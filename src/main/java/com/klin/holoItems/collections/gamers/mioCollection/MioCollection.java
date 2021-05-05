@@ -11,11 +11,12 @@ public class MioCollection extends Collection {
     public static final String theme = "Time played";
     public static final String ign = "ookamimio";
     public static final String uuid = "8a017472-7d0f-4c4e-87f6-9cda380dccab";
+    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDI2MzU0MCwKICAicHJvZmlsZUlkIiA6ICI4YTAxNzQ3MjdkMGY0YzRlODdmNjljZGEzODBkY2NhYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJvb2thbWltaW8iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkYTNhNWFhZjY1YmNhYTIwYzc0NjE4YTA4NjEzMGJmMTA5OTFiODAyZmE5MDMwNTU2MGI3YjAzMTNiNjVhNCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9=";
 
     public static final char key = 'p';
 
     public MioCollection(){
-        super(name, desc, theme, ign, uuid, key);
+        super(name, desc, theme, ign, uuid, key, base64);
     }
 
     public Map<String, Integer> getStat(Player player){

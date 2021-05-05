@@ -15,11 +15,12 @@ public class CalliCollection extends Collection {
     public static final String theme = "Returned to grave";
     public static final String ign = "moricalliopeen";
     public static final String uuid = "14abe999-ac61-432a-ba3f-216bbe9454b3";
+    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDA1NjUwMywKICAicHJvZmlsZUlkIiA6ICIxNGFiZTk5OWFjNjE0MzJhYmEzZjIxNmJiZTk0NTRiMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJtb3JpY2FsbGlvcGVFTiIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9jNGI3NTk2ZWI5OWUzOGI5MTdkOWI2YjZjOGUyMDEwMDQwOGNlOGE2NmYwMGRkNWNjYTQ4N2ViMmE5MDkwODhjIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=";
 
     public static final char key = 'J';
 
     public CalliCollection(){
-        super(name, desc, theme, ign, uuid, key);
+        super(name, desc, theme, ign, uuid, key, base64);
         collection.put(MomentoMori.key, new MomentoMori());
     }
 
