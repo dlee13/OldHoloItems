@@ -13,14 +13,16 @@ public abstract class Collection {
     public String ign;
     public String uuid;
     public char key;
+    public String base64;
 
-    public Collection(String name, String desc, String theme, String ign, String uuid, char key){
+    public Collection(String name, String desc, String theme, String ign, String uuid, char key, String base64){
         this.name = name;
         this.desc = desc;
         this.theme = theme;
         this.ign = ign;
         this.uuid = uuid;
         this.key = key;
+        this.base64 = base64;
     }
 
     public abstract Map<String, Integer> getStat(Player player);
