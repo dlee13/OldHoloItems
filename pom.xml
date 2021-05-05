@@ -10,8 +10,8 @@
 
     <repositories>
         <repository>
-            <id>skullcreator-repo</id>
-            <url>https://github.com/deanveloper/SkullCreator/raw/mvn-repo/</url>
+            <id>aikar-release</id>
+            <url>https://repo.aikar.co/nexus/content/repositories/aikar-release/</url>
         </repository>
         <repository>
             <id>papermc</id>
@@ -21,10 +21,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>dev.dbassett</groupId>
-            <artifactId>skullcreator</artifactId>
-            <version>3.0.1</version>
-            <scope>compile</scope>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>1.11</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
@@ -38,5 +38,6 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-    
+
+
 </project>
