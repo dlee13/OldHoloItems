@@ -49,6 +49,7 @@ import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
+import com.klin.holoItems.utility.SkullCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -392,16 +393,10 @@ public class Collections implements CommandExecutor, Listener {
     }
 
     private static void setupHeads(Player player){
-        Inventory inv = player.getInventory();
-        ItemStack item = inv.getItem(0);
-
         for(Collection collection : collections.values()){
             if(collection.ign==null)
                 break;
-            inv.setItem(0, null);
-            Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(),
-                    "give "+player.getName()+" minecraft:player_head{SkullOwner:\""+collection.ign+"\"}");
-            ItemStack head = inv.getItem(0);
+            ItemStack head = SkullCreator.itemFromBase64(collection.base64);
             ItemMeta headMeta = head.getItemMeta();
             headMeta.setDisplayName("§6"+collection.name+"§0"+collection.key);
             if(!collection.desc.isEmpty()) {
@@ -412,7 +407,7 @@ public class Collections implements CommandExecutor, Listener {
             head.setItemMeta(headMeta);
             heads.put(collection.name, head);
         }
-        inv.setItem(0, item);
+
     }
 
     private static ItemStack tilUnlocked(ItemStack item, String name, int cost){
