@@ -823,6 +823,10 @@ public class Events implements Listener {
         }
     }
 
+    private static final Set<String> stackException = new HashSet<String>(){{
+        add(DoubleUp.id);
+    }};
+
     @EventHandler
     public static void craftItem(CraftItemEvent event){
         if(event.isCancelled())
@@ -861,6 +865,8 @@ public class Events implements Listener {
                     Utility.formatName(item.name)+": "+progress+"/"+item.cost);
         }
         else if(!item.stackable && item.item.getMaxStackSize()>1){
+            if(stackException.contains(id))
+                return;
             World world = player.getWorld();
             Location loc = player.getLocation();
             boolean excess = false;

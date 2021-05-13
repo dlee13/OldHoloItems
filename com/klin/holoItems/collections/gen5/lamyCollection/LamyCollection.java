@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.gen5.lamyCollection;
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Condensation;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.CubeTray;
+import com.klin.holoItems.collections.gen5.lamyCollection.items.FrostLayer;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ public class LamyCollection extends Collection {
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(CubeTray.key, new CubeTray());
         collection.put(Condensation.key, new Condensation());
+        collection.put(FrostLayer.key, new FrostLayer());
     }
 
     public Map<String, Integer> getStat(Player player){

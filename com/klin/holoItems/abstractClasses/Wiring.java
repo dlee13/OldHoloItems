@@ -39,7 +39,7 @@ public abstract class Wiring extends Crate implements Clickable {
         Dispenser dispenser = (Dispenser) block.getState();
         if(!current) {
             ItemStack wiring = event.getCursor();
-            if(wiring==null || wiring.getAmount()!=1)
+            if(wiring==null)
                 return;
             String check = dispenser.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             if(check!=null) {
@@ -59,7 +59,9 @@ public abstract class Wiring extends Crate implements Clickable {
 
             new BukkitRunnable(){
                 public void run(){
-                    inv.setItem(event.getRawSlot(), null);
+                    ItemStack item = inv.getItem(event.getRawSlot());
+                    if(item!=null)
+                        item.setAmount(item.getAmount()-1);
                 }
             }.runTask(HoloItems.getInstance());
         }

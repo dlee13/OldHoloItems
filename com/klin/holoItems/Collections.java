@@ -266,6 +266,7 @@ public class Collections implements CommandExecutor, Listener {
                                 int j = Integer.parseInt(args[2]);
                                 player.setStatistic(stat, entity, j);
                                 player.sendMessage(stat+":"+entity+" set to "+j);
+                                break;
                             case UNTYPED:
                                 int k = Integer.parseInt(args[1]);
                                 player.setStatistic(stat, k);

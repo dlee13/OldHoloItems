@@ -182,6 +182,8 @@ public class Trowel extends Pack {
         int facingIncrement = 0;
         for(int j=0; j<6; j++){
             for(int i=-4; i<5; i++){
+                if(blocksIncrement>=blocks.length)
+                    return;
                 if(!blocks[blocksIncrement].trim().isEmpty()) {
                     Material type = Material.getMaterial(blocks[blocksIncrement]);
                     if (type!=null) {
