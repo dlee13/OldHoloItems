@@ -106,11 +106,15 @@ public class EarthenSpoon extends Wiring {
             soil = Material.SOUL_SAND;
         else
             soil = Material.FARMLAND;
-        if(face==BlockFace.UP && !place.isEmpty() && place.getType()==soil){
-            Block air = place.getRelative(BlockFace.UP);
-            if(!air.isEmpty())
+        if(!place.isEmpty()) {
+            if (face == BlockFace.UP && place.getType() == soil) {
+                Block air = place.getRelative(BlockFace.UP);
+                if (!air.isEmpty())
+                    return;
+                air.setType(crop);
+            }
+            else
                 return;
-            air.setType(crop);
         }
         int charge = 1;
         if(item.getItemMeta()!=null) {

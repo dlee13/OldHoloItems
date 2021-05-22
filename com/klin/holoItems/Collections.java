@@ -46,6 +46,7 @@ import com.klin.holoItems.collections.id2.reineCollection.ReineCollection;
 import com.klin.holoItems.collections.misc.achanCollection.AchanCollection;
 import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
 import com.klin.holoItems.collections.misc.hiddenCollection.Recipes;
+import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
 import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Utility;
@@ -79,6 +80,8 @@ public class Collections implements CommandExecutor, Listener {
     public static Set<String> disabled = new HashSet<>();
 
     Collections(){
+        collections.put(IngredientCollection.key, new IngredientCollection());
+
         collections.put(SuiseiCollection.key, new SuiseiCollection());
         collections.put(SoraCollection.key, new SoraCollection());
         collections.put(RobocosanCollection.key, new RobocosanCollection());
@@ -172,7 +175,7 @@ public class Collections implements CommandExecutor, Listener {
                         ((collections.size() - 2) / 9 + 1) * 9, "Collections");
                 for (Collection collection : collections.values()) {
                     if (collection.uuid == null)
-                        break;
+                        continue;
                     ItemStack item = heads.get(collection.name);
                     item = item.clone();
                     ItemMeta meta = item.getItemMeta();
@@ -387,7 +390,7 @@ public class Collections implements CommandExecutor, Listener {
     private static void setupHeads(){
         for(Collection collection : collections.values()){
             if(collection.ign==null)
-                break;
+                continue;
             ItemStack head = SkullCreator.itemFromBase64(collection.base64);
             ItemMeta headMeta = head.getItemMeta();
             headMeta.setDisplayName("§6"+collection.name+"§0"+collection.key);
@@ -399,7 +402,6 @@ public class Collections implements CommandExecutor, Listener {
             head.setItemMeta(headMeta);
             heads.put(collection.name, head);
         }
-
     }
 
     private static ItemStack tilUnlocked(ItemStack item, String name, int cost){

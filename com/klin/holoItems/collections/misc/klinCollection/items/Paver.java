@@ -92,14 +92,14 @@ public class Paver extends SlidingPack {
             for (int i = heldItemSlot + 1; i < 9; i++) {
                 ItemStack item = inv.getItem(i);
                 if (item == null || item.getItemMeta() == null)
-                    return;
+                    break;
                 String id = item.getItemMeta().getPersistentDataContainer().
                         get(Utility.key, PersistentDataType.STRING);
                 if (id == null)
-                    return;
+                    break;
                 Item generic = Collections.findItem(id);
                 if (!(generic instanceof Trowel))
-                    return;
+                    break;
 
                 ((Trowel) generic).ability(new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK,
                         item, block, BlockFace.UP, EquipmentSlot.HAND), Action.RIGHT_CLICK_BLOCK);

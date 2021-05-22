@@ -461,6 +461,18 @@ public class Utility {
         }
     }
 
+    public static int inspect(ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+        Integer charge = meta.getPersistentDataContainer().
+                get(Utility.pack, PersistentDataType.INTEGER);
+        if(charge==null || charge==0)
+            return -1;
+        else {
+            charge -= 1;
+            return charge;
+        }
+    }
+
     public static void imbueProjectile(Projectile proj, String id){
         proj.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
     }

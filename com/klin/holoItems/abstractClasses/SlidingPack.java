@@ -55,6 +55,8 @@ public abstract class SlidingPack extends Pack implements Clickable {
         Player player = (Player) event.getWhoClicked();
         ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta meta = item.getItemMeta();
+        if(meta==null)
+            return;
         meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, selected.getAmount());
         item.setItemMeta(meta);
     }

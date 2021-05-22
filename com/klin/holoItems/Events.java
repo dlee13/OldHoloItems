@@ -93,6 +93,12 @@ public class Events implements Listener {
     }};
 
     private static final Set<String> exception = new HashSet<String>(){{
+        for(Character key : Collections.findCollection('0').collection.keySet())
+            add("0"+key);
+        add(DoubleUp.id);
+    }};
+
+    private static final Set<String> stackException = new HashSet<String>(){{
         add(DoubleUp.id);
     }};
 
@@ -822,10 +828,6 @@ public class Events implements Listener {
             event.setAmount(Utility.addDurability(item, event.getAmount(), player));
         }
     }
-
-    private static final Set<String> stackException = new HashSet<String>(){{
-        add(DoubleUp.id);
-    }};
 
     @EventHandler
     public static void craftItem(CraftItemEvent event){
