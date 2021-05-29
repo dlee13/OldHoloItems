@@ -4,6 +4,7 @@ import com.klin.holoItems.interfaces.Holdable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen2.aquaCollection.AquaCollection;
+import com.klin.holoItems.interfaces.Retainable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,15 +16,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.Event;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.Set;
 
-public class OnionRing extends Item implements Holdable {
+public class OnionRing extends Item implements Holdable, Retainable {
     public static final String name = "onionRing";
     public static final Set<Enchantment> accepted = null;
 
@@ -77,5 +82,23 @@ public class OnionRing extends Item implements Holdable {
                     arrow.remove();
             }
         }.runTaskLater(HoloItems.getInstance(), 1);
+    }
+
+    public boolean ability(PlayerDeathEvent event){
+        PlayerInventory inv = event.getEntity().getInventory();
+        ItemStack ring = inv.getItemInOffHand();
+        if(!event.getKeepInventory() && ring.getItemMeta()!=null &&
+                id.equals(ring.getItemMeta().getPersistentDataContainer().
+                get(Utility.key, PersistentDataType.STRING))) {
+            ItemStack crossbow = inv.getItemInMainHand();
+            if (crossbow.getType() == Material.CROSSBOW) {
+                new BukkitRunnable() {
+                    public void run() {
+                        crossbow.setAmount(0);
+                    }
+                }.runTask(HoloItems.getInstance());
+            }
+        }
+        return false;
     }
 }

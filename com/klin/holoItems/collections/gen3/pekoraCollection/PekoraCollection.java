@@ -2,6 +2,7 @@ package com.klin.holoItems.collections.gen3.pekoraCollection;
 
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.CarrotCannon;
+import com.klin.holoItems.collections.gen3.pekoraCollection.items.Compactor;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
 import org.bukkit.Statistic;
 import org.bukkit.entity.EntityType;
@@ -24,6 +25,7 @@ public class PekoraCollection extends Collection {
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(DoubleUp.key, new DoubleUp());
         collection.put(CarrotCannon.key, new CarrotCannon());
+        collection.put(Compactor.key, new Compactor());
     }
 
     public Map<String, Integer> getStat(Player player){

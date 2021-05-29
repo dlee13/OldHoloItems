@@ -36,7 +36,7 @@ public class GemKnife extends BatteryPack {
                 "break a piece off any ore softer than" +"/n"+
                 "an emerald";
     private static final int durability = 0;
-    private static final boolean shiny = false;
+    private static final boolean shiny = true;
 
     public static final Material content = Material.EMERALD;
     public static final double perFuel = 2;

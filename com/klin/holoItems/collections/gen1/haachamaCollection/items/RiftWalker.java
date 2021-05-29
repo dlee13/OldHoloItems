@@ -28,7 +28,7 @@ public class RiftWalker extends BatteryPack {
             "§6Ability" +"/n"+
             "Right click to consume a charge and" +"/n"+
             "teleport yourself 8 blocks in the" +"/n"+
-            "direction you're facing up to 4 times" +"/n"+
+            "direction you're facing up to 8 times" +"/n"+
             "in a row. 2 ender pearls/charge";
     private static final int durability = 0;
     private static final boolean shiny = true;
@@ -100,7 +100,7 @@ public class RiftWalker extends BatteryPack {
                     }
                 };
             } else {
-                if (cooldown >= 4)
+                if (cooldown >= 8)
                     return;
                 else {
                     jumps += cooldown;
@@ -112,7 +112,7 @@ public class RiftWalker extends BatteryPack {
             Utility.deplete(item);
             if(charge==24 || charge==8 || charge==0)
                 player.sendMessage("§7"+charge+" remaining");
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Jumps: "+jumps+"/4"));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Jumps: "+jumps+"/8"));
         }
 
         Block block = player.getTargetBlockExact(8);

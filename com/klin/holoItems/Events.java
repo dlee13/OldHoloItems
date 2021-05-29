@@ -20,10 +20,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingPlaceEvent;
@@ -217,8 +214,8 @@ public class Events implements Listener {
             }
             Item generic = Collections.findItem(id);
             if(generic instanceof Retainable) {
-                ((Retainable) generic).ability(event);
-                item.setAmount(item.getAmount() - 1);
+                if(((Retainable) generic).ability(event))
+                    item.setAmount(item.getAmount() - 1);
             }
         }
     }
@@ -1019,24 +1016,22 @@ public class Events implements Listener {
         }
     }
 
-//    TO-DO: REMOVE fix for updating to instanceof
-//    @EventHandler
-//    public static void updateItem(InventoryClickEvent event){
-//        ItemStack item = event.getCurrentItem();
-//        if(item==null || item.getItemMeta()==null)
-//            return;
-//        String id = item.getItemMeta().
-//                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-//        if(id==null)
-//            return;
-//
-//        if(id.length()>2){
-//            ItemMeta meta = item.getItemMeta();
-//            meta.getPersistentDataContainer().
-//                    set(Utility.key, PersistentDataType.STRING, id.substring(id.indexOf(":")+1));
-//            item.setItemMeta(meta);
-//        }
-//    }
+    @EventHandler
+    public void burnableAbility(BlockIgniteEvent event){
+        BlockState state = event.getBlock().getState();
+        if(!(state instanceof TileState))
+            return;
+
+        String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id==null)
+            return;
+
+        if(Collections.disabled.contains(id))
+            return;
+        Item generic = Collections.findItem(id);
+        if(generic instanceof Burnable)
+            ((Burnable) generic).ability(event);
+    }
 
     private static int findMultiplier(Enchantment enchant){
         for(Integer i : multiplier.keySet()){

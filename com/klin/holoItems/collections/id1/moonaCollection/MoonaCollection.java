@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.id1.moonaCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.id1.moonaCollection.items.Lightbulb;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ public class MoonaCollection extends Collection {
 
     public MoonaCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(Lightbulb.key, new Lightbulb());
     }
 
     public Map<String, Integer> getStat(Player player){

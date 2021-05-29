@@ -308,6 +308,11 @@ public class Utility {
                     item.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK)));
         if (flame)
             target.setFireTicks(100);
+        int arrowsInBody = 1;
+        if(item.getEnchantmentLevel(Enchantment.MULTISHOT)==1) {
+            damage *= 3;
+            arrowsInBody = 3;
+        }
         if (damage >= 0) {
             target.damage(abstractArrow.isCritical() ?
                     damage + Math.random() * (damage / 2 + 1) : damage,
@@ -317,7 +322,7 @@ public class Utility {
             if (target.isValid())
                 target.setHealth(Math.min(20, target.getHealth() + Math.abs(damage) + 2));
         }
-        target.setArrowsInBody(target.getArrowsInBody()+1);
+        target.setArrowsInBody(target.getArrowsInBody()+arrowsInBody);
         if(!target.isValid())
             return;
 
