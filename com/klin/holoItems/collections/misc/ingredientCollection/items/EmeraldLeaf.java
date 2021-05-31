@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 
 import java.util.Set;
@@ -38,5 +39,11 @@ public class EmeraldLeaf extends Item {
                         Material.EMERALD_ORE, 1, 1600);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
+
+        BlastingRecipe blastingRecipe =
+                new BlastingRecipe(new NamespacedKey(HoloItems.getInstance(), name), item,
+                        Material.EMERALD_ORE, 1, 800);
+        blastingRecipe.setGroup(name);
+        Bukkit.getServer().addRecipe(blastingRecipe);
     }
 }

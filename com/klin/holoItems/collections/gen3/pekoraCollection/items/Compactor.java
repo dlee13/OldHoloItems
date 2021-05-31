@@ -141,16 +141,14 @@ public class Compactor extends Wiring {
                 ItemStack special = special(result.getType());
                 if(container instanceof Container) {
                     Inventory output = ((Container) container).getInventory();
-                    if(output.firstEmpty()==-1)
-                        world.dropItemNaturally(loc, result);
-                    else {
-                        output.addItem(result);
-                        if (special != null){
-                            if(output.firstEmpty()==-1)
-                                world.dropItemNaturally(loc, result);
-                            else
-                                output.addItem(special);
-                        }
+                    Map<Integer, ItemStack> excess;
+                    if(special!=null)
+                        excess = output.addItem(result, special);
+                    else
+                        excess = output.addItem(result);
+                    if(!excess.isEmpty()) {
+                        for(ItemStack item : excess.values())
+                            world.dropItemNaturally(loc, item);
                     }
                 }
                 else {

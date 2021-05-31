@@ -8,10 +8,13 @@ import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Container;
 import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -77,9 +80,14 @@ public class SandPortal extends Item implements Dispensable, Placeable {
         BlockFace face = ((Dispenser) block.getBlockData()).getFacing();
         Block place = block.getRelative(face);
         event.setCancelled(true);
-        if(!place.getType().isAir())
+        Material type = event.getItem().getType();
+        if(!place.getType().isAir()) {
+            BlockState container = place.getState();
+            if(container instanceof Container)
+                ((Container) container).getInventory().addItem(new ItemStack(type));
             return;
-        place.setType(event.getItem().getType());
+        }
+        place.setType(type);
     }
 
     public void ability(BlockPlaceEvent event){

@@ -273,10 +273,12 @@ public class Utility {
         double damage = Math.min(6, ((int) (abstractArrow.getVelocity().length()*2))+1);
         boolean punch = false;
         boolean flame = false;
+        int multishot = 1;
         if (item != null) {
             damage *= (1 + (.25 * item.getEnchantmentLevel(Enchantment.ARROW_DAMAGE)));
             punch = item.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK) > 0;
             flame = item.getEnchantmentLevel(Enchantment.ARROW_FIRE) > 0;
+            multishot = item.getEnchantmentLevel(Enchantment.MULTISHOT) > 0 ? 3 : 1;
         }
 
         if(abstractArrow instanceof Arrow) {
@@ -294,7 +296,7 @@ public class Utility {
                     } else
                         damage = 12;
                 } else {
-                    double duration = durations.get(data.getType()) / 8 * 60 * 20;
+                    double duration = durations.get(data.getType())/8*60*20*multishot;
                     target.addPotionEffect(new PotionEffect(type,
                             data.isExtended() ? (int) (duration * 2.666) :
                                     data.isUpgraded() ? (int) (duration / 2) : (int) duration,
@@ -302,27 +304,21 @@ public class Utility {
                 }
             }
         }
-
         if (punch)
             target.setVelocity(abstractArrow.getVelocity().setY(0.1).multiply(
-                    item.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK)));
+                    item.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK)).multiply(multishot));
         if (flame)
-            target.setFireTicks(100);
-        int arrowsInBody = 1;
-        if(item.getEnchantmentLevel(Enchantment.MULTISHOT)==1) {
-            damage *= 3;
-            arrowsInBody = 3;
-        }
+            target.setFireTicks(100*multishot);
         if (damage >= 0) {
-            target.damage(abstractArrow.isCritical() ?
-                    damage + Math.random() * (damage / 2 + 1) : damage,
-                    (Player) abstractArrow.getShooter());
+                target.damage((abstractArrow.isCritical() ?
+                                damage + Math.random() * (damage / 2 + 1) : damage)*multishot,
+                        (Player) abstractArrow.getShooter());
         } else {
-            target.damage(2, (Player) abstractArrow.getShooter());
+            target.damage(2*multishot, (Player) abstractArrow.getShooter());
             if (target.isValid())
-                target.setHealth(Math.min(20, target.getHealth() + Math.abs(damage) + 2));
+                target.setHealth(Math.min(20, (target.getHealth() + Math.abs(damage) + 2)*multishot));
         }
-        target.setArrowsInBody(target.getArrowsInBody()+arrowsInBody);
+        target.setArrowsInBody(target.getArrowsInBody()+multishot);
         if(!target.isValid())
             return;
 
@@ -334,7 +330,7 @@ public class Utility {
                 public void run(){
                     target.setGlowing(false);
                 }
-            }.runTaskLater(HoloItems.getInstance(), spectralArrow.getGlowingTicks());
+            }.runTaskLater(HoloItems.getInstance(), (long) spectralArrow.getGlowingTicks()*multishot);
         }
     }
 
