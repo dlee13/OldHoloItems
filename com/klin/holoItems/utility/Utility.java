@@ -136,6 +136,15 @@ public class Utility {
         add(Material.WOODEN_HOE);
     }};
 
+    public static final Set<Material> pickaxes = new HashSet<Material>(){{
+        add(Material.DIAMOND_PICKAXE);
+        add(Material.GOLDEN_PICKAXE);
+        add(Material.IRON_PICKAXE);
+        add(Material.STONE_PICKAXE);
+        add(Material.NETHERITE_PICKAXE);
+        add(Material.WOODEN_PICKAXE);
+    }};
+
     public static final Set<Material> logs = new HashSet<Material>(){{
         add(Material.ACACIA_LOG);
         add(Material.OAK_LOG);

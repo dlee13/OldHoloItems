@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
-public class Vacuum  extends Item implements Interactable {
+public class Vacuum extends Item implements Interactable {
     public static final String name = "vacuum";
     public static final Set<Enchantment> accepted = null;
 

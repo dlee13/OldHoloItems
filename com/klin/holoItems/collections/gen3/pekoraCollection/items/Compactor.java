@@ -194,7 +194,21 @@ public class Compactor extends Wiring {
         nestedKelpBlock.put('h', kelp);
         nestedKelpBlock.put('i', kelp);
 
+        Map<Character, ItemStack> tnt = new HashMap<>();
+        ItemStack gunpowder = new ItemStack(GUNPOWDER);
+        ItemStack sand = new ItemStack(SAND);
+        tnt.put('a', gunpowder);
+        tnt.put('b', sand);
+        tnt.put('c', gunpowder);
+        tnt.put('d', sand);
+        tnt.put('e', gunpowder);
+        tnt.put('f', sand);
+        tnt.put('g', gunpowder);
+        tnt.put('h', sand);
+        tnt.put('i', gunpowder);
+
         Map<Map<Character, ItemStack>, ItemStack> square = recipes.get(squareKey);
         square.put(nestedKelpBlock, new ItemStack(DRIED_KELP_BLOCK));
+        square.put(tnt, new ItemStack(TNT));
     }
 }

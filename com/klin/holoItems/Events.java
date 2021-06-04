@@ -148,20 +148,28 @@ public class Events implements Listener {
             return;
         String id = item.getItemMeta().
                 getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
-            return;
-        if(block!=null && deactive.contains(block.getType())) {
-            event.setUseItemInHand(Event.Result.DENY);
-            return;
+        String enchant = item.getItemMeta().
+                getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        if(id!=null) {
+            if (block != null && deactive.contains(block.getType())) {
+                event.setUseItemInHand(Event.Result.DENY);
+            }
+            else if (Collections.disabled.contains(id)) {
+                event.getPlayer().sendMessage("§cThis item has been disabled");
+            }
+            else {
+                Item generic = Collections.findItem(id);
+                if (generic instanceof Interactable)
+                    ((Interactable) generic).ability(event, action);
+            }
         }
-
-        if(Collections.disabled.contains(id)) {
-            event.getPlayer().sendMessage("§cThis item has been disabled");
-            return;
+        if(enchant!=null) {
+            if (Collections.disabled.contains(enchant))
+                return;
+            Item generic = Collections.findItem(enchant);
+            if (generic instanceof Interactable)
+                ((Interactable) generic).ability(event, action);
         }
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Interactable)
-            ((Interactable) generic).ability(event, action);
     }
 
     @EventHandler

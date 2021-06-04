@@ -1,8 +1,9 @@
 package com.klin.holoItems.collections.misc.hiddenCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.misc.hiddenCollection.items.*;
-import com.klin.holoItems.collections.misc.ingredientCollection.items.EmeraldLeaf;
+import com.klin.holoItems.collections.misc.hiddenCollection.items.GalleryFrame;
+import com.klin.holoItems.collections.misc.hiddenCollection.items.Sokoban;
+import com.klin.holoItems.collections.misc.hiddenCollection.items.WheatPortal;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -19,6 +20,7 @@ public class HiddenCollection extends Collection {
 
     public HiddenCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(Sokoban.key, new Sokoban());
         collection.put(WheatPortal.key, new WheatPortal());
         collection.put(GalleryFrame.key, new GalleryFrame());
     }
