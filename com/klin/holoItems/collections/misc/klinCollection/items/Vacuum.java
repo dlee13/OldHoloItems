@@ -41,11 +41,9 @@ public class Vacuum extends Item implements Interactable {
     public void registerRecipes(){}
 
     public void ability(PlayerInteractEvent event, Action action){
-        if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK))
+        if(action!=Action.RIGHT_CLICK_BLOCK)
             return;
         Block block = event.getClickedBlock();
-        if(block==null)
-            return;
         Material type = block.getType();
         Queue<Block> clear = new LinkedList<>();
         Set<Block> checked = new HashSet<>();

@@ -2,6 +2,7 @@ package com.klin.holoItems.collections.gen4.kanataCollection;
 
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.gen4.kanataCollection.items.Shuribow;
+import com.klin.holoItems.collections.gen4.kanataCollection.items.Zipline;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -19,6 +20,7 @@ public class KanataCollection extends Collection {
     public KanataCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(Shuribow.key, new Shuribow());
+        collection.put(Zipline.key, new Zipline());
     }
 
     public Map<String, Integer> getStat(Player player){

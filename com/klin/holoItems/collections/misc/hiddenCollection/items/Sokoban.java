@@ -6,6 +6,7 @@ import com.klin.holoItems.interfaces.Interactable;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -15,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Sokoban  extends Item implements Interactable {
+public class Sokoban extends Item implements Interactable {
     public static final String name = "sokoban";
     public static final Set<Enchantment> accepted = null;
 
@@ -48,11 +49,9 @@ public class Sokoban  extends Item implements Interactable {
     public void registerRecipes(){}
 
     public void ability(PlayerInteractEvent event, Action action){
-        if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK))
+        if(action!=Action.RIGHT_CLICK_BLOCK)
             return;
         Block block = event.getClickedBlock();
-        if(block==null)
-            return;
         Block target = block.getRelative(opposites.get(event.getBlockFace()));
         if(!target.isEmpty())
             return;
@@ -63,10 +62,10 @@ public class Sokoban  extends Item implements Interactable {
 //        double y = 0.05*(dest.getBlockY()-loc.getBlockY());
 //        double z = 0.05*(dest.getBlockZ()-loc.getBlockZ());
 
-        Material type = block.getType();
-//        BlockData data = block.getBlockData();
+//        Material type = block.getType();
+        BlockData data = block.getBlockData();
         block.setType(Material.AIR);
-        target.setType(type);
+        target.setBlockData(data);
 
 //        FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(loc.add(0.5, 0, 0.5), data);
 //        fallingBlock.setGravity(false);
