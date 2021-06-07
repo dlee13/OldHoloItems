@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.HashSet;
@@ -43,7 +44,7 @@ public class MomentoMori extends Item implements Retainable {
         Bukkit.getServer().addRecipe(recipe);
     }
 
-    public boolean ability(PlayerDeathEvent event){
+    public boolean ability(PlayerDeathEvent event, ItemStack item){
         event.getDrops().clear();
         event.setKeepInventory(true);
         return true;

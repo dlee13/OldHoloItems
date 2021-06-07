@@ -71,7 +71,7 @@ public abstract class Armor extends Item implements Wearable {
             removeEffect(event);
     }
 
-    public boolean ability(PlayerDeathEvent event){
+    public boolean ability(PlayerDeathEvent event, ItemStack item){
         effect(event);
         return false;
     }

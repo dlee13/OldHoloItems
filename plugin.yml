@@ -6,6 +6,8 @@ api-version: 1.14
 commands:
   collections:
     usage: /<command>
+  ground:
+    usage: /<command>
   acquire:
     usage: /<command> <id>
   registry:

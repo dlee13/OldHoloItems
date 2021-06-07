@@ -84,12 +84,12 @@ public class OnionRing extends Item implements Holdable, Retainable {
         }.runTaskLater(HoloItems.getInstance(), 1);
     }
 
-    public boolean ability(PlayerDeathEvent event){
+    public boolean ability(PlayerDeathEvent event, ItemStack item){
         PlayerInventory inv = event.getEntity().getInventory();
         ItemStack ring = inv.getItemInOffHand();
-        if(!event.getKeepInventory() && ring.getItemMeta()!=null &&
+        if(!event.getKeepInventory() && item.equals(ring) /*ring.getItemMeta()!=null &&
                 id.equals(ring.getItemMeta().getPersistentDataContainer().
-                get(Utility.key, PersistentDataType.STRING))) {
+                get(Utility.key, PersistentDataType.STRING))*/) {
             ItemStack crossbow = inv.getItemInMainHand();
             if (crossbow.getType() == Material.CROSSBOW) {
                 new BukkitRunnable() {

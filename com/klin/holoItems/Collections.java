@@ -190,6 +190,17 @@ public class Collections implements CommandExecutor, Listener {
                 player.openInventory(inv);
                 return true;
 
+            case "ground":
+                if (args.length >= 1) {
+                    Player play = Bukkit.getServer().getPlayer(args[0]);
+                    if(play!=null) {
+                        play.setGravity(true);
+                        return true;
+                    }
+                }
+                player.setGravity(true);
+                return true;
+
             case "acquire":
                 if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE)
                     return true;

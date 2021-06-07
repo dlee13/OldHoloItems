@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen1.akiCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen1.akiCollection.items.QuartzBlossom;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ public class AkiCollection extends Collection {
 
     public AkiCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(QuartzBlossom.key, new QuartzBlossom());
     }
 
     public Map<String, Integer> getStat(Player player){

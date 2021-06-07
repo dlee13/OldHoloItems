@@ -18,6 +18,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -94,31 +97,52 @@ public class Zipline extends Item implements Interactable {
         dest.setYaw(loc.getYaw());
         dest.setPitch(loc.getPitch());
         player.teleport(dest);
-        player.setGravity(false);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 160, 1));
 
         Location zero = new Location(loc.getWorld(), 0, 0, 0);
         new Task(HoloItems.getInstance(), 0, 1){
             int increment = 0;
             Block block = clicked;
+            Location lastPos = player.getLocation();
             BlockFace alongVertical = null;
             BlockFace alongHorizontal = null;
+            int oneTwo = 0;
 
             public void run(){
                 Location to = block.getLocation().add(0.5, -2, 0.5);
                 increment++;
-                if(increment>128){
+                if(increment>160 || player.isSneaking() || !player.isValid()){
                     Location loc = player.getLocation();
                     to.setYaw(loc.getYaw());
                     to.setPitch(loc.getPitch());
                     player.teleport(to);
-                    player.setGravity(true);
+                    new BukkitRunnable(){
+                        public void run(){
+                            player.removePotionEffect(PotionEffectType.LEVITATION);
+                        }
+                    }.runTask(HoloItems.getInstance());
                     cancel();
                     return;
                 }
 
                 Location velocity = to.clone().subtract(player.getLocation());
-                if(!velocity.equals(zero))
+                Location loc = player.getLocation();
+                if(!velocity.equals(zero)) {
                     player.setVelocity(velocity.toVector().normalize());
+                    if(loc.distance(lastPos)==0){
+                        if(oneTwo<2)
+                            oneTwo++;
+                        else {
+                            to.setYaw(loc.getYaw());
+                            to.setPitch(loc.getPitch());
+                            player.teleport(to);
+                            oneTwo = 0;
+                        }
+                    }
+                    else
+                        oneTwo = 0;
+                }
+                lastPos = loc;
                 block = block.getRelative(forward);
                 if(block.getType()==fence)
                     return;
@@ -130,28 +154,25 @@ public class Zipline extends Item implements Interactable {
                             block = relative;
                             if(vertical.contains(face)) {
                                 alongVertical = face;
-                                Location loc = player.getLocation();
                                 Location dest = block.getLocation().add(0.5, -2, 0.5);
                                 dest.setYaw(loc.getYaw());
                                 dest.setPitch(loc.getPitch());
                                 player.teleport(dest);
                             }
-                            alongHorizontal = face;
+                            else
+                                alongHorizontal = face;
                             faces.remove(opposites.get(face));
                             return;
                         }
                         if(!vertical.contains(face)){
                             for(BlockFace corner : vertical) {
+                                if(!faces.contains(corner))
+                                    continue;
                                 Block cornered = relative.getRelative(corner);
                                 if(cornered.getType()==fence) {
                                     block = relative;
                                     alongVertical = corner;
-                                    faces.remove(opposites.get(face));
-                                    if(alongHorizontal==null){
-                                        alongHorizontal = face;
-                                        faces.remove(opposites.get(face));
-                                    }
-                                    Location loc = player.getLocation();
+                                    alongHorizontal = face;
                                     Location dest = block.getLocation().add(0.5, -2, 0.5);
                                     dest.setYaw(loc.getYaw());
                                     dest.setPitch(loc.getPitch());
@@ -166,6 +187,10 @@ public class Zipline extends Item implements Interactable {
                     Block relative = block.getRelative(alongVertical);
                     if(block.getRelative(alongVertical).getType()==fence) {
                         block = relative;
+                        Location dest = block.getLocation().add(0.5, -2, 0.5);
+                        dest.setYaw(loc.getYaw());
+                        dest.setPitch(loc.getPitch());
+                        player.teleport(dest);
                         return;
                     }
                     relative = block.getRelative(alongHorizontal);
@@ -176,15 +201,22 @@ public class Zipline extends Item implements Interactable {
                     relative = relative.getRelative(alongVertical);
                     if(relative.getType()==fence) {
                         block = relative;
+                        Location dest = block.getLocation().add(0.5, -2, 0.5);
+                        dest.setYaw(loc.getYaw());
+                        dest.setPitch(loc.getPitch());
+                        player.teleport(dest);
                         return;
                     }
                 }
 
-                Location loc = player.getLocation();
                 to.setYaw(loc.getYaw());
                 to.setPitch(loc.getPitch());
                 player.teleport(to);
-                player.setGravity(true);
+                new BukkitRunnable(){
+                    public void run(){
+                        player.removePotionEffect(PotionEffectType.LEVITATION);
+                    }
+                }.runTask(HoloItems.getInstance());
                 cancel();
             }
         };

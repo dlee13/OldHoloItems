@@ -139,8 +139,9 @@ public class Events implements Listener {
         if(action==Action.PHYSICAL)
             return;
         Block block = event.getClickedBlock();
+        Player player = event.getPlayer();
         if(block!=null){
-            if(block.getState() instanceof Container || block.getBlockData() instanceof Openable)
+            if(!player.isSneaking() && (block.getState() instanceof Container || block.getBlockData() instanceof Openable))
                 return;
         }
         ItemStack item = event.getItem();
@@ -155,7 +156,7 @@ public class Events implements Listener {
                 event.setUseItemInHand(Event.Result.DENY);
             }
             else if (Collections.disabled.contains(id)) {
-                event.getPlayer().sendMessage("§cThis item has been disabled");
+                player.sendMessage("§cThis item has been disabled");
             }
             else {
                 Item generic = Collections.findItem(id);
@@ -194,10 +195,8 @@ public class Events implements Listener {
                     ((Placeable) generic).ability(event);
             }
         }
-        if(enchant!=null) {
-            if (player.getGameMode() != GameMode.CREATIVE)
-                Utility.addDurability(item, -1, player);
-        }
+        if(enchant!=null)
+            Utility.addDurability(item, -1, player);
     }
 
     @EventHandler
@@ -222,7 +221,7 @@ public class Events implements Listener {
             }
             Item generic = Collections.findItem(id);
             if(generic instanceof Retainable) {
-                if(((Retainable) generic).ability(event))
+                if(((Retainable) generic).ability(event, item))
                     item.setAmount(item.getAmount() - 1);
             }
         }
@@ -579,8 +578,7 @@ public class Events implements Listener {
                 ((Shootable) generic).cause(event, item);
                 if (shooter instanceof Player){
                     Player player = (Player) shooter;
-                    if(player.getGameMode()!=GameMode.CREATIVE)
-                        Utility.addDurability(item, -1, player);
+                    Utility.addDurability(item, -1, player);
                 }
             }
             else if(offhand && generic instanceof Holdable)
@@ -779,8 +777,24 @@ public class Events implements Listener {
                     ((Crate) generic).ability(event);
             }
         }
+        PlayerInventory inv = event.getPlayer().getInventory();
 
-        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+        ItemStack offhand = inv.getItemInOffHand();
+        if(offhand.getType()!=Material.AIR && offhand.getItemMeta()!=null){
+            String id = offhand.getItemMeta().
+                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            if(id!=null) {
+                if (Collections.disabled.contains(id))
+                    event.getPlayer().sendMessage("§cThis item has been disabled");
+                else {
+                    Item generic = Collections.findItem(id);
+                    if (generic instanceof Holdable)
+                        ((Holdable) generic).ability(event);
+                }
+            }
+        }
+
+        ItemStack item = inv.getItemInMainHand();
         if(item.getType()==Material.AIR || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().
@@ -791,8 +805,7 @@ public class Events implements Listener {
         if(id!=null) {
             Player player = event.getPlayer();
             durability = true;
-            if (player.getGameMode() != GameMode.CREATIVE)
-                Utility.addDurability(item, -1, player);
+            Utility.addDurability(item, -1, player);
             if (Collections.disabled.contains(id))
                 event.getPlayer().sendMessage("§cThis item has been disabled");
             else {
@@ -802,11 +815,8 @@ public class Events implements Listener {
             }
         }
         if(enchant!=null) {
-            if(!durability){
-                Player player = event.getPlayer();
-                if (player.getGameMode() != GameMode.CREATIVE)
-                    Utility.addDurability(item, -1, player);
-            }
+            if(!durability)
+                Utility.addDurability(item, -1, event.getPlayer());
             if (Collections.disabled.contains(enchant))
                 return;
             Item generic = Collections.findItem(enchant);
@@ -1002,6 +1012,28 @@ public class Events implements Listener {
         Item generic = Collections.findItem(id);
         if(generic instanceof Hangable)
             ((Hangable) generic).ability(event);
+    }
+
+    @EventHandler
+    public static void dropAbility(PlayerDropItemEvent event){
+        if(event.isCancelled())
+            return;
+
+        ItemStack item = event.getItemDrop().getItemStack();
+        if (item.getType()==Material.AIR || item.getItemMeta() == null)
+            return;
+        String id = item.getItemMeta().
+                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id==null)
+            return;
+
+        if(Collections.disabled.contains(id)) {
+            event.getPlayer().sendMessage("§cThis item has been disabled");
+            return;
+        }
+        Item generic = Collections.findItem(id);
+        if(generic instanceof Dropable)
+            ((Dropable) generic).ability(event);
     }
 
     @EventHandler

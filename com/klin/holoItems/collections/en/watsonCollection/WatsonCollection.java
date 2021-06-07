@@ -1,10 +1,7 @@
 package com.klin.holoItems.collections.en.watsonCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.en.watsonCollection.items.Filter;
-import com.klin.holoItems.collections.en.watsonCollection.items.GemKnife;
-import com.klin.holoItems.collections.en.watsonCollection.items.Hourglass;
-import com.klin.holoItems.collections.en.watsonCollection.items.SandPortal;
+import com.klin.holoItems.collections.en.watsonCollection.items.*;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
@@ -28,6 +25,7 @@ public class WatsonCollection extends Collection {
         collection.put(Filter.key, new Filter());
         collection.put(GemKnife.key, new GemKnife());
         collection.put(Hourglass.key, new Hourglass());
+        collection.put(MagnifyingGlass.key, new MagnifyingGlass());
     }
 
     public Map<String, Integer> getStat(Player player){

@@ -4,6 +4,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -344,7 +345,7 @@ public class Utility {
     }
 
     public static int addDurability(ItemStack item, double addend, Player player){
-        if(addend==0 || item==null)
+        if(player.getGameMode()==GameMode.CREATIVE && addend<0 || addend==0 || item==null)
             return 0;
         ItemMeta meta = item.getItemMeta();
         if(meta==null)
