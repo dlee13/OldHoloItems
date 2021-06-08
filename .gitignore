@@ -208,7 +208,7 @@ build.xml
 *_REMOTE_*.txt
 
 ### Github ###
-.github
+# .github
 README.md
 LICENSE
 
