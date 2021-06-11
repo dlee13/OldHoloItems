@@ -208,8 +208,8 @@ build.xml
 *_REMOTE_*.txt
 
 ### Github ###
-.github
-README.md
+# .github
+# README.md
 LICENSE
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,intellij+iml,git
