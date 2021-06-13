@@ -61,6 +61,8 @@ public class OnionRing extends Item implements Holdable, Retainable {
     }
 
     public void ability(Event generic) {
+        if(!(generic instanceof ProjectileLaunchEvent))
+            return;
         ProjectileLaunchEvent event = (ProjectileLaunchEvent) generic;
         Projectile proj = event.getEntity();
         if(!(proj instanceof AbstractArrow) || proj instanceof Trident)

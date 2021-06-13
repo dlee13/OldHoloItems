@@ -73,7 +73,6 @@ public class Events implements Listener {
         add(InventoryType.BEACON);
         add(InventoryType.BREWING);
         add(InventoryType.CARTOGRAPHY);
-        add(InventoryType.BLAST_FURNACE);
         add(InventoryType.FURNACE);
         add(InventoryType.LECTERN);
         add(InventoryType.LOOM);
@@ -691,6 +690,29 @@ public class Events implements Listener {
             ((Flauntable) generic).ability(event);
     }
 
+//    @EventHandler
+//    public static void fallDamageAbility(EntityDamageEvent event){
+//        if(event.isCancelled())
+//            return;
+//        if(!(event.getEntity() instanceof Player) || event.getCause()!=EntityDamageEvent.DamageCause.FALL)
+//            return;
+//        Player player = (Player) event.getEntity();
+//        ItemStack item = player.getInventory().getItemInOffHand();
+//        if(item.getType()==Material.AIR || item.getItemMeta()==null)
+//            return;
+//        String id = item.getItemMeta().
+//                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+//        if(id==null)
+//            return;
+//        if(Collections.disabled.contains(id)) {
+//            player.sendMessage("§cThis item has been disabled");
+//            return;
+//        }
+//        Item generic = Collections.findItem(id);
+//        if(generic instanceof Holdable)
+//            ((Holdable) generic).ability(event);
+//    }
+
     @EventHandler
     public static void breakItemAttacking(EntityDamageByEntityEvent event){
         if(event.isCancelled())
@@ -862,50 +884,56 @@ public class Events implements Listener {
             }
         }
         Player player = (Player) event.getWhoClicked();
-        if(player.getGameMode()==GameMode.CREATIVE)
-            return;
         ItemStack curr = event.getCurrentItem();
-        if(curr==null || curr.getItemMeta()==null)
+        if (curr == null || curr.getItemMeta() == null)
             return;
         ItemMeta currMeta = curr.getItemMeta();
         String id = currMeta.
                 getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
+        if (id == null)
             return;
-
         Collection collection = Collections.findCollection(id.charAt(0));
         Item item = collection.collection.get(id.charAt(1));
-        int progress = Utility.add(collection.getStat(player));
-        if(item.cost>progress){
-            event.setCancelled(true);
-            player.sendMessage("Progress to unlocking "+
-                    Utility.formatName(item.name)+": "+progress+"/"+item.cost);
-        }
-        else if(!item.stackable && item.item.getMaxStackSize()>1){
-            if(stackException.contains(id))
-                return;
-            World world = player.getWorld();
-            Location loc = player.getLocation();
-            boolean excess = false;
-            for (ItemStack ingredient : inv.getMatrix()) {
-                if(ingredient==null)
-                    continue;
-                if(ingredient.getAmount()>1) {
-                    excess = true;
-                    ItemStack refund = ingredient.clone();
-                    refund.setAmount(ingredient.getAmount() - 1);
-                    ingredient.setAmount(1);
-                    world.dropItemNaturally(loc, refund);
-                }
-            }
-            if(excess) {
-                event.setCancelled(true);
-                return;
-            }
 
-            currMeta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
-            curr.setItemMeta(currMeta);
+        if(player.getGameMode()!=GameMode.CREATIVE) {
+            int progress = Utility.add(collection.getStat(player));
+            if (item.cost > progress) {
+                event.setCancelled(true);
+                player.sendMessage("Progress to unlocking " +
+                        Utility.formatName(item.name) + ": " + progress + "/" + item.cost);
+            } else if (!item.stackable && item.item.getMaxStackSize() > 1) {
+                if (stackException.contains(id))
+                    return;
+                World world = player.getWorld();
+                Location loc = player.getLocation();
+                boolean excess = false;
+                for (ItemStack ingredient : inv.getMatrix()) {
+                    if (ingredient == null)
+                        continue;
+                    if (ingredient.getAmount() > 1) {
+                        excess = true;
+                        ItemStack refund = ingredient.clone();
+                        refund.setAmount(ingredient.getAmount() - 1);
+                        ingredient.setAmount(1);
+                        world.dropItemNaturally(loc, refund);
+                    }
+                }
+                if (excess) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                currMeta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
+                curr.setItemMeta(currMeta);
+            }
         }
+
+        if(Collections.disabled.contains(id)) {
+            player.sendMessage("§cThis item has been disabled");
+            return;
+        }
+        if(item instanceof Craftable)
+            ((Craftable) item).ability(event);
     }
 
     @EventHandler

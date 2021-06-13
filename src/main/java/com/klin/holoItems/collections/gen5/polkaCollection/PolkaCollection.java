@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen5.polkaCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen5.polkaCollection.items.PartyRocket;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ public class PolkaCollection extends Collection {
 
     public PolkaCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(PartyRocket.key, new PartyRocket());
     }
 
     public Map<String, Integer> getStat(Player player){

@@ -58,6 +58,8 @@ public class WitchsBracelet extends Item implements Holdable {
     }
 
     public void ability(Event generic) {
+        if(!(generic instanceof ProjectileLaunchEvent))
+            return;
         ProjectileLaunchEvent event = (ProjectileLaunchEvent) generic;
         Projectile proj = event.getEntity();
         if(!(proj instanceof ThrownPotion))

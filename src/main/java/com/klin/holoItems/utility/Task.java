@@ -13,4 +13,8 @@ public abstract class Task implements Runnable{
     public void cancel(){
         Bukkit.getScheduler().cancelTask(taskId);
     }
+
+    public int getTaskId(){
+        return taskId;
+    }
 }

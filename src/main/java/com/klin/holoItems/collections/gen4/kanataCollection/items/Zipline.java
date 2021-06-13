@@ -5,11 +5,7 @@ import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen4.kanataCollection.KanataCollection;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Task;
-import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
@@ -49,12 +45,12 @@ public class Zipline extends Item implements Interactable {
             collect(Collectors.toCollection(HashSet::new));
 
     private static final Material material = Material.STRING;
-    private static final int quantity = 1;
+    private static final int quantity = 2;
     private static final String lore =
             "§6Ability" +"/n"+
                 "Ride fences, iron bars, and chains";
-    private static final int durability = 2;
-    private static final boolean stackable = false;
+    private static final int durability = 0;
+    private static final boolean stackable = true;
     private static final boolean shiny = true;
 
     public static final int cost = 0;
@@ -86,7 +82,8 @@ public class Zipline extends Item implements Interactable {
         if(!((LivingEntity) player).isOnGround())
             return;
 
-        Utility.addDurability(event.getItem(), -1, player);
+        if(player.getGameMode()!= GameMode.CREATIVE)
+            event.getItem().setAmount(event.getItem().getAmount()-1);
         BlockFace forward = player.getFacing();
         Set<BlockFace> faces = new HashSet<>(this.faces);
         faces.remove(opposites.get(forward));

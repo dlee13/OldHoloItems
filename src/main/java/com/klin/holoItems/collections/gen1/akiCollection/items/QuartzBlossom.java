@@ -5,11 +5,12 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.BatteryPack;
 import com.klin.holoItems.collections.gen1.akiCollection.AkiCollection;
 import com.klin.holoItems.interfaces.*;
-import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -23,7 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.Set;
 
 public class QuartzBlossom extends BatteryPack implements Interactable, Dropable, Holdable, Retainable, Clickable {
     public static final String name = "quartzBlossom";
@@ -167,6 +168,8 @@ public class QuartzBlossom extends BatteryPack implements Interactable, Dropable
     }
 
     public void ability(Event generic){
+        if(!(generic instanceof BlockBreakEvent))
+            return;
         BlockBreakEvent event = (BlockBreakEvent) generic;
         Player player = event.getPlayer();
 //        Set<Block> blocks = active.get(player);
