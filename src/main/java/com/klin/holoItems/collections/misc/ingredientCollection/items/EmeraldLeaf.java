@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.misc.ingredientCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

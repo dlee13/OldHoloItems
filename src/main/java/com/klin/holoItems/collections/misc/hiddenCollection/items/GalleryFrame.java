@@ -103,6 +103,9 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
                 case WEST:
                     surrounding[2] = BlockFace.NORTH;
                     surrounding[3] = BlockFace.SOUTH;
+                    break;
+                default:
+                    break;
             }
             if(surrounding[2]!=null){
                 Block frame = itemFrame.getLocation().getBlock();

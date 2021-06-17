@@ -26,7 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 
-public class QuartzBlossom extends BatteryPack implements Interactable, Dropable, Holdable, Retainable, Clickable {
+public class QuartzBlossom extends BatteryPack implements Dropable, Holdable, Retainable, Clickable {
     public static final String name = "quartzBlossom";
     public static final Set<Enchantment> accepted = null;
 //    private Map<Player, Set<Block>> active = new HashMap<>();

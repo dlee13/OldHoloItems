@@ -76,7 +76,6 @@ public class Collections implements CommandExecutor, Listener {
     private static Map<String, ItemStack> heads = new HashMap<>();
     private static String registry;
     private static ItemStack back;
-    private static boolean first = true;
     public static Set<String> disabled = new HashSet<>();
 
     Collections(){
