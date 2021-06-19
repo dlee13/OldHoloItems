@@ -29,9 +29,10 @@ public class MoltenCore extends Wiring {
 
     public static final int cost = 400;
     public static final char key = '0';
+    public static final String id = ""+FlareCollection.key+key;
 
     public MoltenCore(){
-        super(name, material, lore, shiny, cost, ""+FlareCollection.key+key, key);
+        super(name, material, lore, shiny, cost, id, key);
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().remove(Utility.key);
         meta.setDisplayName("§6Hardened Core");
