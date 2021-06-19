@@ -49,12 +49,14 @@ public class PartyRocket extends Item implements Interactable, Craftable {
         recipe.shape("&%&","%*%","&%&");
         recipe.setIngredient('*', Material.FIREWORK_ROCKET);
         recipe.setIngredient('%', Material.TNT);
-        recipe.setIngredient('&', Material.TARGET);
+        recipe.setIngredient('&', Material.ANCIENT_DEBRIS);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }
 
     public void ability(PlayerInteractEvent event, Action action){
+        if(action!=Action.RIGHT_CLICK_BLOCK)
+            return;
         Player player = event.getPlayer();
         World world = player.getWorld();
         FireworkMeta meta = (FireworkMeta) event.getItem().getItemMeta();

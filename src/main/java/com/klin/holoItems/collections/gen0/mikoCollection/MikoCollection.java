@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen0.mikoCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen0.mikoCollection.items.Record;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ public class MikoCollection extends Collection {
 
     public MikoCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(Record.key, new Record());
     }
 
     public Map<String, Integer> getStat(Player player){
