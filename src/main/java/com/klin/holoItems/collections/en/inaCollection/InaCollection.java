@@ -15,12 +15,11 @@ public class InaCollection extends Collection {
     public static final String theme = "Mats farmed";
     public static final String ign = "ninoina";
     public static final String uuid = "8237e9c4-1c11-4c19-b29a-67c51f2045b8";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDEwOTA5MCwKICAicHJvZmlsZUlkIiA6ICI4MjM3ZTljNDFjMTE0YzE5YjI5YTY3YzUxZjIwNDViOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJOaW5vSW5hIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzNiMzA2OGJmN2M0NDEyODBkYTU1ZjBkOTY2ODZlMzk0MDhjNDYzNWVjMTBiZmFmNTk0ZTk4ZTc0MzMxOWU5NiIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9=";
 
     public static final char key = 'L';
 
     public InaCollection(){
-        super(name, desc, theme, ign, uuid, key, base64);
+        super(name, desc, theme, ign, uuid, key);
         collection.put(CorruptedWheat.key, new CorruptedWheat());
         collection.put(EarthenSpoon.key, new EarthenSpoon());
         collection.put(CeramicLadle.key, new CeramicLadle());

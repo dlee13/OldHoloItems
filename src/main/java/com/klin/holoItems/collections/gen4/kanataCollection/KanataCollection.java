@@ -13,12 +13,11 @@ public class KanataCollection extends Collection {
     public static final String theme = "";
     public static final String ign = "amane_kanata";
     public static final String uuid = "7ec7cca2-6085-4eed-89c6-3c0ef6eef5ee";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NTMzNjk3MiwKICAicHJvZmlsZUlkIiA6ICI3ZWM3Y2NhMjYwODU0ZWVkODljNjNjMGVmNmVlZjVlZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJBbWFuZV9LYW5hdGEiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTdhYmRhMGRiYzRhMWE1NDJjNTRhZTM4MDUxMDFhZWUxNWI4MDgyZDVkNjM5ZTI1NDNlODk4OGRjYWZmZTljIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=";
 
     public static final char key = 'x';
 
     public KanataCollection(){
-        super(name, desc, theme, ign, uuid, key, base64);
+        super(name, desc, theme, ign, uuid, key);
         collection.put(Shuribow.key, new Shuribow());
         collection.put(Zipline.key, new Zipline());
     }

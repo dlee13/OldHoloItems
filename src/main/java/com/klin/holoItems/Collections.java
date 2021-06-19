@@ -48,7 +48,7 @@ import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
 import com.klin.holoItems.collections.misc.hiddenCollection.Recipes;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
-import com.klin.holoItems.utility.SkullCreator;
+import com.klin.holoItems.utility.PlayerHead;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -399,9 +399,9 @@ public class Collections implements CommandExecutor, Listener {
 
     private static void setupHeads(){
         for(Collection collection : collections.values()){
-            if(collection.ign==null)
+            if(collection.uuid==null)
                 continue;
-            ItemStack head = SkullCreator.itemFromBase64(collection.base64);
+            ItemStack head = PlayerHead.itemFromUuid(collection.uuid);
             ItemMeta headMeta = head.getItemMeta();
             headMeta.setDisplayName("§6"+collection.name+"§0"+collection.key);
             if(!collection.desc.isEmpty()) {

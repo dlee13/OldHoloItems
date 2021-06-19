@@ -15,12 +15,11 @@ public class MelCollection extends Collection {
     public static final String theme = "Creatures gathered";
     public static final String ign = "yozoramel";
     public static final String uuid = "ece6a72b-8cd4-497b-b01f-aed07229fa3e";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDYwODYwNiwKICAicHJvZmlsZUlkIiA6ICJlY2U2YTcyYjhjZDQ0OTdiYjAxZmFlZDA3MjI5ZmEzZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJ5b3pvcmFtZWwiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWRlNmMxMWU0ODk4NmFlNWM0MTE3N2UyZmIzMTdiMGU3NTdiNTUxM2RjOTVlOGJhMTg5MWQzMjY4YjVhOGZjMCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9=";
 
     public static final char key = 'f';
 
     public MelCollection(){
-        super(name, desc, theme, ign, uuid, key, base64);
+        super(name, desc, theme, ign, uuid, key);
         collection.put(ReadingGlasses.key, new ReadingGlasses());
     }
 
