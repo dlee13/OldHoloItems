@@ -213,3 +213,7 @@ build.xml
 LICENSE
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,intellij+iml,git
+
+# Visual Studio Code
+.vscode/
+*.code-workspace

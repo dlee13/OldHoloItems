@@ -17,7 +17,7 @@ public class ReflectionUtils {
 
     private static void setup() {
         try {
-            Class craftStackClass = Class.forName(craft + ".inventory.CraftMetaItem");
+            Class<?> craftStackClass = Class.forName(craft + ".inventory.CraftMetaItem");
             repairCost = craftStackClass.getDeclaredField("repairCost");
             repairCost.setAccessible(true);
             setup = true;
