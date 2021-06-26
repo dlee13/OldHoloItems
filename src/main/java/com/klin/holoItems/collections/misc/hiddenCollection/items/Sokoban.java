@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.misc.hiddenCollection.items;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
 import com.klin.holoItems.interfaces.Interactable;
+import com.klin.holoItems.utility.Utility;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,15 +20,6 @@ import java.util.stream.Stream;
 public class Sokoban extends Item implements Interactable {
     public static final String name = "sokoban";
     public static final Set<Enchantment> accepted = null;
-
-    Map<BlockFace, BlockFace> opposites = Stream.of(new BlockFace[][] {
-            { BlockFace.UP, BlockFace.DOWN },
-            { BlockFace.DOWN, BlockFace.UP },
-            { BlockFace.NORTH, BlockFace.SOUTH },
-            { BlockFace.SOUTH, BlockFace.NORTH },
-            { BlockFace.EAST, BlockFace.WEST },
-            { BlockFace.WEST, BlockFace.EAST },
-    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     private static final Material material = Material.STONE_HOE;
     private static final int quantity = 1;
@@ -52,7 +44,7 @@ public class Sokoban extends Item implements Interactable {
         if(action!=Action.RIGHT_CLICK_BLOCK)
             return;
         Block block = event.getClickedBlock();
-        Block target = block.getRelative(opposites.get(event.getBlockFace()));
+        Block target = block.getRelative(Utility.opposites.get(event.getBlockFace()));
         if(!target.isEmpty())
             return;
 

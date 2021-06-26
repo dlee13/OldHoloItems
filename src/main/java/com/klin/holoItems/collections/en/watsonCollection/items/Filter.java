@@ -4,29 +4,28 @@ import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.type.Dispenser;
+import org.bukkit.entity.*;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.*;
+import org.bukkit.material.Colorable;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Filter extends Wiring {
     public static final String name = "filter";
-
-    private static final Set<Material> dirt = new HashSet<Material>(){{
-        add(Material.DIRT);
-        add(Material.COARSE_DIRT);
-        add(Material.GRASS_BLOCK);
-        add(Material.PODZOL);
-        add(Material.MYCELIUM);
-    }};
+    private static final Set<Material> dirt = Stream.of(Material.DIRT, Material.COARSE_DIRT, Material.GRASS_BLOCK, Material.PODZOL, Material.MYCELIUM).collect(Collectors.toCollection(HashSet::new));
+    private static final Set<Material> dyes = Stream.of(Material.BLACK_DYE, Material.BLUE_DYE, Material.BROWN_DYE, Material.CYAN_DYE, Material.GRAY_DYE, Material.GREEN_DYE, Material.LIGHT_BLUE_DYE, Material.LIGHT_GRAY_DYE, Material.LIME_DYE, Material.MAGENTA_DYE, Material.ORANGE_DYE, Material.PINK_DYE, Material.PURPLE_DYE, Material.RED_DYE, Material.WHITE_DYE, Material.YELLOW_DYE).collect(Collectors.toCollection(HashSet::new));
     private static final ItemStack clay = new ItemStack(Material.CLAY_BALL);
 
     private static final Material material = Material.IRON_BARS;
@@ -57,9 +56,25 @@ public class Filter extends Wiring {
 
     public void ability(BlockDispenseEvent event){
         ItemStack item = event.getItem();
-        if(!dirt.contains(item.getType()))
+        Material type = item.getType();
+        if(dyes.contains(type)) {
+            event.setCancelled(true);
+            Block block = event.getBlock();
+            for(Entity entity : block.getRelative(((Dispenser) block.getBlockData()).getFacing()).getLocation().add(0.5, 0.5, 0.5).getNearbyLivingEntities(0.5, 0.5, 0.5, entity -> (entity instanceof Colorable))) {
+                ((Colorable) entity).setColor(DyeColor.valueOf(type.toString().substring(0, type.toString().indexOf("_DYE"))));
+                new BukkitRunnable(){
+                    public void run(){
+                        Inventory inv = ((InventoryHolder) block.getState()).getInventory();
+                        inv.removeItem(item);
+                    }
+                }.runTask(HoloItems.getInstance());
+                return;
+            }
             return;
+        }
 
+        if(!dirt.contains(type))
+            return;
         event.setCancelled(true);
         Block block = event.getBlock();
         BlockFace face = ((Dispenser) block.getBlockData()).getFacing();

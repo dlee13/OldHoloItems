@@ -10,7 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Dispenser;
+import org.bukkit.block.TileState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -54,17 +54,15 @@ public class MagnifyingGlass extends Item implements Interactable {
         if(action!=Action.RIGHT_CLICK_BLOCK)
             return;
         BlockState state = event.getClickedBlock().getState();
-        if(state instanceof Dispenser) {
-            String check = ((Dispenser) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(state instanceof TileState) {
+            String check = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             if (check != null) {
                 Item generic = Collections.findItem(check);
                 if (generic != null)
-                    event.getPlayer().sendMessage("This dispenser is wired with " + Utility.formatName(generic.name));
-                else
-                    event.getPlayer().sendMessage("This dispenser needs replacing");
+                    event.getPlayer().sendMessage(Utility.formatName(generic.name));
             }
             else
-                event.getPlayer().sendMessage("This dispenser isn't wired with anything");
+                event.getPlayer().sendMessage("Nothing");
         }
     }
 }

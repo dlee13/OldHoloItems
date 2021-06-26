@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
@@ -23,6 +24,8 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Utility {
     public static final NamespacedKey key =
@@ -36,7 +39,16 @@ public class Utility {
     public static final NamespacedKey enchant =
             new NamespacedKey(HoloItems.getInstance(), "enchant");
 
-    public static final Map<Material, Material> ageable = new LinkedHashMap<Material, Material>(){{
+    public static final Map<BlockFace, BlockFace> opposites = Stream.of(new BlockFace[][] {
+            { BlockFace.UP, BlockFace.DOWN },
+            { BlockFace.DOWN, BlockFace.UP },
+            { BlockFace.NORTH, BlockFace.SOUTH },
+            { BlockFace.SOUTH, BlockFace.NORTH },
+            { BlockFace.EAST, BlockFace.WEST },
+            { BlockFace.WEST, BlockFace.EAST },
+    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+    public static final Map<Material, Material> ageable = new LinkedHashMap<>() {{
         put(Material.BEETROOT_SEEDS, Material.BEETROOTS);
         put(Material.CARROT, Material.CARROTS);
         put(Material.POTATO, Material.POTATOES);
@@ -44,7 +56,7 @@ public class Utility {
         put(Material.WHEAT_SEEDS, Material.WHEAT);
     }};
 
-    public static final Map<Material, Material> sowable = new LinkedHashMap<Material, Material>(){{
+    public static final Map<Material, Material> sowable = new LinkedHashMap<>() {{
         put(Material.BEETROOTS, Material.BEETROOT_SEEDS);
         put(Material.CARROTS, Material.CARROT);
         put(Material.POTATOES, Material.POTATO);
@@ -52,15 +64,15 @@ public class Utility {
         put(Material.WHEAT, Material.WHEAT_SEEDS);
     }};
 
-    public static final Map<String, Set<Material>> dirt = new HashMap<String, Set<Material>>(){{
-        put("SAPLING", new HashSet<Material>(){{
+    public static final Map<String, Set<Material>> dirt = new HashMap<>() {{
+        put("SAPLING", new HashSet<>() {{
             add(Material.GRASS_BLOCK);
             add(Material.DIRT);
             add(Material.COARSE_DIRT);
             add(Material.PODZOL);
             add(Material.FARMLAND);
         }});
-        put("FUNGUS", new HashSet<Material>(){{
+        put("FUNGUS", new HashSet<>() {{
             add(Material.GRASS_BLOCK);
             add(Material.DIRT);
             add(Material.COARSE_DIRT);
@@ -73,7 +85,7 @@ public class Utility {
         }});
     }};
 
-    private static final Set<EntityType> humanoids = new HashSet<EntityType>(){{
+    private static final Set<EntityType> humanoids = new HashSet<>() {{
         add(EntityType.PLAYER);
         add(EntityType.ZOMBIE);
         add(EntityType.ZOMBIE_VILLAGER);
@@ -93,7 +105,7 @@ public class Utility {
         add(EntityType.GIANT);
     }};
 
-    private static final Map<PotionType, Double> durations = new HashMap<PotionType, Double>(){{
+    private static final Map<PotionType, Double> durations = new HashMap<>() {{
         put(PotionType.FIRE_RESISTANCE, 3.0);
         put(PotionType.INVISIBILITY, 3.0);
         put(PotionType.JUMP, 3.0);
@@ -110,7 +122,7 @@ public class Utility {
         put(PotionType.WEAKNESS, 1.5);
     }};
 
-    public static final Set<Material> shovels = new HashSet<Material>(){{
+    public static final Set<Material> shovels = new HashSet<>() {{
         add(Material.DIAMOND_SHOVEL);
         add(Material.GOLDEN_SHOVEL);
         add(Material.IRON_SHOVEL);
@@ -119,7 +131,7 @@ public class Utility {
         add(Material.WOODEN_SHOVEL);
     }};
 
-    public static final Set<Material> axes = new HashSet<Material>(){{
+    public static final Set<Material> axes = new HashSet<>() {{
         add(Material.DIAMOND_AXE);
         add(Material.GOLDEN_AXE);
         add(Material.IRON_AXE);
@@ -128,7 +140,7 @@ public class Utility {
         add(Material.WOODEN_AXE);
     }};
 
-    public static final Set<Material> hoes = new HashSet<Material>(){{
+    public static final Set<Material> hoes = new HashSet<>() {{
         add(Material.DIAMOND_HOE);
         add(Material.GOLDEN_HOE);
         add(Material.IRON_HOE);
@@ -137,7 +149,7 @@ public class Utility {
         add(Material.WOODEN_HOE);
     }};
 
-    public static final Set<Material> pickaxes = new HashSet<Material>(){{
+    public static final Set<Material> pickaxes = new HashSet<>() {{
         add(Material.DIAMOND_PICKAXE);
         add(Material.GOLDEN_PICKAXE);
         add(Material.IRON_PICKAXE);
@@ -146,7 +158,7 @@ public class Utility {
         add(Material.WOODEN_PICKAXE);
     }};
 
-    public static final Set<Material> logs = new HashSet<Material>(){{
+    public static final Set<Material> logs = new HashSet<>() {{
         add(Material.ACACIA_LOG);
         add(Material.OAK_LOG);
         add(Material.BIRCH_LOG);
@@ -221,6 +233,7 @@ public class Utility {
         else if(meta.hasEnchants())
             list.add(0, "");
         meta.setLore(list);
+        meta.setCustomModelData(id.charAt(0)*10 + Character.getNumericValue(id.charAt(1)));
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, id);
         item.setItemMeta(meta);
 

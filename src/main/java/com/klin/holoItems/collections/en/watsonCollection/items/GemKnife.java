@@ -11,6 +11,8 @@ import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,7 @@ import java.util.Map;
 public class GemKnife extends BatteryPack {
     public static final String name = "gemKnife";
 
-    private static final Map<Material, Material> ores = new HashMap<Material, Material>(){{
+    private static final Map<Material, Material> ores = new HashMap<>() {{
         put(Material.COAL_ORE, Material.COAL);
         put(Material.IRON_ORE, Material.IRON_NUGGET);
         put(Material.GOLD_ORE, Material.GOLD_NUGGET);
@@ -108,10 +110,18 @@ public class GemKnife extends BatteryPack {
         Material type = ores.get(ore.getType());
         if(type==null)
             return;
-        int charge = Utility.deplete(event.getItem());
+        ItemStack item = event.getItem();
+        int charge = Utility.deplete(item);
         if(charge==-1)
             return;
 
+        if(charge>=63){
+            ItemMeta meta = item.getItemMeta();
+            meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, charge-63);
+            item.setItemMeta(meta);
+            ore.getWorld().dropItemNaturally(ore.getLocation(), new ItemStack(type, 64));
+            return;
+        }
         ore.getWorld().dropItemNaturally(ore.getLocation(), new ItemStack(type));
         if(charge==192 || charge==64 || charge==0)
             event.getPlayer().sendMessage("§7" + charge + " remaining");

@@ -19,11 +19,13 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class Wiring extends Crate implements Clickable {
+    private static final int quantity = 1;
     private static final int durability = 0;
+    private static final boolean stackable = false;
 
     public Wiring(String name, Material material, String lore, boolean shiny, int cost,
                   String id, char key) {
-        super(name, material, lore, durability, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void ability(InventoryClickEvent event, boolean current){

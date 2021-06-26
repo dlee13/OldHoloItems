@@ -13,8 +13,10 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.*;
-import org.bukkit.block.data.Openable;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.TileState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
@@ -41,35 +43,35 @@ import java.util.*;
 
 public class Events implements Listener {
     private static final Map<Integer, Enchantment[]> multiplier =
-    new HashMap<Integer, Enchantment[]>(){{
-        put(1, new Enchantment[]{
-            Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.DAMAGE_ALL,
-                Enchantment.DIG_SPEED, Enchantment.ARROW_DAMAGE,
-                Enchantment.LOYALTY, Enchantment.PIERCING
-        });
-        put(2, new Enchantment[]{
-            Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_FALL,
-                Enchantment.PROTECTION_PROJECTILE, Enchantment.DAMAGE_UNDEAD,
-                Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK,
-                Enchantment.DURABILITY, Enchantment.QUICK_CHARGE
-        });
-        put(4, new Enchantment[]{
-            Enchantment.PROTECTION_EXPLOSIONS, Enchantment.OXYGEN,
-                Enchantment.DEPTH_STRIDER, Enchantment.WATER_WORKER,
-                Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS,
-                Enchantment.LOOT_BONUS_BLOCKS, Enchantment.ARROW_KNOCKBACK,
-                Enchantment.ARROW_FIRE, Enchantment.LUCK, Enchantment.LURE,
-                Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.IMPALING,
-                Enchantment.RIPTIDE, Enchantment.MULTISHOT, Enchantment.SWEEPING_EDGE
-        });
-        put(8, new Enchantment[]{
-            Enchantment.THORNS, Enchantment.SILK_TOUCH, Enchantment.ARROW_INFINITE,
-                Enchantment.BINDING_CURSE, Enchantment.VANISHING_CURSE,
-                Enchantment.CHANNELING, Enchantment.SOUL_SPEED
-        });
-    }};
+            new HashMap<>() {{
+                put(1, new Enchantment[]{
+                        Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.DAMAGE_ALL,
+                        Enchantment.DIG_SPEED, Enchantment.ARROW_DAMAGE,
+                        Enchantment.LOYALTY, Enchantment.PIERCING
+                });
+                put(2, new Enchantment[]{
+                        Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_FALL,
+                        Enchantment.PROTECTION_PROJECTILE, Enchantment.DAMAGE_UNDEAD,
+                        Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK,
+                        Enchantment.DURABILITY, Enchantment.QUICK_CHARGE
+                });
+                put(4, new Enchantment[]{
+                        Enchantment.PROTECTION_EXPLOSIONS, Enchantment.OXYGEN,
+                        Enchantment.DEPTH_STRIDER, Enchantment.WATER_WORKER,
+                        Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS,
+                        Enchantment.LOOT_BONUS_BLOCKS, Enchantment.ARROW_KNOCKBACK,
+                        Enchantment.ARROW_FIRE, Enchantment.LUCK, Enchantment.LURE,
+                        Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.IMPALING,
+                        Enchantment.RIPTIDE, Enchantment.MULTISHOT, Enchantment.SWEEPING_EDGE
+                });
+                put(8, new Enchantment[]{
+                        Enchantment.THORNS, Enchantment.SILK_TOUCH, Enchantment.ARROW_INFINITE,
+                        Enchantment.BINDING_CURSE, Enchantment.VANISHING_CURSE,
+                        Enchantment.CHANNELING, Enchantment.SOUL_SPEED
+                });
+            }};
 
-    private static final Set<InventoryType> prohibitedInv = new HashSet<InventoryType>(){{
+    private static final Set<InventoryType> prohibitedInv = new HashSet<>() {{
         add(InventoryType.BEACON);
         add(InventoryType.BREWING);
         add(InventoryType.CARTOGRAPHY);
@@ -82,19 +84,19 @@ public class Events implements Listener {
         add(InventoryType.STONECUTTER);
     }};
 
-    private static final Set<Material> deactive = new HashSet<Material>(){{
+    private static final Set<Material> deactive = new HashSet<>() {{
         add(Material.JUKEBOX);
         add(Material.CAMPFIRE);
         add(Material.SOUL_CAMPFIRE);
     }};
 
-    private static final Set<String> exception = new HashSet<String>(){{
-        for(Character key : Collections.findCollection('0').collection.keySet())
-            add("0"+key);
+    private static final Set<String> exception = new HashSet<>() {{
+        for (Character key : Collections.findCollection('0').collection.keySet())
+            add("0" + key);
         add(DoubleUp.id);
     }};
 
-    private static final Set<String> stackException = new HashSet<String>(){{
+    private static final Set<String> stackException = new HashSet<>() {{
         add(DoubleUp.id);
     }};
 
@@ -135,13 +137,39 @@ public class Events implements Listener {
     public static void activateAbility(PlayerInteractEvent event){
         //no isCancelled()
         Action action = event.getAction();
-        if(action==Action.PHYSICAL)
-            return;
-        Block block = event.getClickedBlock();
         Player player = event.getPlayer();
-        if(block!=null){
-            if(!player.isSneaking() && (block.getState() instanceof Container || block.getBlockData() instanceof Openable))
+        if(action==Action.PHYSICAL){
+            ItemStack item = player.getInventory().getBoots();
+            if(item==null || item.getItemMeta()==null)
                 return;
+            String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            if(id==null)
+                return;
+            if(Collections.disabled.contains(id)) {
+                player.sendMessage("§cThis item has been disabled");
+                return;
+            }
+            Item generic = Collections.findItem(id);
+            if(generic instanceof Passable)
+                ((Passable) generic).ability(event, player.getWorld().getBlockAt(player.getLocation()));
+            return;
+        }
+        Block block = event.getClickedBlock();
+        if(block!=null && !player.isSneaking()){
+            BlockState state = block.getState();
+            if(state instanceof TileState){
+                String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+                if(id==null)
+                    return;
+                if(Collections.disabled.contains(id)) {
+                    player.sendMessage("§cThis item has been disabled");
+                    return;
+                }
+                Item generic = Collections.findItem(id);
+                if (generic instanceof Punchable)
+                    ((Punchable) generic).ability(event, action);
+                return;
+            }
         }
         ItemStack item = event.getItem();
         if(item==null || item.getItemMeta()==null)
@@ -154,9 +182,8 @@ public class Events implements Listener {
             if (block != null && deactive.contains(block.getType())) {
                 event.setUseItemInHand(Event.Result.DENY);
             }
-            else if (Collections.disabled.contains(id)) {
+            else if (Collections.disabled.contains(id))
                 player.sendMessage("§cThis item has been disabled");
-            }
             else {
                 Item generic = Collections.findItem(id);
                 if (generic instanceof Interactable)
@@ -1062,6 +1089,22 @@ public class Events implements Listener {
         Item generic = Collections.findItem(id);
         if(generic instanceof Dropable)
             ((Dropable) generic).ability(event);
+    }
+
+    @EventHandler
+    public static void activateAbility(BlockRedstoneEvent event){
+        BlockState state = event.getBlock().getState();
+        if(!(state instanceof TileState))
+            return;
+
+        String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id==null)
+            return;
+        if(Collections.disabled.contains(id))
+            return;
+        Item generic = Collections.findItem(id);
+        if(generic instanceof Activatable)
+            ((Activatable) generic).ability(event);
     }
 
     @EventHandler
