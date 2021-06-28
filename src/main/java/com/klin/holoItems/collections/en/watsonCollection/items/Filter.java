@@ -5,6 +5,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.material.Colorable;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -60,7 +62,9 @@ public class Filter extends Wiring {
         if(dyes.contains(type)) {
             event.setCancelled(true);
             Block block = event.getBlock();
-            for(Entity entity : block.getRelative(((Dispenser) block.getBlockData()).getFacing()).getLocation().add(0.5, 0.5, 0.5).getNearbyLivingEntities(0.5, 0.5, 0.5, entity -> (entity instanceof Colorable))) {
+            Location location = block.getRelative(((Dispenser) block.getBlockData()).getFacing()).getLocation().add(0.5, 0.5, 0.5);
+            Collection<Entity> nearbyColorableEntities = location.getWorld().getNearbyEntities(location, 0.5, 0.5, 0.5, entity -> (entity instanceof Colorable));
+            for(Entity entity : nearbyColorableEntities) {
                 ((Colorable) entity).setColor(DyeColor.valueOf(type.toString().substring(0, type.toString().indexOf("_DYE"))));
                 new BukkitRunnable(){
                     public void run(){
