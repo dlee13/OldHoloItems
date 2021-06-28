@@ -37,6 +37,15 @@ import com.klin.holoItems.collections.gen5.botanCollection.BotanCollection;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
 import com.klin.holoItems.collections.gen5.neneCollection.NeneCollection;
 import com.klin.holoItems.collections.gen5.polkaCollection.PolkaCollection;
+import com.klin.holoItems.collections.holostars.aruranCollection.AruranCollection;
+import com.klin.holoItems.collections.holostars.astelCollection.AstelCollection;
+import com.klin.holoItems.collections.holostars.izuruCollection.IzuruCollection;
+import com.klin.holoItems.collections.holostars.miyabiCollection.MiyabiCollection;
+import com.klin.holoItems.collections.holostars.ogaCollection.OgaCollection;
+import com.klin.holoItems.collections.holostars.rikkaCollection.RikkaCollection;
+import com.klin.holoItems.collections.holostars.roberuCollection.RoberuCollection;
+import com.klin.holoItems.collections.holostars.shienCollection.ShienCollection;
+import com.klin.holoItems.collections.holostars.temmaCollection.TemmaCollection;
 import com.klin.holoItems.collections.id1.iofiCollection.IofiCollection;
 import com.klin.holoItems.collections.id1.moonaCollection.MoonaCollection;
 import com.klin.holoItems.collections.id1.risuCollection.RisuCollection;
@@ -138,6 +147,16 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(KlinCollection.key, new KlinCollection());
         collections.put(HiddenCollection.key, new HiddenCollection());
 
+        collections.put(MiyabiCollection.key, new MiyabiCollection());
+        collections.put(IzuruCollection.key, new IzuruCollection());
+        collections.put(AruranCollection.key, new AruranCollection());
+        collections.put(RikkaCollection.key, new RikkaCollection());
+        collections.put(AstelCollection.key, new AstelCollection());
+        collections.put(TemmaCollection.key, new TemmaCollection());
+        collections.put(RoberuCollection.key, new RoberuCollection());
+        collections.put(ShienCollection.key, new ShienCollection());
+        collections.put(OgaCollection.key, new OgaCollection());
+
         Recipes.registerRecipes();
 
         registry = "§6HoloItems"+"\n";
@@ -171,7 +190,7 @@ public class Collections implements CommandExecutor, Listener {
                 if (heads.isEmpty())
                     return true;
                 Inventory inv = Bukkit.createInventory(null,
-                        ((collections.size() - 2) / 9 + 1) * 9, "Collections");
+                        /*((collections.size() - 2) / 9 + 1) * 9*/54, "Collections");
                 for (Collection collection : collections.values()) {
                     if (collection.uuid == null)
                         continue;
