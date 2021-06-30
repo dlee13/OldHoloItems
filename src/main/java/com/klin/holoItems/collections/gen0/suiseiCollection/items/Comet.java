@@ -27,7 +27,7 @@ import java.util.Set;
 
 public class Comet extends Item implements Interactable {
     public static final String name = "comet";
-    public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
+    public static final Set<Enchantment> accepted = new HashSet<>() {{
         add(Enchantment.FIRE_ASPECT);
         add(Enchantment.DAMAGE_ALL);
         add(Enchantment.DAMAGE_ARTHROPODS);
@@ -102,12 +102,15 @@ public class Comet extends Item implements Interactable {
             player.sendMessage("§7The axe weighs heavily on your arms");
             return;
         }
+        ItemStack item = event.getItem();
+        if(Utility.onCooldown(item))
+            return;
+        Utility.cooldown(item, 20);
         double damage = 4+3*(Utility.checkPotionEffect(player, PotionEffectType.INCREASE_DAMAGE)-
                 Utility.checkPotionEffect(player, PotionEffectType.WEAKNESS));
 
         Location location = player.getEyeLocation();
         World world = player.getWorld();
-        ItemStack item = event.getItem();
         boolean hand = event.getHand()==EquipmentSlot.HAND;
 
         double distance = 100;

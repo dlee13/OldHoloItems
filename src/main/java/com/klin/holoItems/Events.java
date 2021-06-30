@@ -764,14 +764,20 @@ public class Events implements Listener {
     public static void breakItemDefending(EntityDamageByEntityEvent event){
         if(event.isCancelled())
             return;
-        if(!(event.getEntity() instanceof Player))
+//        if(!(event.getEntity() instanceof Player))
+//            return;
+//        Player player = (Player) event.getEntity();
+//        if (player.getGameMode()==GameMode.CREATIVE)
+//            return;
+        if(!(event.getEntity() instanceof LivingEntity))
             return;
-        Player player = (Player) event.getEntity();
-        if (player.getGameMode()==GameMode.CREATIVE)
+        LivingEntity entity = (LivingEntity) event.getEntity();
+        EntityEquipment equipment = entity.getEquipment();
+        if(equipment==null)
             return;
 
-        for(ItemStack item : player.getInventory().getArmorContents()) {
-            if (item==null || item.getItemMeta() == null)
+        for(ItemStack item : equipment.getArmorContents()) {
+            if (item == null || item.getItemMeta() == null)
                 continue;
             String id = item.getItemMeta().
                     getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
@@ -779,17 +785,19 @@ public class Events implements Listener {
                 continue;
 
             //mel: reading glasses easter egg
-            if(id.equals("f0") && item.containsEnchantment(Enchantment.BINDING_CURSE))
+            if (id.equals("f0") && item.containsEnchantment(Enchantment.BINDING_CURSE))
                 continue;
 
-            if(Collections.disabled.contains(id))
+            if (Collections.disabled.contains(id))
                 continue;
             Item generic = Collections.findItem(id);
-            if(generic instanceof Wearable)
-                ((Wearable) generic).ability(event,
-                        Utility.addDurability(item, -1, player)==-1);
+            if (generic instanceof Wearable)
+                ((Wearable) generic).ability(event, Utility.addDurability(item, -1, entity) == -1);
         }
 
+        if(!(entity instanceof Player))
+            return;
+        Player player = (Player) entity;
         if(!player.isBlocking())
             return;
         PlayerInventory inv = player.getInventory();
@@ -1041,8 +1049,8 @@ public class Events implements Listener {
                 }
                 Item generic = Collections.findItem(id);
                 if(generic instanceof Responsible)
-                    ((Responsible) generic).ability(event);
-                    Utility.addDurability(item, -1, player);
+                    if(((Responsible) generic).ability(event))
+                        Utility.addDurability(item, -1, player);
             }
         }
     }

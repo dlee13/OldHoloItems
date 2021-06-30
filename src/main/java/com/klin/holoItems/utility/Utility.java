@@ -357,8 +357,10 @@ public class Utility {
         }
     }
 
-    public static int addDurability(ItemStack item, double addend, Player player){
-        if(player.getGameMode()==GameMode.CREATIVE && addend<0 || addend==0 || item==null)
+    public static int addDurability(ItemStack item, double addend, LivingEntity player){
+        if(player instanceof Player && ((Player) player).getGameMode()==GameMode.CREATIVE && addend<0)
+            return 0;
+        if(addend==0 || item==null)
             return 0;
         ItemMeta meta = item.getItemMeta();
         if(meta==null)
@@ -393,7 +395,8 @@ public class Utility {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(breaking));
+        if(player instanceof Player)
+            ((Player) player).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(breaking));
         return total;
     }
 
@@ -416,6 +419,9 @@ public class Utility {
         item.setItemMeta(meta);
         new BukkitRunnable(){
             public void run(){
+                ItemMeta meta = item.getItemMeta();
+                if(meta==null)
+                    return;
                 meta.getPersistentDataContainer().remove(cooldown);
                 item.setItemMeta(meta);
             }

@@ -7,6 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -21,7 +24,7 @@ import java.util.Set;
 
 public class ReadingGlasses extends Armor {
     public static final String name = "readingGlasses";
-    public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
+    public static final Set<Enchantment> accepted = new HashSet<>() {{
         add(Enchantment.BINDING_CURSE);
     }};
 
@@ -52,8 +55,13 @@ public class ReadingGlasses extends Armor {
     }
 
     public void ability(EntityDamageByEntityEvent event, boolean broken){
-        if(broken)
-            removeEffect((Player) event.getEntity());
+        Entity entity = event.getEntity();
+        if(broken && entity instanceof LivingEntity) {
+            if (entity instanceof Player)
+                removeEffect((Player) entity);
+            else
+                ((Damageable) entity).damage(40);
+        }
     }
 
     public void removeEffect(InventoryClickEvent event){
