@@ -90,9 +90,7 @@ public class Record extends Item implements Dispensable, Interactable, Clickable
                         int increment = 0;
 
                         public void run() {
-                            if (!loc.getChunk().isLoaded())
-                                loc.getChunk().load();
-                            if (loc.getBlock().getType() != Material.DISPENSER || increment >= 2400 || records.isEmpty()){
+                            if (!loc.getChunk().isLoaded() || loc.getBlock().getType() != Material.DISPENSER || increment >= 2400 || records.isEmpty()){
                                 if(records.isEmpty())
                                     tracker.remove(""+getTaskId());
                                 cancel();
