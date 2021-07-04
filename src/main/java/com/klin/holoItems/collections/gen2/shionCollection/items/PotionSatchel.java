@@ -31,12 +31,12 @@ public class PotionSatchel extends Pack {
     private static final Material material = Material.LEAD;
     private static final String lore =
             "§6Ability" +"/n"+
-            "Store up to 27 potions and throw them" +"/n"+
+            "Store up to 9 potions and throw them" +"/n"+
             "with extended range";
     private static final int durability = 0;
     private static final boolean shiny = true;
 
-    private static  final int size = 27;
+    private static  final int size = 9;
     public static final String title = "Potting. . .";
     public static final boolean display = false;
 
@@ -147,7 +147,7 @@ public class PotionSatchel extends Pack {
                 potions.substring(potions.indexOf(" ")+1));
         item.setItemMeta(meta);
         int length = potions.split(" ").length;
-        if(length==10 || length==4 || length ==1)
+        if(length==4 || length==2 || length ==1)
             player.sendMessage("§7"+(length-1)+" remaining");
     }
 }

@@ -15,13 +15,16 @@ public class HoloItems extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Events(), this);
         getServer().getPluginManager().registerEvents(new StatManager(), this);
         getCommand("collections").setExecutor(collections);
-        getCommand("ground").setExecutor(collections);
+//        getCommand("ground").setExecutor(collections);
+        getCommand("custommodeldata").setExecutor(collections);
         getCommand("acquire").setExecutor(collections);
         getCommand("registry").setExecutor(collections);
         getCommand("disable").setExecutor(collections);
         getCommand("enable").setExecutor(collections);
         getCommand("collect").setExecutor(collections);
         getCommand("gethead").setExecutor(collections);
+        getCommand("setcustommodeldata").setExecutor(collections);
+        getCommand("settype").setExecutor(collections);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "HoloItems [ON]");
     }

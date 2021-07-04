@@ -6,7 +6,7 @@ api-version: 1.14
 commands:
   collections:
     usage: /<command>
-  ground:
+  custommodeldata:
     usage: /<command>
   acquire:
     usage: /<command> <id>
@@ -20,3 +20,7 @@ commands:
     usage: /<command> <stat> <type> <id>
   gethead:
     usage: /<command> <name>
+  setcustommodeldata:
+    usage: /<command> <custommodeldata>
+  settype:
+    usage: /<command> <type>

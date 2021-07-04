@@ -24,6 +24,7 @@ public abstract class Armor extends Item implements Wearable, Responsible {
     private static final int quantity = 1;
     private static final boolean shiny = false;
 
+    //4: zombie/skeleton main hand
     //5: helmet, 6: chestplate, 7: leggings, 8: boots
     public final int armorPiece;
 
@@ -66,6 +67,8 @@ public abstract class Armor extends Item implements Wearable, Responsible {
                 else
                     return;
                 break;
+            default:
+                return;
         }
         item.setAmount(item.getAmount()-1);
         effect(event);
@@ -99,6 +102,12 @@ public abstract class Armor extends Item implements Wearable, Responsible {
             return false;
 
         switch(armorPiece){
+            case 4:
+                if(inv.getItemInMainHand().getType()==Material.AIR)
+                    inv.setItemInMainHand(armor);
+                else
+                    return false;
+                break;
             case 5:
                 if(inv.getHelmet()==null || inv.getHelmet().getType()==Material.AIR)
                     inv.setHelmet(armor);

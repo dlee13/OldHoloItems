@@ -1,10 +1,7 @@
 package com.klin.holoItems.collections.misc.klinCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.misc.klinCollection.items.Bore;
-import com.klin.holoItems.collections.misc.klinCollection.items.Paver;
-import com.klin.holoItems.collections.misc.klinCollection.items.Trowel;
-import com.klin.holoItems.collections.misc.klinCollection.items.Vacuum;
+import com.klin.holoItems.collections.misc.klinCollection.items.*;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -25,6 +22,7 @@ public class KlinCollection extends Collection {
         collection.put(Trowel.key, new Trowel());
         collection.put(Paver.key, new Paver());
         collection.put(Vacuum.key, new Vacuum());
+        collection.put(Falchion.key, new Falchion());
     }
 
     public Map<String, Integer> getStat(Player player){

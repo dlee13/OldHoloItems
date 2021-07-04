@@ -163,7 +163,7 @@ public class Comet extends Item implements Interactable {
                         if (player.getGameMode()!=GameMode.CREATIVE)
                             Utility.addDurability(item, 0.5, player);
                         for (LivingEntity target : targets) {
-                            if (target.isValid())
+                            if (target.isValid() && (!(target instanceof Player) || !((Player) target).isBlocking()))
                                 Utility.damage(item, damage, crit, player, target, false, true);
                         }
                     }

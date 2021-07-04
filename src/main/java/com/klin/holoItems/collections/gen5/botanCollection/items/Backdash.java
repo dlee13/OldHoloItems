@@ -48,11 +48,15 @@ public class Backdash extends Armor {
     public void ability(EntityDamageByEntityEvent event, boolean broken){
         Entity entity = event.getEntity();
         Entity damager = event.getDamager();
+        if(entity.equals(damager))
+            return;
         boolean distant = true;
         if(damager instanceof Projectile) {
             damager = (LivingEntity) ((Projectile) damager).getShooter();
             distant = false;
         }
+        if(damager==null)
+            return;
         Location dodge = damager.getLocation();
         if(distant && dodge.distance(entity.getLocation())>=2.5 ||
                 !distant && dodge.distance(entity.getLocation())<=2.5){

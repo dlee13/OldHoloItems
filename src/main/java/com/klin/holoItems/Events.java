@@ -744,20 +744,28 @@ public class Events implements Listener {
     public static void breakItemAttacking(EntityDamageByEntityEvent event){
         if(event.isCancelled())
             return;
-        if(!(event.getDamager() instanceof Player))
+        if(!(event.getDamager() instanceof LivingEntity))
             return;
-        Player player = (Player) event.getDamager();
-        if (player.getGameMode()==GameMode.CREATIVE)
+        LivingEntity player = (LivingEntity) event.getDamager();
+        if (player instanceof Player && ((Player) player).getGameMode()==GameMode.CREATIVE)
             return;
-        ItemStack item = player.getInventory().getItemInMainHand();
+        EntityEquipment equipment = player.getEquipment();
+        if(equipment==null)
+            return;
+        ItemStack item = equipment.getItemInMainHand();
         if(item.getType()==Material.AIR || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().
                 getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id==null)
             return;
-
         Utility.addDurability(item, -1, player);
+
+        if (Collections.disabled.contains(id))
+            return;
+        Item generic = Collections.findItem(id);
+        if (generic instanceof Afflictable)
+            ((Afflictable) generic).ability(event, item);
     }
 
     @EventHandler

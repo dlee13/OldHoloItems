@@ -76,6 +76,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -208,15 +209,35 @@ public class Collections implements CommandExecutor, Listener {
                 player.openInventory(inv);
                 return true;
 
-            case "ground":
-                if (args.length >= 1) {
-                    Player play = Bukkit.getServer().getPlayer(args[0]);
-                    if(play!=null) {
-                        play.setGravity(true);
-                        return true;
+//            case "ground":
+//                if (args.length >= 1) {
+//                    Player play = Bukkit.getServer().getPlayer(args[0]);
+//                    if(play!=null) {
+//                        play.setGravity(true);
+//                        return true;
+//                    }
+//                }
+//                player.setGravity(true);
+//                return true;
+
+            case "custommodeldata":
+                ItemStack model = player.getInventory().getItemInMainHand();
+                if(model.getType()!=Material.AIR && model.getItemMeta()!=null){
+                    ItemMeta meta = model.getItemMeta();
+                    String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+                    if(id!=null) {
+                        int data = id.charAt(0)*10 + Character.getNumericValue(id.charAt(1));
+                        if(meta.getCustomModelData()!=data) {
+                            meta.setCustomModelData(data);
+                            model.setItemMeta(meta);
+                            player.sendMessage("Updated CustomModelData to "+data);
+                        }
+                        else
+                            player.sendMessage("This item's CustomModelData is "+data);
                     }
                 }
-                player.setGravity(true);
+                else
+                    player.sendMessage("Invalid item");
                 return true;
 
             case "acquire":
@@ -328,6 +349,34 @@ public class Collections implements CommandExecutor, Listener {
                 }
                 else
                     player.sendMessage("No such head");
+                return true;
+
+            case "setcustommodeldata":
+                ItemStack model = player.getInventory().getItemInMainHand();
+                if(args.length>=1 && model.getType()!=Material.AIR && model.getItemMeta()!=null) {
+                    ItemMeta meta = model.getItemMeta();
+                    try {
+                        int data = Integer.parseInt(args[0]);
+                        player.sendMessage("Set CustomModelData from "+meta.getCustomModelData()+" to "+args[0]);
+                        meta.setCustomModelData(data);
+                        model.setItemMeta(meta);
+                    }
+                    catch(NumberFormatException e) {
+                        player.sendMessage("Argument needs to be an integer");
+                        return true;
+                    }
+                }
+                else
+                    player.sendMessage("Invalid item");
+                return true;
+
+            case "settype":
+                ItemStack item = player.getInventory().getItemInMainHand();
+                if(args.length>=1) {
+                    Material type = Material.getMaterial(args[0]);
+                    if(type!=null)
+                        item.setType(type);
+                }
         }
         return true;
     }
