@@ -38,6 +38,8 @@ public class Utility {
             new NamespacedKey(HoloItems.getInstance(), "cooldown");
     public static final NamespacedKey enchant =
             new NamespacedKey(HoloItems.getInstance(), "enchant");
+    public static final NamespacedKey data =
+            new NamespacedKey(HoloItems.getInstance(), "data");
 
     public static final Map<BlockFace, BlockFace> opposites = Stream.of(new BlockFace[][] {
             { BlockFace.UP, BlockFace.DOWN },

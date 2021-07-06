@@ -227,7 +227,7 @@ public class Collections implements CommandExecutor, Listener {
                     String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
                     if(id!=null) {
                         int data = id.charAt(0)*10 + Character.getNumericValue(id.charAt(1));
-                        if(meta.getCustomModelData()!=data) {
+                        if(!meta.hasCustomModelData() || meta.getCustomModelData()!=data) {
                             meta.setCustomModelData(data);
                             model.setItemMeta(meta);
                             player.sendMessage("Updated CustomModelData to "+data);

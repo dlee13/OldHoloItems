@@ -2,6 +2,7 @@ package com.klin.holoItems.collections.misc.hiddenCollection;
 
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.misc.hiddenCollection.items.GalleryFrame;
+import com.klin.holoItems.collections.misc.hiddenCollection.items.Payload;
 import com.klin.holoItems.collections.misc.hiddenCollection.items.Sokoban;
 import com.klin.holoItems.collections.misc.hiddenCollection.items.WheatPortal;
 import org.bukkit.entity.Player;
@@ -23,6 +24,7 @@ public class HiddenCollection extends Collection {
         collection.put(Sokoban.key, new Sokoban());
         collection.put(WheatPortal.key, new WheatPortal());
         collection.put(GalleryFrame.key, new GalleryFrame());
+        collection.put(Payload.key, new Payload());
     }
 
     public Map<String, Integer> getStat(Player player){

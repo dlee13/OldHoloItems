@@ -25,10 +25,6 @@ public class Recipes {
         ItemStack whiteCarpet = new ItemStack(Material.WHITE_CARPET);
         ItemStack clearGlass = new ItemStack(Material.GLASS);
         ItemStack clearGlassPane = new ItemStack(Material.GLASS_PANE);
-        ItemStack emptyBox = new ItemStack(Material.SHULKER_BOX);
-        ItemMeta emptyBoxMeta = emptyBox.getItemMeta();
-        emptyBoxMeta.setLore(Arrays.asList("§cWARNING: Items will not be kept"));
-        emptyBox.setItemMeta(emptyBoxMeta);
         ItemStack unfiredTerracotta = new ItemStack(Material.TERRACOTTA);
         ItemStack whiteBed = new ItemStack(Material.WHITE_BED);
 
@@ -58,12 +54,6 @@ public class Recipes {
             pane.addIngredient(Material.getMaterial(color+"STAINED_GLASS_PANE"));
             pane.setGroup("pane");
             server.addRecipe(pane);
-
-            ShapelessRecipe shulker = new ShapelessRecipe(
-                    new NamespacedKey(HoloItems.getInstance(), "bleach"+key+"Shulker"), emptyBox);
-            shulker.addIngredient(Material.getMaterial(color+"SHULKER_BOX"));
-            shulker.setGroup("shulker");
-            server.addRecipe(shulker);
 
             ShapelessRecipe terracotta = new ShapelessRecipe(
                     new NamespacedKey(HoloItems.getInstance(), "bleach"+key+"Terracotta"), unfiredTerracotta);

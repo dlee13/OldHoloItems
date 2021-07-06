@@ -236,14 +236,18 @@ public class Events implements Listener {
         for(ItemStack item : player.getInventory().getContents()) {
             if(item==null || item.getType()==Material.AIR || item.getItemMeta() == null)
                 continue;
-            String id = item.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            ItemMeta meta = item.getItemMeta();
+            String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             if (id == null)
                 continue;
-
+            if(Utility.onCooldown(item)) {
+                meta.getPersistentDataContainer().remove(Utility.cooldown);
+                item.setItemMeta(meta);
+                continue;
+            }
             if(Collections.disabled.contains(id)){
                 player.sendMessage("§cThis item has been disabled");
-                return;
+                continue;
             }
             Item generic = Collections.findItem(id);
             if(generic instanceof Retainable) {
@@ -467,7 +471,10 @@ public class Events implements Listener {
                 current = false;
                 continue;
             }
-
+            if(current && Utility.onCooldown(item)) {
+                event.setCancelled(true);
+                return;
+            }
             if (Collections.disabled.contains(id)) {
                 current = false;
                 continue;
@@ -1090,14 +1097,21 @@ public class Events implements Listener {
         if(event.isCancelled())
             return;
 
-        ItemStack item = event.getItemDrop().getItemStack();
+        org.bukkit.entity.Item itemEntity = event.getItemDrop();
+        ItemStack item = itemEntity.getItemStack();
         if (item.getType()==Material.AIR || item.getItemMeta() == null)
             return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        ItemMeta meta = item.getItemMeta();
+        String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id==null)
             return;
-
+        if(Utility.onCooldown(item)) {
+            event.setCancelled(true);
+//            meta.getPersistentDataContainer().remove(Utility.cooldown);
+//            item.setItemMeta(meta);
+//            itemEntity.setItemStack(item);
+            return;
+        }
         if(Collections.disabled.contains(id)) {
             event.getPlayer().sendMessage("§cThis item has been disabled");
             return;
