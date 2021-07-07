@@ -100,8 +100,13 @@ public class RiftWalker extends BatteryPack {
                     }
                 };
             } else {
-                if (cooldown >= 8)
+                if (cooldown >= 8) {
+                    if(((LivingEntity) player).isOnGround()){
+                        container.remove(Utility.cooldown);
+                        item.setItemMeta(meta);
+                    }
                     return;
+                }
                 else {
                     jumps += cooldown;
                     container.set(Utility.cooldown, PersistentDataType.INTEGER, jumps);

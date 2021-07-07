@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.holostars.rikkaCollection;
 import com.klin.holoItems.Collection;
 import org.bukkit.entity.Player;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RikkaCollection extends Collection {
@@ -19,6 +20,7 @@ public class RikkaCollection extends Collection {
     }
 
     public Map<String, Integer> getStat(Player player){
-        return null;
+        Map<String, Integer> stat = new LinkedHashMap<>();
+        return stat;
     }
 }

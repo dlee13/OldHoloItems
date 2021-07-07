@@ -160,6 +160,49 @@ public class Utility {
         add(Material.WOODEN_PICKAXE);
     }};
 
+    public static final Set<Material> slabs = Stream.of(
+            Material.OAK_SLAB,
+            Material.SPRUCE_SLAB,
+            Material.BIRCH_SLAB,
+            Material.JUNGLE_SLAB,
+            Material.ACACIA_SLAB,
+            Material.DARK_OAK_SLAB,
+            Material.CRIMSON_SLAB,
+            Material.WARPED_SLAB,
+            Material.PETRIFIED_OAK_SLAB,
+            Material.STONE_SLAB,
+            Material.SMOOTH_STONE_SLAB,
+            Material.COBBLESTONE_SLAB,
+            Material.MOSSY_COBBLESTONE_SLAB,
+            Material.STONE_BRICK_SLAB,
+            Material.MOSSY_STONE_BRICK_SLAB,
+            Material.ANDESITE_SLAB,
+            Material.POLISHED_ANDESITE_SLAB,
+            Material.DIORITE_SLAB,
+            Material.POLISHED_DIORITE_SLAB,
+            Material.GRANITE_SLAB,
+            Material.POLISHED_GRANITE_SLAB,
+            Material.SANDSTONE_SLAB,
+            Material.CUT_SANDSTONE_SLAB,
+            Material.SMOOTH_SANDSTONE_SLAB,
+            Material.RED_SANDSTONE_SLAB,
+            Material.CUT_RED_SANDSTONE_SLAB,
+            Material.SMOOTH_RED_SANDSTONE_SLAB,
+            Material.BRICK_SLAB,
+            Material.PRISMARINE_SLAB,
+            Material.PRISMARINE_BRICK_SLAB,
+            Material.DARK_PRISMARINE_SLAB,
+            Material.NETHER_BRICK_SLAB,
+            Material.RED_NETHER_BRICK_SLAB,
+            Material.QUARTZ_SLAB,
+            Material.SMOOTH_QUARTZ_SLAB,
+            Material.PURPUR_SLAB,
+            Material.END_STONE_BRICK_SLAB,
+            Material.BLACKSTONE_SLAB,
+            Material.POLISHED_BLACKSTONE_SLAB,
+            Material.POLISHED_BLACKSTONE_BRICK_SLAB
+    ).collect(Collectors.toCollection(HashSet::new));
+
     public static final Set<Material> logs = new HashSet<>() {{
         add(Material.ACACIA_LOG);
         add(Material.OAK_LOG);
@@ -433,6 +476,29 @@ public class Utility {
     public static boolean onCooldown(ItemStack item){
         return item.getItemMeta().getPersistentDataContainer().get(cooldown, PersistentDataType.INTEGER) != null;
     }
+
+//    public static boolean cooldown(ItemStack item, double seconds){
+//        ItemMeta meta = item.getItemMeta();
+//        if(meta==null)
+//            return false;
+//        Long cooldown = meta.getPersistentDataContainer().get(Utility.cooldown, PersistentDataType.LONG);
+//        Long nanoTime = System.nanoTime();
+//        if(cooldown==null || nanoTime < cooldown || cooldown + seconds*1000000 < nanoTime){
+//            meta.getPersistentDataContainer().set(Utility.cooldown, PersistentDataType.LONG, nanoTime);
+//            item.setItemMeta(meta);
+//            new BukkitRunnable(){
+//                public void run(){
+//                    ItemMeta meta = item.getItemMeta();
+//                    if(meta==null)
+//                        return;
+//                    meta.getPersistentDataContainer().remove(Utility.cooldown);
+//                    item.setItemMeta(meta);
+//                }
+//            }.runTaskLater(HoloItems.getInstance(), (int)(seconds*20));
+//            return true;
+//        }
+//        else return false;
+//    }
 
     public static List<String> processStr(String str){
         List<String> list = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.id1.risuCollection;
 import com.klin.holoItems.Collection;
 import org.bukkit.entity.Player;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RisuCollection extends Collection {
@@ -20,6 +21,7 @@ public class RisuCollection extends Collection {
     }
 
     public Map<String, Integer> getStat(Player player){
-        return null;
+        Map<String, Integer> stat = new LinkedHashMap<>();
+        return stat;
     }
 }

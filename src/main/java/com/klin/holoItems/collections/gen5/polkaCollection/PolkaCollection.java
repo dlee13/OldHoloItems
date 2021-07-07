@@ -4,6 +4,7 @@ import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.gen5.polkaCollection.items.PartyRocket;
 import org.bukkit.entity.Player;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PolkaCollection extends Collection {
@@ -22,6 +23,7 @@ public class PolkaCollection extends Collection {
     }
 
     public Map<String, Integer> getStat(Player player){
-        return null;
+        Map<String, Integer> stat = new LinkedHashMap<>();
+        return stat;
     }
 }

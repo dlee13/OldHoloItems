@@ -145,8 +145,6 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(ReineCollection.key, new ReineCollection());
 
         collections.put(AchanCollection.key, new AchanCollection());
-        collections.put(KlinCollection.key, new KlinCollection());
-        collections.put(HiddenCollection.key, new HiddenCollection());
 
         collections.put(MiyabiCollection.key, new MiyabiCollection());
         collections.put(IzuruCollection.key, new IzuruCollection());
@@ -157,6 +155,9 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(RoberuCollection.key, new RoberuCollection());
         collections.put(ShienCollection.key, new ShienCollection());
         collections.put(OgaCollection.key, new OgaCollection());
+
+        collections.put(KlinCollection.key, new KlinCollection());
+        collections.put(HiddenCollection.key, new HiddenCollection());
 
         Recipes.registerRecipes();
 

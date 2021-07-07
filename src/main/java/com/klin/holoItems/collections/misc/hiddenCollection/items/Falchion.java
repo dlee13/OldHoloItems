@@ -1,7 +1,7 @@
-package com.klin.holoItems.collections.misc.klinCollection.items;
+package com.klin.holoItems.collections.misc.hiddenCollection.items;
 
 import com.klin.holoItems.abstractClasses.Armor;
-import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
+import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
 import com.klin.holoItems.interfaces.Afflictable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Material;
@@ -32,7 +32,7 @@ public class Falchion extends Armor implements Afflictable {
     private static final Material material = Material.IRON_SWORD;
     private static final String lore =
             "§6Ability" +"/n"+
-                "Splash harming pot every 6 strikes";
+                    "Splash harming pot every 6 strikes";
     private static final int durability = -1;
     public static final boolean stackable = false;
 
@@ -43,7 +43,7 @@ public class Falchion extends Armor implements Afflictable {
 
     public Falchion(){
         super(name, accepted, material, lore, durability, stackable, cost, armorPiece,
-                ""+KlinCollection.key+key, key);
+                ""+HiddenCollection.key+key, key);
 
         ItemMeta meta = item.getItemMeta();
         meta.addEnchant(Enchantment.DAMAGE_ALL, 10, true);

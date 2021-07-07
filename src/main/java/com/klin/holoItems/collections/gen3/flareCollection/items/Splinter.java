@@ -6,10 +6,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.gen3.flareCollection.FlareCollection;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Statistic;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
@@ -54,7 +51,7 @@ public class Splinter extends Enchant implements Extractable {
     public void registerRecipes(){
         ShapedRecipe recipe0 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
-        recipe0.shape("** ","*& "," % ");
+        recipe0.shape("**","*&"," %");
         recipe0.setIngredient('*', Material.SCUTE);
         recipe0.setIngredient('&', Material.CONDUIT);
         recipe0.setIngredient('%', Material.STICK);
@@ -63,30 +60,12 @@ public class Splinter extends Enchant implements Extractable {
 
         ShapedRecipe recipe1 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
-        recipe1.shape("** ","&* ","%  ");
+        recipe1.shape("**","&*","% ");
         recipe1.setIngredient('*', Material.SCUTE);
         recipe1.setIngredient('&', Material.CONDUIT);
         recipe1.setIngredient('%', Material.STICK);
         recipe1.setGroup(name);
         Bukkit.getServer().addRecipe(recipe1);
-
-        ShapedRecipe recipe2 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"2"), item);
-        recipe2.shape("** ","*& "," % ");
-        recipe2.setIngredient('*', Material.SCUTE);
-        recipe2.setIngredient('&', Material.CONDUIT);
-        recipe2.setIngredient('%', Material.STICK);
-        recipe2.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe2);
-
-        ShapedRecipe recipe3 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"3"), item);
-        recipe3.shape(" **"," &*"," % ");
-        recipe3.setIngredient('*', Material.SCUTE);
-        recipe3.setIngredient('&', Material.CONDUIT);
-        recipe3.setIngredient('%', Material.STICK);
-        recipe3.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe3);
     }
 
     public void ability(BlockBreakEvent event){
@@ -102,6 +81,7 @@ public class Splinter extends Enchant implements Extractable {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         Utility.addDurability(item, 0.5, player);
+        World world = player.getWorld();
         new Task(HoloItems.getInstance(), 0, 1){
             int charge = 32;
 
@@ -122,16 +102,15 @@ public class Splinter extends Enchant implements Extractable {
                     player.setStatistic(Statistic.MINE_BLOCK, wood,
                             player.getStatistic(Statistic.MINE_BLOCK, wood)+1);
                     charge--;
-                    for (Block block : new Block[]{
-                            center.getRelative(BlockFace.UP),
-                            center.getRelative(BlockFace.NORTH),
-                            center.getRelative(BlockFace.SOUTH),
-                            center.getRelative(BlockFace.EAST),
-                            center.getRelative(BlockFace.WEST),
-                            center.getRelative(BlockFace.DOWN)}) {
-                        if (block.getType()==wood &&
-                                !checked.contains(block) && !log.contains(block))
-                            log.add(block);
+                    Location loc = center.getLocation();
+                    for (int j=-1; j<=1; j++) {
+                        for(int k=-1; k<=1; k++) {
+                            for(int l=-1; l<=1; l++) {
+                                Block block = world.getBlockAt(loc.clone().add(j, k, l));
+                                if (block.getType() == wood && !checked.contains(block) && !log.contains(block))
+                                    log.add(block);
+                            }
+                        }
                     }
                 }
             }

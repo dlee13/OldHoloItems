@@ -5,6 +5,7 @@ import com.klin.holoItems.collections.id1.moonaCollection.items.LunarLaser;
 import com.klin.holoItems.collections.id1.moonaCollection.items.Partitioner;
 import org.bukkit.entity.Player;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MoonaCollection extends Collection {
@@ -24,6 +25,7 @@ public class MoonaCollection extends Collection {
     }
 
     public Map<String, Integer> getStat(Player player){
-        return null;
+        Map<String, Integer> stat = new LinkedHashMap<>();
+        return stat;
     }
 }

@@ -86,10 +86,12 @@ public abstract class Armor extends Item implements Wearable, Responsible {
     }
 
     public boolean ability(PlayerInteractEntityEvent event){
+        Player player = event.getPlayer();
+        if(!player.isOp())
+            return false;
         Entity entity = event.getRightClicked();
         if(!(entity instanceof Zombie || entity instanceof Skeleton))
             return false;
-        Player player = event.getPlayer();
         ItemStack item;
         if(event.getHand()== EquipmentSlot.HAND)
             item = player.getInventory().getItemInMainHand();

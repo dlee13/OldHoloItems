@@ -1,8 +1,10 @@
 package com.klin.holoItems.collections.holostars.temmaCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.holostars.temmaCollection.items.SSKSword;
 import org.bukkit.entity.Player;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TemmaCollection extends Collection {
@@ -16,9 +18,11 @@ public class TemmaCollection extends Collection {
 
     public TemmaCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(SSKSword.key, new SSKSword());
     }
 
     public Map<String, Integer> getStat(Player player){
-        return null;
+        Map<String, Integer> stat = new LinkedHashMap<>();
+        return stat;
     }
 }

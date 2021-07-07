@@ -5,6 +5,7 @@ import com.klin.holoItems.collections.gen4.kanataCollection.items.Shuribow;
 import com.klin.holoItems.collections.gen4.kanataCollection.items.Zipline;
 import org.bukkit.entity.Player;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class KanataCollection extends Collection {
@@ -24,6 +25,7 @@ public class KanataCollection extends Collection {
     }
 
     public Map<String, Integer> getStat(Player player){
-        return null;
+        Map<String, Integer> stat = new LinkedHashMap<>();
+        return stat;
     }
 }

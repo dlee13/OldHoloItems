@@ -754,8 +754,6 @@ public class Events implements Listener {
         if(!(event.getDamager() instanceof LivingEntity))
             return;
         LivingEntity player = (LivingEntity) event.getDamager();
-        if (player instanceof Player && ((Player) player).getGameMode()==GameMode.CREATIVE)
-            return;
         EntityEquipment equipment = player.getEquipment();
         if(equipment==null)
             return;

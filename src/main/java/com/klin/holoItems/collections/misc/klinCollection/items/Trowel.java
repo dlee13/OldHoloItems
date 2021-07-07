@@ -164,7 +164,7 @@ public class Trowel extends Pack {
             container.set(Utility.pack, PersistentDataType.STRING, stored.substring(1));
             if(!stack.isEmpty())
                 container.set(Utility.stack, PersistentDataType.STRING, stack.substring(1));
-            container.set(Utility.cooldown, PersistentDataType.INTEGER, faces.get(direction));
+            container.set(Utility.data, PersistentDataType.INTEGER, faces.get(direction));
             trowel.setItemMeta(meta);
             return;
         }
@@ -174,7 +174,7 @@ public class Trowel extends Pack {
         String[] facing = null;
         if(stack!=null)
             facing = stack.split(" ");
-        Integer off = container.get(Utility.cooldown, PersistentDataType.INTEGER);
+        Integer off = container.get(Utility.data, PersistentDataType.INTEGER);
         int offset = 0;
         if(off!=null)
             offset = off-faces.get(player.getFacing());
