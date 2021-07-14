@@ -8,6 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.util.Vector;
 
 import java.util.Set;
 
@@ -19,9 +20,7 @@ public class SuperStar extends PowerUp {
     private static final int quantity = 1;
     private static final String lore =
             "§6Ability" +"/n"+
-            "While riding in a boat," +"/n"+
-            "Right click to gain a speed" +"/n"+
-            "boost for 5 seconds";
+            "Drift";
     private static final boolean shiny = true;
 
     private static final int interval = 5;
@@ -46,7 +45,9 @@ public class SuperStar extends PowerUp {
     }
 
     protected void effect(Player player, Entity boat){
-        boat.setVelocity(boat.getVelocity().add(player.getLocation().getDirection().setY(0).normalize()));
+        Vector velocity = boat.getVelocity();
+        boat.teleport(player.getLocation());
+        boat.setVelocity(velocity);
     }
 
     protected boolean endCondition(){

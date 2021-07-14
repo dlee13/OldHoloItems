@@ -61,37 +61,37 @@ public class WitchsBracelet extends Item implements Holdable {
         if(!(generic instanceof ProjectileLaunchEvent))
             return;
         ProjectileLaunchEvent event = (ProjectileLaunchEvent) generic;
-        Projectile proj = event.getEntity();
-        if(!(proj instanceof ThrownPotion))
-            return;
+        Projectile potion = event.getEntity();
 
-        Player player = (Player) proj.getShooter();
-        ThrownPotion potion = (ThrownPotion) proj;
+        Player player = (Player) potion.getShooter();
         new Task(HoloItems.getInstance(), 0, 1){
             int increment = 0;
 
             @Override
             public void run(){
                 if(!potion.isValid() || player==null || !player.isValid() || increment>=100){
+                    potion.setGravity(true);
                     cancel();
                     return;
                 }
 
+//                Location potionPos = potion.getLocation();
+//                Location playerPos = player.getEyeLocation();
+//                playerPos.add(playerPos.getDirection().multiply(potionPos.distance(playerPos)));
+//                Vector vel = potion.getVelocity();
+//                double magnitude = vel.length();
+//                potion.setVelocity(vel.add(playerPos.subtract(potionPos).toVector().multiply(2)).normalize().multiply(magnitude));
+//                increment++;
+
                 Vector vel = potion.getVelocity();
                 Location potionPos = potion.getLocation().clone();
                 double y = potionPos.getY();
-                potionPos.setY(0);
+//                potionPos.setY(0);
                 Location playerPos = player.getLocation().clone();
-                playerPos.setY(0);
+//                playerPos.setY(0);
                 double dist = potionPos.distance(playerPos);
-                playerPos.add(playerPos.getDirection().setY(0).normalize().multiply(dist)).setY(y);
-                potion.teleport(playerPos);
-                potion.setVelocity(vel);
-//                potion.setVelocity((
-//                        player.getLocation().getDirection().multiply(2).subtract(
-//                                potion.getVelocity())).normalize().multiply(
-//                                        potion.getVelocity().setY(0).length()).setY(
-//                                                potion.getVelocity().getY()));
+                playerPos.add(playerPos.getDirection().normalize().multiply(dist)).setY(y);
+                potion.setVelocity(vel.add(playerPos.subtract(potionPos).toVector().multiply(2)));
                 increment++;
             }
         };

@@ -17,11 +17,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SSKSword extends Item implements Afflictable {
     public static final String name = "sskSword";
-    public static final Set<Enchantment> accepted = null;
+    public static final Set<Enchantment> accepted = Stream.of(Enchantment.FIRE_ASPECT, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_ARTHROPODS, Enchantment.DAMAGE_UNDEAD, Enchantment.DURABILITY, Enchantment.LOOT_BONUS_MOBS, Enchantment.MENDING, Enchantment.KNOCKBACK, Enchantment.SWEEPING_EDGE).collect(Collectors.toCollection(HashSet::new));
 
     private static final Material material = Material.DIAMOND_SWORD;
     private static final int quantity = 1;
@@ -39,10 +42,6 @@ public class SSKSword extends Item implements Afflictable {
     public SSKSword(){
         super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
                 ""+TemmaCollection.key+key, key);
-
-        ItemMeta meta = item.getItemMeta();
-        meta.addEnchant(Enchantment.DAMAGE_ALL, 5, true);
-        item.setItemMeta(meta);
     }
 
     public void registerRecipes(){
@@ -74,7 +73,7 @@ public class SSKSword extends Item implements Afflictable {
         Entity entity = event.getEntity();
         if(entity instanceof LivingEntity){
             LivingEntity target = (LivingEntity) entity;
-            target.setHealth(Math.min(target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue(), target.getHealth()+event.getDamage()));
+            target.setHealth(Math.min(target.getMaxHealth(), target.getHealth()+event.getDamage()));
             event.setDamage(0);
             int level = item.getEnchantmentLevel(Enchantment.FIRE_ASPECT);
             if(level>0) {

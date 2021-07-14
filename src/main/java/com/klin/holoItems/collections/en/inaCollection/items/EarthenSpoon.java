@@ -21,7 +21,7 @@ public class EarthenSpoon extends Wiring {
     private static final String lore =
             "§6Ability" +"/n"+
             "Dispensers wired with this item will" +"/n"+
-            "plant crops from its inventory" + "/n"+
+            "plant crops & flowers from its inventory" + "/n"+
             "Break the dispenser to retrieve";
     private static final boolean shiny = true;
 

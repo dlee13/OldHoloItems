@@ -1,12 +1,12 @@
 package com.klin.holoItems.utility;
 
+import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
+import com.klin.holoItems.interfaces.Spawnable;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
@@ -26,6 +26,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.bukkit.Material.*;
 
 public class Utility {
     public static final NamespacedKey key =
@@ -51,61 +53,61 @@ public class Utility {
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     public static final Map<Material, Material> ageable = new LinkedHashMap<>() {{
-        put(Material.BEETROOT_SEEDS, Material.BEETROOTS);
-        put(Material.CARROT, Material.CARROTS);
-        put(Material.POTATO, Material.POTATOES);
-        put(Material.NETHER_WART, Material.NETHER_WART);
-        put(Material.WHEAT_SEEDS, Material.WHEAT);
+        put(BEETROOT_SEEDS, BEETROOTS);
+        put(CARROT, CARROTS);
+        put(POTATO, POTATOES);
+        put(NETHER_WART, NETHER_WART);
+        put(WHEAT_SEEDS, WHEAT);
     }};
 
     public static final Map<Material, Material> sowable = new LinkedHashMap<>() {{
-        put(Material.BEETROOTS, Material.BEETROOT_SEEDS);
-        put(Material.CARROTS, Material.CARROT);
-        put(Material.POTATOES, Material.POTATO);
-        put(Material.NETHER_WART, Material.NETHER_WART);
-        put(Material.WHEAT, Material.WHEAT_SEEDS);
+        put(BEETROOTS, BEETROOT_SEEDS);
+        put(CARROTS, CARROT);
+        put(POTATOES, POTATO);
+        put(NETHER_WART, NETHER_WART);
+        put(WHEAT, WHEAT_SEEDS);
     }};
 
     public static final Map<String, Set<Material>> dirt = new HashMap<>() {{
         put("SAPLING", new HashSet<>() {{
-            add(Material.GRASS_BLOCK);
-            add(Material.DIRT);
-            add(Material.COARSE_DIRT);
-            add(Material.PODZOL);
-            add(Material.FARMLAND);
+            add(GRASS_BLOCK);
+            add(DIRT);
+            add(COARSE_DIRT);
+            add(PODZOL);
+            add(FARMLAND);
         }});
         put("FUNGUS", new HashSet<>() {{
-            add(Material.GRASS_BLOCK);
-            add(Material.DIRT);
-            add(Material.COARSE_DIRT);
-            add(Material.PODZOL);
-            add(Material.FARMLAND);
-            add(Material.CRIMSON_NYLIUM);
-            add(Material.WARPED_NYLIUM);
-            add(Material.MYCELIUM);
-            add(Material.SOUL_SOIL);
+            add(GRASS_BLOCK);
+            add(DIRT);
+            add(COARSE_DIRT);
+            add(PODZOL);
+            add(FARMLAND);
+            add(CRIMSON_NYLIUM);
+            add(WARPED_NYLIUM);
+            add(MYCELIUM);
+            add(SOUL_SOIL);
         }});
     }};
 
-    private static final Set<EntityType> humanoids = new HashSet<>() {{
-        add(EntityType.PLAYER);
-        add(EntityType.ZOMBIE);
-        add(EntityType.ZOMBIE_VILLAGER);
-        add(EntityType.HUSK);
-        add(EntityType.SKELETON);
-        add(EntityType.STRAY);
-        add(EntityType.PIGLIN_BRUTE);
-        add(EntityType.PIGLIN);
-        add(EntityType.ZOMBIFIED_PIGLIN);
-        add(EntityType.DROWNED);
-        add(EntityType.WITHER_SKELETON);
-        add(EntityType.VILLAGER);
-        add(EntityType.PILLAGER);
-        add(EntityType.VINDICATOR);
-        add(EntityType.EVOKER);
-        add(EntityType.WITCH);
-        add(EntityType.GIANT);
-    }};
+    private static final Set<EntityType> humanoids = Stream.of(
+            EntityType.PLAYER,
+            EntityType.ZOMBIE,
+            EntityType.ZOMBIE_VILLAGER,
+            EntityType.HUSK,
+            EntityType.SKELETON,
+            EntityType.STRAY,
+            EntityType.PIGLIN_BRUTE,
+            EntityType.PIGLIN,
+            EntityType.ZOMBIFIED_PIGLIN,
+            EntityType.DROWNED,
+            EntityType.WITHER_SKELETON,
+            EntityType.VILLAGER,
+            EntityType.PILLAGER,
+            EntityType.VINDICATOR,
+            EntityType.EVOKER,
+            EntityType.WITCH,
+            EntityType.GIANT
+    ).collect(Collectors.toCollection(HashSet::new));
 
     private static final Map<PotionType, Double> durations = new HashMap<>() {{
         put(PotionType.FIRE_RESISTANCE, 3.0);
@@ -124,119 +126,185 @@ public class Utility {
         put(PotionType.WEAKNESS, 1.5);
     }};
 
-    public static final Set<Material> shovels = new HashSet<>() {{
-        add(Material.DIAMOND_SHOVEL);
-        add(Material.GOLDEN_SHOVEL);
-        add(Material.IRON_SHOVEL);
-        add(Material.STONE_SHOVEL);
-        add(Material.NETHERITE_SHOVEL);
-        add(Material.WOODEN_SHOVEL);
-    }};
-
-    public static final Set<Material> axes = new HashSet<>() {{
-        add(Material.DIAMOND_AXE);
-        add(Material.GOLDEN_AXE);
-        add(Material.IRON_AXE);
-        add(Material.STONE_AXE);
-        add(Material.NETHERITE_AXE);
-        add(Material.WOODEN_AXE);
-    }};
-
-    public static final Set<Material> hoes = new HashSet<>() {{
-        add(Material.DIAMOND_HOE);
-        add(Material.GOLDEN_HOE);
-        add(Material.IRON_HOE);
-        add(Material.STONE_HOE);
-        add(Material.NETHERITE_HOE);
-        add(Material.WOODEN_HOE);
-    }};
-
-    public static final Set<Material> pickaxes = new HashSet<>() {{
-        add(Material.DIAMOND_PICKAXE);
-        add(Material.GOLDEN_PICKAXE);
-        add(Material.IRON_PICKAXE);
-        add(Material.STONE_PICKAXE);
-        add(Material.NETHERITE_PICKAXE);
-        add(Material.WOODEN_PICKAXE);
-    }};
-
-    public static final Set<Material> slabs = Stream.of(
-            Material.OAK_SLAB,
-            Material.SPRUCE_SLAB,
-            Material.BIRCH_SLAB,
-            Material.JUNGLE_SLAB,
-            Material.ACACIA_SLAB,
-            Material.DARK_OAK_SLAB,
-            Material.CRIMSON_SLAB,
-            Material.WARPED_SLAB,
-            Material.PETRIFIED_OAK_SLAB,
-            Material.STONE_SLAB,
-            Material.SMOOTH_STONE_SLAB,
-            Material.COBBLESTONE_SLAB,
-            Material.MOSSY_COBBLESTONE_SLAB,
-            Material.STONE_BRICK_SLAB,
-            Material.MOSSY_STONE_BRICK_SLAB,
-            Material.ANDESITE_SLAB,
-            Material.POLISHED_ANDESITE_SLAB,
-            Material.DIORITE_SLAB,
-            Material.POLISHED_DIORITE_SLAB,
-            Material.GRANITE_SLAB,
-            Material.POLISHED_GRANITE_SLAB,
-            Material.SANDSTONE_SLAB,
-            Material.CUT_SANDSTONE_SLAB,
-            Material.SMOOTH_SANDSTONE_SLAB,
-            Material.RED_SANDSTONE_SLAB,
-            Material.CUT_RED_SANDSTONE_SLAB,
-            Material.SMOOTH_RED_SANDSTONE_SLAB,
-            Material.BRICK_SLAB,
-            Material.PRISMARINE_SLAB,
-            Material.PRISMARINE_BRICK_SLAB,
-            Material.DARK_PRISMARINE_SLAB,
-            Material.NETHER_BRICK_SLAB,
-            Material.RED_NETHER_BRICK_SLAB,
-            Material.QUARTZ_SLAB,
-            Material.SMOOTH_QUARTZ_SLAB,
-            Material.PURPUR_SLAB,
-            Material.END_STONE_BRICK_SLAB,
-            Material.BLACKSTONE_SLAB,
-            Material.POLISHED_BLACKSTONE_SLAB,
-            Material.POLISHED_BLACKSTONE_BRICK_SLAB
+    public static final Set<Material> shovels = Stream.of(
+            DIAMOND_SHOVEL,
+            GOLDEN_SHOVEL,
+            IRON_SHOVEL,
+            STONE_SHOVEL,
+            NETHERITE_SHOVEL,
+            WOODEN_SHOVEL
     ).collect(Collectors.toCollection(HashSet::new));
 
-    public static final Set<Material> logs = new HashSet<>() {{
-        add(Material.ACACIA_LOG);
-        add(Material.OAK_LOG);
-        add(Material.BIRCH_LOG);
-        add(Material.DARK_OAK_LOG);
-        add(Material.JUNGLE_LOG);
-        add(Material.SPRUCE_LOG);
-        add(Material.CRIMSON_STEM);
-        add(Material.WARPED_STEM);
-        add(Material.STRIPPED_ACACIA_LOG);
-        add(Material.STRIPPED_OAK_LOG);
-        add(Material.STRIPPED_BIRCH_LOG);
-        add(Material.STRIPPED_DARK_OAK_LOG);
-        add(Material.STRIPPED_JUNGLE_LOG);
-        add(Material.STRIPPED_SPRUCE_LOG);
-        add(Material.STRIPPED_CRIMSON_STEM);
-        add(Material.STRIPPED_WARPED_STEM);
-        add(Material.ACACIA_WOOD);
-        add(Material.OAK_WOOD);
-        add(Material.BIRCH_WOOD);
-        add(Material.DARK_OAK_WOOD);
-        add(Material.JUNGLE_WOOD);
-        add(Material.SPRUCE_WOOD);
-        add(Material.CRIMSON_HYPHAE);
-        add(Material.WARPED_HYPHAE);
-        add(Material.STRIPPED_ACACIA_WOOD);
-        add(Material.STRIPPED_OAK_WOOD);
-        add(Material.STRIPPED_BIRCH_WOOD);
-        add(Material.STRIPPED_DARK_OAK_WOOD);
-        add(Material.STRIPPED_JUNGLE_WOOD);
-        add(Material.STRIPPED_SPRUCE_WOOD);
-        add(Material.STRIPPED_CRIMSON_HYPHAE);
-        add(Material.STRIPPED_WARPED_HYPHAE);
-    }};
+    public static final Set<Material> axes = Stream.of(
+            DIAMOND_AXE,
+            GOLDEN_AXE,
+            IRON_AXE,
+            STONE_AXE,
+            NETHERITE_AXE,
+            WOODEN_AXE
+    ).collect(Collectors.toCollection(HashSet::new));
+
+    public static final Set<Material> hoes = Stream.of(
+            DIAMOND_HOE,
+            GOLDEN_HOE,
+            IRON_HOE,
+            STONE_HOE,
+            NETHERITE_HOE,
+            WOODEN_HOE
+    ).collect(Collectors.toCollection(HashSet::new));
+
+    public static final Set<Material> pickaxes = Stream.of(
+            DIAMOND_PICKAXE,
+            GOLDEN_PICKAXE,
+            IRON_PICKAXE,
+            STONE_PICKAXE,
+            NETHERITE_PICKAXE,
+            WOODEN_PICKAXE
+    ).collect(Collectors.toCollection(HashSet::new));
+
+    public static final Set<Material> slabs = Stream.of(
+            OAK_SLAB,
+            SPRUCE_SLAB,
+            BIRCH_SLAB,
+            JUNGLE_SLAB,
+            ACACIA_SLAB,
+            DARK_OAK_SLAB,
+            CRIMSON_SLAB,
+            WARPED_SLAB,
+            PETRIFIED_OAK_SLAB,
+            STONE_SLAB,
+            SMOOTH_STONE_SLAB,
+            COBBLESTONE_SLAB,
+            MOSSY_COBBLESTONE_SLAB,
+            STONE_BRICK_SLAB,
+            MOSSY_STONE_BRICK_SLAB,
+            ANDESITE_SLAB,
+            POLISHED_ANDESITE_SLAB,
+            DIORITE_SLAB,
+            POLISHED_DIORITE_SLAB,
+            GRANITE_SLAB,
+            POLISHED_GRANITE_SLAB,
+            SANDSTONE_SLAB,
+            CUT_SANDSTONE_SLAB,
+            SMOOTH_SANDSTONE_SLAB,
+            RED_SANDSTONE_SLAB,
+            CUT_RED_SANDSTONE_SLAB,
+            SMOOTH_RED_SANDSTONE_SLAB,
+            BRICK_SLAB,
+            PRISMARINE_SLAB,
+            PRISMARINE_BRICK_SLAB,
+            DARK_PRISMARINE_SLAB,
+            NETHER_BRICK_SLAB,
+            RED_NETHER_BRICK_SLAB,
+            QUARTZ_SLAB,
+            SMOOTH_QUARTZ_SLAB,
+            PURPUR_SLAB,
+            END_STONE_BRICK_SLAB,
+            BLACKSTONE_SLAB,
+            POLISHED_BLACKSTONE_SLAB,
+            POLISHED_BLACKSTONE_BRICK_SLAB
+    ).collect(Collectors.toCollection(HashSet::new));
+
+    public static final Set<Material> logs = Stream.of(
+            ACACIA_LOG,
+            OAK_LOG,
+            BIRCH_LOG,
+            DARK_OAK_LOG,
+            JUNGLE_LOG,
+            SPRUCE_LOG,
+            CRIMSON_STEM,
+            WARPED_STEM,
+            STRIPPED_ACACIA_LOG,
+            STRIPPED_OAK_LOG,
+            STRIPPED_BIRCH_LOG,
+            STRIPPED_DARK_OAK_LOG,
+            STRIPPED_JUNGLE_LOG,
+            STRIPPED_SPRUCE_LOG,
+            STRIPPED_CRIMSON_STEM,
+            STRIPPED_WARPED_STEM,
+            ACACIA_WOOD,
+            OAK_WOOD,
+            BIRCH_WOOD,
+            DARK_OAK_WOOD,
+            JUNGLE_WOOD,
+            SPRUCE_WOOD,
+            CRIMSON_HYPHAE,
+            WARPED_HYPHAE,
+            STRIPPED_ACACIA_WOOD,
+            STRIPPED_OAK_WOOD,
+            STRIPPED_BIRCH_WOOD,
+            STRIPPED_DARK_OAK_WOOD,
+            STRIPPED_JUNGLE_WOOD,
+            STRIPPED_SPRUCE_WOOD,
+            STRIPPED_CRIMSON_HYPHAE,
+            STRIPPED_WARPED_HYPHAE
+    ).collect(Collectors.toCollection(HashSet::new));
+    
+    public static final Set<Material> spawnEggs = Stream.of(
+            BAT_SPAWN_EGG,
+            BEE_SPAWN_EGG,
+            BLAZE_SPAWN_EGG,
+            CAT_SPAWN_EGG,
+            CAVE_SPIDER_SPAWN_EGG,
+            CHICKEN_SPAWN_EGG,
+            COD_SPAWN_EGG,
+            COW_SPAWN_EGG,
+            CREEPER_SPAWN_EGG,
+            DOLPHIN_SPAWN_EGG,
+            DONKEY_SPAWN_EGG,
+            DROWNED_SPAWN_EGG,
+            ELDER_GUARDIAN_SPAWN_EGG,
+            ENDERMAN_SPAWN_EGG,
+            ENDERMITE_SPAWN_EGG,
+            EVOKER_SPAWN_EGG,
+            FOX_SPAWN_EGG,
+            GHAST_SPAWN_EGG,
+            GUARDIAN_SPAWN_EGG,
+            HOGLIN_SPAWN_EGG,
+            HORSE_SPAWN_EGG,
+            HUSK_SPAWN_EGG,
+            LLAMA_SPAWN_EGG,
+            MAGMA_CUBE_SPAWN_EGG,
+            MOOSHROOM_SPAWN_EGG,
+            MULE_SPAWN_EGG,
+            OCELOT_SPAWN_EGG,
+            PANDA_SPAWN_EGG,
+            PARROT_SPAWN_EGG,
+            PHANTOM_SPAWN_EGG,
+            PIG_SPAWN_EGG,
+            PIGLIN_BRUTE_SPAWN_EGG,
+            PIGLIN_SPAWN_EGG,
+            PILLAGER_SPAWN_EGG,
+            POLAR_BEAR_SPAWN_EGG,
+            PUFFERFISH_SPAWN_EGG,
+            RABBIT_SPAWN_EGG,
+            RAVAGER_SPAWN_EGG,
+            SALMON_SPAWN_EGG,
+            SHEEP_SPAWN_EGG,
+            SHULKER_SPAWN_EGG,
+            SILVERFISH_SPAWN_EGG,
+            SKELETON_HORSE_SPAWN_EGG,
+            SKELETON_SPAWN_EGG,
+            SLIME_SPAWN_EGG,
+            SPIDER_SPAWN_EGG,
+            SQUID_SPAWN_EGG,
+            STRAY_SPAWN_EGG,
+            STRIDER_SPAWN_EGG,
+            TROPICAL_FISH_SPAWN_EGG,
+            TURTLE_SPAWN_EGG,
+            VEX_SPAWN_EGG,
+            VILLAGER_SPAWN_EGG,
+            VINDICATOR_SPAWN_EGG,
+            WANDERING_TRADER_SPAWN_EGG,
+            WITCH_SPAWN_EGG,
+            WITHER_SKELETON_SPAWN_EGG,
+            WOLF_SPAWN_EGG,
+            ZOGLIN_SPAWN_EGG,
+            ZOMBIE_HORSE_SPAWN_EGG,
+            ZOMBIFIED_PIGLIN_SPAWN_EGG,
+            ZOMBIE_SPAWN_EGG,
+            ZOMBIE_VILLAGER_SPAWN_EGG
+    ).collect(Collectors.toCollection(HashSet::new));
 
     public static ItemStack addEnchant(ItemStack itemStack, Enchant enchant){
         ItemMeta meta = itemStack.getItemMeta();
@@ -384,7 +452,7 @@ public class Utility {
         } else {
             target.damage(2*multishot, (Player) abstractArrow.getShooter());
             if (target.isValid())
-                target.setHealth(Math.min(20, (target.getHealth() + Math.abs(damage) + 2)*multishot));
+                target.setHealth(Math.min(target.getMaxHealth(), (target.getHealth() + Math.abs(damage) + 2)*multishot));
         }
         target.setArrowsInBody(target.getArrowsInBody()+multishot);
         if(!target.isValid())
@@ -584,5 +652,23 @@ public class Utility {
         if(entity.hasPotionEffect(type))
             return entity.getPotionEffect(type).getAmplifier()+1;
         return 0;
+    }
+
+    public static LivingEntity spawn(Location loc, World world, String base, String modifiers){
+        try {
+            EntityType type = EntityType.valueOf(base);
+            LivingEntity entity = (LivingEntity) world.spawnEntity(loc, type);
+            if(modifiers!=null) {
+                entity.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, modifiers);
+                for (String modifier : modifiers.split("-")) {
+                    com.klin.holoItems.Item generic = Collections.findItem(modifier.substring(0, 2));
+                    if (generic instanceof Spawnable)
+                        ((Spawnable) generic).ability(entity, modifier.length()>2?modifier.substring(3):null);
+                }
+            }
+            return entity;
+        } catch(IllegalArgumentException e){
+            return null;
+        }
     }
 }

@@ -53,6 +53,7 @@ import com.klin.holoItems.collections.id2.anyaCollection.AnyaCollection;
 import com.klin.holoItems.collections.id2.ollieCollection.OllieCollection;
 import com.klin.holoItems.collections.id2.reineCollection.ReineCollection;
 import com.klin.holoItems.collections.misc.achanCollection.AchanCollection;
+import com.klin.holoItems.collections.misc.franCollection.FranCollection;
 import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
 import com.klin.holoItems.collections.misc.hiddenCollection.Recipes;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
@@ -144,6 +145,8 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(AnyaCollection.key, new AnyaCollection());
         collections.put(ReineCollection.key, new ReineCollection());
 
+        //collections.put(IrysCollection.key, new IrysCollection());
+
         collections.put(AchanCollection.key, new AchanCollection());
 
         collections.put(MiyabiCollection.key, new MiyabiCollection());
@@ -156,6 +159,7 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(ShienCollection.key, new ShienCollection());
         collections.put(OgaCollection.key, new OgaCollection());
 
+        collections.put(FranCollection.key, new FranCollection());
         collections.put(KlinCollection.key, new KlinCollection());
         collections.put(HiddenCollection.key, new HiddenCollection());
 
