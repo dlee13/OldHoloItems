@@ -21,7 +21,7 @@ public class EarthenSpoon extends Wiring {
     private static final String lore =
             "§6Ability" +"/n"+
             "Dispensers wired with this item will" +"/n"+
-            "plant crops & flowers from its inventory" + "/n"+
+            "plant crops from its inventory" + "/n"+
             "Break the dispenser to retrieve";
     private static final boolean shiny = true;
 
@@ -77,33 +77,14 @@ public class EarthenSpoon extends Wiring {
             return;
 
         event.setCancelled(true);
-//        Block block = event.getBlock();
-//        BlockFace face = ((Dispenser) block.getBlockData()).getFacing();
-//        Block place = block.getRelative(face);
-//        Material soil;
-//        if(crop==Material.NETHER_WART)
-//            soil = Material.SOUL_SAND;
-//        else
-//            soil = Material.FARMLAND;
-//        if(face==BlockFace.UP &&
-//                !place.isEmpty() && place.getType()==soil){
-//            Block air = place.getRelative(BlockFace.UP);
-//            if(!air.isEmpty())
-//                return;
-//            air.setType(crop);
-//        }
-//        else {
-//            if (!place.isEmpty() || place.getRelative(BlockFace.DOWN).getType()!=soil)
-//                return;
-//            place.setType(crop);
-//        }
-
         Block block = event.getBlock();
         BlockFace face = ((Dispenser) block.getBlockData()).getFacing();
         Block place = block.getRelative(face);
         Material soil;
         if(crop==Material.NETHER_WART)
             soil = Material.SOUL_SAND;
+        else if(crop==Material.CHORUS_FLOWER)
+            soil = Material.END_STONE;
         else
             soil = Material.FARMLAND;
         if(!place.isEmpty()) {
@@ -122,7 +103,8 @@ public class EarthenSpoon extends Wiring {
             if(battery!=null)
                 charge = battery+1;
         }
-        plant(face, place, crop, soil, charge);
+        if(plant(face, place, crop, soil, charge))
+            return;
 
         Inventory inv = ((InventoryHolder) block.getState()).getInventory();
         new BukkitRunnable(){
@@ -132,10 +114,11 @@ public class EarthenSpoon extends Wiring {
         }.runTask(HoloItems.getInstance());
     }
 
-    private static void plant(BlockFace face, Block place, Material crop, Material soil, int charge){
+    private static boolean plant(BlockFace face, Block place, Material crop, Material soil, int charge){
         if(charge<=0 || !place.getType().isAir() || place.getRelative(BlockFace.DOWN).getType()!=soil)
-            return;
+            return true;
         place.setType(crop);
         plant(face, place.getRelative(face), crop, soil, charge-1);
+        return false;
     }
 }

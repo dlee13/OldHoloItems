@@ -90,13 +90,14 @@ public abstract class Armor extends Item implements Wearable, Responsible {
         if(!player.isOp())
             return false;
         Entity entity = event.getRightClicked();
-        if(!(entity instanceof Zombie || entity instanceof Skeleton))
+        if(!(entity instanceof Mob))
             return false;
         ItemStack item;
+        PlayerInventory playerInv = player.getInventory();
         if(event.getHand()== EquipmentSlot.HAND)
-            item = player.getInventory().getItemInMainHand();
+            item = playerInv.getItemInMainHand();
         else
-            item = player.getInventory().getItemInOffHand();
+            item = playerInv.getItemInOffHand();
         ItemStack armor = item.clone();
         armor.setAmount(1);
         EntityEquipment inv = ((LivingEntity) entity).getEquipment();
@@ -111,25 +112,25 @@ public abstract class Armor extends Item implements Wearable, Responsible {
                     return false;
                 break;
             case 5:
-                if(inv.getHelmet()==null || inv.getHelmet().getType()==Material.AIR)
+                if(playerInv.getHelmet()!=null && (inv.getHelmet()==null || inv.getHelmet().getType()==Material.AIR))
                     inv.setHelmet(armor);
                 else
                     return false;
                 break;
             case 6:
-                if(inv.getChestplate()==null || inv.getChestplate().getType()==Material.AIR)
+                if(playerInv.getChestplate()!=null && (inv.getChestplate()==null || inv.getChestplate().getType()==Material.AIR))
                     inv.setChestplate(armor);
                 else
                     return false;
                 break;
             case 7:
-                if(inv.getLeggings()==null || inv.getLeggings().getType()==Material.AIR)
+                if(playerInv.getLeggings()!=null && (inv.getLeggings()==null || inv.getLeggings().getType()==Material.AIR))
                     inv.setLeggings(armor);
                 else
                     return false;
                 break;
             case 8:
-                if(inv.getBoots()==null || inv.getBoots().getType()==Material.AIR)
+                if(playerInv.getBoots()!=null && (inv.getBoots()==null || inv.getBoots().getType()==Material.AIR))
                     inv.setBoots(armor);
                 else
                     return false;

@@ -1,4 +1,4 @@
-package com.klin.holoItems.interfaces;
+package com.klin.holoItems.interfaces.combinable;
 
 import org.bukkit.inventory.ItemStack;
 

@@ -167,7 +167,7 @@ public class Collections implements CommandExecutor, Listener {
 
         registry = "§6HoloItems"+"\n";
         for(Collection collection : collections.values()){
-            if(collection.key=='Y')
+            if(collection.key=='X')
                 break;
             registry += "§7"+collection.name+"\n§f";
             for(Item item : collection.collection.values()){
@@ -249,7 +249,7 @@ public class Collections implements CommandExecutor, Listener {
                 if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE)
                     return true;
                 if (args.length >= 1 && !(!player.isOp() &&
-                        (args[0].contains("Y") || args[0].contains("Z")))) {
+                        (args[0].contains("X") || args[0].contains("Y") || args[0].contains("Z")))) {
                     Item item = findItem(args[0]);
                     if (item == null) {
                         player.sendMessage("No such item");

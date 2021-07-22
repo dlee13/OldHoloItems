@@ -60,7 +60,7 @@ public class TotemicEgg extends Pack implements Dispensable {
                 continue;
             mobs += " "+type.substring(0, type.length()-10);
             ItemMeta meta = content.getItemMeta();
-            if(meta!=null && meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING).equals(SteinsEgg.id))
+            if(meta!=null && SteinsEgg.id.equals(meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
                 mobs += ":" + meta.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
             size++;
         }

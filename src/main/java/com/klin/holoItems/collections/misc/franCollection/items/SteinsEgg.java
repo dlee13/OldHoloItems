@@ -4,7 +4,7 @@ import com.klin.holoItems.Collections;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.collections.misc.franCollection.FranCollection;
-import com.klin.holoItems.interfaces.Combinable;
+import com.klin.holoItems.interfaces.combinable.Combinable;
 import com.klin.holoItems.interfaces.Dispensable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;

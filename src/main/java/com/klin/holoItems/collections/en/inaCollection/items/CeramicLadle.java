@@ -22,7 +22,7 @@ public class CeramicLadle  extends Wiring {
     private static final String lore =
             "§6Ability" +"/n"+
                 "Dispensers wired with this item will" +"/n"+
-                "plant saplings from its inventory" + "/n"+
+                "plant saplings and flowers" + "/n"+
                 "Break the dispenser to retrieve";
     private static final boolean shiny = true;
 
@@ -39,7 +39,7 @@ public class CeramicLadle  extends Wiring {
         ItemStack item = event.getItem();
         Material sapling = item.getType();
         String type = sapling.toString();
-        if(type.contains("SAPLING"))
+        if(Utility.flowers.contains(sapling) || type.contains("SAPLING"))
             type = "SAPLING";
         else if(type.contains("FUNGUS"))
             type = "FUNGUS";

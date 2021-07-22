@@ -3,7 +3,7 @@ package com.klin.holoItems.utility;
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
-import com.klin.holoItems.interfaces.Spawnable;
+import com.klin.holoItems.interfaces.combinable.Spawnable;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -58,7 +58,28 @@ public class Utility {
         put(POTATO, POTATOES);
         put(NETHER_WART, NETHER_WART);
         put(WHEAT_SEEDS, WHEAT);
+        put(CHORUS_FLOWER, CHORUS_FLOWER);
     }};
+
+    public static final Set<Material> flowers = Stream.of(
+            DANDELION,
+            POPPY,
+            BLUE_ORCHID,
+            ALLIUM,
+            AZURE_BLUET,
+            RED_TULIP,
+            ORANGE_TULIP,
+            WHITE_TULIP,
+            PINK_TULIP,
+            OXEYE_DAISY,
+            CORNFLOWER,
+            LILY_OF_THE_VALLEY,
+            WITHER_ROSE
+//            SUNFLOWER,
+//            LILAC,
+//            ROSE_BUSH,
+//            PEONY
+    ).collect(Collectors.toCollection(HashSet::new));
 
     public static final Map<Material, Material> sowable = new LinkedHashMap<>() {{
         put(BEETROOTS, BEETROOT_SEEDS);

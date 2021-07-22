@@ -7,6 +7,7 @@ import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
 import com.klin.holoItems.collections.misc.hiddenCollection.items.GalleryFrame;
 import com.klin.holoItems.interfaces.*;
+import com.klin.holoItems.interfaces.combinable.Targetable;
 import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.GameMode;
@@ -465,14 +466,15 @@ public class Events implements Listener {
                 current = false;
                 continue;
             }
-            String id = item.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            ItemMeta meta = item.getItemMeta();
+            String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             if (id == null) {
                 current = false;
                 continue;
             }
             if(current && Utility.onCooldown(item)) {
-                event.setCancelled(true);
+                meta.getPersistentDataContainer().remove(Utility.cooldown);
+                item.setItemMeta(meta);
                 return;
             }
             if (Collections.disabled.contains(id)) {
@@ -681,23 +683,18 @@ public class Events implements Listener {
 //    public static void targetAbility(EntityTargetLivingEntityEvent event){
 //        if(event.isCancelled())
 //            return;
-//
-//        if(!(event.getTarget() instanceof Player))
+//        Entity entity = event.getEntity();
+//        if(!(entity instanceof LivingEntity))
 //            return;
-//        PlayerInventory inv = ((Player) event.getTarget()).getInventory();
-//        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
-//            if (item==null || item.getItemMeta()==null)
-//                continue;
-//            String id = item.getItemMeta().
-//                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-//            if (id == null)
-//                continue;
-//
-//            if(Collections.disabled.contains(id))
-//                continue;
+//        String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
+//        if(modifiers==null)
+//            return;
+//        for(String id : modifiers.split("-")) {
+//            if (id == null || Collections.disabled.contains(id))
+//                return;
 //            Item generic = Collections.findItem(id);
-//            if(generic instanceof Necrotic)
-//                ((Necrotic) generic).ability(event);
+//            if (generic instanceof Targetable)
+//                ((Targetable) generic).ability(event);
 //        }
 //    }
 
@@ -1103,13 +1100,6 @@ public class Events implements Listener {
         String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id==null)
             return;
-        if(Utility.onCooldown(item)) {
-            event.setCancelled(true);
-//            meta.getPersistentDataContainer().remove(Utility.cooldown);
-//            item.setItemMeta(meta);
-//            itemEntity.setItemStack(item);
-            return;
-        }
         if(Collections.disabled.contains(id)) {
             event.getPlayer().sendMessage("§cThis item has been disabled");
             return;
@@ -1170,6 +1160,22 @@ public class Events implements Listener {
         Item generic = Collections.findItem(id);
         if(generic instanceof Burnable)
             ((Burnable) generic).ability(event);
+    }
+
+    @EventHandler
+    public void togglableAbility(PlayerToggleSneakEvent event){
+        ItemStack item = event.getPlayer().getInventory().getBoots();
+        if(item==null || item.getItemMeta()==null)
+            return;
+        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id==null)
+            return;
+
+        if(Collections.disabled.contains(id))
+            return;
+        Item generic = Collections.findItem(id);
+        if(generic instanceof Togglable)
+            ((Togglable) generic).ability(event, item);
     }
 
     private static int findMultiplier(Enchantment enchant){
