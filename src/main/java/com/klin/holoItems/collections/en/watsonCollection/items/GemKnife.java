@@ -53,53 +53,13 @@ public class GemKnife extends BatteryPack {
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe0 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
-        recipe0.shape("*  ","%  ","   ");
-        recipe0.setIngredient('*', Material.EMERALD_BLOCK);
-        recipe0.setIngredient('%', Material.STICK);
-        recipe0.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe0);
-
-        ShapedRecipe recipe1 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
-        recipe1.shape(" * "," % ","   ");
-        recipe1.setIngredient('*', Material.EMERALD_BLOCK);
-        recipe1.setIngredient('%', Material.STICK);
-        recipe1.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe1);
-
-        ShapedRecipe recipe2 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"2"), item);
-        recipe2.shape("  *","  %","   ");
-        recipe2.setIngredient('*', Material.EMERALD_BLOCK);
-        recipe2.setIngredient('%', Material.STICK);
-        recipe2.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe2);
-
-        ShapedRecipe recipe3 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"3"), item);
-        recipe3.shape("   ","*  ","%  ");
-        recipe3.setIngredient('*', Material.EMERALD_BLOCK);
-        recipe3.setIngredient('%', Material.STICK);
-        recipe3.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe3);
-
-        ShapedRecipe recipe4 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"4"), item);
-        recipe4.shape("   "," * "," % ");
-        recipe4.setIngredient('*', Material.EMERALD_BLOCK);
-        recipe4.setIngredient('%', Material.STICK);
-        recipe4.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe4);
-
-        ShapedRecipe recipe5 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"5"), item);
-        recipe5.shape("   ","  *","  %");
-        recipe5.setIngredient('*', Material.EMERALD_BLOCK);
-        recipe5.setIngredient('%', Material.STICK);
-        recipe5.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe5);
+        ShapedRecipe recipe =
+                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        recipe.shape("a","b");
+        recipe.setIngredient('a', Material.EMERALD_BLOCK);
+        recipe.setIngredient('b', Material.STICK);
+        recipe.setGroup(name);
+        Bukkit.getServer().addRecipe(recipe);
     }
 
     public void effect(PlayerInteractEvent event){

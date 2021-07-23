@@ -182,17 +182,17 @@ public class Compactor extends Wiring {
     private static void additions(){
         List<String> squareKey = Arrays.asList("abc", "def", "ghi");
 
-        Map<Character, ItemStack> nestedKelpBlock = new HashMap<>();
+        Map<Character, ItemStack> kelpBlock = new HashMap<>();
         ItemStack kelp = new ItemStack(DRIED_KELP);
-        nestedKelpBlock.put('a', kelp);
-        nestedKelpBlock.put('b', kelp);
-        nestedKelpBlock.put('c', kelp);
-        nestedKelpBlock.put('d', kelp);
-        nestedKelpBlock.put('e', kelp);
-        nestedKelpBlock.put('f', kelp);
-        nestedKelpBlock.put('g', kelp);
-        nestedKelpBlock.put('h', kelp);
-        nestedKelpBlock.put('i', kelp);
+        kelpBlock.put('a', kelp);
+        kelpBlock.put('b', kelp);
+        kelpBlock.put('c', kelp);
+        kelpBlock.put('d', kelp);
+        kelpBlock.put('e', kelp);
+        kelpBlock.put('f', kelp);
+        kelpBlock.put('g', kelp);
+        kelpBlock.put('h', kelp);
+        kelpBlock.put('i', kelp);
 
         Map<Character, ItemStack> tnt = new HashMap<>();
         ItemStack gunpowder = new ItemStack(GUNPOWDER);
@@ -208,7 +208,20 @@ public class Compactor extends Wiring {
         tnt.put('i', gunpowder);
 
         Map<Map<Character, ItemStack>, ItemStack> square = recipes.get(squareKey);
-        square.put(nestedKelpBlock, new ItemStack(DRIED_KELP_BLOCK));
+        square.put(kelpBlock, new ItemStack(DRIED_KELP_BLOCK));
         square.put(tnt, new ItemStack(TNT));
+
+        squareKey = Arrays.asList("ab", "cd");
+
+        Map<Character, ItemStack> coarseDirt = new HashMap<>();
+        ItemStack dirt = new ItemStack(DIRT);
+        ItemStack gravel = new ItemStack(GRAVEL);
+        coarseDirt.put('a', dirt);
+        coarseDirt.put('b', gravel);
+        coarseDirt.put('c', gravel);
+        coarseDirt.put('d', dirt);
+
+        square = recipes.get(squareKey);
+        square.replace(coarseDirt, new ItemStack(COARSE_DIRT, 4));
     }
 }
