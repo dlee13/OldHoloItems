@@ -1,8 +1,8 @@
 package com.klin.holoItems.collections.gamers.koroneCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.gamers.koroneCollection.items.DeliveryDrone;
-import com.klin.holoItems.collections.gamers.koroneCollection.items.LaunchPad;
+import com.klin.holoItems.collections.gen4.watameCollection.items.UberSheepPackage;
+import com.klin.holoItems.collections.gen4.watameCollection.items.LaunchPad;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -20,8 +20,6 @@ public class KoroneCollection extends Collection {
 
     public KoroneCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(DeliveryDrone.key, new DeliveryDrone());
-        collection.put(LaunchPad.key, new LaunchPad());
     }
 
     public Map<String, Integer> getStat(Player player){

@@ -41,13 +41,13 @@ public class WitchsBracelet extends Item implements Holdable {
     public WitchsBracelet(){
         super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
                 ""+ShionCollection.key+key, key);
-
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§6Witch's Bracelet");
-        item.setItemMeta(meta);
     }
 
     public void registerRecipes(){
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§6Witch's Bracelet");
+        item.setItemMeta(meta);
+
         ShapedRecipe recipe =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape(" * ","*%*"," * ");

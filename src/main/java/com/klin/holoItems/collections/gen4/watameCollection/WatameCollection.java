@@ -1,6 +1,8 @@
 package com.klin.holoItems.collections.gen4.watameCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen4.watameCollection.items.LaunchPad;
+import com.klin.holoItems.collections.gen4.watameCollection.items.UberSheepPackage;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -19,6 +21,8 @@ public class WatameCollection extends Collection {
 
     public WatameCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(UberSheepPackage.key, new UberSheepPackage());
+        collection.put(LaunchPad.key, new LaunchPad());
     }
 
     public Map<String, Integer> getStat(Player player){

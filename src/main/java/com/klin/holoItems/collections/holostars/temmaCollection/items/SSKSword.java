@@ -45,6 +45,10 @@ public class SSKSword extends Item implements Afflictable {
     }
 
     public void registerRecipes(){
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§6SSK Sword");
+        item.setItemMeta(meta);
+
         ShapedRecipe recipe0 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
         recipe0.shape("*&#","*&#","*/#");

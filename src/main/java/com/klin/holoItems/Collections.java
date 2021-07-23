@@ -416,9 +416,9 @@ public class Collections implements CommandExecutor, Listener {
         Player player = (Player) event.getWhoClicked();
 
         List<String> lore = meta.getLore();
-        boolean expand = true;
-        if(!lore.get(lore.size()-1).contains(collection.theme))
-            expand = false;
+        if(lore==null)
+            return;
+        boolean expand = lore.get(lore.size() - 1).contains(collection.theme);
         Map<String, Integer> stat = collection.getStat(player);
         if(stat==null)
             return;
