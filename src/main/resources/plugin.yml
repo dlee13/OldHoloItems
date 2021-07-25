@@ -26,5 +26,7 @@ commands:
     usage: /<command> <custommodeldata>
   settype:
     usage: /<command> <type>
+  removechunktickets:
+    usage: /<command>
   test:
     usage: /<command>

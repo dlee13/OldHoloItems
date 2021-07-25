@@ -11,7 +11,6 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -82,12 +81,12 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
         BlockState state = block.getState();
         Player player = event.getPlayer();
         if(!(state instanceof Barrel)) {
-            player.sendMessage("Improper launch set up");
+            player.sendMessage("No packages to deliver");
             return;
         }
         Barrel barrel = (Barrel) state;
         if(!UberSheepPackage.id.equals(barrel.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
-            player.sendMessage("Improper launch set up");
+            player.sendMessage("Unsupported container");
             return;
         }
 
@@ -126,9 +125,11 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             }
         }
         Chunk chunk = dest.getChunk();
-        if(!chunk.isLoaded())
-            chunk.load();
-        state = dest.getWorld().getHighestBlockAt(dest).getState();
+        chunk.addPluginChunkTicket(HoloItems.getInstance());
+        Block launchPad = dest.getWorld().getHighestBlockAt(dest);
+        while(launchPad.getType()==Material.BARREL && UberSheepPackage.id.equals(((TileState) launchPad.getState()).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
+            launchPad = launchPad.getRelative(BlockFace.DOWN);
+        state = launchPad.getState();
         if(!(state instanceof Smoker) || !id.equals(((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
             player.sendMessage("No receiving launch pad identified");
             return;
@@ -154,68 +155,39 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                     String name = world.getName();
                     World world = dest.getWorld();
                     boolean interdimension = !name.equals(world.getName());
-                    boolean observers = false;
-                    for(Entity entity : world.getNearbyEntities(dest, 32, 32, 32)){
-                        if(entity instanceof Player){
-                            observers = true;
-                            break;
-                        }
-                    }
-                    if(observers) {
-                        new Task(HoloItems.getInstance(), 1, 1) {
-                            int increment = 0;
-                            final FallingBlock drone = world.spawnFallingBlock(dest.clone().add(0, 256-dest.getY(), 0), data);
-                            public void run() {
-                                boolean observers = false;
-                                for (Entity entity : world.getNearbyEntities(dest, 32, 32, 32)) {
-                                    if (entity instanceof Player) {
-                                        observers = true;
-                                        break;
-                                    }
-                                }
-                                if (!observers || increment >= 240 || !drone.isValid()) {
-                                    if (drone != null)
-                                        drone.remove();
-                                    Block drop = world.getHighestBlockAt(dest);
-                                    if (drop.getType() == Material.BARREL || !observers) {
-                                        if (!observers) {
-                                            drop = drop.getRelative(BlockFace.UP);
-                                            drop.setType(Material.BARREL);
-                                        }
-                                        Barrel barrel = (Barrel) drop.getState();
-                                        barrel.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
-                                        barrel.setCustomName(block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
-                                        barrel.update();
+                    new Task(HoloItems.getInstance(), 1, 1) {
+                        int increment = 0;
+                        final FallingBlock drone = world.spawnFallingBlock(dest.clone().add(0, 256-dest.getY(), 0), data);
+                        public void run() {
+                            if (increment >= 240 || !drone.isValid()) {
+                                if (drone != null)
+                                    drone.remove();
+                                Block drop = world.getHighestBlockAt(dest);
+                                if (drop.getType() == Material.BARREL) {
+                                    Barrel barrel = (Barrel) drop.getState();
+                                    barrel.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
+                                    barrel.setCustomName(block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
+                                    barrel.update();
 
-                                        barrel.getInventory().setContents(contents);
-                                    } else {
-                                        for (ItemStack content : contents) {
-                                            if (content != null && content.getType() != Material.AIR)
-                                                world.dropItemNaturally(drop.getRelative(BlockFace.UP).getLocation(), content);
-                                        }
+                                    barrel.getInventory().setContents(contents);
+                                } else {
+                                    for (ItemStack content : contents) {
+                                        if (content != null && content.getType() != Material.AIR)
+                                            world.dropItemNaturally(drop.getRelative(BlockFace.UP).getLocation(), content);
                                     }
-                                    cancel();
-                                    return;
                                 }
-                                if(increment==0) {
-                                    PersistentDataContainer container = drone.getPersistentDataContainer();
-                                    container.set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
-                                    container.set(Utility.pack, PersistentDataType.STRING, block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
-                                }
-                                increment++;
+                                chunk.removePluginChunkTicket(HoloItems.getInstance());
+                                cancel();
+                                return;
                             }
-                        };
-                    }
-                    else{
-                        Block drop = world.getHighestBlockAt(dest).getRelative(BlockFace.UP);
-                        drop.setType(Material.BARREL);
-                        Barrel barrel = (Barrel) drop.getState();
-                        barrel.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
-                        barrel.setCustomName(block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
-                        barrel.update();
-
-                        barrel.getInventory().setContents(contents);
-                    }
+                            if(increment==0) {
+                                PersistentDataContainer container = drone.getPersistentDataContainer();
+                                container.set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
+                                container.set(Utility.pack, PersistentDataType.STRING, block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
+                            }
+                            increment++;
+                        }
+                    };
                     cancel();
                     return;
                 }

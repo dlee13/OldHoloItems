@@ -60,10 +60,7 @@ import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollec
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
 import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Statistic;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -375,6 +372,15 @@ public class Collections implements CommandExecutor, Listener {
                     if(type!=null)
                         item.setType(type);
                 }
+                return true;
+
+            case "removechunktickets":
+                World world = player.getWorld();
+                java.util.Collection<Chunk> chunks = world.getPluginChunkTickets().get(HoloItems.getInstance());
+                int quantity = chunks==null?0:chunks.size();
+                player.sendMessage("Chunk tickets to be removed: "+quantity);
+                if(quantity>0)
+                    world.removePluginChunkTickets(HoloItems.getInstance());
                 return true;
 
             case "test":
