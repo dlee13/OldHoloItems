@@ -214,16 +214,9 @@ public class Collections implements CommandExecutor, Listener {
                 player.openInventory(inv);
                 return true;
 
-//            case "ground":
-//                if (args.length >= 1) {
-//                    Player play = Bukkit.getServer().getPlayer(args[0]);
-//                    if(play!=null) {
-//                        play.setGravity(true);
-//                        return true;
-//                    }
-//                }
-//                player.setGravity(true);
-//                return true;
+            case "worldname":
+                player.sendMessage(player.getWorld().getName());
+                return true;
 
             case "custommodeldata":
                 ItemStack model = player.getInventory().getItemInMainHand();
@@ -382,6 +375,11 @@ public class Collections implements CommandExecutor, Listener {
                     if(type!=null)
                         item.setType(type);
                 }
+                return true;
+
+            case "test":
+                Utility.test = !Utility.test;
+                player.sendMessage("Test set to: "+Utility.test);
         }
         return true;
     }

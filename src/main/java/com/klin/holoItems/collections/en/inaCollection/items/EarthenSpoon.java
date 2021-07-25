@@ -92,10 +92,24 @@ public class EarthenSpoon extends Wiring {
                 Block air = place.getRelative(BlockFace.UP);
                 if (!air.isEmpty())
                     return;
-                air.setType(crop);
+                if(item.getItemMeta()!=null){
+                    Integer battery = item.getItemMeta().getPersistentDataContainer().get(Utility.pack, PersistentDataType.INTEGER);
+                    if(battery!=null)
+                        CorruptedWheat.spread(place, item.getType(), battery+1, air.getLocation());
+                    else
+                        air.setType(crop);
+                }
+                else
+                    air.setType(crop);
+
+                Inventory inv = ((InventoryHolder) block.getState()).getInventory();
+                new BukkitRunnable(){
+                    public void run(){
+                        inv.removeItem(item);
+                    }
+                }.runTask(HoloItems.getInstance());
             }
-            else
-                return;
+            return;
         }
         int charge = 1;
         if(item.getItemMeta()!=null) {

@@ -6,6 +6,8 @@ api-version: 1.14
 commands:
   collections:
     usage: /<command>
+  worldname:
+    usage: /<command>
   custommodeldata:
     usage: /<command>
   acquire:
@@ -24,3 +26,5 @@ commands:
     usage: /<command> <custommodeldata>
   settype:
     usage: /<command> <type>
+  test:
+    usage: /<command>

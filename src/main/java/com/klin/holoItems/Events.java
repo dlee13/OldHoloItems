@@ -18,6 +18,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.TileState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
@@ -124,8 +126,34 @@ public class Events implements Listener {
             return;
         String id = item.getItemMeta().
                 getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
+        if(id==null){
+            Material type = item.getType();
+            if(Utility.buckets.contains(type)){
+                Block dispenser = event.getBlock();
+                Block cauldron = dispenser.getRelative(((org.bukkit.block.data.type.Dispenser) dispenser.getBlockData()).getFacing());
+                if(cauldron.getType()==Material.CAULDRON){
+                    Levelled level = (Levelled) cauldron.getBlockData();
+                    if(type==Material.BUCKET) {
+                        if(level.getLevel()!=3)
+                            return;
+                        level.setLevel(0);
+                    }
+                    else
+                        level.setLevel(3);
+                    cauldron.setBlockData(level);
+
+                    event.setCancelled(true);
+                    new BukkitRunnable(){
+                        public void run(){
+                            Inventory inv = ((Dispenser) state).getInventory();
+                            inv.removeItem(item);
+                            inv.addItem(new ItemStack(type==Material.BUCKET?Material.WATER_BUCKET:Material.BUCKET));
+                        }
+                    }.runTask(HoloItems.getInstance());
+                }
+            }
             return;
+        }
 
         if(Collections.disabled.contains(id))
             return;

@@ -53,8 +53,8 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
         recipe.shape("a a","bcb","ded");
         recipe.setIngredient('a', Material.SMOOTH_STONE_SLAB);
         recipe.setIngredient('b', Material.GLASS);
-        recipe.setIngredient('c', Material.BARREL);
-        recipe.setIngredient('d', Material.LODESTONE);
+        recipe.setIngredient('c', Material.LODESTONE);
+        recipe.setIngredient('d', Material.STONE);
         recipe.setIngredient('e', Material.CAMPFIRE);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
@@ -102,14 +102,23 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             return;
         }
         Location dest = block.getLocation();
-        boolean first = true;
+        int i=0;
         for(String coord : name.split(" ")){
             try {
-                if(first)
+                if(i==0)
                     dest.setX(Integer.parseInt(coord)+0.5);
-                else
+                else if(i==1)
                     dest.setZ(Integer.parseInt(coord)+0.5);
-                first = false;
+                else if(i>=2) {
+                    World dimension = Bukkit.getWorld(coord);
+                    if(dimension!=null)
+                        dest.setWorld(dimension);
+                    else{
+                        player.sendMessage("Invalid world name");
+                        return;
+                    }
+                }
+                i++;
             } catch(NumberFormatException e){
                 player.sendMessage("Destination set incorrectly");
                 return;
@@ -118,7 +127,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
         Chunk chunk = dest.getChunk();
         if(!chunk.isLoaded())
             chunk.load();
-        state = world.getHighestBlockAt(dest).getState();
+        state = dest.getWorld().getHighestBlockAt(dest).getState();
         if(!(state instanceof Smoker) || !id.equals(((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
             player.sendMessage("No receiving launch pad identified");
             return;
@@ -140,6 +149,10 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             public void run() {
                 if (increment >= 20 || !drone.isValid() || drone.getLocation().getY() > 256) {
                     drone.remove();
+
+                    String name = world.getName();
+                    World world = dest.getWorld();
+                    boolean interdimension = !name.equals(world.getName());
                     boolean observers = false;
                     for(Entity entity : world.getNearbyEntities(dest, 32, 32, 32)){
                         if(entity instanceof Player){
@@ -169,7 +182,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                                         }
                                         Barrel barrel = (Barrel) drop.getState();
                                         barrel.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
-                                        barrel.setCustomName(block.getX() + " " + block.getZ());
+                                        barrel.setCustomName(block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
                                         barrel.update();
 
                                         barrel.getInventory().setContents(contents);
@@ -191,7 +204,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                         drop.setType(Material.BARREL);
                         Barrel barrel = (Barrel) drop.getState();
                         barrel.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
-                        barrel.setCustomName(block.getX() + " " + block.getZ());
+                        barrel.setCustomName(block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
                         barrel.update();
 
                         barrel.getInventory().setContents(contents);

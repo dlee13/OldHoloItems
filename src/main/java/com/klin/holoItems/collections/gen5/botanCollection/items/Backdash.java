@@ -36,7 +36,7 @@ public class Backdash extends Armor implements Togglable {
 
     private static final int armorPiece = 8;
 
-    public static final int cost = -1;
+    public static final int cost = 0;
     public static final char key = '0';
 
     public Backdash(){

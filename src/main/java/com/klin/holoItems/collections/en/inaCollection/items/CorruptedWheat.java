@@ -8,6 +8,7 @@ import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -73,9 +74,13 @@ public class CorruptedWheat extends BatteryPack implements Placeable {
         if(event.getPlayer().getGameMode()!=GameMode.CREATIVE)
             item.setAmount(item.getAmount()-1);
 
-        Queue<Location> farmland = new LinkedList<>();
-        Set<Location> checked = new HashSet<>();
-        Location start = event.getBlockAgainst().getLocation();
+        Block start = event.getBlockAgainst();
+        spread(start, type, currCharge, event.getPlayer().getLocation());
+    }
+
+    public static void spread(Block start, Material type, int currCharge, Location loc){
+        Queue<Block> farmland = new LinkedList<>();
+        Set<Block> checked = new HashSet<>();
         World world = start.getWorld();
         farmland.add(start);
 
@@ -90,18 +95,17 @@ public class CorruptedWheat extends BatteryPack implements Placeable {
             public void run(){
                 if(farmland.isEmpty() || charge<0){
                     if(charge>0)
-                        world.dropItemNaturally(event.getPlayer().getLocation(),
-                                new ItemStack(type, charge));
+                        world.dropItemNaturally(loc, new ItemStack(type, charge));
                     cancel();
                     return;
                 }
 
                 for(int i=0; i<2; i++) {
-                    Location center = farmland.poll();
+                    Block center = farmland.poll();
                     checked.add(center);
                     if(center==null || charge<0)
                         break;
-                    Block air = world.getBlockAt(center.clone().add(0, 1, 0));
+                    Block air = center.getRelative(BlockFace.UP);
                     if(air.isEmpty()) {
                         air.setType(crop);
                         charge--;
@@ -110,15 +114,14 @@ public class CorruptedWheat extends BatteryPack implements Placeable {
                         i--;
                         continue;
                     }
-                    for (Location loc : new Location[]{
-                            center.clone().add(1, 0, 0),
-                            center.clone().add(-1, 0, 0),
-                            center.clone().add(0, 0, 1),
-                            center.clone().add(0, 0, -1)}) {
-                        Block check = world.getBlockAt(loc);
+                    for (Block check : new Block[]{
+                            center.getRelative(BlockFace.NORTH),
+                            center.getRelative(BlockFace.SOUTH),
+                            center.getRelative(BlockFace.EAST),
+                            center.getRelative(BlockFace.WEST)}) {
                         if (check.getType()==soil &&
-                                !checked.contains(loc) && !farmland.contains(loc))
-                            farmland.add(loc);
+                                !checked.contains(check) && !farmland.contains(check))
+                            farmland.add(check);
                     }
                 }
             }

@@ -79,17 +79,28 @@ public class Partitioner extends Item implements Dispensable {
             int amount = quantities.get(0);
             int size = quantities.size();
             if(size>1){
-                int total = 0;
-                for(Integer i : quantities)
-                    total += i;
-                amount = total/size;
-                int remainder = total % size;
-                if(remainder>0) {
-                    key.setAmount(remainder);
-                    container.getWorld().dropItemNaturally(container.getLocation(), key);
+                int mod = quantities.get(1);
+                if(mod<0){
+                    amount++;
+                    if(mod==-1)
+                        quantities.remove(1);
+                    else
+                        quantities.set(1, mod+1);
                 }
-                quantities.clear();
-                quantities.add(amount);
+                else {
+                    int total = 0;
+                    for (Integer i : quantities)
+                        total += i;
+                    amount = total / size;
+                    quantities.clear();
+                    quantities.add(amount);
+                    int remainder = total % size;
+                    if (remainder>0) {
+                        amount++;
+                        if(remainder>1)
+                            quantities.add(-1 * (remainder-1));
+                    }
+                }
             }
             item.setAmount(amount);
         }

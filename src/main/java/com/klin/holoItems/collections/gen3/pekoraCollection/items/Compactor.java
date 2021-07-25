@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.gen3.pekoraCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.gen3.pekoraCollection.PekoraCollection;
+import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -44,7 +45,7 @@ public class Compactor extends Wiring {
         recipe.shape("&*&","*%*","&*&");
         recipe.setIngredient('&', COBBLESTONE);
         recipe.setIngredient('*', CRAFTING_TABLE);
-        recipe.setIngredient('%', NETHERITE_BLOCK);
+        recipe.setIngredient('%', LODESTONE);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }
@@ -131,6 +132,10 @@ public class Compactor extends Wiring {
                         return;
                 }
 
+                //test
+                if(Utility.test)
+                    System.out.println(result);
+                //
                 Block block = event.getBlock();
                 Block relative = block.getRelative(((Dispenser) block.getBlockData()).getFacing());
                 Location loc = relative.getLocation();

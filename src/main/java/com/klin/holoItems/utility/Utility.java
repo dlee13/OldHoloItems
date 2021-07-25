@@ -43,6 +43,8 @@ public class Utility {
     public static final NamespacedKey data =
             new NamespacedKey(HoloItems.getInstance(), "data");
 
+    public static boolean test = false;
+
     public static final Map<BlockFace, BlockFace> opposites = Stream.of(new BlockFace[][] {
             { BlockFace.UP, BlockFace.DOWN },
             { BlockFace.DOWN, BlockFace.UP },
@@ -57,8 +59,8 @@ public class Utility {
         put(CARROT, CARROTS);
         put(POTATO, POTATOES);
         put(NETHER_WART, NETHER_WART);
-        put(WHEAT_SEEDS, WHEAT);
         put(CHORUS_FLOWER, CHORUS_FLOWER);
+        put(WHEAT_SEEDS, WHEAT);
     }};
 
     public static final Set<Material> flowers = Stream.of(
@@ -181,6 +183,13 @@ public class Utility {
             STONE_PICKAXE,
             NETHERITE_PICKAXE,
             WOODEN_PICKAXE
+    ).collect(Collectors.toCollection(HashSet::new));
+
+    public static final Set<Material> buckets = Stream.of(
+            BUCKET,
+            WATER_BUCKET
+//            LAVA_BUCKET,
+//            POWERED_SNOW_BUCKET
     ).collect(Collectors.toCollection(HashSet::new));
 
     public static final Set<Material> slabs = Stream.of(
