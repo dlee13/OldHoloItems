@@ -95,12 +95,6 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             player.sendMessage("Destination set incorrectly");
             return;
         }
-        Inventory inv = barrel.getInventory();
-        ItemStack[] contents;
-        if(inv.isEmpty()) {
-            player.sendMessage("Delivery is empty");
-            return;
-        }
         Location dest = block.getLocation();
         int i=0;
         for(String coord : name.split(" ")){
@@ -134,8 +128,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             player.sendMessage("No receiving launch pad identified");
             return;
         }
-        contents = inv.getContents().clone();
-        inv.setContents(new ItemStack[27]);
+        ItemStack[] contents = barrel.getInventory().getContents().clone();
         BlockData data = block.getBlockData();
         Location spawn = block.getLocation().add(0.5, 0.5, 0.5);
         FallingBlock drone = world.spawnFallingBlock(spawn, data);
