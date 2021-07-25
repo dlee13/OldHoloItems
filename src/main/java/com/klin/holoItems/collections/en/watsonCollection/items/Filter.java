@@ -65,7 +65,7 @@ public class Filter extends Wiring {
             Block block = event.getBlock();
             BlockFace face = ((Dispenser) block.getBlockData()).getFacing();
             Block place = block.getRelative(face);
-            if(place.getType()!=Material.CAULDRON)
+            if(place.getType()!=Material.WATER_CAULDRON)
                 return;
             Levelled cauldron = (Levelled) place.getBlockData();
             if(cauldron.getLevel()==0)
