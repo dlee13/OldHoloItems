@@ -257,8 +257,6 @@ public class Events implements Listener {
         //no isCancelled()
         Player player = event.getEntity();
         Entity killer = player.getKiller();
-        if(killer!=null && killer.equals(player) && event.getDeathMessage().contains("was slain by"))
-            event.setDeathMessage(player.getName()+" ga shinda");
 
         for(ItemStack item : player.getInventory().getContents()) {
             if(item==null || item.getType()==Material.AIR || item.getItemMeta() == null)
@@ -1038,14 +1036,22 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void preventConsume(PlayerItemConsumeEvent event){
+    public static void consumeAbility(PlayerItemConsumeEvent event){
         if(event.isCancelled())
             return;
         ItemStack item = event.getItem();
         if (item.getType()==Material.AIR || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if (id != null)
+        if (id == null)
+            return;
+
+        if(Collections.disabled.contains(id))
+            return;
+        Item generic = Collections.findItem(id);
+        if(generic instanceof Consumable)
+            ((Consumable) generic).ability(event, item);
+        else
             event.setCancelled(true);
     }
 
