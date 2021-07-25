@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
@@ -162,6 +163,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                     }
                     if(observers) {
                         new Task(HoloItems.getInstance(), 1, 1) {
+                            int increment = 0;
                             final FallingBlock drone = world.spawnFallingBlock(dest.clone().add(0, 256-dest.getY(), 0), data);
                             public void run() {
                                 boolean observers = false;
@@ -194,6 +196,11 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                                     }
                                     cancel();
                                     return;
+                                }
+                                if(increment==0) {
+                                    PersistentDataContainer container = drone.getPersistentDataContainer();
+                                    container.set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
+                                    container.set(Utility.pack, PersistentDataType.STRING, block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
                                 }
                                 increment++;
                             }

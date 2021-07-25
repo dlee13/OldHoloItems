@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.gen4.watameCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.collections.gen4.watameCollection.WatameCollection;
+import com.klin.holoItems.interfaces.Collectable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -10,8 +11,10 @@ import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,7 +22,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashSet;
 
-public class UberSheepPackage extends Crate implements Placeable {
+public class UberSheepPackage extends Crate implements Placeable, Collectable {
     public static final String name = "uberSheepPackage";
     public static final HashSet<Enchantment> accepted = null;
 
@@ -73,5 +76,16 @@ public class UberSheepPackage extends Crate implements Placeable {
             if(content!=null && content.getType()!=Material.AIR)
                 world.dropItemNaturally(loc, content);
         }
+    }
+
+    public void ability(EntityDropItemEvent event, Entity entity) {
+        event.setCancelled(true);
+        Location loc = entity.getLocation();
+        ItemStack drop = item.clone();
+        ItemMeta meta = drop.getItemMeta();
+        meta.setDisplayName(entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING));
+        meta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
+        drop.setItemMeta(meta);
+        loc.getWorld().dropItemNaturally(loc, drop);
     }
 }

@@ -7,7 +7,6 @@ import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
 import com.klin.holoItems.collections.misc.hiddenCollection.items.GalleryFrame;
 import com.klin.holoItems.interfaces.*;
-import com.klin.holoItems.interfaces.combinable.Targetable;
 import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.GameMode;
@@ -18,7 +17,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.TileState;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
@@ -1188,6 +1186,20 @@ public class Events implements Listener {
         Item generic = Collections.findItem(id);
         if(generic instanceof Burnable)
             ((Burnable) generic).ability(event);
+    }
+
+    @EventHandler
+    public void collectableAbility(EntityDropItemEvent event){
+        Entity entity = event.getEntity();
+        String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id==null)
+            return;
+
+        if(Collections.disabled.contains(id))
+            return;
+        Item generic = Collections.findItem(id);
+        if(generic instanceof Collectable)
+            ((Collectable) generic).ability(event, entity);
     }
 
     @EventHandler
