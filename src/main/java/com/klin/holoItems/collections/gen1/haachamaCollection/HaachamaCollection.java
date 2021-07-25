@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen1.haachamaCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen1.haachamaCollection.items.Gnaw;
 import com.klin.holoItems.collections.gen1.haachamaCollection.items.RiftWalker;
 import org.bukkit.entity.Player;
 
@@ -20,6 +21,7 @@ public class HaachamaCollection extends Collection {
     public HaachamaCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(RiftWalker.key, new RiftWalker());
+        collection.put(Gnaw.key, new Gnaw());
     }
 
     public Map<String, Integer> getStat(Player player){

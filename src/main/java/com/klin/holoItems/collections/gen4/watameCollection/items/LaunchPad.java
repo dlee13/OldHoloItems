@@ -128,7 +128,10 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             player.sendMessage("No receiving launch pad identified");
             return;
         }
-        ItemStack[] contents = barrel.getInventory().getContents().clone();
+        Inventory inv = barrel.getInventory();
+        ItemStack[] contents = inv.getContents().clone();
+        //important: setting a container to air drops its contents
+        inv.setContents(new ItemStack[27]);
         BlockData data = block.getBlockData();
         Location spawn = block.getLocation().add(0.5, 0.5, 0.5);
         FallingBlock drone = world.spawnFallingBlock(spawn, data);

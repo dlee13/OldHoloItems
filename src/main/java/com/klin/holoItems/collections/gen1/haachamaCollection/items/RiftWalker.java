@@ -46,25 +46,14 @@ public class RiftWalker extends BatteryPack {
     }
 
     public void registerRecipes(){
-        ItemStack leaf = Collections.findItem("00").item;
-
         ShapedRecipe recipe0 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
-        recipe0.shape(" * ","/%/","   ");
+        recipe0.shape(" * ","/%/");
         recipe0.setIngredient('*', new RecipeChoice.ExactChoice(new ItemStack(Material.COOKED_PORKCHOP, 64)));
         recipe0.setIngredient('%', Material.ELYTRA);
-        recipe0.setIngredient('/', new RecipeChoice.ExactChoice(leaf));
+        recipe0.setIngredient('/', new RecipeChoice.ExactChoice(Collections.findItem("00").item));
         recipe0.setGroup(name);
         Bukkit.getServer().addRecipe(recipe0);
-
-        ShapedRecipe recipe1 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
-        recipe1.shape("   "," * ","/%/");
-        recipe1.setIngredient('*', Material.COOKED_PORKCHOP);
-        recipe1.setIngredient('%', Material.ELYTRA);
-        recipe1.setIngredient('/', new RecipeChoice.ExactChoice(leaf));
-        recipe1.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe1);
     }
 
     public void effect(PlayerInteractEvent event){
