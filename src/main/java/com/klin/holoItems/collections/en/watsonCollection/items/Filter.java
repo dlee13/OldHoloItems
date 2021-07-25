@@ -59,6 +59,33 @@ public class Filter extends Wiring {
     public void ability(BlockDispenseEvent event){
         ItemStack item = event.getItem();
         Material type = item.getType();
+
+        if(dirt.contains(type)) {
+            event.setCancelled(true);
+            Block block = event.getBlock();
+            BlockFace face = ((Dispenser) block.getBlockData()).getFacing();
+            Block place = block.getRelative(face);
+            if(place.getType()!=Material.CAULDRON)
+                return;
+            Levelled cauldron = (Levelled) place.getBlockData();
+            if(cauldron.getLevel()==0)
+                return;
+            cauldron.setLevel(cauldron.getLevel()-1);
+            place.setBlockData(cauldron);
+
+            new BukkitRunnable(){
+                public void run(){
+                    Inventory inv = ((InventoryHolder) block.getState()).getInventory();
+                    inv.removeItem(item);
+                    if(!inv.addItem(clay).isEmpty()) {
+                        Location location = place.getLocation();
+                        location.getWorld().dropItemNaturally(location, clay);
+                    }
+                }
+            }.runTask(HoloItems.getInstance());
+            return;
+        }
+
         if(dyes.contains(type)) {
             event.setCancelled(true);
             Block block = event.getBlock();
@@ -76,39 +103,5 @@ public class Filter extends Wiring {
             }
             return;
         }
-
-        if(!dirt.contains(type))
-            return;
-        event.setCancelled(true);
-        Block block = event.getBlock();
-        BlockFace face = ((Dispenser) block.getBlockData()).getFacing();
-        Block place = block.getRelative(face);
-        if(place.getType()!=Material.CAULDRON)
-            return;
-        Levelled cauldron = (Levelled) place.getBlockData();
-        if(cauldron.getLevel()==0)
-            return;
-        cauldron.setLevel(cauldron.getLevel()-1);
-        place.setBlockData(cauldron);
-
-        new BukkitRunnable(){
-            public void run(){
-                Inventory inv = ((InventoryHolder) block.getState()).getInventory();
-                inv.removeItem(item);
-                if(inv.firstEmpty()>=0)
-                    inv.addItem(clay);
-                else{
-                    for(ItemStack content : inv.getContents()){
-                        if(content.getType()==Material.CLAY_BALL)
-                            if(content.getAmount()<content.getMaxStackSize()){
-                                inv.addItem(clay);
-                                return;
-                            }
-                    }
-                    place.getLocation().getWorld().
-                            dropItemNaturally(place.getLocation(), clay);
-                }
-            }
-        }.runTask(HoloItems.getInstance());
     }
 }
