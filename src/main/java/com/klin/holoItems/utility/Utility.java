@@ -187,9 +187,10 @@ public class Utility {
 
     public static final Set<Material> buckets = Stream.of(
             BUCKET,
-            WATER_BUCKET
+            WATER_BUCKET,
 //            LAVA_BUCKET,
 //            POWERED_SNOW_BUCKET
+            BOWL
     ).collect(Collectors.toCollection(HashSet::new));
 
     public static final Set<Material> slabs = Stream.of(

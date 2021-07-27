@@ -151,6 +151,29 @@ public class Events implements Listener {
                         }
                     }.runTask(HoloItems.getInstance());
                 }
+                else{
+                    Location loc = cauldron.getLocation().add(0.5, 0.5, 0.5);
+                    java.util.Collection<Entity> cows = loc.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5, entity -> (entity instanceof Cow));
+                    if(cows.isEmpty())
+                        return;
+                    int mushroomCows = 0;
+                    for(Entity cow : cows){
+                        if(cow instanceof MushroomCow)
+                            mushroomCows++;
+                    }
+                    if(type==Material.BUCKET && cows.size()>mushroomCows)
+                        event.setItem(new ItemStack(Material.MILK_BUCKET));
+                    else if(type==Material.BOWL && mushroomCows!=0)
+                        event.setItem(new ItemStack(Material.MUSHROOM_STEW));
+                    else
+                        return;
+                    new BukkitRunnable(){
+                        public void run(){
+                            Inventory inv = ((Dispenser) state).getInventory();
+                            inv.removeItem(item);
+                        }
+                    }.runTask(HoloItems.getInstance());
+                }
             }
             return;
         }
