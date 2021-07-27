@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen4.towaCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen4.towaCollection.items.HolyFire;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -18,6 +19,7 @@ public class TowaCollection extends Collection {
 
     public TowaCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(HolyFire.key, new HolyFire());
     }
 
     public Map<String, Integer> getStat(Player player){

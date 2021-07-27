@@ -58,6 +58,7 @@ import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
 import com.klin.holoItems.collections.misc.hiddenCollection.Recipes;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
+import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -381,6 +382,27 @@ public class Collections implements CommandExecutor, Listener {
                 player.sendMessage("Chunk tickets to be removed: "+quantity);
                 if(quantity>0)
                     world.removePluginChunkTickets(HoloItems.getInstance());
+                return true;
+
+            case "getactivatables":
+                if(Events.activatables.isEmpty())
+                    player.sendMessage("Activatables is empty");
+                else {
+                    boolean first = true;
+                    for (Activatable activatable : Events.activatables) {
+                        if(!first)
+                            player.sendMessage("");
+                        player.sendMessage(activatable.toString() + "\n-----------------------------------------------------\n" + activatable.survey());
+                        first = false;
+                    }
+                }
+                return true;
+
+            case "clearactivatables":
+                for(Activatable activatable : Events.activatables)
+                    activatable.survey().clear();
+                Events.activatables.clear();
+                player.sendMessage("Activatables cleared");
                 return true;
 
             case "test":

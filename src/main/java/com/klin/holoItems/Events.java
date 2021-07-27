@@ -101,6 +101,8 @@ public class Events implements Listener {
         add(DoubleUp.id);
     }};
 
+    public static Set<Activatable> activatables = new HashSet<>();
+
     @EventHandler
     public static void dispenseAbility(BlockDispenseEvent event){
         if(event.isCancelled())
@@ -1142,7 +1144,15 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void activateAbility(BlockRedstoneEvent event){
+    public static void activateAbility(CreatureSpawnEvent event){
+        if(event.isCancelled() || activatables.isEmpty())
+            return;
+        for(Activatable activatable : activatables)
+            activatable.ability(event);
+    }
+
+    @EventHandler
+    public static void powerAbility(BlockRedstoneEvent event){
         BlockState state = event.getBlock().getState();
         if(!(state instanceof TileState))
             return;
@@ -1153,8 +1163,8 @@ public class Events implements Listener {
         if(Collections.disabled.contains(id))
             return;
         Item generic = Collections.findItem(id);
-        if(generic instanceof Activatable)
-            ((Activatable) generic).ability(event);
+        if(generic instanceof Powerable)
+            ((Powerable) generic).ability(event);
     }
 
     @EventHandler

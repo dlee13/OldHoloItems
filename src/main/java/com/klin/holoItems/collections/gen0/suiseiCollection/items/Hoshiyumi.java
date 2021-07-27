@@ -105,7 +105,7 @@ public class Hoshiyumi extends Item implements Interactable, Shootable {
         LivingEntity target = (LivingEntity) hit;
         if(!player.equals(target) &&
                 !Utility.damage(null, 1, false,
-                        player, target, false, false))
+                        player, target, false, false, false))
             return;
 
         Set<LivingEntity> entities = hits.get(player);

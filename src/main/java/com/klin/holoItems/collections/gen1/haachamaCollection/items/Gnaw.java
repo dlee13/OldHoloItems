@@ -30,6 +30,7 @@ public class Gnaw extends Item implements Consumable {
     public static final String name = "gnaw";
     public static final Set<Enchantment> accepted = Stream.of(
             Enchantment.DURABILITY,
+            Enchantment.FIRE_ASPECT,
             Enchantment.IMPALING,
             Enchantment.LURE,
             Enchantment.KNOCKBACK,
@@ -81,20 +82,17 @@ public class Gnaw extends Item implements Consumable {
         int thorns = meta.getEnchantLevel(Enchantment.THORNS);
         for(Entity entity : entities){
             LivingEntity food = (LivingEntity) entity;
-            int damage = 9 + thorns;
+            int damage = 11+thorns*3;
+            if(!Utility.damage(item, damage, player.getVelocity().getY()<0, player, food, true, false, true))
+                return;
             if(thorns!=0) {
-                player.damage(((double)thorns)/2);
+                player.damage(thorns);
                 player.setNoDamageTicks(0);
-            }
-            Utility.damage(item, damage, food.getVelocity().getY()<0, player, food, false, false);
-            if(food instanceof Player && ((Player) food).isBlocking()){
-                food.setNoDamageTicks(0);
-                Utility.damage(item, damage, food.getVelocity().getY()<0, player, food, false, false);
             }
             if(lure!=0)
                 entity.setVelocity(loc.subtract(entity.getLocation()).toVector().normalize().setY(0).multiply(lure/3));
             else if(knockback!=0)
-                entity.setVelocity(entity.getLocation().subtract(loc).toVector().normalize().multiply(knockback));
+                entity.setVelocity(food.getEyeLocation().subtract(loc).add(0, 1, 0).toVector().normalize().multiply(knockback));
         }
     }
 }

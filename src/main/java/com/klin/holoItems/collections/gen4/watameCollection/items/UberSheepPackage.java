@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -32,7 +33,7 @@ public class UberSheepPackage extends Crate implements Placeable, Collectable {
             "§6Ability" +"/n"+
                 "Contains goods to be delivered";
     private static final int durability = 0;
-    public static final boolean stackable = false;
+    public static final boolean stackable = true;
     private static final boolean shiny = false;
 
     public static final int cost = 0;
@@ -51,8 +52,9 @@ public class UberSheepPackage extends Crate implements Placeable, Collectable {
         ShapedRecipe recipe =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aaa","bcb","aaa");
-        recipe.setIngredient('a', Material.SMOOTH_STONE_SLAB);
-        recipe.setIngredient('b', Material.SHIELD);
+        recipe.setIngredient('a', new RecipeChoice.MaterialChoice(Material.ACACIA_SLAB, Material.BIRCH_SLAB,
+                Material.DARK_OAK_SLAB, Material.JUNGLE_SLAB, Material.OAK_SLAB, Material.SPRUCE_SLAB, Material.CRIMSON_SLAB, Material.WARPED_SLAB));
+        recipe.setIngredient('b', Material.CHAIN);
         recipe.setIngredient('c', Material.BARREL);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
@@ -81,11 +83,10 @@ public class UberSheepPackage extends Crate implements Placeable, Collectable {
     public void ability(EntityDropItemEvent event, Entity entity) {
         event.setCancelled(true);
         Location loc = entity.getLocation();
-        ItemStack drop = item.clone();
-        ItemMeta meta = drop.getItemMeta();
-        meta.setDisplayName(entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING));
-        meta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
-        drop.setItemMeta(meta);
-        loc.getWorld().dropItemNaturally(loc, drop);
+//        ItemStack drop = item.clone();
+//        ItemMeta meta = drop.getItemMeta();
+//        meta.setDisplayName(entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING));
+//        drop.setItemMeta(meta);
+        loc.getWorld().dropItemNaturally(loc, item);
     }
 }

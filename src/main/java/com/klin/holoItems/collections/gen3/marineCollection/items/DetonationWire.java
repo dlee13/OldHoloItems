@@ -3,7 +3,7 @@ package com.klin.holoItems.collections.gen3.marineCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.collections.gen3.marineCollection.MarineCollection;
-import com.klin.holoItems.interfaces.Activatable;
+import com.klin.holoItems.interfaces.Powerable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
 import com.klin.holoItems.utility.Utility;
@@ -24,7 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import static org.bukkit.Material.*;
 
-public class DetonationWire extends Crate implements Activatable, Placeable, Punchable {
+public class DetonationWire extends Crate implements Powerable, Placeable, Punchable {
     public static final String name = "detonationWire";
 
     private static final Material material = Material.COMPARATOR;
