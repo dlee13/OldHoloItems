@@ -10,10 +10,10 @@ import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -187,9 +187,10 @@ public class Utility {
 
     public static final Set<Material> buckets = Stream.of(
             BUCKET,
-            WATER_BUCKET
+            WATER_BUCKET,
 //            LAVA_BUCKET,
 //            POWERED_SNOW_BUCKET
+            BOWL
     ).collect(Collectors.toCollection(HashSet::new));
 
     public static final Set<Material> slabs = Stream.of(
@@ -385,7 +386,12 @@ public class Utility {
 
     public static boolean damage(ItemStack item, double damage, boolean crit,
                               LivingEntity attacker, LivingEntity target,
-                              boolean strength, boolean projectile){
+                              boolean strength, boolean projectile, boolean bypass){
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker, target, EntityDamageEvent.DamageCause.ENTITY_ATTACK, 0.1);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if(event.isCancelled())
+            return false;
+
         if(strength) {
             int multiplier = checkPotionEffect(attacker, PotionEffectType.INCREASE_DAMAGE);
             damage = damage+3*multiplier*
@@ -422,10 +428,17 @@ public class Utility {
             target.setFireTicks(1);
         }
 
-        double initial = target.getHealth();
-        target.damage(damage, attacker);
-        if(target.getHealth()>=initial)
-            return false;
+        if(bypass) {
+            target.damage(0.1, attacker);
+            target.damage(damage);
+        }
+        else{
+            //damage blocked
+            double initial = target.getHealth();
+            target.damage(damage, attacker);
+            if (target.getHealth() >= initial)
+                return false;
+        }
 
         double returnDamage = Math.random()*3+1;
         if (Math.random()<thornsChance)

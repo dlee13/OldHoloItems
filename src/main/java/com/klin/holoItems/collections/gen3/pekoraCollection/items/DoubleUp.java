@@ -25,7 +25,7 @@ import java.util.Map;
 public class DoubleUp extends Wiring {
     public static final String name = "doubleUp";
 
-    private static final Map<Integer, String> upgrades = new HashMap<Integer, String>(){{
+    private static final Map<Integer, String> upgrades = new HashMap<>(){{
         put(3, "tripleUp");
         put(4, "quadrupleUp");
         put(5, "quintupleUp");

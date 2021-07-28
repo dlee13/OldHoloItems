@@ -20,7 +20,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
@@ -37,7 +36,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             "§6Ability" +"/n"+
                     "Light to launch a package";
     private static final int durability = 0;
-    public static final boolean stackable = false;
+    public static final boolean stackable = true;
     private static final boolean shiny = false;
 
     public static final int cost = 0;
@@ -154,7 +153,9 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                     new Task(HoloItems.getInstance(), 1, 1) {
                         int increment = 0;
                         final FallingBlock drone = world.spawnFallingBlock(dest.clone().add(0, 256-dest.getY(), 0), data);
+                        Location loc;
                         public void run() {
+                            loc = drone.getLocation();
                             if (increment >= 240 || !drone.isValid()) {
                                 if (drone != null)
                                     drone.remove();
@@ -165,22 +166,21 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                                     barrel.setCustomName(block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
                                     barrel.update();
 
-                                    barrel.getInventory().setContents(contents);
+                                    for(ItemStack excess : barrel.getInventory().addItem(contents).values())
+                                        world.dropItemNaturally(loc, excess);
                                 } else {
                                     for (ItemStack content : contents) {
                                         if (content != null && content.getType() != Material.AIR)
-                                            world.dropItemNaturally(drop.getRelative(BlockFace.UP).getLocation(), content);
+                                            world.dropItemNaturally(loc, content);
                                     }
                                 }
                                 chunk.removePluginChunkTicket(HoloItems.getInstance());
                                 cancel();
                                 return;
                             }
-                            if(increment==0) {
-                                PersistentDataContainer container = drone.getPersistentDataContainer();
-                                container.set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
-                                container.set(Utility.pack, PersistentDataType.STRING, block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
-                            }
+                            if(increment==0)
+                                drone.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
+//                                container.set(Utility.pack, PersistentDataType.STRING, block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
                             increment++;
                         }
                     };

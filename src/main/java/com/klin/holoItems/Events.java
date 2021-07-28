@@ -101,6 +101,8 @@ public class Events implements Listener {
         add(DoubleUp.id);
     }};
 
+    public static Set<Activatable> activatables = new HashSet<>();
+
     @EventHandler
     public static void dispenseAbility(BlockDispenseEvent event){
         if(event.isCancelled())
@@ -146,6 +148,29 @@ public class Events implements Listener {
                             Inventory inv = ((Dispenser) state).getInventory();
                             inv.removeItem(item);
                             inv.addItem(new ItemStack(type==Material.BUCKET?Material.WATER_BUCKET:Material.BUCKET));
+                        }
+                    }.runTask(HoloItems.getInstance());
+                }
+                else{
+                    Location loc = cauldron.getLocation().add(0.5, 0.5, 0.5);
+                    java.util.Collection<Entity> cows = loc.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5, entity -> (entity instanceof Cow));
+                    if(cows.isEmpty())
+                        return;
+                    int mushroomCows = 0;
+                    for(Entity cow : cows){
+                        if(cow instanceof MushroomCow)
+                            mushroomCows++;
+                    }
+                    if(type==Material.BUCKET && cows.size()>mushroomCows)
+                        event.setItem(new ItemStack(Material.MILK_BUCKET));
+                    else if(type==Material.BOWL && mushroomCows!=0)
+                        event.setItem(new ItemStack(Material.MUSHROOM_STEW));
+                    else
+                        return;
+                    new BukkitRunnable(){
+                        public void run(){
+                            Inventory inv = ((Dispenser) state).getInventory();
+                            inv.removeItem(item);
                         }
                     }.runTask(HoloItems.getInstance());
                 }
@@ -1142,7 +1167,15 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void activateAbility(BlockRedstoneEvent event){
+    public static void activateAbility(CreatureSpawnEvent event){
+        if(event.isCancelled() || activatables.isEmpty())
+            return;
+        for(Activatable activatable : activatables)
+            activatable.ability(event);
+    }
+
+    @EventHandler
+    public static void powerAbility(BlockRedstoneEvent event){
         BlockState state = event.getBlock().getState();
         if(!(state instanceof TileState))
             return;
@@ -1153,8 +1186,8 @@ public class Events implements Listener {
         if(Collections.disabled.contains(id))
             return;
         Item generic = Collections.findItem(id);
-        if(generic instanceof Activatable)
-            ((Activatable) generic).ability(event);
+        if(generic instanceof Powerable)
+            ((Powerable) generic).ability(event);
     }
 
     @EventHandler

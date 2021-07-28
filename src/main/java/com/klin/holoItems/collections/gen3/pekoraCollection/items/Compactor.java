@@ -107,7 +107,10 @@ public class Compactor extends Wiring {
                     }
                     increment++;
                 }
-
+                //test
+                if(Utility.test)
+                    System.out.println("1: "+ingredientMap);
+                //
 
                 String[] shape = new String[(bottomRight-topLeft)/3+1];
                 increment = 0;
@@ -124,6 +127,10 @@ public class Compactor extends Wiring {
                 ItemStack result = null;
                 if(shapes!=null)
                     result = shapes.get(ingredientMap);
+                //test
+                if(Utility.test)
+                    System.out.println("2: "+result);
+                //
                 if(result==null) {
                     List<ItemStack> ingredients = new ArrayList<>(ingredientMap.values());
                     ingredients.removeAll(Collections.singleton(null));
@@ -134,7 +141,7 @@ public class Compactor extends Wiring {
 
                 //test
                 if(Utility.test)
-                    System.out.println(result);
+                    System.out.println("3: "+result);
                 //
                 Block block = event.getBlock();
                 Block relative = block.getRelative(((Dispenser) block.getBlockData()).getFacing());
@@ -167,6 +174,10 @@ public class Compactor extends Wiring {
                         continue;
                     itemStack.setAmount(itemStack.getAmount() - 1);
                 }
+                //test
+                if(Utility.test)
+                    System.out.println("4: "+result);
+                //
             }
         }.runTask(HoloItems.getInstance());
     }
@@ -219,14 +230,14 @@ public class Compactor extends Wiring {
         squareKey = Arrays.asList("ab", "cd");
 
         Map<Character, ItemStack> coarseDirt = new HashMap<>();
-        ItemStack dirt = new ItemStack(DIRT);
         ItemStack gravel = new ItemStack(GRAVEL);
-        coarseDirt.put('a', dirt);
-        coarseDirt.put('b', gravel);
-        coarseDirt.put('c', gravel);
-        coarseDirt.put('d', dirt);
+        ItemStack dirt = new ItemStack(DIRT);
+        coarseDirt.put('a', gravel);
+        coarseDirt.put('b', dirt);
+        coarseDirt.put('c', dirt);
+        coarseDirt.put('d', gravel);
 
         square = recipes.get(squareKey);
-        square.replace(coarseDirt, new ItemStack(COARSE_DIRT, 4));
+        square.put(coarseDirt, new ItemStack(COARSE_DIRT, 4));
     }
 }

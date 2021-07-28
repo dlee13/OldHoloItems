@@ -28,5 +28,9 @@ commands:
     usage: /<command> <type>
   removechunktickets:
     usage: /<command>
+  getactivatables:
+    usage: /<command>
+  clearactivatables:
+    usage: /<command>
   test:
     usage: /<command>

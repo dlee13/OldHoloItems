@@ -111,7 +111,7 @@ public class CarrotCannon extends BatteryPack {
                     Collection<Entity> entities = world.getNearbyEntities(explosion, 1.5, 1.5, 1.5,
                             entity -> entity instanceof LivingEntity);
                     for(Entity entity : entities) {
-                        if(Utility.damage(item, 1, false, player, (LivingEntity) entity, false, false))
+                        if(Utility.damage(item, 1, false, player, (LivingEntity) entity, false, false, false))
                             entity.setVelocity((new Vector(Math.random()-0.5, Math.random(), Math.random()-0.5)).normalize());
                     }
                     cancel();

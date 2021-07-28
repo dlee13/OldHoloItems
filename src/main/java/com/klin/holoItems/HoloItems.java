@@ -26,6 +26,8 @@ public class HoloItems extends JavaPlugin {
         getCommand("setcustommodeldata").setExecutor(collections);
         getCommand("settype").setExecutor(collections);
         getCommand("removechunktickets").setExecutor(collections);
+        getCommand("getactivatables").setExecutor(collections);
+        getCommand("clearactivatables").setExecutor(collections);
         getCommand("test").setExecutor(collections);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "HoloItems [ON]");
