@@ -23,6 +23,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class LaunchPad extends Crate implements Placeable, Punchable {
@@ -166,7 +167,9 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                                     barrel.setCustomName(block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
                                     barrel.update();
 
-                                    for(ItemStack excess : barrel.getInventory().addItem(contents).values())
+                                    for(ItemStack excess : barrel.getInventory().addItem(Arrays.stream(contents)
+                                            .filter(item -> (item != null && item.getType()!=Material.AIR))
+                                            .toArray(ItemStack[]::new)).values())
                                         world.dropItemNaturally(loc, excess);
                                 } else {
                                     for (ItemStack content : contents) {

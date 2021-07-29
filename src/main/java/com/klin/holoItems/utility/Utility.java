@@ -2,18 +2,24 @@ package com.klin.holoItems.utility;
 
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.interfaces.combinable.Spawnable;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.TileState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -62,6 +68,29 @@ public class Utility {
         put(CHORUS_FLOWER, CHORUS_FLOWER);
         put(WHEAT_SEEDS, WHEAT);
     }};
+
+    public static final Set<Enchantment> enchantedBoots = Stream.of(
+            Enchantment.PROTECTION_EXPLOSIONS,
+            Enchantment.DEPTH_STRIDER,
+            Enchantment.PROTECTION_FALL,
+            Enchantment.PROTECTION_FIRE,
+            Enchantment.FROST_WALKER,
+            Enchantment.MENDING,
+            Enchantment.PROTECTION_PROJECTILE,
+            Enchantment.PROTECTION_ENVIRONMENTAL,
+            Enchantment.SOUL_SPEED,
+            Enchantment.THORNS,
+            Enchantment.DURABILITY
+    ).collect(Collectors.toCollection(HashSet::new));
+
+    public static final Set<Material> boots = Stream.of(
+            LEATHER_BOOTS,
+            IRON_BOOTS,
+            CHAINMAIL_BOOTS,
+            GOLDEN_BOOTS,
+            DIAMOND_BOOTS,
+            NETHERITE_BOOTS
+    ).collect(Collectors.toCollection(HashSet::new));
 
     public static final Set<Material> flowers = Stream.of(
             DANDELION,
@@ -337,6 +366,69 @@ public class Utility {
             ZOMBIE_VILLAGER_SPAWN_EGG
     ).collect(Collectors.toCollection(HashSet::new));
 
+    public static <T> T findItem(ItemStack item, Class<T> cls){
+        if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
+            return null;
+        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        return findItem(id, cls);
+    }
+
+    public static <T> T findItem(ItemStack item, Class<T> cls, Player player){
+        if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
+            return null;
+        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        return findItem(id, cls, player);
+    }
+
+    public static <T> T findItem(Entity entity, Class<T> cls){
+        String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        return findItem(id, cls);
+    }
+
+    public static <T> T findItem(Entity entity, Class<T> cls, Player player){
+        String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        return findItem(id, cls, player);
+    }
+
+    public static <T> T findItem(Block block, Class<T> cls){
+        BlockState state = block.getState();
+        if(!(state instanceof TileState))
+            return null;
+        String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        return findItem(id, cls);
+    }
+
+    public static <T> T findItem(Block block, Class<T> cls, Player player){
+        BlockState state = block.getState();
+        if(!(state instanceof TileState))
+            return null;
+        String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        return findItem(id, cls, player);
+    }
+
+    public static <T> T findItem(String id, Class<T> cls){
+        if(id==null || Collections.disabled.contains(id))
+            return null;
+        Item generic = Collections.findItem(id);
+        if(!cls.isInstance(generic))
+            return null;
+        return cls.cast(generic);
+    }
+
+    public static <T> T findItem(String id, Class<T> cls, Player player){
+        if(id==null)
+            return null;
+        if(Collections.disabled.contains(id)){
+            if(player!=null)
+                player.sendMessage("§cThis item has been disabled");
+            return null;
+        }
+        Item generic = Collections.findItem(id);
+        if(!cls.isInstance(generic))
+            return null;
+        return cls.cast(generic);
+    }
+
     public static ItemStack addEnchant(ItemStack itemStack, Enchant enchant){
         ItemMeta meta = itemStack.getItemMeta();
         meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchant.id);
@@ -428,17 +520,13 @@ public class Utility {
             target.setFireTicks(1);
         }
 
-        if(bypass) {
-            target.damage(0.1, attacker);
+        double initial = target.getHealth();
+        target.damage(damage, attacker);
+        if(bypass && target instanceof Player && ((Player) target).isBlocking())
             target.damage(damage);
-        }
-        else{
-            //damage blocked
-            double initial = target.getHealth();
-            target.damage(damage, attacker);
-            if (target.getHealth() >= initial)
-                return false;
-        }
+        //not bypass && attack blocked
+        else if (target.getHealth() >= initial)
+            return false;
 
         double returnDamage = Math.random()*3+1;
         if (Math.random()<thornsChance)

@@ -51,7 +51,7 @@ public class LunarLaser extends Enchant implements Interactable {
             ).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Enchantment> accepted = Stream.of(Enchantment.SILK_TOUCH, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
     public static final Set<String> acceptedIds = Stream.of("a2", "u1").collect(Collectors.toCollection(HashSet::new));
-    public static final Set<Material> acceptedTypes = new HashSet<Material>(){{
+    public static final Set<Material> acceptedTypes = new HashSet<>(){{
         addAll(Utility.axes);
         addAll(Utility.shovels);
         addAll(Utility.hoes);

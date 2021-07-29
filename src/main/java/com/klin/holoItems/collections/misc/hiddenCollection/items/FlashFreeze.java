@@ -1,6 +1,6 @@
 package com.klin.holoItems.collections.misc.hiddenCollection.items;
 
-import com.klin.holoItems.interfaces.Shootable;
+import com.klin.holoItems.interfaces.Launchable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
-public class FlashFreeze extends Item implements Shootable {
+public class FlashFreeze extends Item implements Launchable {
     public static final String name = "flashFreeze";
     public static final Set<Enchantment> accepted = null;
 
@@ -43,7 +43,7 @@ public class FlashFreeze extends Item implements Shootable {
 
     public void registerRecipes(){}
 
-    public void cause(ProjectileLaunchEvent event, ItemStack item){
+    public void ability(ProjectileLaunchEvent event, ItemStack item){
         Projectile snowball = event.getEntity();
         new Task(HoloItems.getInstance(), 1, 1) {
             int increment = 1200;
@@ -104,8 +104,6 @@ public class FlashFreeze extends Item implements Shootable {
             }
         };
     }
-
-    public void effect(ProjectileHitEvent event){}
 }
 
 //public class Condensation extends Item implements Shootable {

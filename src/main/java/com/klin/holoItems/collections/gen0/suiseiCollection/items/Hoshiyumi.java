@@ -1,7 +1,8 @@
 package com.klin.holoItems.collections.gen0.suiseiCollection.items;
 
+import com.klin.holoItems.interfaces.Hitable;
 import com.klin.holoItems.interfaces.Interactable;
-import com.klin.holoItems.interfaces.Shootable;
+import com.klin.holoItems.interfaces.Launchable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen0.suiseiCollection.SuiseiCollection;
@@ -22,7 +23,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Hoshiyumi extends Item implements Interactable, Shootable {
+public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable {
     public static final String name = "hoshiyumi";
     public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
         add(Enchantment.ARROW_DAMAGE);
@@ -92,11 +93,11 @@ public class Hoshiyumi extends Item implements Interactable, Shootable {
         hits.remove(event.getPlayer());
     }
 
-    public void cause(ProjectileLaunchEvent event, ItemStack item){
+    public void ability(ProjectileLaunchEvent event, ItemStack item){
         Utility.imbueProjectile(event.getEntity(), id);
     }
 
-    public void effect(ProjectileHitEvent event){
+    public void ability(ProjectileHitEvent event){
         Projectile proj = event.getEntity();
         Entity hit = event.getHitEntity();
         if(!(hit instanceof LivingEntity) || !(proj.getShooter() instanceof Player))

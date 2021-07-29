@@ -21,7 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public abstract class Wiring extends Crate implements Clickable {
     private static final int quantity = 1;
     private static final int durability = 0;
-    private static final boolean stackable = false;
+    private static final boolean stackable = true;
 
     public Wiring(String name, Material material, String lore, boolean shiny, int cost,
                   String id, char key) {

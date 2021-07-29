@@ -16,7 +16,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Dispenser;
-import org.bukkit.block.TileState;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
@@ -38,277 +37,69 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Events implements Listener {
-    private static final Map<Integer, Enchantment[]> multiplier =
-            new HashMap<>() {{
-                put(1, new Enchantment[]{
-                        Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.DAMAGE_ALL,
-                        Enchantment.DIG_SPEED, Enchantment.ARROW_DAMAGE,
-                        Enchantment.LOYALTY, Enchantment.PIERCING
-                });
-                put(2, new Enchantment[]{
-                        Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_FALL,
-                        Enchantment.PROTECTION_PROJECTILE, Enchantment.DAMAGE_UNDEAD,
-                        Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK,
-                        Enchantment.DURABILITY, Enchantment.QUICK_CHARGE
-                });
-                put(4, new Enchantment[]{
-                        Enchantment.PROTECTION_EXPLOSIONS, Enchantment.OXYGEN,
-                        Enchantment.DEPTH_STRIDER, Enchantment.WATER_WORKER,
-                        Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS,
-                        Enchantment.LOOT_BONUS_BLOCKS, Enchantment.ARROW_KNOCKBACK,
-                        Enchantment.ARROW_FIRE, Enchantment.LUCK, Enchantment.LURE,
-                        Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.IMPALING,
-                        Enchantment.RIPTIDE, Enchantment.MULTISHOT, Enchantment.SWEEPING_EDGE
-                });
-                put(8, new Enchantment[]{
-                        Enchantment.THORNS, Enchantment.SILK_TOUCH, Enchantment.ARROW_INFINITE,
-                        Enchantment.BINDING_CURSE, Enchantment.VANISHING_CURSE,
-                        Enchantment.CHANNELING, Enchantment.SOUL_SPEED
-                });
-            }};
+    public static Set<Activatable> activatables = new HashSet<>();
 
-    private static final Set<InventoryType> prohibitedInv = new HashSet<>() {{
-        add(InventoryType.BEACON);
-        add(InventoryType.BREWING);
-        add(InventoryType.CARTOGRAPHY);
-        add(InventoryType.FURNACE);
-        add(InventoryType.LECTERN);
-        add(InventoryType.LOOM);
-        add(InventoryType.MERCHANT);
-        add(InventoryType.SMITHING);
-        add(InventoryType.SMOKER);
-        add(InventoryType.STONECUTTER);
-    }};
+    private static final Set<Material> deactive = Stream.of(
+        Material.JUKEBOX,
+        Material.CAMPFIRE,
+        Material.SOUL_CAMPFIRE
+    ).collect(Collectors.toCollection(HashSet::new));
 
-    private static final Set<Material> deactive = new HashSet<>() {{
-        add(Material.JUKEBOX);
-        add(Material.CAMPFIRE);
-        add(Material.SOUL_CAMPFIRE);
-    }};
-
-    private static final Set<String> exception = new HashSet<>() {{
+    private static final Set<String> ingredients = new HashSet<>() {{
         for (Character key : Collections.findCollection('0').collection.keySet())
             add("0" + key);
         add(DoubleUp.id);
     }};
 
-    private static final Set<String> stackException = new HashSet<>() {{
-        add(DoubleUp.id);
+    private static final Set<InventoryType> prohibitedInv = Stream.of(
+        InventoryType.BEACON,
+        InventoryType.BREWING,
+        InventoryType.CARTOGRAPHY,
+        InventoryType.LECTERN,
+        InventoryType.LOOM,
+        InventoryType.MERCHANT,
+        InventoryType.SMOKER,
+        InventoryType.STONECUTTER
+    ).collect(Collectors.toCollection(HashSet::new));
+
+    private static final Map<Integer, Enchantment[]> multiplier = new HashMap<>() {{
+        put(1, new Enchantment[]{
+                Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.DAMAGE_ALL,
+                Enchantment.DIG_SPEED, Enchantment.ARROW_DAMAGE,
+                Enchantment.LOYALTY, Enchantment.PIERCING
+        });
+        put(2, new Enchantment[]{
+                Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_FALL,
+                Enchantment.PROTECTION_PROJECTILE, Enchantment.DAMAGE_UNDEAD,
+                Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK,
+                Enchantment.DURABILITY, Enchantment.QUICK_CHARGE
+        });
+        put(4, new Enchantment[]{
+                Enchantment.PROTECTION_EXPLOSIONS, Enchantment.OXYGEN,
+                Enchantment.DEPTH_STRIDER, Enchantment.WATER_WORKER,
+                Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS,
+                Enchantment.LOOT_BONUS_BLOCKS, Enchantment.ARROW_KNOCKBACK,
+                Enchantment.ARROW_FIRE, Enchantment.LUCK, Enchantment.LURE,
+                Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.IMPALING,
+                Enchantment.RIPTIDE, Enchantment.MULTISHOT, Enchantment.SWEEPING_EDGE
+        });
+        put(8, new Enchantment[]{
+                Enchantment.THORNS, Enchantment.SILK_TOUCH, Enchantment.ARROW_INFINITE,
+                Enchantment.BINDING_CURSE, Enchantment.VANISHING_CURSE,
+                Enchantment.CHANNELING, Enchantment.SOUL_SPEED
+        });
     }};
 
-    public static Set<Activatable> activatables = new HashSet<>();
-
     @EventHandler
-    public static void dispenseAbility(BlockDispenseEvent event){
-        if(event.isCancelled())
-            return;
-        BlockState state = event.getBlock().getState();
-        if(!(state instanceof Dispenser))
-            return;
-
-        String itemId = ((Dispenser) state).getPersistentDataContainer().
-                get(Utility.key, PersistentDataType.STRING);
-        if(itemId!=null){
-            if(Collections.disabled.contains(itemId))
-                return;
-            Item generic = Collections.findItem(itemId);
-            if(generic instanceof Wiring)
-                ((Wiring) generic).ability(event);
-        }
-
-        ItemStack item = event.getItem();
-        if(item.getItemMeta()==null)
-            return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null){
-            Material type = item.getType();
-            if(Utility.buckets.contains(type)){
-                Block dispenser = event.getBlock();
-                Block cauldron = dispenser.getRelative(((org.bukkit.block.data.type.Dispenser) dispenser.getBlockData()).getFacing());
-                if(cauldron.getType()==Material.CAULDRON){
-                    Levelled level = (Levelled) cauldron.getBlockData();
-                    if(type==Material.BUCKET) {
-                        if(level.getLevel()!=3)
-                            return;
-                        level.setLevel(0);
-                    }
-                    else
-                        level.setLevel(3);
-                    cauldron.setBlockData(level);
-
-                    event.setCancelled(true);
-                    new BukkitRunnable(){
-                        public void run(){
-                            Inventory inv = ((Dispenser) state).getInventory();
-                            inv.removeItem(item);
-                            inv.addItem(new ItemStack(type==Material.BUCKET?Material.WATER_BUCKET:Material.BUCKET));
-                        }
-                    }.runTask(HoloItems.getInstance());
-                }
-                else{
-                    Location loc = cauldron.getLocation().add(0.5, 0.5, 0.5);
-                    java.util.Collection<Entity> cows = loc.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5, entity -> (entity instanceof Cow));
-                    if(cows.isEmpty())
-                        return;
-                    int mushroomCows = 0;
-                    for(Entity cow : cows){
-                        if(cow instanceof MushroomCow)
-                            mushroomCows++;
-                    }
-                    if(type==Material.BUCKET && cows.size()>mushroomCows)
-                        event.setItem(new ItemStack(Material.MILK_BUCKET));
-                    else if(type==Material.BOWL && mushroomCows!=0)
-                        event.setItem(new ItemStack(Material.MUSHROOM_STEW));
-                    else
-                        return;
-                    new BukkitRunnable(){
-                        public void run(){
-                            Inventory inv = ((Dispenser) state).getInventory();
-                            inv.removeItem(item);
-                        }
-                    }.runTask(HoloItems.getInstance());
-                }
-            }
-            return;
-        }
-
-        if(Collections.disabled.contains(id))
-            return;
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Dispensable)
-            ((Dispensable) generic).ability(event);
-    }
-
-    @EventHandler
-    public static void activateAbility(PlayerInteractEvent event){
-        //no isCancelled()
-        Action action = event.getAction();
-        Player player = event.getPlayer();
-        if(action==Action.PHYSICAL){
-            ItemStack item = player.getInventory().getBoots();
-            if(item==null || item.getItemMeta()==null)
-                return;
-            String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if(id==null)
-                return;
-            if(Collections.disabled.contains(id)) {
-                player.sendMessage("§cThis item has been disabled");
-                return;
-            }
-            Item generic = Collections.findItem(id);
-            if(generic instanceof Passable)
-                ((Passable) generic).ability(event, player.getWorld().getBlockAt(player.getLocation()));
-            return;
-        }
-        Block block = event.getClickedBlock();
-        if(block!=null && !player.isSneaking()){
-            BlockState state = block.getState();
-            if(state instanceof TileState){
-                String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-                if(id==null)
-                    return;
-                if(Collections.disabled.contains(id)) {
-                    player.sendMessage("§cThis item has been disabled");
-                    return;
-                }
-                Item generic = Collections.findItem(id);
-                if (generic instanceof Punchable)
-                    ((Punchable) generic).ability(event, action);
-                return;
-            }
-        }
-        ItemStack item = event.getItem();
-        if(item==null || item.getItemMeta()==null)
-            return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        String enchant = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-        if(id!=null) {
-            if (block != null && deactive.contains(block.getType())) {
-                event.setUseItemInHand(Event.Result.DENY);
-            }
-            else if (Collections.disabled.contains(id))
-                player.sendMessage("§cThis item has been disabled");
-            else {
-                Item generic = Collections.findItem(id);
-                if (generic instanceof Interactable)
-                    ((Interactable) generic).ability(event, action);
-            }
-        }
-        if(enchant!=null) {
-            if (Collections.disabled.contains(enchant))
-                return;
-            Item generic = Collections.findItem(enchant);
-            if (generic instanceof Interactable)
-                ((Interactable) generic).ability(event, action);
-        }
-    }
-
-    @EventHandler
-    public static void blockAbility(BlockPlaceEvent event){
-        if(event.isCancelled())
-            return;
-        ItemStack item = event.getItemInHand();
-        if(item.getItemMeta()==null)
-            return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        String enchant = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-        Player player = event.getPlayer();
-        if(id!=null) {
-            event.setCancelled(true);
-            if (Collections.disabled.contains(id))
-                player.sendMessage("§cThis item has been disabled");
-            else {
-                Item generic = Collections.findItem(id);
-                if (generic instanceof Placeable)
-                    ((Placeable) generic).ability(event);
-            }
-        }
-        if(enchant!=null)
-            Utility.addDurability(item, -1, player);
-    }
-
-    @EventHandler
-    public static void retainAbility(PlayerDeathEvent event){
-        //no isCancelled()
-        Player player = event.getEntity();
-        Entity killer = player.getKiller();
-
-        for(ItemStack item : player.getInventory().getContents()) {
-            if(item==null || item.getType()==Material.AIR || item.getItemMeta() == null)
-                continue;
-            ItemMeta meta = item.getItemMeta();
-            String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if (id == null)
-                continue;
-            if(Utility.onCooldown(item)) {
-                meta.getPersistentDataContainer().remove(Utility.cooldown);
-                item.setItemMeta(meta);
-                continue;
-            }
-            if(Collections.disabled.contains(id)){
-                player.sendMessage("§cThis item has been disabled");
-                continue;
-            }
-            Item generic = Collections.findItem(id);
-            if(generic instanceof Retainable) {
-                if(((Retainable) generic).ability(event, item))
-                    item.setAmount(item.getAmount() - 1);
-            }
-        }
-    }
-
-    @EventHandler
-    public static void clickAbility(InventoryClickEvent event){
+    public static void clickItem(InventoryClickEvent event){
         if(event.isCancelled())
             return;
 
@@ -578,7 +369,75 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void acceptable(EnchantItemEvent event){
+    public static void craftItem(CraftItemEvent event){
+        if(event.isCancelled())
+            return;
+        CraftingInventory inv = event.getInventory();
+        for(ItemStack item : event.getInventory().getMatrix()){
+            if(item!=null && item.getItemMeta()!=null){
+                String id = item.getItemMeta().getPersistentDataContainer().
+                        get(Utility.key, PersistentDataType.STRING);
+                if(id!=null) {
+                    if(ingredients.contains(id))
+                        continue;
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
+        Player player = (Player) event.getWhoClicked();
+        ItemStack curr = event.getCurrentItem();
+        if (curr == null || curr.getItemMeta() == null)
+            return;
+        ItemMeta currMeta = curr.getItemMeta();
+        String id = currMeta.
+                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if (id == null)
+            return;
+        Collection collection = Collections.findCollection(id.charAt(0));
+        Item item = collection.collection.get(id.charAt(1));
+
+        if(player.getGameMode()!=GameMode.CREATIVE) {
+            int progress = Utility.add(collection.getStat(player));
+            if (item.cost > progress) {
+                event.setCancelled(true);
+                player.sendMessage("Progress to unlocking " +
+                        Utility.formatName(item.name) + ": " + progress + "/" + item.cost);
+            } else if (!item.stackable && item.item.getMaxStackSize() > 1) {
+                World world = player.getWorld();
+                Location loc = player.getLocation();
+                boolean excess = false;
+                for (ItemStack ingredient : inv.getMatrix()) {
+                    if (ingredient == null)
+                        continue;
+                    if (ingredient.getAmount() > 1) {
+                        excess = true;
+                        ItemStack refund = ingredient.clone();
+                        refund.setAmount(ingredient.getAmount() - 1);
+                        ingredient.setAmount(1);
+                        world.dropItemNaturally(loc, refund);
+                    }
+                }
+                if (excess) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                currMeta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
+                curr.setItemMeta(currMeta);
+            }
+        }
+
+        if(Collections.disabled.contains(id)) {
+            player.sendMessage("§cThis item has been disabled");
+            return;
+        }
+        if(item instanceof Craftable)
+            ((Craftable) item).ability(event);
+    }
+
+    @EventHandler
+    public static void enchantItem(EnchantItemEvent event){
         if(event.isCancelled())
             return;
         ItemStack item = event.getItem();
@@ -629,319 +488,6 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void bowCause(ProjectileLaunchEvent event){
-        if(event.isCancelled())
-            return;
-        Projectile proj = event.getEntity();
-        if(!(proj.getShooter() instanceof LivingEntity))
-            return;
-
-        LivingEntity shooter = (LivingEntity) proj.getShooter();
-        boolean offhand = false;
-        EntityEquipment equip = shooter.getEquipment();
-        if(equip==null)
-            return;
-        for(ItemStack item : new ItemStack[]{equip.getItemInMainHand(), equip.getItemInOffHand()}) {
-            if (item==null || item.getItemMeta()==null) {
-                offhand = true;
-                continue;
-            }
-            String id = item.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if (id == null) {
-                offhand = true;
-                continue;
-            }
-
-            if(Collections.disabled.contains(id)) {
-                offhand = true;
-                continue;
-            }
-            Item generic = Collections.findItem(id);
-            if(generic instanceof Shootable) {
-                ((Shootable) generic).cause(event, item);
-                if (shooter instanceof Player){
-                    Player player = (Player) shooter;
-                    Utility.addDurability(item, -1, player);
-                }
-            }
-            else if(offhand && generic instanceof Holdable)
-                ((Holdable) generic).ability(event);
-
-            offhand = true;
-        }
-    }
-
-    @EventHandler
-    public static void bowEffect(ProjectileHitEvent event){
-        //no isCancelled()
-        Projectile proj = event.getEntity();
-        if(!(proj instanceof Arrow) || proj.doesBounce())
-            return;
-        String id = proj.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
-            return;
-
-        if(Collections.disabled.contains(id))
-            return;
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Shootable)
-            ((Shootable) generic).effect(event);
-    }
-
-    @EventHandler
-    public static void necroticAbility(EntityDeathEvent event){
-        //no isCancelled()
-
-        LivingEntity entity = event.getEntity();
-        String itemId = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(itemId!=null) {
-            event.getDrops().clear();
-            event.setDroppedExp(0);
-
-//            if(Collections.disabled.contains(itemId))
-//                return;
-//            Item generic = Collections.findItem(itemId);
-//            if(generic instanceof Necrotic)
-//                ((Necrotic) generic).effect(event, itemId);
-            return;
-        }
-
-        Player player = entity.getKiller();
-        if(player==null)
-            return;
-
-        PlayerInventory inv = player.getInventory();
-        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
-            if (item==null || item.getItemMeta()==null)
-                continue;
-            String id = item.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if (id == null)
-                continue;
-
-            if(Collections.disabled.contains(id))
-                continue;
-            Item generic = Collections.findItem(id);
-            if(generic instanceof Necrotic)
-                ((Necrotic) generic).cause(event, item);
-        }
-    }
-
-//    @EventHandler
-//    public static void targetAbility(EntityTargetLivingEntityEvent event){
-//        if(event.isCancelled())
-//            return;
-//        Entity entity = event.getEntity();
-//        if(!(entity instanceof LivingEntity))
-//            return;
-//        String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
-//        if(modifiers==null)
-//            return;
-//        for(String id : modifiers.split("-")) {
-//            if (id == null || Collections.disabled.contains(id))
-//                return;
-//            Item generic = Collections.findItem(id);
-//            if (generic instanceof Targetable)
-//                ((Targetable) generic).ability(event);
-//        }
-//    }
-
-    @EventHandler
-    public static void flauntAbility(AsyncPlayerChatEvent event){
-        if(event.isCancelled() || !event.isAsynchronous())
-            return;
-
-        Player player = event.getPlayer();
-        ItemStack item = player.getInventory().getHelmet();
-        if(item==null || item.getItemMeta()==null)
-            return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
-            return;
-
-        if(Collections.disabled.contains(id)){
-            player.sendMessage("§cThis item has been disabled");
-            return;
-        }
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Flauntable)
-            ((Flauntable) generic).ability(event);
-    }
-
-//    @EventHandler
-//    public static void fallDamageAbility(EntityDamageEvent event){
-//        if(event.isCancelled())
-//            return;
-//        if(!(event.getEntity() instanceof Player) || event.getCause()!=EntityDamageEvent.DamageCause.FALL)
-//            return;
-//        Player player = (Player) event.getEntity();
-//        ItemStack item = player.getInventory().getItemInOffHand();
-//        if(item.getType()==Material.AIR || item.getItemMeta()==null)
-//            return;
-//        String id = item.getItemMeta().
-//                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-//        if(id==null)
-//            return;
-//        if(Collections.disabled.contains(id)) {
-//            player.sendMessage("§cThis item has been disabled");
-//            return;
-//        }
-//        Item generic = Collections.findItem(id);
-//        if(generic instanceof Holdable)
-//            ((Holdable) generic).ability(event);
-//    }
-
-    @EventHandler
-    public static void breakItemAttacking(EntityDamageByEntityEvent event){
-        if(event.isCancelled())
-            return;
-        if(!(event.getDamager() instanceof LivingEntity))
-            return;
-        LivingEntity player = (LivingEntity) event.getDamager();
-        EntityEquipment equipment = player.getEquipment();
-        if(equipment==null)
-            return;
-        ItemStack item = equipment.getItemInMainHand();
-        if(item.getType()==Material.AIR || item.getItemMeta()==null)
-            return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
-            return;
-        Utility.addDurability(item, -1, player);
-
-        if (Collections.disabled.contains(id))
-            return;
-        Item generic = Collections.findItem(id);
-        if (generic instanceof Afflictable)
-            ((Afflictable) generic).ability(event, item);
-    }
-
-    @EventHandler
-    public static void breakItemDefending(EntityDamageByEntityEvent event){
-        if(event.isCancelled())
-            return;
-//        if(!(event.getEntity() instanceof Player))
-//            return;
-//        Player player = (Player) event.getEntity();
-//        if (player.getGameMode()==GameMode.CREATIVE)
-//            return;
-        if(!(event.getEntity() instanceof LivingEntity))
-            return;
-        LivingEntity entity = (LivingEntity) event.getEntity();
-        EntityEquipment equipment = entity.getEquipment();
-        if(equipment==null)
-            return;
-
-        for(ItemStack item : equipment.getArmorContents()) {
-            if (item == null || item.getItemMeta() == null)
-                continue;
-            String id = item.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if (id == null)
-                continue;
-
-            //mel: reading glasses easter egg
-            if (id.equals("f0") && item.containsEnchantment(Enchantment.BINDING_CURSE))
-                continue;
-
-            if (Collections.disabled.contains(id))
-                continue;
-            Item generic = Collections.findItem(id);
-            if (generic instanceof Wearable)
-                ((Wearable) generic).ability(event, Utility.addDurability(item, -1, entity) == -1);
-        }
-
-        if(!(entity instanceof Player))
-            return;
-        Player player = (Player) entity;
-        if(!player.isBlocking())
-            return;
-        PlayerInventory inv = player.getInventory();
-        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
-            if (item==null || item.getItemMeta()==null)
-                continue;
-            String id = item.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if (id == null)
-                continue;
-
-            if(Collections.disabled.contains(id))
-                continue;
-            Item generic = Collections.findItem(id);
-            if(generic instanceof Defensible) {
-                ((Defensible) generic).ability(event);
-                return;
-            }
-        }
-    }
-
-    @EventHandler
-    public static void breakItemMining(BlockBreakEvent event){
-        if(event.isCancelled())
-            return;
-
-        BlockState blockState = event.getBlock().getState();
-        if(blockState instanceof TileState){
-            String itemId = ((TileState) blockState).
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if(itemId!=null){
-                Item generic = Collections.findItem(itemId);
-                if(generic instanceof Crate)
-                    ((Crate) generic).ability(event);
-            }
-        }
-        PlayerInventory inv = event.getPlayer().getInventory();
-
-        ItemStack offhand = inv.getItemInOffHand();
-        if(offhand.getType()!=Material.AIR && offhand.getItemMeta()!=null){
-            String id = offhand.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if(id!=null) {
-                if (Collections.disabled.contains(id))
-                    event.getPlayer().sendMessage("§cThis item has been disabled");
-                else {
-                    Item generic = Collections.findItem(id);
-                    if (generic instanceof Holdable)
-                        ((Holdable) generic).ability(event);
-                }
-            }
-        }
-
-        ItemStack item = inv.getItemInMainHand();
-        if(item.getType()==Material.AIR || item.getItemMeta()==null)
-            return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        String enchant = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-        boolean durability = false;
-        if(id!=null) {
-            Player player = event.getPlayer();
-            durability = true;
-            Utility.addDurability(item, -1, player);
-            if (Collections.disabled.contains(id))
-                event.getPlayer().sendMessage("§cThis item has been disabled");
-            else {
-                Item generic = Collections.findItem(id);
-                if (generic instanceof Extractable)
-                    ((Extractable) generic).ability(event);
-            }
-        }
-        if(enchant!=null) {
-            if(!durability)
-                Utility.addDurability(item, -1, event.getPlayer());
-            if (Collections.disabled.contains(enchant))
-                return;
-            Item generic = Collections.findItem(enchant);
-            if (generic instanceof Extractable)
-                ((Extractable) generic).ability(event);
-        }
-    }
-
-    @EventHandler
     public static void mendItem(PlayerExpChangeEvent event){
         //no isCancelled()
         Player player = event.getPlayer();
@@ -961,103 +507,43 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void craftItem(CraftItemEvent event){
-        if(event.isCancelled())
+    public static void activateAbility(CreatureSpawnEvent event){
+        if(event.isCancelled() || activatables.isEmpty())
             return;
-        CraftingInventory inv = event.getInventory();
-        for(ItemStack item : event.getInventory().getMatrix()){
-            if(item!=null && item.getItemMeta()!=null){
-                String id = item.getItemMeta().getPersistentDataContainer().
-                        get(Utility.key, PersistentDataType.STRING);
-                if(id!=null) {
-                    if(exception.contains(id))
-                        continue;
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-        }
-        Player player = (Player) event.getWhoClicked();
-        ItemStack curr = event.getCurrentItem();
-        if (curr == null || curr.getItemMeta() == null)
-            return;
-        ItemMeta currMeta = curr.getItemMeta();
-        String id = currMeta.
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if (id == null)
-            return;
-        Collection collection = Collections.findCollection(id.charAt(0));
-        Item item = collection.collection.get(id.charAt(1));
-
-        if(player.getGameMode()!=GameMode.CREATIVE) {
-            int progress = Utility.add(collection.getStat(player));
-            if (item.cost > progress) {
-                event.setCancelled(true);
-                player.sendMessage("Progress to unlocking " +
-                        Utility.formatName(item.name) + ": " + progress + "/" + item.cost);
-            } else if (!item.stackable && item.item.getMaxStackSize() > 1) {
-                if (stackException.contains(id))
-                    return;
-                World world = player.getWorld();
-                Location loc = player.getLocation();
-                boolean excess = false;
-                for (ItemStack ingredient : inv.getMatrix()) {
-                    if (ingredient == null)
-                        continue;
-                    if (ingredient.getAmount() > 1) {
-                        excess = true;
-                        ItemStack refund = ingredient.clone();
-                        refund.setAmount(ingredient.getAmount() - 1);
-                        ingredient.setAmount(1);
-                        world.dropItemNaturally(loc, refund);
-                    }
-                }
-                if (excess) {
-                    event.setCancelled(true);
-                    return;
-                }
-
-                currMeta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
-                curr.setItemMeta(currMeta);
-            }
-        }
-
-        if(Collections.disabled.contains(id)) {
-            player.sendMessage("§cThis item has been disabled");
-            return;
-        }
-        if(item instanceof Craftable)
-            ((Craftable) item).ability(event);
+        for(Activatable activatable : activatables)
+            activatable.ability(event);
     }
 
     @EventHandler
-    public static void sealAbility(InventoryCloseEvent event){
-        //no isCancelled()
-        InventoryView view = event.getView();
-        Inventory inv = view.getTopInventory();
-        if(inv.getHolder()!=null)
+    public static void afflictAbility(EntityDamageByEntityEvent event){
+        if(event.isCancelled() || !(event.getDamager() instanceof LivingEntity))
             return;
-
-        if(view.getTitle().equals("Price")){
-            (new GalleryFrame()).ability(event);
+        LivingEntity entity = (LivingEntity) event.getDamager();
+        EntityEquipment equipment = entity.getEquipment();
+        if(equipment==null)
             return;
-        }
-
-        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-        if (item.getType()==Material.AIR || item.getItemMeta()==null)
+        ItemStack item = equipment.getItemInMainHand();
+        if(item.getType()==Material.AIR || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
-            return;
-
-        if(Collections.disabled.contains(id))
-            return;
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Pack) {
-            Pack pack = (Pack) generic;
-            if (view.getTitle().equals(pack.title))
-                pack.ability(inv, item, (Player) event.getPlayer());
+        if(id!=null) {
+            Utility.addDurability(item, -1, entity);
+            if (Collections.disabled.contains(id))
+                return;
+            Item generic = Collections.findItem(id);
+            if (generic instanceof Afflictable)
+                ((Afflictable) generic).ability(event, item);
         }
+    }
+
+    @EventHandler
+    public void collectAbility(EntityDropItemEvent event){
+        if(event.isCancelled())
+            return;
+        Entity entity = event.getEntity();
+        Collectable collectable = Utility.findItem(entity, Collectable.class);
+        if(collectable!=null)
+            collectable.ability(event, entity);
     }
 
     @EventHandler
@@ -1070,9 +556,10 @@ public class Events implements Listener {
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if (id == null)
             return;
-
-        if(Collections.disabled.contains(id))
+        if(Collections.disabled.contains(id)) {
+            event.getPlayer().sendMessage("§cThis item has been disabled");
             return;
+        }
         Item generic = Collections.findItem(id);
         if(generic instanceof Consumable)
             ((Consumable) generic).ability(event, item);
@@ -1081,180 +568,417 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void respondAbility(PlayerInteractEntityEvent event){
-        Entity entity = event.getRightClicked();
-        String itemId = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if (itemId != null) {
-            event.setCancelled(true);
-
-            if(!Collections.disabled.contains(itemId)) {
-                Item generic = Collections.findItem(itemId);
-                if (generic instanceof Reactable)
-                    ((Reactable) generic).ability(event);
-            }
-            else
-                event.getPlayer().sendMessage("§cThis item has been disabled");
+    public static void defendAbility(EntityDamageByEntityEvent event){
+        if(event.isCancelled() || !(event.getEntity() instanceof LivingEntity))
             return;
-        }
-        if(event.isCancelled())
+        LivingEntity entity = (LivingEntity) event.getEntity();
+        EntityEquipment equipment = entity.getEquipment();
+        if(equipment==null)
             return;
-
-        Player player = event.getPlayer();
-        ItemStack item;
-        if(event.getHand()==EquipmentSlot.HAND)
-            item = player.getInventory().getItemInMainHand();
-        else
-            item = player.getInventory().getItemInOffHand();
-        if (item.getType()!=Material.AIR && item.getItemMeta()!=null) {
+        for(ItemStack item : equipment.getArmorContents()) {
+            if (item == null || item.getItemMeta() == null)
+                continue;
             String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            if (id != null) {
-                event.setCancelled(true);
-
-                if(Collections.disabled.contains(id)){
-                    player.sendMessage("§cThis item has been disabled");
-                    return;
-                }
+            if (id!=null) {
+                //f0: reading glasses easter egg
+                if(id.equals("f0") && item.containsEnchantment(Enchantment.BINDING_CURSE) || Collections.disabled.contains(id))
+                    continue;
                 Item generic = Collections.findItem(id);
-                if(generic instanceof Responsible)
-                    if(((Responsible) generic).ability(event))
-                        Utility.addDurability(item, -1, player);
+                if (generic instanceof Wearable)
+                    ((Wearable) generic).ability(event, Utility.addDurability(item, -1, entity) == -1);
             }
         }
-    }
 
-    @EventHandler
-    public static void hangingAbility(HangingPlaceEvent event){
-        if(event.isCancelled())
+        if(!(entity instanceof Player))
             return;
-
-        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-        if (item.getType()==Material.AIR || item.getItemMeta() == null)
+        Player player = (Player) entity;
+        if(!player.isBlocking())
             return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
-            return;
-
-        if(Collections.disabled.contains(id)) {
-            event.getPlayer().sendMessage("§cThis item has been disabled");
-            return;
-        }
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Hangable)
-            ((Hangable) generic).ability(event);
-    }
-
-    @EventHandler
-    public static void dropAbility(PlayerDropItemEvent event){
-        if(event.isCancelled())
-            return;
-
-        org.bukkit.entity.Item itemEntity = event.getItemDrop();
-        ItemStack item = itemEntity.getItemStack();
-        if (item.getType()==Material.AIR || item.getItemMeta() == null)
-            return;
-        ItemMeta meta = item.getItemMeta();
-        String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
-            return;
-        if(Collections.disabled.contains(id)) {
-            event.getPlayer().sendMessage("§cThis item has been disabled");
-            return;
-        }
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Dropable)
-            ((Dropable) generic).ability(event);
-    }
-
-    @EventHandler
-    public static void activateAbility(CreatureSpawnEvent event){
-        if(event.isCancelled() || activatables.isEmpty())
-            return;
-        for(Activatable activatable : activatables)
-            activatable.ability(event);
-    }
-
-    @EventHandler
-    public static void powerAbility(BlockRedstoneEvent event){
-        BlockState state = event.getBlock().getState();
-        if(!(state instanceof TileState))
-            return;
-
-        String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
-            return;
-        if(Collections.disabled.contains(id))
-            return;
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Powerable)
-            ((Powerable) generic).ability(event);
-    }
-
-    @EventHandler
-    public static void protectPlacableWither(EntityChangeBlockEvent event){
-        if(event.isCancelled())
-            return;
-        if(event.getBlock().getType()==Material.PLAYER_HEAD)
-            event.setCancelled(true);
-    }
-
-    @EventHandler
-    public static void protectPlacableExplosion(EntityExplodeEvent event){
-        if(event.isCancelled())
-            return;
-        for(Block block : event.blockList()){
-            if(block!=null && block.getType()==Material.PLAYER_HEAD){
-                event.setCancelled(true);
+        PlayerInventory inv = player.getInventory();
+        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
+            Defensible defensible = Utility.findItem(item, Defensible.class, player);
+            if(defensible!=null) {
+                defensible.ability(event);
                 return;
             }
         }
     }
 
     @EventHandler
-    public void burnableAbility(BlockIgniteEvent event){
-        BlockState state = event.getBlock().getState();
-        if(!(state instanceof TileState))
+    public static void dispenseAbility(BlockDispenseEvent event){
+        if(event.isCancelled())
+            return;
+        Block block = event.getBlock();
+        BlockState state = block.getState();
+        if(!(state instanceof Dispenser))
             return;
 
-        String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
+        Wiring wiring = Utility.findItem(block, Wiring.class);
+        if(wiring!=null)
+            wiring.ability(event);
+
+        ItemStack item = event.getItem();
+        if(item.getItemMeta()==null)
             return;
+        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id==null){
+            Material type = item.getType();
+            if(Utility.buckets.contains(type)){
+                Block dispenser = event.getBlock();
+                Block cauldron = dispenser.getRelative(((org.bukkit.block.data.type.Dispenser) dispenser.getBlockData()).getFacing());
+                if(cauldron.getType()==Material.CAULDRON){
+                    Levelled level = (Levelled) cauldron.getBlockData();
+                    if(type==Material.BUCKET) {
+                        if(level.getLevel()!=3)
+                            return;
+                        level.setLevel(0);
+                    }
+                    else
+                        level.setLevel(3);
+                    cauldron.setBlockData(level);
+
+                    event.setCancelled(true);
+                    new BukkitRunnable(){
+                        public void run(){
+                            Inventory inv = ((Dispenser) state).getInventory();
+                            inv.removeItem(item);
+                            inv.addItem(new ItemStack(type==Material.BUCKET?Material.WATER_BUCKET:Material.BUCKET));
+                        }
+                    }.runTask(HoloItems.getInstance());
+                }
+                else{
+                    Location loc = cauldron.getLocation().add(0.5, 0.5, 0.5);
+                    java.util.Collection<Entity> cows = loc.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5, entity -> (entity instanceof Cow));
+                    if(cows.isEmpty())
+                        return;
+                    int mushroomCows = 0;
+                    for(Entity cow : cows){
+                        if(cow instanceof MushroomCow)
+                            mushroomCows++;
+                    }
+                    if(type==Material.BUCKET && cows.size()>mushroomCows)
+                        event.setItem(new ItemStack(Material.MILK_BUCKET));
+                    else if(type==Material.BOWL && mushroomCows!=0)
+                        event.setItem(new ItemStack(Material.MUSHROOM_STEW));
+                    else
+                        return;
+                    new BukkitRunnable(){
+                        public void run(){
+                            Inventory inv = ((Dispenser) state).getInventory();
+                            inv.removeItem(item);
+                        }
+                    }.runTask(HoloItems.getInstance());
+                }
+            }
+            return;
+        }
 
         if(Collections.disabled.contains(id))
             return;
         Item generic = Collections.findItem(id);
-        if(generic instanceof Burnable)
-            ((Burnable) generic).ability(event);
+        if(generic instanceof Dispensable)
+            ((Dispensable) generic).ability(event);
     }
 
     @EventHandler
-    public void collectableAbility(EntityDropItemEvent event){
-        Entity entity = event.getEntity();
-        String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
+    public static void dropAbility(PlayerDropItemEvent event){
+        if(event.isCancelled())
             return;
-
-        if(Collections.disabled.contains(id))
-            return;
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Collectable)
-            ((Collectable) generic).ability(event, entity);
+        Player player = event.getPlayer();
+        org.bukkit.entity.Item item = event.getItemDrop();
+        Dropable dropable = Utility.findItem(item, Dropable.class, player);
+        if(dropable!=null)
+            dropable.ability(event);
     }
 
     @EventHandler
-    public void togglableAbility(PlayerToggleSneakEvent event){
-        ItemStack item = event.getPlayer().getInventory().getBoots();
+    public static void extractAbility(BlockBreakEvent event){
+        if(event.isCancelled())
+            return;
+
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+        Crate crate = Utility.findItem(block, Crate.class, player);
+        if(crate!=null)
+            crate.ability(event);
+
+        PlayerInventory inv = player.getInventory();
+        boolean offhand = false;
+        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
+            if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
+                continue;
+            String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            String enchantments = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+            if(id!=null)
+                Utility.addDurability(item, -1, event.getPlayer());
+            else
+                continue;
+            Extractable extractable = Utility.findItem(id, Extractable.class, player);
+            if(extractable !=null && offhand == extractable instanceof Holdable)
+                extractable.ability(event);
+            if(!offhand) {
+                if(enchantments==null)
+                    continue;
+                for (String enchantment : enchantments.split(" ")) {
+                    Item generic = Collections.findItem(enchantment);
+                    if (generic instanceof Extractable)
+                        ((Extractable) generic).ability(event);
+                }
+            }
+            offhand = true;
+        }
+    }
+
+    @EventHandler
+    public static void entityAbility(PlayerInteractEntityEvent event){
+        //delayed isCancelled()
+        Entity entity = event.getRightClicked();
+        Player player = event.getPlayer();
+        Reactable reactable = Utility.findItem(entity, Reactable.class, player);
+        if(reactable!=null)
+            reactable.ability(event);
+
+        if(event.isCancelled())
+            return;
+        ItemStack item;
+        if(event.getHand()==EquipmentSlot.HAND)
+            item = player.getInventory().getItemInMainHand();
+        else
+            item = player.getInventory().getItemInOffHand();
+        Responsible responsible = Utility.findItem(item, Responsible.class, player);
+        if(responsible!=null && responsible.ability(event))
+            Utility.addDurability(item, -1, player);
+    }
+
+    @EventHandler
+    public static void flauntAbility(AsyncPlayerChatEvent event){
+        if(event.isCancelled() || !event.isAsynchronous())
+            return;
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getHelmet();
+        Flauntable flauntable = Utility.findItem(item, Flauntable.class, player);
+        if(flauntable!=null)
+            flauntable.ability(event);
+    }
+
+    @EventHandler
+    public static void hangingAbility(HangingPlaceEvent event){
+        if(event.isCancelled())
+            return;
+        Player player = event.getPlayer();
+        if(player==null)
+            return;
+        ItemStack item = player.getInventory().getItemInMainHand();
+        Hangable hangable = Utility.findItem(item, Hangable.class, player);
+        if(hangable!=null)
+            hangable.ability(event);
+    }
+
+    @EventHandler
+    public static void hitAbility(ProjectileHitEvent event){
+        //no isCancelled()
+        Projectile projectile = event.getEntity();
+        if(!(projectile instanceof Arrow) || projectile.doesBounce())
+            return;
+        Hitable hitable = Utility.findItem(projectile, Hitable.class);
+        if(hitable!=null)
+            hitable.ability(event);
+    }
+
+    @EventHandler
+    public void igniteAbility(BlockIgniteEvent event){
+        if(event.isCancelled())
+            return;
+        Block block = event.getBlock();
+        Ignitable ignitable = Utility.findItem(block, Ignitable.class);
+        if(ignitable !=null)
+            ignitable.ability(event);
+    }
+
+    @EventHandler
+    public static void interactAbility(PlayerInteractEvent event){
+        //no isCancelled()
+        Action action = event.getAction();
+        Player player = event.getPlayer();
+        if(action==Action.PHYSICAL){
+            ItemStack item = player.getInventory().getBoots();
+            Passable passable = Utility.findItem(item, Passable.class, player);
+            if(passable!=null)
+                passable.ability(event, player.getWorld().getBlockAt(player.getLocation()));
+            return;
+        }
+        Block block = event.getClickedBlock();
+        if(block!=null && !player.isSneaking()){
+            Punchable punchable = Utility.findItem(block, Punchable.class, player);
+            if (punchable!=null)
+                punchable.ability(event, action);
+            return;
+        }
+        ItemStack item = event.getItem();
         if(item==null || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null)
+        String enchantments = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        if(id!=null) {
+            if (block != null && deactive.contains(block.getType()))
+                event.setUseItemInHand(Event.Result.DENY);
+            else if (Collections.disabled.contains(id))
+                player.sendMessage("§cThis item has been disabled");
+            else {
+                Item generic = Collections.findItem(id);
+                if (generic instanceof Interactable)
+                    ((Interactable) generic).ability(event, action);
+            }
+        }
+        if(enchantments!=null) {
+            for (String enchantment : enchantments.split(" ")) {
+                if (Collections.disabled.contains(enchantment))
+                    return;
+                Item generic = Collections.findItem(enchantment);
+                if (generic instanceof Interactable)
+                    ((Interactable) generic).ability(event, action);
+            }
+        }
+    }
+
+    @EventHandler
+    public static void powerAbility(BlockRedstoneEvent event){
+        //no isCancelled()
+        Block block = event.getBlock();
+        Powerable powerable = Utility.findItem(block, Powerable.class);
+        if(powerable!=null)
+            powerable.ability(event);
+    }
+
+    @EventHandler
+    public static void launchAbility(ProjectileLaunchEvent event){
+        if(event.isCancelled())
+            return;
+        ProjectileSource entity = event.getEntity().getShooter();
+        if(!(entity instanceof LivingEntity))
+            return;
+        LivingEntity shooter = (LivingEntity) entity;
+        EntityEquipment equipment = shooter.getEquipment();
+        if(equipment==null)
+            return;
+        boolean offhand = false;
+        for(ItemStack item : new ItemStack[]{equipment.getItemInMainHand(), equipment.getItemInOffHand()}) {
+            Player player = shooter instanceof Player ? (Player) shooter : null;
+            Launchable launchable = Utility.findItem(item, Launchable.class, player);
+            if(launchable !=null && offhand == launchable instanceof Holdable){
+                launchable.ability(event, item);
+                Utility.addDurability(item, -1, player);
+            }
+            offhand = true;
+        }
+    }
+
+    @EventHandler
+    public static void retainAbility(PlayerDeathEvent event){
+        //no isCancelled()
+        Player player = event.getEntity();
+        for(ItemStack item : player.getInventory().getContents()) {
+            Retainable retainable = Utility.findItem(item, Retainable.class, player);
+            if(retainable!=null && retainable.ability(event, item))
+                item.setAmount(item.getAmount() - 1);
+        }
+    }
+
+    @EventHandler
+    public static void packAbility(InventoryCloseEvent event){
+        //no isCancelled()
+        InventoryView view = event.getView();
+        Inventory inv = view.getTopInventory();
+        if(inv.getHolder()!=null)
             return;
 
-        if(Collections.disabled.contains(id))
+        if(view.getTitle().equals("Price")){
+            (new GalleryFrame()).ability(event);
             return;
-        Item generic = Collections.findItem(id);
-        if(generic instanceof Togglable)
-            ((Togglable) generic).ability(event, item);
+        }
+
+        Player player = (Player) event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        Pack pack = Utility.findItem(item, Pack.class, player);
+        if(pack!=null && view.getTitle().equals(pack.title))
+            pack.ability(inv, item, player);
+    }
+
+    @EventHandler
+    public static void perishAbility(EntityDeathEvent event){
+        //no isCancelled()
+        LivingEntity entity = event.getEntity();
+        String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id!=null) {
+            event.getDrops().clear();
+            event.setDroppedExp(0);
+//            Perishable perishable = Utility.findItem(id, Perishable.class);
+//            if(perishable!=null)
+//                perishable.effect(event, id);
+            return;
+        }
+
+        Player player = entity.getKiller();
+        if(player==null)
+            return;
+        PlayerInventory inv = player.getInventory();
+        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
+            Perishable perishable = Utility.findItem(item, Perishable.class, player);
+            if(perishable!=null)
+                perishable.cause(event, item);
+        }
+    }
+
+    @EventHandler
+    public static void placeAbility(BlockPlaceEvent event){
+        if(event.isCancelled())
+            return;
+        ItemStack item = event.getItemInHand();
+        if(item.getItemMeta()==null)
+            return;
+        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id!=null) {
+            event.setCancelled(true);
+            if (Collections.disabled.contains(id))
+                event.getPlayer().sendMessage("§cThis item has been disabled");
+            else {
+                Item generic = Collections.findItem(id);
+                if (generic instanceof Placeable)
+                    ((Placeable) generic).ability(event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void toggleAbility(PlayerToggleSneakEvent event){
+        if(event.isCancelled())
+            return;
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getBoots();
+        if(item==null || item.getItemMeta()==null)
+            return;
+        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        String enchantments = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        if(id!=null) {
+            if (Collections.disabled.contains(id))
+                player.sendMessage("§cThis item has been disabled");
+            else {
+                Item generic = Collections.findItem(id);
+                if (generic instanceof Togglable)
+                    ((Togglable) generic).ability(event, item);
+            }
+        }
+        if(enchantments!=null) {
+            for (String enchantment : enchantments.split(" ")) {
+                if (Collections.disabled.contains(id))
+                    player.sendMessage("§cThis item has been disabled");
+                else {
+                    Item generic = Collections.findItem(enchantment);
+                    if (generic instanceof Togglable)
+                        ((Togglable) generic).ability(event, item);
+                }
+            }
+        }
     }
 
     private static int findMultiplier(Enchantment enchant){
@@ -1265,5 +989,25 @@ public class Events implements Listener {
             }
         }
         return -1;
+    }
+
+    @EventHandler
+    public static void preventWither(EntityChangeBlockEvent event){
+        if(event.isCancelled())
+            return;
+        if(event.getBlock().getType()==Material.PLAYER_HEAD)
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public static void preventExplosion(EntityExplodeEvent event){
+        if(event.isCancelled())
+            return;
+        for(Block block : event.blockList()){
+            if(block!=null && block.getType()==Material.PLAYER_HEAD){
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 }

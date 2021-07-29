@@ -2,7 +2,7 @@ package com.klin.holoItems.collections.gen3.rushiaCollection.items;
 
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.interfaces.Defensible;
-import com.klin.holoItems.interfaces.Necrotic;
+import com.klin.holoItems.interfaces.Perishable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.gen3.rushiaCollection.RushiaCollection;
 import com.klin.holoItems.utility.Task;
@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class NecromancersTome extends Pack implements Necrotic, Defensible {
+public class NecromancersTome extends Pack implements Perishable, Defensible {
     public static final String name = "necromancersTome";
     public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
         add(Enchantment.MENDING);

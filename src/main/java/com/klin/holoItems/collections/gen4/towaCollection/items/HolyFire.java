@@ -8,10 +8,7 @@ import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.block.data.Lightable;
@@ -74,8 +71,10 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
     }
 
     public void ability(CreatureSpawnEvent event) {
-        for(Location loc : locations){
-            if(loc.distance(event.getEntity().getLocation())<=100 && reasons.contains(event.getSpawnReason())){
+        Location loc =event.getEntity().getLocation();
+        World world = loc.getWorld();
+        for(Location location : locations){
+            if(world.equals(location.getWorld()) && loc.distance(location)<=100 && reasons.contains(event.getSpawnReason())){
                 event.setCancelled(true);
                 return;
             }

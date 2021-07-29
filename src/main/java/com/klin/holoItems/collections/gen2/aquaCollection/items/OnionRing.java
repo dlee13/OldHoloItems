@@ -1,10 +1,11 @@
 package com.klin.holoItems.collections.gen2.aquaCollection.items;
 
-import com.klin.holoItems.interfaces.Holdable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen2.aquaCollection.AquaCollection;
+import com.klin.holoItems.interfaces.Holdable;
 import com.klin.holoItems.interfaces.Retainable;
+import com.klin.holoItems.interfaces.Launchable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,7 +16,6 @@ import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Trident;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -27,7 +27,7 @@ import org.bukkit.util.Vector;
 
 import java.util.Set;
 
-public class OnionRing extends Item implements Holdable, Retainable {
+public class OnionRing extends Item implements Launchable, Holdable, Retainable {
     public static final String name = "onionRing";
     public static final Set<Enchantment> accepted = null;
 
@@ -59,10 +59,7 @@ public class OnionRing extends Item implements Holdable, Retainable {
         Bukkit.getServer().addRecipe(recipe);
     }
 
-    public void ability(Event generic) {
-        if(!(generic instanceof ProjectileLaunchEvent))
-            return;
-        ProjectileLaunchEvent event = (ProjectileLaunchEvent) generic;
+    public void ability(ProjectileLaunchEvent event, ItemStack item) {
         Projectile proj = event.getEntity();
         if(!(proj instanceof AbstractArrow) || proj instanceof Trident)
             return;

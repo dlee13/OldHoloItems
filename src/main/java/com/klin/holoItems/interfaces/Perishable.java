@@ -11,7 +11,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.HashSet;
 import java.util.Set;
 
-public interface Necrotic {
+public interface Perishable {
     Set<EntityType> prohibited = new HashSet<EntityType>(){{
         add(EntityType.GHAST);
         add(EntityType.GIANT);

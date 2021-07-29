@@ -1,7 +1,7 @@
 package com.klin.holoItems.collections.gen4.kanataCollection.items;
 
 import com.klin.holoItems.abstractClasses.SlidingPack;
-import com.klin.holoItems.interfaces.Shootable;
+import com.klin.holoItems.interfaces.Launchable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.gen4.kanataCollection.KanataCollection;
 import com.klin.holoItems.utility.Utility;
@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
 
 import java.util.Set;
 
-public class Shuribow extends SlidingPack implements Shootable {
+public class Shuribow extends SlidingPack implements Launchable {
     public static final String name = "shuribow";
     public static final Set<Enchantment> accepted = null;
 
@@ -59,7 +59,7 @@ public class Shuribow extends SlidingPack implements Shootable {
         Bukkit.getServer().addRecipe(bowLeft);
     }
 
-    public void cause(ProjectileLaunchEvent event, ItemStack item){
+    public void ability(ProjectileLaunchEvent event, ItemStack item){
         Integer spread = item.getItemMeta().getPersistentDataContainer().
                 get(Utility.pack, PersistentDataType.INTEGER);
         if(spread==null || spread==1)
@@ -145,8 +145,6 @@ public class Shuribow extends SlidingPack implements Shootable {
 //            }
 //        };
     }
-
-    public void effect(ProjectileHitEvent event){}
 
     protected void effect(PlayerInteractEvent event){}
 }

@@ -1,9 +1,10 @@
 package com.klin.holoItems.collections.gen2.shionCollection.items;
 
-import com.klin.holoItems.interfaces.Holdable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen2.shionCollection.ShionCollection;
+import com.klin.holoItems.interfaces.Holdable;
+import com.klin.holoItems.interfaces.Launchable;
 import com.klin.holoItems.utility.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,16 +13,15 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import java.util.Set;
 
-public class WitchsBracelet extends Item implements Holdable {
+public class WitchsBracelet extends Item implements Launchable, Holdable {
     public static final String name = "witchsBracelet";
     public static final Set<Enchantment> accepted = null;
 
@@ -57,10 +57,7 @@ public class WitchsBracelet extends Item implements Holdable {
         Bukkit.getServer().addRecipe(recipe);
     }
 
-    public void ability(Event generic) {
-        if(!(generic instanceof ProjectileLaunchEvent))
-            return;
-        ProjectileLaunchEvent event = (ProjectileLaunchEvent) generic;
+    public void ability(ProjectileLaunchEvent event, ItemStack item){
         Projectile potion = event.getEntity();
         potion.setVelocity(potion.getVelocity().multiply(0.5));
 

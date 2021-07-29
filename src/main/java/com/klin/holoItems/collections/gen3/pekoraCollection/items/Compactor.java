@@ -3,7 +3,6 @@ package com.klin.holoItems.collections.gen3.pekoraCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.gen3.pekoraCollection.PekoraCollection;
-import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -107,10 +106,6 @@ public class Compactor extends Wiring {
                     }
                     increment++;
                 }
-                //test
-                if(Utility.test)
-                    System.out.println("1: "+ingredientMap);
-                //
 
                 String[] shape = new String[(bottomRight-topLeft)/3+1];
                 increment = 0;
@@ -127,10 +122,6 @@ public class Compactor extends Wiring {
                 ItemStack result = null;
                 if(shapes!=null)
                     result = shapes.get(ingredientMap);
-                //test
-                if(Utility.test)
-                    System.out.println("2: "+result);
-                //
                 if(result==null) {
                     List<ItemStack> ingredients = new ArrayList<>(ingredientMap.values());
                     ingredients.removeAll(Collections.singleton(null));
@@ -138,11 +129,8 @@ public class Compactor extends Wiring {
                     if(result==null)
                         return;
                 }
+                result = result.clone();
 
-                //test
-                if(Utility.test)
-                    System.out.println("3: "+result);
-                //
                 Block block = event.getBlock();
                 Block relative = block.getRelative(((Dispenser) block.getBlockData()).getFacing());
                 Location loc = relative.getLocation();
@@ -174,10 +162,6 @@ public class Compactor extends Wiring {
                         continue;
                     itemStack.setAmount(itemStack.getAmount() - 1);
                 }
-                //test
-                if(Utility.test)
-                    System.out.println("4: "+result);
-                //
             }
         }.runTask(HoloItems.getInstance());
     }
