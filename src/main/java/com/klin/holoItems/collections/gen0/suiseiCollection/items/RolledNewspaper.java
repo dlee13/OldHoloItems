@@ -9,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import java.util.Set;
 
 public class RolledNewspaper extends Item implements Responsible {
     public static final String name = "rolledNewspaper";
-    public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
+    public static final Set<Enchantment> accepted = new HashSet<>(){{
         add(Enchantment.DURABILITY);
         add(Enchantment.MENDING);
     }};
@@ -46,7 +47,7 @@ public class RolledNewspaper extends Item implements Responsible {
         Bukkit.getServer().addRecipe(recipe);
     }
 
-    public boolean ability(PlayerInteractEntityEvent event){
+    public boolean ability(PlayerInteractEntityEvent event, ItemStack item){
         Entity player = event.getRightClicked();
         if(!(player instanceof Player))
             return false;

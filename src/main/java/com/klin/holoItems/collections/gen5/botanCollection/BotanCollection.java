@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.gen5.botanCollection;
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
 import com.klin.holoItems.collections.gen5.botanCollection.items.AirStall;
+import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -22,6 +23,7 @@ public class BotanCollection extends Collection {
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(Backdash.key, new Backdash());
         collection.put(AirStall.key, new AirStall());
+        collection.put(Sentry.key, new Sentry());
     }
 
     public Map<String, Integer> getStat(Player player){

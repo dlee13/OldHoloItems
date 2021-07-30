@@ -51,6 +51,10 @@ public class Utility {
 
     public static boolean test = false;
 
+    public static final Set<Material> fences = Stream.of(
+            Material.ACACIA_FENCE, Material.BIRCH_FENCE, Material.OAK_FENCE, Material.DARK_OAK_FENCE, Material.CRIMSON_FENCE, Material.JUNGLE_FENCE, Material.NETHER_BRICK_FENCE, Material.SPRUCE_FENCE, Material.WARPED_FENCE, Material.CHAIN, Material.IRON_BARS, Material.GLASS_PANE, Material.BLACK_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE, Material.GREEN_STAINED_GLASS_PANE, Material.BLUE_STAINED_GLASS_PANE, Material.PURPLE_STAINED_GLASS_PANE, Material.CYAN_STAINED_GLASS_PANE, Material.LIGHT_GRAY_STAINED_GLASS_PANE, Material.GRAY_STAINED_GLASS_PANE, Material.PINK_STAINED_GLASS_PANE, Material.LIME_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.MAGENTA_STAINED_GLASS_PANE, Material.ORANGE_STAINED_GLASS_PANE, Material.WHITE_STAINED_GLASS_PANE, Material.BROWN_STAINED_GLASS_PANE, Material.COBBLESTONE_WALL, Material.MOSSY_COBBLESTONE_WALL,  Material.STONE_BRICK_WALL, Material.MOSSY_STONE_BRICK_WALL, Material.ANDESITE_WALL, Material.DIORITE_WALL, Material.GRANITE_WALL, Material.SANDSTONE_WALL, Material.RED_SANDSTONE_WALL, Material.BRICK_WALL, Material.PRISMARINE_WALL, Material.NETHER_BRICK_WALL, Material.RED_NETHER_BRICK_WALL, Material.END_STONE_BRICK_WALL, Material.BLACKSTONE_WALL, Material.POLISHED_BLACKSTONE_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL).
+            collect(Collectors.toCollection(HashSet::new));
+
     public static final Map<BlockFace, BlockFace> opposites = Stream.of(new BlockFace[][] {
             { BlockFace.UP, BlockFace.DOWN },
             { BlockFace.DOWN, BlockFace.UP },
@@ -768,10 +772,6 @@ public class Utility {
             charge -= 1;
             return charge;
         }
-    }
-
-    public static void imbueProjectile(Projectile proj, String id){
-        proj.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
     }
 
     public static boolean isInBoat(Player player){

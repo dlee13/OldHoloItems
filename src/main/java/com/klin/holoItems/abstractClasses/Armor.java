@@ -85,25 +85,20 @@ public abstract class Armor extends Item implements Wearable, Responsible {
         return false;
     }
 
-    public boolean ability(PlayerInteractEntityEvent event){
+    public boolean ability(PlayerInteractEntityEvent event, ItemStack item){
         Player player = event.getPlayer();
         if(!player.isOp())
             return false;
         Entity entity = event.getRightClicked();
         if(!(entity instanceof Mob))
             return false;
-        ItemStack item;
-        PlayerInventory playerInv = player.getInventory();
-        if(event.getHand()== EquipmentSlot.HAND)
-            item = playerInv.getItemInMainHand();
-        else
-            item = playerInv.getItemInOffHand();
         ItemStack armor = item.clone();
         armor.setAmount(1);
         EntityEquipment inv = ((LivingEntity) entity).getEquipment();
         if(inv==null)
             return false;
 
+        PlayerInventory playerInv = player.getInventory();
         switch(armorPiece){
             case 4:
                 if(inv.getItemInMainHand().getType()==Material.AIR)

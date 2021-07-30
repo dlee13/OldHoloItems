@@ -709,7 +709,7 @@ public class Events implements Listener {
                 continue;
             String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             String enchantments = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-            if(id!=null)
+            if(id!=null || enchantments!=null)
                 Utility.addDurability(item, -1, event.getPlayer());
             else
                 continue;
@@ -746,7 +746,7 @@ public class Events implements Listener {
         else
             item = player.getInventory().getItemInOffHand();
         Responsible responsible = Utility.findItem(item, Responsible.class, player);
-        if(responsible!=null && responsible.ability(event))
+        if(responsible!=null && responsible.ability(event, item))
             Utility.addDurability(item, -1, player);
     }
 
@@ -812,7 +812,6 @@ public class Events implements Listener {
             Punchable punchable = Utility.findItem(block, Punchable.class, player);
             if (punchable!=null)
                 punchable.ability(event, action);
-            return;
         }
         ItemStack item = event.getItem();
         if(item==null || item.getItemMeta()==null)
@@ -874,6 +873,21 @@ public class Events implements Listener {
     }
 
     @EventHandler
+    public static void manipulateAbility(PlayerArmorStandManipulateEvent event){
+        if(event.isCancelled())
+            return;
+        ArmorStand stand = event.getRightClicked();
+        String id = stand.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id==null || Collections.disabled.contains(id))
+            return;
+        event.setCancelled(true);
+
+        Item generic = Collections.findItem(id);
+        if(generic instanceof Manipulatable)
+            ((Manipulatable) generic).ability(event);
+    }
+
+    @EventHandler
     public static void retainAbility(PlayerDeathEvent event){
         //no isCancelled()
         Player player = event.getEntity();
@@ -908,6 +922,9 @@ public class Events implements Listener {
     public static void perishAbility(EntityDeathEvent event){
         //no isCancelled()
         LivingEntity entity = event.getEntity();
+        if(entity instanceof ArmorStand)
+            return;
+        //
         String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id!=null) {
             event.getDrops().clear();

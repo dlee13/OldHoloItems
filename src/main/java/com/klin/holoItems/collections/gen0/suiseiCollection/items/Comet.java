@@ -142,12 +142,22 @@ public class Comet extends Item implements Interactable {
         stand.setGravity(false);
         stand.setBasePlate(false);
         stand.setCanPickupItems(false);
-        stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.INTEGER, 0);
+        stand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING);
+        stand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING);
+        stand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.ADDING);
+        stand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING);
+        stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
 
-        if(hand)
+        if(hand) {
+            stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
+            stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
             stand.getEquipment().setItemInMainHand(item);
-        else
+        }
+        else {
+            stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
+            stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING);
             stand.getEquipment().setItemInOffHand(item);
+        }
 
         if (player.getGameMode()!=GameMode.CREATIVE)
             Utility.addDurability(item, -1, player);
@@ -159,6 +169,7 @@ public class Comet extends Item implements Interactable {
 
             public void run(){
                 if(increment>=0.3*iterations) {
+                    stand.remove();
                     if(!targets.isEmpty()) {
                         if (player.getGameMode()!=GameMode.CREATIVE)
                             Utility.addDurability(item, 0.5, player);
@@ -167,7 +178,6 @@ public class Comet extends Item implements Interactable {
                                 Utility.damage(item, damage, crit, player, target, false, true, false);
                         }
                     }
-                    stand.remove();
                     cancel();
                     return;
                 }

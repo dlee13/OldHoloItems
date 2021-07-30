@@ -16,6 +16,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -94,7 +95,7 @@ public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable
     }
 
     public void ability(ProjectileLaunchEvent event, ItemStack item){
-        Utility.imbueProjectile(event.getEntity(), id);
+        event.getEntity().getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
     }
 
     public void ability(ProjectileHitEvent event){
