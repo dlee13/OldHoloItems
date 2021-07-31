@@ -153,12 +153,14 @@ public class Events implements Listener {
                             meta.setUnbreakable(true);
                             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
                             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                            List<String> addDurability = meta.getLore();
-                            if (addDurability == null)
-                                addDurability = new ArrayList<>();
+                        }
+                        List<String> addDurability = meta.getLore();
+                        if (addDurability == null)
+                            addDurability = new ArrayList<>();
+                        if(!addDurability.get(addDurability.size()-1).startsWith("§fDurability: ")) {
                             int maxDurability = itemA.getType().getMaxDurability();
-                            int currDurability = maxDurability-((Damageable) meta).getDamage();
-                            addDurability.add("§fDurability: "+currDurability+"/"+maxDurability);
+                            int currDurability = maxDurability - ((Damageable) meta).getDamage();
+                            addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
                             meta.setLore(addDurability);
                             combined.setItemMeta(meta);
                         }

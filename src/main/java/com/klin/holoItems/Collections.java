@@ -368,10 +368,24 @@ public class Collections implements CommandExecutor, Listener {
 
             case "settype":
                 ItemStack item = player.getInventory().getItemInMainHand();
-                if(args.length>=1) {
+                if(item.getType()!=Material.AIR && args.length>=1) {
                     Material type = Material.getMaterial(args[0]);
                     if(type!=null)
                         item.setType(type);
+                }
+                return true;
+
+            case "setenchantments":
+                ItemStack stack = player.getInventory().getItemInMainHand();
+                if(stack.getType()!=Material.AIR && stack.getItemMeta()!=null && args.length>=1) {
+                    String enchantments = "";
+                    for(int i=0; i<args.length; i++)
+                        enchantments += args[i] + " ";
+                    enchantments = enchantments.substring(0, enchantments.length()-1);
+                    ItemMeta meta = stack.getItemMeta();
+                    meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments);
+                    stack.setItemMeta(meta);
+                    player.sendMessage("Enchantments set to: "+enchantments);
                 }
                 return true;
 

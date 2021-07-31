@@ -25,6 +25,7 @@ public class HoloItems extends JavaPlugin {
         getCommand("gethead").setExecutor(collections);
         getCommand("setcustommodeldata").setExecutor(collections);
         getCommand("settype").setExecutor(collections);
+        getCommand("setenchantments").setExecutor(collections);
         getCommand("removechunktickets").setExecutor(collections);
         getCommand("getactivatables").setExecutor(collections);
         getCommand("clearactivatables").setExecutor(collections);

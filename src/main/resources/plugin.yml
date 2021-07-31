@@ -26,6 +26,8 @@ commands:
     usage: /<command> <custommodeldata>
   settype:
     usage: /<command> <type>
+  setenchantments:
+    usage: /<command> <enchantments>
   removechunktickets:
     usage: /<command>
   getactivatables:

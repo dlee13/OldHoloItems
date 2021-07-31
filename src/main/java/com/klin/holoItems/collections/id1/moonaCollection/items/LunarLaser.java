@@ -100,7 +100,7 @@ public class LunarLaser extends Enchant implements Interactable {
             }
             return;
         }
-        Location loc = player.getLocation();
+        Location loc = player.getEyeLocation();
         World world = loc.getWorld();
         if(world.getTime() < 13000 || world.getHighestBlockAt(loc, HeightMap.OCEAN_FLOOR).getY()-1 > loc.getY())
             return;

@@ -443,10 +443,15 @@ public class Utility {
 
     public static ItemStack addEnchant(ItemStack itemStack, Enchant enchant){
         ItemMeta meta = itemStack.getItemMeta();
-        meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchant.id);
+        String enchantments = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        if(enchantments==null)
+            enchantments = "";
+        else
+            enchantments += " ";
+        meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments+enchant.id);
         List<String> lore = meta.getLore();
         if(lore==null)
-            lore = new ArrayList<>();
+            lore = new ArrayList<>(List.of(""));
         lore.add(0, "§7"+formatName(enchant.name));
         meta.setLore(lore);
         itemStack.setItemMeta(meta);

@@ -14,6 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,13 +49,17 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
     public void ability(LivingEntity entity, String info) {
         int speed;
         try{
-            speed = Math.max(1, Math.min(Integer.parseInt(info.substring(0, 1)), 8));
+            speed = Math.max(1, Math.min(Integer.parseInt(info.substring(0, Math.max(info.indexOf(" "), 1))), 32));
         } catch(NumberFormatException e){ return; }
-        Material path = Material.getMaterial(info.substring(1));
-        if(path==null)
+        Material path = Material.getMaterial(info.substring(info.indexOf(" ")+1));
+        if(path==null) {
+            entity.damage(entity.getHealth()*3);
             return;
-        Location location = entity.getLocation();
+        }
+        entity.setAI(false);
+        entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
 
+        Location location = entity.getLocation();
         Set<Block> visited = new HashSet<>();
         new Task(HoloItems.getInstance(), 0, 1){
             Block curr = location.getWorld().getBlockAt(location).getRelative(BlockFace.DOWN);
@@ -83,9 +88,9 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
                     return;
                 }
 
-                if(increments>42 || next==null || !entity.isValid()){
+                if(increments>210 || next==null || !entity.isValid()){
                     if(entity.isValid())
-                        entity.damage(entity.getHealth()*2);
+                        entity.damage(entity.getHealth()*3);
                     cancel();
                     return;
                 }
