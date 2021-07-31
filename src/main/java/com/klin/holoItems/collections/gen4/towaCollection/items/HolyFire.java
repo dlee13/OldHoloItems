@@ -24,20 +24,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class HolyFire extends Crate implements Activatable, Punchable, Placeable {
     public static final String name = "holyFire";
     public static final HashSet<Enchantment> accepted = null;
-    private static final Set<CreatureSpawnEvent.SpawnReason> reasons = Stream.of(
-            CreatureSpawnEvent.SpawnReason.DEFAULT,
-            CreatureSpawnEvent.SpawnReason.NATURAL,
-            CreatureSpawnEvent.SpawnReason.NETHER_PORTAL,
-            CreatureSpawnEvent.SpawnReason.PATROL,
-            CreatureSpawnEvent.SpawnReason.REINFORCEMENTS,
-            CreatureSpawnEvent.SpawnReason.SPAWNER
-    ).collect(Collectors.toCollection(HashSet::new));
+//    private static final Set<CreatureSpawnEvent.SpawnReason> reasons = Stream.of(
+//            CreatureSpawnEvent.SpawnReason.DEFAULT,
+//            CreatureSpawnEvent.SpawnReason.NATURAL,
+//            CreatureSpawnEvent.SpawnReason.NETHER_PORTAL,
+//            CreatureSpawnEvent.SpawnReason.PATROL,
+//            CreatureSpawnEvent.SpawnReason.REINFORCEMENTS,
+//            CreatureSpawnEvent.SpawnReason.SPAWNER
+//    ).collect(Collectors.toCollection(HashSet::new));
     private static Set<Location> locations = new HashSet<>();
 
     private static final Material material = Material.SOUL_CAMPFIRE;
@@ -71,10 +69,10 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
     }
 
     public void ability(CreatureSpawnEvent event) {
-        Location loc =event.getEntity().getLocation();
+        Location loc = event.getEntity().getLocation();
         World world = loc.getWorld();
         for(Location location : locations){
-            if(world.equals(location.getWorld()) && loc.distance(location)<=100 && reasons.contains(event.getSpawnReason())){
+            if(world.equals(location.getWorld()) && loc.distance(location)<=100/* && reasons.contains(event.getSpawnReason())*/){
                 event.setCancelled(true);
                 return;
             }
@@ -119,6 +117,7 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
     }
 
     public void ability(BlockBreakEvent event) {
+        event.setDropItems(false);
         super.ability(event);
         remove(event.getBlock().getLocation());
     }

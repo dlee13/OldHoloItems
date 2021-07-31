@@ -28,6 +28,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class Utility {
             { BlockFace.NORTH, BlockFace.SOUTH },
             { BlockFace.SOUTH, BlockFace.NORTH },
             { BlockFace.EAST, BlockFace.WEST },
-            { BlockFace.WEST, BlockFace.EAST },
+            { BlockFace.WEST, BlockFace.EAST }
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     public static final Map<Material, Material> ageable = new LinkedHashMap<>() {{
@@ -86,6 +87,13 @@ public class Utility {
             Enchantment.THORNS,
             Enchantment.DURABILITY
     ).collect(Collectors.toCollection(HashSet::new));
+
+    public static final Map<BlockFace, Vector> cardinal = new HashMap<>() {{
+        put(BlockFace.NORTH, new Vector(0, 0, -1));
+        put(BlockFace.SOUTH, new Vector(0, 0, 1));
+        put(BlockFace.EAST, new Vector(1, 0, 0));
+        put(BlockFace.WEST, new Vector(-1, 0, 0));
+    }};
 
     public static final Set<Material> boots = Stream.of(
             LEATHER_BOOTS,

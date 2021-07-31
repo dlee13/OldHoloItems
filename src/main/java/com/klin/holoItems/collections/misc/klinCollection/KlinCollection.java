@@ -23,6 +23,7 @@ public class KlinCollection extends Collection {
         collection.put(Paver.key, new Paver());
         collection.put(Vacuum.key, new Vacuum());
         collection.put(KFPGuide.key, new KFPGuide());
+        collection.put(SecondHand.key, new SecondHand());
     }
 
     public Map<String, Integer> getStat(Player player){

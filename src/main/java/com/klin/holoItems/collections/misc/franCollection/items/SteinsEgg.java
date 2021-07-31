@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.misc.franCollection.items;
 
 import com.klin.holoItems.Collections;
+import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.collections.misc.franCollection.FranCollection;
@@ -19,10 +20,12 @@ import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 
@@ -132,6 +135,12 @@ public class SteinsEgg extends Pack implements Dispensable {
     public void ability(BlockDispenseEvent event) {
         event.setCancelled(true);
         Block block = event.getBlock();
-        effect(event.getItem(), block.getRelative(((Dispenser) block.getBlockData()).getFacing()), null);
+        ItemStack item = event.getItem();
+        effect(item, block.getRelative(((Dispenser) block.getBlockData()).getFacing()), null);
+        new BukkitRunnable(){
+            public void run(){
+                ((InventoryHolder) block.getState()).getInventory().removeItem(item);
+            }
+        }.runTask(HoloItems.getInstance());
     }
 }

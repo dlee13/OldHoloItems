@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.misc.franCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.misc.franCollection.items.BreadCrumbs;
 import com.klin.holoItems.collections.misc.franCollection.items.HpModifier;
 import com.klin.holoItems.collections.misc.franCollection.items.SteinsEgg;
 import com.klin.holoItems.collections.misc.franCollection.items.TotemicEgg;
@@ -24,6 +25,7 @@ public class FranCollection extends Collection {
         collection.put(TotemicEgg.key, new TotemicEgg());
         collection.put(SteinsEgg.key, new SteinsEgg());
         collection.put(HpModifier.key, new HpModifier());
+        collection.put(BreadCrumbs.key, new BreadCrumbs());
     }
 
     public Map<String, Integer> getStat(Player player){
