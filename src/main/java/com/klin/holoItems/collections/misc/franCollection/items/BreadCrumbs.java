@@ -3,8 +3,8 @@ package com.klin.holoItems.collections.misc.franCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.misc.franCollection.FranCollection;
-import com.klin.holoItems.interfaces.combinable.Combinable;
-import com.klin.holoItems.interfaces.combinable.Spawnable;
+import com.klin.holoItems.interfaces.customMobs.Combinable;
+import com.klin.holoItems.interfaces.customMobs.Spawnable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
@@ -29,7 +29,7 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
             "§6Ability" +"/n"+
                 "Rename to set HP";
     private static final int durability = 0;
-    public static final boolean stackable = false;
+    public static final boolean stackable = true;
     private static final boolean shiny = true;
 
     public static final int cost = -1;
@@ -53,7 +53,7 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
         } catch(NumberFormatException e){ return; }
         Material path = Material.getMaterial(info.substring(info.indexOf(" ")+1));
         if(path==null) {
-            entity.damage(entity.getHealth()*3);
+            entity.damage(210);
             return;
         }
         entity.setAI(false);
@@ -89,8 +89,10 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
                 }
 
                 if(increments>210 || next==null || !entity.isValid()){
-                    if(entity.isValid())
-                        entity.damage(entity.getHealth()*3);
+                    if(entity.isValid()) {
+                        entity.setAI(true);
+                        entity.damage(210);
+                    }
                     cancel();
                     return;
                 }

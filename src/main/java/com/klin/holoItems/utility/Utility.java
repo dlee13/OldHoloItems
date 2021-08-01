@@ -4,7 +4,7 @@ import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Enchant;
-import com.klin.holoItems.interfaces.combinable.Spawnable;
+import com.klin.holoItems.interfaces.customMobs.Spawnable;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -803,12 +803,19 @@ public class Utility {
             EntityType type = EntityType.valueOf(base);
             LivingEntity entity = (LivingEntity) world.spawnEntity(loc, type);
             if(modifiers!=null) {
-                entity.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, modifiers);
+                String active = "";
                 for (String modifier : modifiers.split("-")) {
                     com.klin.holoItems.Item generic = Collections.findItem(modifier.substring(0, 2));
-                    if (generic instanceof Spawnable)
-                        ((Spawnable) generic).ability(entity, modifier.length()>2?modifier.substring(3):null);
+                    if (generic instanceof Spawnable) {
+                        ((Spawnable) generic).ability(entity, modifier.length() > 2 ? modifier.substring(3) : null);
+                        if(generic.getClass().getInterfaces().length>1 || generic.getClass().getSuperclass()!=Item.class)
+                            active += "-"+modifier;
+                    }
+                    else
+                        active += "-"+modifier;
                 }
+                if(!active.isEmpty())
+                    entity.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, active.substring(1));
             }
             return entity;
         } catch(IllegalArgumentException e){

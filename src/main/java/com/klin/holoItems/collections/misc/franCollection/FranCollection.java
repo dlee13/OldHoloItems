@@ -1,11 +1,7 @@
 package com.klin.holoItems.collections.misc.franCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.misc.franCollection.items.BreadCrumbs;
-import com.klin.holoItems.collections.misc.franCollection.items.HpModifier;
-import com.klin.holoItems.collections.misc.franCollection.items.SteinsEgg;
-import com.klin.holoItems.collections.misc.franCollection.items.TotemicEgg;
-import com.klin.holoItems.collections.misc.hiddenCollection.items.*;
+import com.klin.holoItems.collections.misc.franCollection.items.*;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -22,10 +18,12 @@ public class FranCollection extends Collection {
 
     public FranCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(TotemicEgg.key, new TotemicEgg());
+        collection.put(TotemPole.key, new TotemPole());
         collection.put(SteinsEgg.key, new SteinsEgg());
-        collection.put(HpModifier.key, new HpModifier());
+        collection.put(LifeCrystal.key, new LifeCrystal());
         collection.put(BreadCrumbs.key, new BreadCrumbs());
+        collection.put(LaserPointer.key, new LaserPointer());
+        collection.put(SlimeJelly.key, new SlimeJelly());
     }
 
     public Map<String, Integer> getStat(Player player){

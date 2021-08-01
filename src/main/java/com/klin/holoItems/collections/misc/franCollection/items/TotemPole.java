@@ -23,25 +23,25 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Set;
 
-public class TotemicEgg extends Pack implements Dispensable {
-    public static final String name = "totemicEgg";
+public class TotemPole extends Pack implements Dispensable {
+    public static final String name = "totemPole";
     public static final Set<Enchantment> accepted = null;
 
-    private static final Material material = Material.EGG;
+    private static final Material material = Material.ARMOR_STAND;
     private static final String lore =
             "§6Ability" +"/n"+
-            "egg";
+                    "Stack eggs";
     private static final int durability = 0;
     private static final boolean shiny = true;
 
     private static final int size = 9;
-    public static final String title = "egg";
+    public static final String title = "Eggs";
     public static final boolean display = false;
 
     public static final int cost = -1;
     public static final char key = '0';
 
-    public TotemicEgg(){
+    public TotemPole(){
         super(name, accepted, material, lore, durability, shiny, size, title, display, cost,
                 ""+FranCollection.key+key, key);
     }

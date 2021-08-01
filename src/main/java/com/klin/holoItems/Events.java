@@ -7,6 +7,8 @@ import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
 import com.klin.holoItems.collections.misc.hiddenCollection.items.GalleryFrame;
 import com.klin.holoItems.interfaces.*;
+import com.klin.holoItems.interfaces.customMobs.Retaliable;
+import com.klin.holoItems.interfaces.customMobs.Targetable;
 import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.GameMode;
@@ -521,6 +523,18 @@ public class Events implements Listener {
         if(event.isCancelled() || !(event.getDamager() instanceof LivingEntity))
             return;
         LivingEntity entity = (LivingEntity) event.getDamager();
+        String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
+        //test
+        System.out.println(modifiers);
+        //
+        if(modifiers!=null){
+            for(String modifier : modifiers.split("-")){
+                Retaliable retaliable = Utility.findItem(modifier, Retaliable.class);
+                if(retaliable!=null)
+                    retaliable.ability(event, entity);
+            }
+        }
+
         EntityEquipment equipment = entity.getEquipment();
         if(equipment==null)
             return;
@@ -843,15 +857,6 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void powerAbility(BlockRedstoneEvent event){
-        //no isCancelled()
-        Block block = event.getBlock();
-        Powerable powerable = Utility.findItem(block, Powerable.class);
-        if(powerable!=null)
-            powerable.ability(event);
-    }
-
-    @EventHandler
     public static void launchAbility(ProjectileLaunchEvent event){
         if(event.isCancelled())
             return;
@@ -890,14 +895,12 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void retainAbility(PlayerDeathEvent event){
+    public static void powerAbility(BlockRedstoneEvent event){
         //no isCancelled()
-        Player player = event.getEntity();
-        for(ItemStack item : player.getInventory().getContents()) {
-            Retainable retainable = Utility.findItem(item, Retainable.class, player);
-            if(retainable!=null && retainable.ability(event, item))
-                item.setAmount(item.getAmount() - 1);
-        }
+        Block block = event.getBlock();
+        Powerable powerable = Utility.findItem(block, Powerable.class);
+        if(powerable!=null)
+            powerable.ability(event);
     }
 
     @EventHandler
@@ -926,14 +929,38 @@ public class Events implements Listener {
         LivingEntity entity = event.getEntity();
         if(entity instanceof ArmorStand)
             return;
-        //
         String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id!=null) {
+        String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
+        if(id!=null || modifiers!=null) {
             event.getDrops().clear();
             event.setDroppedExp(0);
 //            Perishable perishable = Utility.findItem(id, Perishable.class);
 //            if(perishable!=null)
 //                perishable.effect(event, id);
+            if(entity.getType()==EntityType.SLIME){
+                Slime slime = (Slime) entity;
+                int size = slime.getSize();
+                new BukkitRunnable() {
+                    public void run() {
+                        for (Entity nearby : entity.getNearbyEntities(10, 10, 10)) {
+                            //test
+                            if(nearby instanceof Slime)
+                                System.out.println(((Slime) nearby).getSize());
+                            //
+                            if (nearby instanceof Slime && ((Slime) nearby).getSize() == size - 1) {
+                                if (id != null)
+                                    nearby.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+                                if (modifiers != null) {
+                                    //test
+                                    System.out.println(nearby);
+                                    //
+                                    nearby.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, modifiers);
+                                }
+                            }
+                        }
+                    }
+                }.runTaskLater(HoloItems.getInstance(), 20);
+            }
             return;
         }
 
@@ -965,6 +992,31 @@ public class Events implements Listener {
                 if (generic instanceof Placeable)
                     ((Placeable) generic).ability(event);
             }
+        }
+    }
+
+    @EventHandler
+    public static void retainAbility(PlayerDeathEvent event){
+        //no isCancelled()
+        Player player = event.getEntity();
+        for(ItemStack item : player.getInventory().getContents()) {
+            Retainable retainable = Utility.findItem(item, Retainable.class, player);
+            if(retainable!=null && retainable.ability(event, item))
+                item.setAmount(item.getAmount() - 1);
+        }
+    }
+
+    @EventHandler
+    public static void targetAbility(EntityTargetLivingEntityEvent event){
+        if(event.isCancelled())
+            return;
+        String modifiers = event.getEntity().getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
+        if(modifiers==null)
+            return;
+        for(String modifier : modifiers.split("-")){
+            Targetable targetable = Utility.findItem(modifier, Targetable.class);
+            if(targetable!=null)
+                targetable.ability(event);
         }
     }
 
