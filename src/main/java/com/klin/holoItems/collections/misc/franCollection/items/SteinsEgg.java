@@ -135,12 +135,6 @@ public class SteinsEgg extends Pack implements Dispensable {
     public void ability(BlockDispenseEvent event) {
         event.setCancelled(true);
         Block block = event.getBlock();
-        ItemStack item = event.getItem();
-        effect(item, block.getRelative(((Dispenser) block.getBlockData()).getFacing()), null);
-        new BukkitRunnable(){
-            public void run(){
-                ((InventoryHolder) block.getState()).getInventory().removeItem(item);
-            }
-        }.runTask(HoloItems.getInstance());
+        effect(event.getItem(), block.getRelative(((Dispenser) block.getBlockData()).getFacing()), null);
     }
 }

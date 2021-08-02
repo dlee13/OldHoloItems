@@ -524,9 +524,6 @@ public class Events implements Listener {
             return;
         LivingEntity entity = (LivingEntity) event.getDamager();
         String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
-        //test
-        System.out.println(modifiers);
-        //
         if(modifiers!=null){
             for(String modifier : modifiers.split("-")){
                 Retaliable retaliable = Utility.findItem(modifier, Retaliable.class);
@@ -942,24 +939,16 @@ public class Events implements Listener {
                 int size = slime.getSize();
                 new BukkitRunnable() {
                     public void run() {
-                        for (Entity nearby : entity.getNearbyEntities(10, 10, 10)) {
-                            //test
-                            if(nearby instanceof Slime)
-                                System.out.println(((Slime) nearby).getSize());
-                            //
-                            if (nearby instanceof Slime && ((Slime) nearby).getSize() == size - 1) {
+                        for (Entity nearby : entity.getNearbyEntities(0.5, 0.5, 0.5)) {
+                            if (nearby instanceof Slime && ((Slime) nearby).getSize() == size/2) {
                                 if (id != null)
                                     nearby.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
-                                if (modifiers != null) {
-                                    //test
-                                    System.out.println(nearby);
-                                    //
+                                if (modifiers != null)
                                     nearby.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, modifiers);
-                                }
                             }
                         }
                     }
-                }.runTaskLater(HoloItems.getInstance(), 20);
+                }.runTaskLater(HoloItems.getInstance(), 30);
             }
             return;
         }

@@ -36,3 +36,7 @@ commands:
     usage: /<command>
   test:
     usage: /<command>
+  tostring:
+    usage: /<command> <x1> <y1> <z1> <x2> <y2> <z2>
+  build:
+    usage: /<command> <index>

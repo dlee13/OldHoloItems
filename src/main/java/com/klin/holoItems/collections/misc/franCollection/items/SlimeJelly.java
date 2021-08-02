@@ -7,7 +7,10 @@ import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -69,9 +72,8 @@ public class SlimeJelly extends LaserPointer implements Retaliable {
             }
         }
         else {
-            //toDo: change velocity to launch players beyond 10 block radius
-            entity.setVelocity(entity.getLocation().subtract(slime.getLocation()).toVector().normalize().multiply(4));
-            entity.damage(slime.getSize()*2);
+            entity.setVelocity(entity.getLocation().subtract(slime.getLocation()).toVector().normalize().setY(0.1).multiply(4));
+            entity.damage(slime.getSize());
             Entity target = null;
             double closest = 11;
             Location loc = slime.getLocation();
