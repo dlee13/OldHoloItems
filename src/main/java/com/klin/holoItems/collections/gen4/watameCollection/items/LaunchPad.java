@@ -29,7 +29,6 @@ import java.util.HashSet;
 public class LaunchPad extends Crate implements Placeable, Punchable {
     public static final String name = "launchPad";
     public static final HashSet<Enchantment> accepted = null;
-    private static final Vector vertical = new Vector(0, 1, 0);
 
     private static final Material material = Material.SMOKER;
     private static final int quantity = 1;
@@ -158,7 +157,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                         public void run() {
                             loc = drone.getLocation();
                             if (increment >= 240 || !drone.isValid()) {
-                                if (drone != null)
+                                if (drone.isValid())
                                     drone.remove();
                                 Block drop = world.getHighestBlockAt(dest);
                                 if (drop.getType() == Material.BARREL) {
@@ -190,7 +189,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                     cancel();
                     return;
                 }
-                drone.setVelocity(drone.getVelocity().add(vertical));
+                drone.setVelocity(drone.getVelocity().add(new Vector(0, 1, 0)));
                 increment++;
             }
         };

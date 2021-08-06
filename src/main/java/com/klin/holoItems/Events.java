@@ -716,9 +716,10 @@ public class Events implements Listener {
             crate.ability(event);
 
         PlayerInventory inv = player.getInventory();
-        boolean offhand = false;
-        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
-            if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
+        ItemStack[] items = new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()};
+        for(int i=0; i<items.length; i++) {
+            ItemStack item = items[i];
+            if(item.getType()==Material.AIR || item.getItemMeta()==null)
                 continue;
             String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             String enchantments = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
@@ -727,9 +728,9 @@ public class Events implements Listener {
             else
                 continue;
             Extractable extractable = Utility.findItem(id, Extractable.class, player);
-            if(extractable !=null && offhand == extractable instanceof Holdable)
+            if(extractable !=null && i!=0 == extractable instanceof Holdable)
                 extractable.ability(event);
-            if(!offhand) {
+            if(i==0) {
                 if(enchantments==null)
                     continue;
                 for (String enchantment : enchantments.split(" ")) {
@@ -738,7 +739,6 @@ public class Events implements Listener {
                         ((Extractable) generic).ability(event);
                 }
             }
-            offhand = true;
         }
     }
 
@@ -861,6 +861,8 @@ public class Events implements Listener {
         if(!(entity instanceof LivingEntity))
             return;
         LivingEntity shooter = (LivingEntity) entity;
+        if(event.isCancelled())
+            return;
         EntityEquipment equipment = shooter.getEquipment();
         if(equipment==null)
             return;
@@ -1007,6 +1009,15 @@ public class Events implements Listener {
             if(targetable!=null)
                 targetable.ability(event);
         }
+    }
+
+    @EventHandler
+    public static void teleportAbility(EntityTeleportEvent event){
+        if(event.isCancelled())
+            return;
+        Entity entity = event.getEntity();
+        if(!(entity instanceof Player) && entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING)!=null)
+            event.setCancelled(true);
     }
 
     @EventHandler

@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -63,6 +64,13 @@ public class Utility {
             { BlockFace.SOUTH, BlockFace.NORTH },
             { BlockFace.EAST, BlockFace.WEST },
             { BlockFace.WEST, BlockFace.EAST }
+    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+    public static final Map<BlockFace, BlockFace> left = Stream.of(new BlockFace[][] {
+            { BlockFace.NORTH, BlockFace.WEST },
+            { BlockFace.SOUTH, BlockFace.EAST },
+            { BlockFace.EAST, BlockFace.NORTH },
+            { BlockFace.WEST, BlockFace.SOUTH }
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     public static final Map<Material, Material> ageable = new LinkedHashMap<>() {{
@@ -377,6 +385,25 @@ public class Utility {
             ZOMBIE_SPAWN_EGG,
             ZOMBIE_VILLAGER_SPAWN_EGG
     ).collect(Collectors.toCollection(HashSet::new));
+
+    public static final HashMap<DyeColor, Set<Material>> colors = new HashMap<>(){{
+        put(DyeColor.BLACK, Stream.of(/*BLACK_BED, BLACK_CARPET,*/ BLACK_CONCRETE/*, BLACK_CONCRETE_POWDER*/, BLACK_GLAZED_TERRACOTTA/*, BLACK_SHULKER_BOX*/, BLACK_STAINED_GLASS, BLACK_STAINED_GLASS_PANE, BLACK_TERRACOTTA, BLACK_WOOL, BLACKSTONE, BLACKSTONE_SLAB, BLACKSTONE_STAIRS, BLACKSTONE_WALL, COAL_BLOCK, CHISELED_POLISHED_BLACKSTONE, CRACKED_POLISHED_BLACKSTONE_BRICKS, GILDED_BLACKSTONE, OBSIDIAN, POLISHED_BLACKSTONE, POLISHED_BLACKSTONE_BRICK_SLAB, POLISHED_BLACKSTONE_BRICK_STAIRS, POLISHED_BLACKSTONE_BRICK_WALL, POLISHED_BLACKSTONE_BRICKS/*, POLISHED_BLACKSTONE_PRESSURE_PLATE*/, POLISHED_BLACKSTONE_SLAB, POLISHED_BLACKSTONE_STAIRS, POLISHED_BLACKSTONE_WALL).collect(Collectors.toSet()));
+        put(DyeColor.GRAY, Stream.of(ANDESITE, BASALT, NETHERITE_BLOCK, COBBLESTONE, COBBLESTONE_SLAB, COBBLESTONE_STAIRS/*, GRAY_BED, GRAY_CARPET*/, GRAY_CONCRETE/*, GRAY_CONCRETE_POWDER*/, GRAY_GLAZED_TERRACOTTA/*, GRAY_SHULKER_BOX*/, GRAY_STAINED_GLASS, GRAY_STAINED_GLASS_PANE, GRAY_TERRACOTTA, GRAY_WOOL, POLISHED_ANDESITE, POLISHED_BASALT/*, TUFF*/).collect(Collectors.toSet()));
+        put(DyeColor.LIGHT_GRAY, Stream.of(IRON_BLOCK, CLAY/*, HEAVY_WEIGHTED_PRESSURE_PLATE, LIGHT_GRAY_BED, LIGHT_GRAY_CARPET*/, LIGHT_GRAY_CONCRETE/*, LIGHT_GRAY_CONCRETE_POWDER*/, LIGHT_GRAY_GLAZED_TERRACOTTA/*, LIGHT_GRAY_SHULKER_BOX*/, LIGHT_GRAY_STAINED_GLASS, LIGHT_GRAY_STAINED_GLASS_PANE, LIGHT_GRAY_TERRACOTTA, LIGHT_GRAY_WOOL, LODESTONE).collect(Collectors.toSet()));
+        put(DyeColor.WHITE, Stream.of(QUARTZ_BLOCK, BONE_BLOCK/*, CALCITE*/, CHISELED_QUARTZ_BLOCK, DIORITE, DIORITE_SLAB, DIORITE_STAIRS, DIORITE_WALL, END_STONE_BRICK_SLAB, END_STONE_BRICK_STAIRS, END_STONE_BRICK_WALL, END_STONE_BRICKS, POLISHED_DIORITE, POLISHED_DIORITE_SLAB, POLISHED_DIORITE_STAIRS, QUARTZ_BRICKS, QUARTZ_PILLAR, SMOOTH_QUARTZ, SMOOTH_QUARTZ_SLAB, SMOOTH_QUARTZ_STAIRS, SNOW_BLOCK/*, WHITE_BED, WHITE_CARPET*/, WHITE_CONCRETE/*, WHITE_CONCRETE_POWDER*/, WHITE_GLAZED_TERRACOTTA/*, WHITE_SHULKER_BOX*/, WHITE_STAINED_GLASS, WHITE_STAINED_GLASS_PANE, WHITE_TERRACOTTA, WHITE_WOOL).collect(Collectors.toSet()));
+        put(DyeColor.YELLOW, Stream.of(GOLD_BLOCK, HAY_BLOCK/*, LIGHT_WEIGHTED_PRESSURE_PLATE*/, SPONGE, WET_SPONGE/*, YELLOW_BED, YELLOW_CARPET*/, YELLOW_CONCRETE/*, YELLOW_CONCRETE_POWDER*/, YELLOW_GLAZED_TERRACOTTA/*, YELLOW_SHULKER_BOX*/, YELLOW_STAINED_GLASS, YELLOW_STAINED_GLASS_PANE, YELLOW_TERRACOTTA, YELLOW_WOOL).collect(Collectors.toSet()));
+        put(DyeColor.ORANGE, Stream.of(CUT_RED_SANDSTONE_SLAB/*, ORANGE_BED, ORANGE_CARPET*/, ORANGE_CONCRETE/*, ORANGE_CONCRETE_POWDER*/, ORANGE_GLAZED_TERRACOTTA/*, ORANGE_SHULKER_BOX*/, ORANGE_STAINED_GLASS, ORANGE_STAINED_GLASS_PANE, ORANGE_TERRACOTTA, ORANGE_WOOL, RED_SANDSTONE_WALL, SMOOTH_RED_SANDSTONE_SLAB, SMOOTH_RED_SANDSTONE_STAIRS).collect(Collectors.toSet()));
+        put(DyeColor.RED, Stream.of(REDSTONE_BLOCK, CHISELED_NETHER_BRICKS, CRACKED_NETHER_BRICKS, CRIMSON_HYPHAE, CRIMSON_NYLIUM, CRIMSON_PLANKS/*, CRIMSON_PRESSURE_PLATE*/, CRIMSON_SLAB, CRIMSON_STAIRS, CRIMSON_STEM, NETHER_BRICK_WALL, NETHER_BRICKS, NETHER_WART_BLOCK/*, RED_BED, RED_CARPET, RED_CONCRETE, RED_CONCRETE_POWDER*/, RED_GLAZED_TERRACOTTA, RED_MUSHROOM_BLOCK, RED_NETHER_BRICK_SLAB, RED_NETHER_BRICK_STAIRS, RED_NETHER_BRICK_WALL, RED_NETHER_BRICKS/*, RED_SHULKER_BOX*/, RED_STAINED_GLASS, RED_STAINED_GLASS_PANE, RED_TERRACOTTA, RED_WOOL, STRIPPED_CRIMSON_HYPHAE, STRIPPED_CRIMSON_STEM).collect(Collectors.toSet()));
+        put(DyeColor.PINK, Stream.of(/*PINK_BED, PINK_CARPET,*/ PINK_CONCRETE/*, PINK_CONCRETE_POWDER*/, PINK_GLAZED_TERRACOTTA/*, PINK_SHULKER_BOX*/, PINK_STAINED_GLASS, PINK_STAINED_GLASS_PANE, PINK_TERRACOTTA, PINK_WOOL).collect(Collectors.toSet()));
+        put(DyeColor.MAGENTA, Stream.of(/*MAGENTA_BED, MAGENTA_CARPET,*/ MAGENTA_CONCRETE/*, MAGENTA_CONCRETE_POWDER*/, MAGENTA_GLAZED_TERRACOTTA/*, MAGENTA_SHULKER_BOX*/, MAGENTA_STAINED_GLASS, MAGENTA_STAINED_GLASS_PANE, MAGENTA_TERRACOTTA, MAGENTA_WOOL).collect(Collectors.toSet()));
+        put(DyeColor.PURPLE, Stream.of(/*BLOCK_OF_AMETHYST, BUDDING_AMETHYST,*/ CRYING_OBSIDIAN/*, PURPLE_BED, PURPLE_CARPET*/, PURPLE_CONCRETE/*, PURPLE_CONCRETE_POWDER*/, PURPLE_GLAZED_TERRACOTTA/*, PURPLE_SHULKER_BOX*/, PURPLE_STAINED_GLASS, PURPLE_STAINED_GLASS_PANE, PURPLE_TERRACOTTA, PURPLE_WOOL, PURPUR_BLOCK, PURPUR_PILLAR, PURPUR_SLAB, PURPUR_STAIRS).collect(Collectors.toSet()));
+        put(DyeColor.BLUE, Stream.of(LAPIS_BLOCK/*, BLUE_BED, BLUE_CARPET*/, BLUE_CONCRETE/*, BLUE_CONCRETE_POWDER*/, BLUE_GLAZED_TERRACOTTA, BLUE_ICE/*, BLUE_SHULKER_BOX*/, BLUE_STAINED_GLASS, BLUE_STAINED_GLASS_PANE, BLUE_TERRACOTTA, BLUE_WOOL).collect(Collectors.toSet()));
+        put(DyeColor.LIGHT_BLUE, Stream.of(DIAMOND_BLOCK/*, LIGHT_BLUE_BED, LIGHT_BLUE_CARPET*/, LIGHT_BLUE_CONCRETE/*, LIGHT_BLUE_CONCRETE_POWDER*/, LIGHT_BLUE_GLAZED_TERRACOTTA/*, LIGHT_BLUE_SHULKER_BOX*/, LIGHT_BLUE_STAINED_GLASS, LIGHT_BLUE_STAINED_GLASS_PANE, LIGHT_BLUE_TERRACOTTA, LIGHT_BLUE_WOOL).collect(Collectors.toSet()));
+        put(DyeColor.CYAN, Stream.of(/*CYAN_BED, CYAN_CARPET,*/ CYAN_CONCRETE/*, CYAN_CONCRETE_POWDER*/, CYAN_GLAZED_TERRACOTTA/*, CYAN_SHULKER_BOX*/, CYAN_STAINED_GLASS, CYAN_STAINED_GLASS_PANE, CYAN_TERRACOTTA, CYAN_WOOL, DARK_PRISMARINE, DARK_PRISMARINE_SLAB, DARK_PRISMARINE_STAIRS, PRISMARINE, PRISMARINE_BRICK_SLAB, PRISMARINE_BRICK_STAIRS, PRISMARINE_BRICKS, PRISMARINE_STAIRS, PRISMARINE_WALL, STRIPPED_WARPED_HYPHAE, STRIPPED_WARPED_STEM, WARPED_PLANKS/*, WARPED_PRESSURE_PLATE*/, WARPED_SLAB, WARPED_STAIRS, WARPED_STEM, WARPED_WART_BLOCK).collect(Collectors.toSet()));
+        put(DyeColor.GREEN, Stream.of(EMERALD_BLOCK/*, GREEN_BED, GREEN_CARPET*/, GREEN_CONCRETE/*, GREEN_CONCRETE_POWDER*/, GREEN_GLAZED_TERRACOTTA/*, GREEN_SHULKER_BOX*/, GREEN_STAINED_GLASS, GREEN_STAINED_GLASS_PANE, GREEN_TERRACOTTA, GREEN_WOOL/*, MOSS_BLOCK, MOSS_CARPET*/).collect(Collectors.toSet()));
+        put(DyeColor.LIME, Stream.of(/*LIME_BED, LIME_CARPET,*/ LIME_CONCRETE/*, LIME_CONCRETE_POWDER*/, LIME_GLAZED_TERRACOTTA/*, LIME_SHULKER_BOX*/, LIME_STAINED_GLASS, LIME_STAINED_GLASS_PANE, LIME_TERRACOTTA, LIME_WOOL, SLIME_BLOCK).collect(Collectors.toSet()));
+        put(DyeColor.BROWN, Stream.of(ANCIENT_DEBRIS/*, BROWN_BED, BROWN_CARPET*/, BROWN_CONCRETE/*, BROWN_CONCRETE_POWDER*/, BROWN_GLAZED_TERRACOTTA, BROWN_MUSHROOM_BLOCK/*, BROWN_SHULKER_BOX*/, BROWN_STAINED_GLASS, BROWN_STAINED_GLASS_PANE, BROWN_TERRACOTTA, BROWN_WOOL, COARSE_DIRT, DIRT, PODZOL/*, ROOTED_DIRT*/).collect(Collectors.toSet()));
+    }};
 
     public static <T> T findItem(ItemStack item, Class<T> cls){
         if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
@@ -799,27 +826,70 @@ public class Utility {
     }
 
     public static LivingEntity spawn(Location loc, World world, String base, String modifiers){
+        EntityType type;
         try {
-            EntityType type = EntityType.valueOf(base);
-            LivingEntity entity = (LivingEntity) world.spawnEntity(loc, type);
-            if(modifiers!=null) {
-                String active = "";
-                for (String modifier : modifiers.split("-")) {
-                    com.klin.holoItems.Item generic = Collections.findItem(modifier.substring(0, 2));
-                    if (generic instanceof Spawnable) {
-                        ((Spawnable) generic).ability(entity, modifier.length() > 2 ? modifier.substring(3) : null);
-                        if(generic.getClass().getInterfaces().length>1 || generic.getClass().getSuperclass()!=Item.class)
-                            active += "-"+modifier;
-                    }
-                    else
+            type = EntityType.valueOf(base);
+        } catch(IllegalArgumentException e){return null;}
+        return spawn(loc, world, type, modifiers);
+    }
+
+    public static LivingEntity spawn(Location loc, World world, EntityType type, String modifiers){
+        LivingEntity entity = (LivingEntity) world.spawnEntity(loc, type);
+        if(modifiers!=null) {
+            String active = "";
+            for (String modifier : modifiers.split("-")) {
+                com.klin.holoItems.Item generic = Collections.findItem(modifier.substring(0, 2));
+                if (generic instanceof Spawnable) {
+                    ((Spawnable) generic).ability(entity, modifier.length() > 2 ? modifier.substring(3) : null);
+                    if(generic.getClass().getInterfaces().length>1 || generic.getClass().getSuperclass()!=Item.class)
                         active += "-"+modifier;
                 }
-                if(!active.isEmpty())
-                    entity.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, active.substring(1));
+                else
+                    active += "-"+modifier;
             }
-            return entity;
-        } catch(IllegalArgumentException e){
-            return null;
+            if(!active.isEmpty())
+                entity.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, active.substring(1));
         }
+        return entity;
+    }
+
+    public static <E> Optional<E> getRandom (Collection<E> e) {
+        if(e==null)
+            return Optional.empty();
+        return e.stream()
+                .skip((int) (e.size() * Math.random()))
+                .findFirst();
+    }
+
+    public static Map<Block, BlockData> explode(Location loc, int radius, boolean remove){
+        World world = loc.getWorld();
+        Map<Block, BlockData> blast = new HashMap<>();
+        for(int i=-1*radius; i<=radius; i++){
+            for(int j=-1*radius; j<=radius; j++) {
+                for (int k=-1*radius; k<=radius; k++) {
+                    double distance = Math.sqrt(Math.pow(i, 2)+Math.pow(j, 2)+Math.pow(k, 2));
+                    if(distance>radius)
+                        continue;
+                    else{
+                        double offset = ((double) radius)/2-1;
+                        double difference = distance-(radius-offset);
+                        if((offset-difference)/offset<Math.random())
+                            continue;
+                    }
+                    Block block = world.getBlockAt(loc.clone().add(i, j, k));
+                    if(block.isPassable())
+                        continue;
+                    blast.put(block, block.getBlockData());
+                    if(remove)
+                        block.setType(AIR);
+                }
+            }
+        }
+        if(radius<3)
+            world.spawnParticle(Particle.EXPLOSION_LARGE, loc, 1);
+        else
+            world.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
+        world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, ((float) radius)/10, 1f);
+        return blast;
     }
 }

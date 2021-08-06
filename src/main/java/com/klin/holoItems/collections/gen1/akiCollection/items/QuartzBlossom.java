@@ -13,7 +13,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -26,7 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 
-public class QuartzBlossom extends BatteryPack implements Dropable, Holdable, Retainable, Clickable {
+public class QuartzBlossom extends BatteryPack implements Extractable, Dropable, Holdable, Retainable, Clickable {
     public static final String name = "quartzBlossom";
     public static final Set<Enchantment> accepted = null;
 //    private Map<Player, Set<Block>> active = new HashMap<>();
@@ -167,10 +166,7 @@ public class QuartzBlossom extends BatteryPack implements Dropable, Holdable, Re
             event.setCancelled(true);
     }
 
-    public void ability(Event generic){
-        if(!(generic instanceof BlockBreakEvent))
-            return;
-        BlockBreakEvent event = (BlockBreakEvent) generic;
+    public void ability(BlockBreakEvent event){
         Player player = event.getPlayer();
 //        Set<Block> blocks = active.get(player);
 //        if(blocks==null)

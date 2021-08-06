@@ -1,12 +1,11 @@
 package com.klin.holoItems.collections.misc.franCollection.items;
 
 import com.klin.holoItems.Collections;
-import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.collections.misc.franCollection.FranCollection;
-import com.klin.holoItems.interfaces.customMobs.Combinable;
 import com.klin.holoItems.interfaces.Dispensable;
+import com.klin.holoItems.interfaces.customMobs.Combinable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,12 +19,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 

@@ -1,10 +1,7 @@
 package com.klin.holoItems.collections.gen0.suiseiCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
-import com.klin.holoItems.collections.gen0.suiseiCollection.items.Hoshiyumi;
-import com.klin.holoItems.collections.gen0.suiseiCollection.items.RolledNewspaper;
-import com.klin.holoItems.collections.gen0.suiseiCollection.items.SuperStar;
+import com.klin.holoItems.collections.gen0.suiseiCollection.items.*;
 import org.bukkit.Statistic;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -31,6 +28,7 @@ public class SuiseiCollection extends Collection {
         collection.put(Hoshiyumi.key, new Hoshiyumi());
         collection.put(Comet.key, new Comet());
         collection.put(RolledNewspaper.key, new RolledNewspaper());
+        collection.put(TetrisPiece.key, new TetrisPiece());
     }
 
     public Map<String, Integer> getStat(Player player){

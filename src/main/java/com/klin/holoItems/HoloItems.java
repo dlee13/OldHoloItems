@@ -1,6 +1,7 @@
 package com.klin.holoItems;
 
-import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
+import com.klin.holoItems.dungeons.inaDungeon.Dungeon;
+import com.klin.holoItems.dungeons.inaDungeon.Payload;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,9 +32,14 @@ public class HoloItems extends JavaPlugin {
         getCommand("getactivatables").setExecutor(collections);
         getCommand("clearactivatables").setExecutor(collections);
         getCommand("test").setExecutor(collections);
-        InaDungeon inaDungeon = new InaDungeon();
-        getCommand("tostring").setExecutor(inaDungeon);
-        getCommand("build").setExecutor(inaDungeon);
+        Dungeon dungeon = new Dungeon();
+        getCommand("tostring").setExecutor(dungeon);
+        getCommand("build").setExecutor(dungeon);
+        getCommand("spreadfire").setExecutor(dungeon);
+        getCommand("paintbomb").setExecutor(dungeon);
+        Payload payload = new Payload();
+        getCommand("spawn").setExecutor(payload);
+        getCommand("payload").setExecutor(payload);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "HoloItems [ON]");
     }
