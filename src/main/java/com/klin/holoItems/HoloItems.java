@@ -37,6 +37,7 @@ public class HoloItems extends JavaPlugin {
         getCommand("build").setExecutor(dungeon);
         getCommand("spreadfire").setExecutor(dungeon);
         getCommand("paintbomb").setExecutor(dungeon);
+        getCommand("groundpound").setExecutor(dungeon);
         Payload payload = new Payload();
         getCommand("spawn").setExecutor(payload);
         getCommand("payload").setExecutor(payload);

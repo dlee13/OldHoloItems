@@ -72,7 +72,10 @@ public class FrostLayer extends BatteryPack implements Placeable {
             item.setItemMeta(meta);
         }
         Block start = event.getBlockAgainst();
-        if(start.getType()!=Material.SNOW_BLOCK)
+        Material material = item.getType();
+        if(material==Material.SNOW)
+            material = Material.SNOW_BLOCK;
+        if(start.getType()!=material)
             return;
 
         Queue<Block> platform = new LinkedList<>();
@@ -80,6 +83,7 @@ public class FrostLayer extends BatteryPack implements Placeable {
         platform.add(start);
 
         Player player = event.getPlayer();
+        Material type = material;
         new Task(HoloItems.getInstance(), 0, 1){
             int charge = currCharge;
 
@@ -104,13 +108,13 @@ public class FrostLayer extends BatteryPack implements Placeable {
                             center.getRelative(BlockFace.SOUTH),
                             center.getRelative(BlockFace.EAST),
                             center.getRelative(BlockFace.WEST)}) {
-                        if ((block.getType().isAir() || block.getType()==Material.SNOW_BLOCK) &&
+                        if ((block.getType().isAir() || block.getType()==type) &&
                                 !checked.contains(block) && !platform.contains(block)) {
                             BlockPlaceEvent event = new BlockPlaceEvent(block, center.getState(), center,
                                     snowBlock, player, true, EquipmentSlot.HAND);
                             Bukkit.getServer().getPluginManager().callEvent(event);
-                            if(!event.isCancelled() && block.getType()!=Material.SNOW_BLOCK) {
-                                block.setType(Material.SNOW_BLOCK);
+                            if(!event.isCancelled() && block.getType()!=type) {
+                                block.setType(type);
                                 charge--;
                             }
                             platform.add(block);

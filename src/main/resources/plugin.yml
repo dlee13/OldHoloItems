@@ -44,6 +44,8 @@ commands:
     usage: /<command> <x> <y> <z>
   paintbomb:
     usage: /<command> <x> <y> <z>
+  groundpound:
+    usage: /<command> <entityType>
   spawn:
     usage: /<command> <index> <world> <x> <y> <z>
   payload:

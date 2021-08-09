@@ -10,9 +10,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
@@ -118,10 +116,13 @@ public class Dungeon implements CommandExecutor{
                 Block drop = bloc;
                 while(drop.getRelative(BlockFace.UP).isEmpty() && drop.getY()<256)
                     drop = drop.getRelative(BlockFace.UP);
+                for(int i=0; i<4; i++)
+                    drop = drop.getRelative(BlockFace.DOWN);
                 DyeColor color = Utility.getRandom(Utility.colors.keySet()).get();
                 Material type = Utility.getRandom(Utility.colors.get(color)).get();
                 FallingBlock fallingBlock = world.spawnFallingBlock(drop.getLocation().add(0.5, 0, 0.5), Bukkit.createBlockData(type));
-                new Task(HoloItems.getInstance(), 1, 1){
+                fallingBlock.setVelocity(new Vector(0, 1, 0));
+                new Task(HoloItems.getInstance(), 20, 1){
                     int increment = 0;
                     Block block = bloc;
                     public void run(){
@@ -134,10 +135,21 @@ public class Dungeon implements CommandExecutor{
                             Utility.spawn(block.getLocation().add(0.5, 0, 0.5), world, EntityType.SHULKER, DyeConcentrate.id+":"+color);
                             cancel();
                         }
-                        fallingBlock.setVelocity(fallingBlock.getVelocity().add(new Vector(0, -0.2, 0)));
+                        fallingBlock.setVelocity(fallingBlock.getVelocity().add(new Vector(0, -0.5, 0)));
                         increment++;
                     }
                 };
+                return true;
+
+            case "groundpound":
+                Entity entity;
+                if(args.length>0) {
+                    try {
+                        entity = player.getWorld().spawnEntity(player.getLocation(), EntityType.valueOf(args[0]));
+                    }catch(IllegalArgumentException e){return true;}
+                }
+                else entity = player;
+                Attacks.groundPound(entity);
         }
         return true;
     }
