@@ -30,6 +30,15 @@ public abstract class Pack extends Item implements Interactable, Sealable {
         this.display = display;
     }
 
+    public Pack(String name, Material material, String lore,
+                int durability, boolean shiny, int size, String title, boolean display,
+                int cost, String id, char key){
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        this.size = size;
+        this.title = title;
+        this.display = display;
+    }
+
     public void ability(PlayerInteractEvent event, Action action){
         if(action==Action.LEFT_CLICK_AIR || action==Action.LEFT_CLICK_BLOCK) {
             event.setCancelled(true);

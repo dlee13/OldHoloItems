@@ -636,52 +636,54 @@ public class Events implements Listener {
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id==null){
             Material type = item.getType();
-            if(Utility.buckets.contains(type)){
+            if(Utility.buckets.containsKey(type)){
                 Block dispenser = event.getBlock();
-                Block cauldron = dispenser.getRelative(((org.bukkit.block.data.type.Dispenser) dispenser.getBlockData()).getFacing());
-                if(cauldron.getType()==Material.CAULDRON){
-                    Levelled level = (Levelled) cauldron.getBlockData();
-                    if(type==Material.BUCKET) {
-                        if(level.getLevel()!=3)
-                            return;
-                        level.setLevel(0);
+                Block relative = dispenser.getRelative(((org.bukkit.block.data.type.Dispenser) dispenser.getBlockData()).getFacing());
+                Material cauldron = relative.getType();
+                if(Utility.buckets.containsValue(cauldron)) {
+                    relative.setType(Utility.buckets.get(type));
+                    Material bucket;
+                    if (relative.getBlockData() instanceof Levelled) {
+                        bucket = Material.BUCKET;
+                        Levelled levelled = (Levelled) relative.getBlockData();
+                        levelled.setLevel(3);
+                        relative.setBlockData(levelled);
+                    } else {
+                        String filling = cauldron.toString();
+                        bucket = Material.getMaterial(filling.substring(0, filling.indexOf("CAULDRON")) + "BUCKET");
                     }
-                    else
-                        level.setLevel(3);
-                    cauldron.setBlockData(level);
-
                     event.setCancelled(true);
-                    new BukkitRunnable(){
-                        public void run(){
+                    new BukkitRunnable() {
+                        public void run() {
                             Inventory inv = ((Dispenser) state).getInventory();
                             inv.removeItem(item);
-                            inv.addItem(new ItemStack(type==Material.BUCKET?Material.WATER_BUCKET:Material.BUCKET));
+                            inv.addItem(new ItemStack(bucket));
                         }
                     }.runTask(HoloItems.getInstance());
+                    return;
                 }
-                else{
-                    Location loc = cauldron.getLocation().add(0.5, 0.5, 0.5);
-                    java.util.Collection<Entity> cows = loc.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5, entity -> (entity instanceof Cow));
-                    if(cows.isEmpty())
-                        return;
-                    int mushroomCows = 0;
-                    for(Entity cow : cows){
-                        if(cow instanceof MushroomCow)
-                            mushroomCows++;
+
+                Location loc = relative.getLocation().add(0.5, 0.5, 0.5);
+                java.util.Collection<Entity> cows = loc.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5, entity -> (entity instanceof Cow));
+                if(cows.isEmpty())
+                    return;
+                int mushroomCows = 0;
+                for(Entity cow : cows){
+                    if(cow instanceof MushroomCow)
+                        mushroomCows++;
+                }
+                if(type==Material.BUCKET && cows.size()>mushroomCows)
+                    event.setItem(new ItemStack(Material.MILK_BUCKET));
+                else if(type==Material.BOWL && mushroomCows!=0)
+                    event.setItem(new ItemStack(Material.MUSHROOM_STEW));
+                else
+                    return;
+                new BukkitRunnable(){
+                    public void run(){
+                        Inventory inv = ((Dispenser) state).getInventory();
+                        inv.removeItem(item);
                     }
-                    if(type==Material.BUCKET && cows.size()>mushroomCows)
-                        event.setItem(new ItemStack(Material.MILK_BUCKET));
-                    else if(type==Material.BOWL && mushroomCows!=0)
-                        event.setItem(new ItemStack(Material.MUSHROOM_STEW));
-                    else
-                        return;
-                    new BukkitRunnable(){
-                        public void run(){
-                            Inventory inv = ((Dispenser) state).getInventory();
-                            inv.removeItem(item);
-                        }
-                    }.runTask(HoloItems.getInstance());
-                }
+                }.runTask(HoloItems.getInstance());
             }
             return;
         }

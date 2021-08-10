@@ -6,15 +6,11 @@ import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollec
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 
-import java.util.Set;
-
 public class EmeraldLeaf extends Item {
     public static final String name = "emeraldLeaf";
-    public static final Set<Enchantment> accepted = null;
 
     private static final Material material = Material.KELP;
     private static final int quantity = 1;
@@ -29,7 +25,7 @@ public class EmeraldLeaf extends Item {
     public static final String id = ""+IngredientCollection.key+key;
 
     public EmeraldLeaf(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){

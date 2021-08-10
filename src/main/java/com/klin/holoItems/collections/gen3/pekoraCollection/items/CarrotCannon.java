@@ -6,6 +6,7 @@ import com.klin.holoItems.collections.gen3.pekoraCollection.PekoraCollection;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -13,10 +14,15 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.util.Vector;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CarrotCannon extends BatteryPack {
     public static final String name = "carrotCannon";
-
+    public static final Set<Enchantment> accepted = new HashSet<>(){{
+        add(Enchantment.DURABILITY);
+        add(Enchantment.MENDING);
+    }};
     private static final ItemStack carrot = new ItemStack(Material.CARROT);
 
     private static final Material material = Material.BLAZE_ROD;
@@ -35,7 +41,7 @@ public class CarrotCannon extends BatteryPack {
     public static final char key = '1';
 
     public CarrotCannon(){
-        super(name, material, lore, durability, shiny, cost, content, perFuel, cap,
+        super(name, accepted, material, lore, durability, shiny, cost, content, perFuel, cap,
                 ""+PekoraCollection.key+key, key);
     }
 
@@ -111,8 +117,10 @@ public class CarrotCannon extends BatteryPack {
                     Collection<Entity> entities = world.getNearbyEntities(explosion, 1.5, 1.5, 1.5,
                             entity -> entity instanceof LivingEntity);
                     for(Entity entity : entities) {
-                        if(Utility.damage(item, 1, false, player, (LivingEntity) entity, false, false, false))
-                            entity.setVelocity((new Vector(Math.random()-0.5, Math.random(), Math.random()-0.5)).normalize());
+                        if(Utility.damage(item, 1, false, player, (LivingEntity) entity, false, false, false)) {
+                            ((LivingEntity) entity).setNoDamageTicks(0);
+                            entity.setVelocity(entity.getLocation().subtract(explosion).toVector().normalize());
+                        }
                     }
                     cancel();
                     return;

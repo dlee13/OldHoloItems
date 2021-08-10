@@ -88,10 +88,10 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
                     return;
                 }
 
-                if(increments>210 || next==null || !entity.isValid()){
+                if(increments>1000 || next==null || !entity.isValid()){
                     if(entity.isValid()) {
                         entity.setAI(true);
-                        entity.damage(210);
+                        entity.damage(1000);
                     }
                     cancel();
                     return;

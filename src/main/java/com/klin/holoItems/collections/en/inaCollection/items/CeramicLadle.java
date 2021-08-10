@@ -22,7 +22,7 @@ public class CeramicLadle  extends Wiring {
     private static final String lore =
             "§6Ability" +"/n"+
                 "Dispensers wired with this item will" +"/n"+
-                "plant saplings and flowers" + "/n"+
+                "plant saplings, flowers, and mushrooms" + "/n"+
                 "Break the dispenser to retrieve";
     private static final boolean shiny = true;
 

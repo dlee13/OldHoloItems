@@ -20,7 +20,7 @@ import java.util.Set;
 
 public class Ingraining extends Enchant implements Extractable {
     public static final String name = "ingraining";
-    public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
+    public static final Set<Enchantment> accepted = new HashSet<>(){{
         add(Enchantment.DURABILITY);
         add(Enchantment.MENDING);
         add(Enchantment.LOOT_BONUS_BLOCKS);

@@ -10,11 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 public abstract class Crate extends Item {
-    public static final Set<Enchantment> accepted = null;
-
     public Crate(String name, Material material, int quantity, String lore, int durability, boolean stackable,
                  boolean shiny, int cost, String id, char key) {
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void ability(BlockBreakEvent event) {

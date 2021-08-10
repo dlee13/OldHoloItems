@@ -11,6 +11,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -46,8 +47,10 @@ public class SecondHand extends Wiring implements Interactable{
                 if(block.equals(state))
                     continue;
                 Dispenser dispenser = ((Dispenser) state.getState());
-                dispenser.getInventory().addItem(item);
+                Inventory inv = dispenser.getInventory();
+                inv.addItem(item);
                 dispenser.dispense();
+                inv.clear();
             }
             else
                 states.add(state);

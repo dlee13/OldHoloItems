@@ -23,12 +23,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Set;
-
 public class QuartzBlossom extends BatteryPack implements Extractable, Dropable, Holdable, Retainable, Clickable {
     public static final String name = "quartzBlossom";
-    public static final Set<Enchantment> accepted = null;
-//    private Map<Player, Set<Block>> active = new HashMap<>();
 
     private static final Material material = Material.LILY_OF_THE_VALLEY;
     private static final String lore =

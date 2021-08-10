@@ -9,6 +9,7 @@ import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -87,15 +88,31 @@ public class Zipline extends Item implements Interactable {
         faces.remove(opposites.get(forward));
         faces.remove(forward);
 
-        Location loc = player.getLocation();
+        Location loc = player.getEyeLocation();
         Location dest = clicked.getLocation().add(0.5, -2, 0.5);
+        Block block = player.getWorld().getBlockAt(dest);
+        int pas = -2;
+        if(!block.isPassable()) {
+            dest.add(0, 1, 0);
+            pas = -1;
+        }
         dest.setYaw(loc.getYaw());
         dest.setPitch(loc.getPitch());
         player.teleport(dest);
         player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 160, 1));
 
+        BlockData air = Bukkit.createBlockData(Material.AIR);
+        player.sendBlockChange(loc, air);
+        player.sendBlockChange(loc, clicked.getBlockData());
+        new BukkitRunnable(){
+            public void run(){
+                player.sendBlockChange(loc, air);
+            }
+        }.runTaskLater(HoloItems.getInstance(), 1);
+
+        int pass = pas;
         Location zero = new Location(loc.getWorld(), 0, 0, 0);
-        new Task(HoloItems.getInstance(), 0, 1){
+        new Task(HoloItems.getInstance(), 1, 1){
             int increment = 0;
             Block block = clicked;
             Location lastPos = player.getLocation();
@@ -104,7 +121,7 @@ public class Zipline extends Item implements Interactable {
             int oneTwo = 0;
 
             public void run(){
-                Location to = block.getLocation().add(0.5, -2, 0.5);
+                Location to = block.getLocation().add(0.5, pass, 0.5);
                 increment++;
                 if(increment>160 || player.isSneaking() || !player.isValid()){
                     Location loc = player.getLocation();
@@ -149,7 +166,7 @@ public class Zipline extends Item implements Interactable {
                             block = relative;
                             if(vertical.contains(face)) {
                                 alongVertical = face;
-                                Location dest = block.getLocation().add(0.5, -2, 0.5);
+                                Location dest = block.getLocation().add(0.5, pass, 0.5);
                                 dest.setYaw(loc.getYaw());
                                 dest.setPitch(loc.getPitch());
                                 player.teleport(dest);
@@ -168,7 +185,7 @@ public class Zipline extends Item implements Interactable {
                                     block = relative;
                                     alongVertical = corner;
                                     alongHorizontal = face;
-                                    Location dest = block.getLocation().add(0.5, -2, 0.5);
+                                    Location dest = block.getLocation().add(0.5, pass, 0.5);
                                     dest.setYaw(loc.getYaw());
                                     dest.setPitch(loc.getPitch());
                                     player.teleport(dest);
@@ -182,7 +199,7 @@ public class Zipline extends Item implements Interactable {
                     Block relative = block.getRelative(alongVertical);
                     if(block.getRelative(alongVertical).getType()==fence) {
                         block = relative;
-                        Location dest = block.getLocation().add(0.5, -2, 0.5);
+                        Location dest = block.getLocation().add(0.5, pass, 0.5);
                         dest.setYaw(loc.getYaw());
                         dest.setPitch(loc.getPitch());
                         player.teleport(dest);
@@ -196,7 +213,7 @@ public class Zipline extends Item implements Interactable {
                     relative = relative.getRelative(alongVertical);
                     if(relative.getType()==fence) {
                         block = relative;
-                        Location dest = block.getLocation().add(0.5, -2, 0.5);
+                        Location dest = block.getLocation().add(0.5, pass, 0.5);
                         dest.setYaw(loc.getYaw());
                         dest.setPitch(loc.getPitch());
                         player.teleport(dest);

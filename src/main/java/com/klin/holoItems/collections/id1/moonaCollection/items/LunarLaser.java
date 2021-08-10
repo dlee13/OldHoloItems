@@ -78,7 +78,7 @@ public class LunarLaser extends Enchant implements Interactable {
         ShapedRecipe recipe =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("&&&","&*&","###");
-        recipe.setIngredient('&', Material.BLACK_STAINED_GLASS);
+        recipe.setIngredient('&', Material.TINTED_GLASS);
         recipe.setIngredient('*', Material.NETHER_STAR);
         recipe.setIngredient('#', Material.OBSIDIAN);
         recipe.setGroup(name);
