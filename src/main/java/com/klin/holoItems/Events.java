@@ -640,7 +640,10 @@ public class Events implements Listener {
                 Block dispenser = event.getBlock();
                 Block relative = dispenser.getRelative(((org.bukkit.block.data.type.Dispenser) dispenser.getBlockData()).getFacing());
                 Material cauldron = relative.getType();
-                if(Utility.buckets.containsValue(cauldron)) {
+                if(Utility.buckets.containsValue(cauldron) && type!=Material.BOWL) {
+                    if(relative.getBlockData() instanceof Levelled && ((Levelled) relative.getBlockData()).getLevel()!=3 ||
+                            (type==Material.BUCKET) == (cauldron==Material.CAULDRON))
+                        return;
                     relative.setType(Utility.buckets.get(type));
                     Material bucket;
                     if (relative.getBlockData() instanceof Levelled) {

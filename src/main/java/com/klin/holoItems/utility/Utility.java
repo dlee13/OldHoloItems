@@ -239,7 +239,7 @@ public class Utility {
             { WATER_BUCKET, WATER_CAULDRON },
             { LAVA_BUCKET, LAVA_CAULDRON },
             { POWDER_SNOW_BUCKET, POWDER_SNOW_CAULDRON },
-            { BOWL, null }
+            { BOWL, BOWL }
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     public static final Set<Material> slabs = Stream.of(
