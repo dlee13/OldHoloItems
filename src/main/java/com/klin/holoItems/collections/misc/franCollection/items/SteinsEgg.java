@@ -97,17 +97,23 @@ public class SteinsEgg extends Pack implements Dispensable {
     protected void repack(ItemStack item, Inventory inv){}
 
     public void effect(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+        ItemStack item = event.getItem();
+        //temp
+        if(!player.isOp()) {
+            item.setAmount(0);
+            return;
+        }
+        //
         if(event.useItemInHand()==Event.Result.DENY)
             return;
         Block block = event.getClickedBlock();
         if(block==null)
             return;
         event.setCancelled(true);
-        ItemStack item = event.getItem();
-        if(item==null || Utility.onCooldown(item))
+        if(Utility.onCooldown(item))
             return;
-        Utility.cooldown(event.getItem(), 20);
-        Player player = event.getPlayer();
+        Utility.cooldown(item, 20);
         effect(item, block, player);
     }
 

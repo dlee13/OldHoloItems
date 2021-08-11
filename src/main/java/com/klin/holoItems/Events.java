@@ -5,6 +5,8 @@ import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
+import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
+import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import com.klin.holoItems.collections.misc.hiddenCollection.items.GalleryFrame;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.interfaces.customMobs.Retaliable;
@@ -59,6 +61,8 @@ public class Events implements Listener {
         for (Character key : Collections.findCollection('0').collection.keySet())
             add("0" + key);
         add(DoubleUp.id);
+        add(Sentry.id);
+        add(ScopedRifle.id);
     }};
 
     private static final Set<InventoryType> prohibitedInv = Stream.of(

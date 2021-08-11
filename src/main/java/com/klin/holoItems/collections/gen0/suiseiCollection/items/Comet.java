@@ -113,11 +113,11 @@ public class Comet extends Item implements Interactable {
         World world = player.getWorld();
         boolean hand = event.getHand()==EquipmentSlot.HAND;
 
-        double distance = 100;
+        double distance = 50;
         Vector dir = player.getLocation().getDirection().multiply(3);
         Set<LivingEntity> targets = new HashSet<>();
         for(int i=0; i<1+item.getEnchantmentLevel(Enchantment.PIERCING); i++) {
-            RayTraceResult result = world.rayTrace(location, dir, 100,
+            RayTraceResult result = world.rayTrace(location, dir, 50,
                     FluidCollisionMode.NEVER, true, 0.5,
                     entity -> (entity != player &&
                             entity instanceof LivingEntity && !(entity instanceof ArmorStand) &&
