@@ -54,7 +54,7 @@ public class Backdash extends Enchant implements Togglable {
             return;
         Player player = event.getPlayer();
         Utility.addDurability(item, -1, player);
-        player.setVelocity(player.getLocation().getDirection().setY(0).normalize().multiply(-0.5));
+        player.setVelocity(player.getLocation().getDirection().setY(0).normalize().multiply(-1));
     }
 }
 

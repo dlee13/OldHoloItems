@@ -17,9 +17,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Dispenser;
+import org.bukkit.block.*;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
@@ -663,7 +661,14 @@ public class Events implements Listener {
                     new BukkitRunnable() {
                         public void run() {
                             Inventory inv = ((Dispenser) state).getInventory();
-                            inv.removeItem(item);
+                            if(!inv.removeItem(item).isEmpty()){
+                                Block input = block.getRelative(BlockFace.DOWN);
+                                if(input.getState() instanceof Hopper && !((Hopper) input.getState()).getInventory().removeItem(item).isEmpty()){
+                                    input = input.getRelative(BlockFace.DOWN);
+                                    if(input.getState() instanceof Container)
+                                        ((Container) input.getState()).getInventory().removeItem(item);
+                                }
+                            }
                             inv.addItem(new ItemStack(bucket));
                         }
                     }.runTask(HoloItems.getInstance());

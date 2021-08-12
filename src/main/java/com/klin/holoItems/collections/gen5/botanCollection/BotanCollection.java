@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.gen5.botanCollection;
 
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
-import com.klin.holoItems.collections.gen5.botanCollection.items.AirStall;
 import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import org.bukkit.entity.Player;
@@ -23,7 +22,6 @@ public class BotanCollection extends Collection {
     public BotanCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(Backdash.key, new Backdash());
-        collection.put(AirStall.key, new AirStall());
         collection.put(Sentry.key, new Sentry());
         collection.put(ScopedRifle.key, new ScopedRifle());
     }
