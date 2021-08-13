@@ -658,47 +658,48 @@ public class Events implements Listener {
                         String filling = cauldron.toString();
                         bucket = Material.getMaterial(filling.substring(0, filling.indexOf("CAULDRON")) + "BUCKET");
                     }
-//                    event.setCancelled(true);
-//                    new BukkitRunnable() {
-//                        public void run() {
-//                            Inventory inv = ((Dispenser) state).getInventory();
-//                            if(!inv.removeItem(item).isEmpty()){
-//                                Block input = block.getRelative(BlockFace.DOWN);
-//                                if(input.getState() instanceof Hopper && !((Hopper) input.getState()).getInventory().removeItem(item).isEmpty()){
-//                                    input = input.getRelative(BlockFace.DOWN);
-//                                    if(input.getState() instanceof Container)
-//                                        ((Container) input.getState()).getInventory().removeItem(item);
-//                                }
-//                            }
-//                            inv.addItem(new ItemStack(bucket));
-//                        }
-//                    }.runTask(HoloItems.getInstance());
-                    event.setVelocity(new Vector(0, 1, 0));
-                    new BukkitRunnable(){
-                        public void run(){
-                            ((Dispenser) state).getInventory().addItem(new ItemStack(bucket));
-                            Set<Player> players = new HashSet<>();
-                            boolean pickUp = true;
-                            for(Entity entity : relative.getWorld().getNearbyEntities(relative.getLocation().add(0.5, 0.5, 0.5), 1, 1, 1)){
-                                if(entity instanceof org.bukkit.entity.Item){
-                                    org.bukkit.entity.Item item = (org.bukkit.entity.Item) entity;
-                                    if(item.getItemStack().getType()==type) {
-                                        item.remove();
-                                        pickUp = false;
-                                        break;
-                                    }
-                                }
-                                else if(entity instanceof Player)
-                                    players.add((Player) entity);
-                            }
-                            if(pickUp){
-                                for(Player player : players) {
-                                    if(player.getInventory().removeItem(item).isEmpty())
-                                        break;
+                    event.setCancelled(true);
+                    new BukkitRunnable() {
+                        public void run() {
+                            Inventory inv = ((Dispenser) state).getInventory();
+                            if(!inv.removeItem(item).isEmpty()){
+                                Block input = block.getRelative(BlockFace.DOWN);
+                                if(input.getState() instanceof Hopper && !((Hopper) input.getState()).getInventory().removeItem(item).isEmpty()){
+                                    input = input.getRelative(BlockFace.DOWN);
+                                    if(input.getState() instanceof Container)
+                                        ((Container) input.getState()).getInventory().removeItem(item);
                                 }
                             }
+                            inv.addItem(new ItemStack(bucket));
                         }
                     }.runTask(HoloItems.getInstance());
+                    //
+//                    event.setVelocity(new Vector(0, 1, 0));
+//                    new BukkitRunnable(){
+//                        public void run(){
+//                            ((Dispenser) state).getInventory().addItem(new ItemStack(bucket));
+//                            Set<Player> players = new HashSet<>();
+//                            boolean pickUp = true;
+//                            for(Entity entity : relative.getWorld().getNearbyEntities(relative.getLocation().add(0.5, 0.5, 0.5), 1, 1, 1)){
+//                                if(entity instanceof org.bukkit.entity.Item){
+//                                    org.bukkit.entity.Item item = (org.bukkit.entity.Item) entity;
+//                                    if(item.getItemStack().getType()==type) {
+//                                        item.remove();
+//                                        pickUp = false;
+//                                        break;
+//                                    }
+//                                }
+//                                else if(entity instanceof Player)
+//                                    players.add((Player) entity);
+//                            }
+//                            if(pickUp){
+//                                for(Player player : players) {
+//                                    if(player.getInventory().removeItem(item).isEmpty())
+//                                        break;
+//                                }
+//                            }
+//                        }
+//                    }.runTask(HoloItems.getInstance());
                     return;
                 }
 

@@ -150,7 +150,14 @@ public class Dungeon implements CommandExecutor{
                 }
                 else entity = player;
                 Attacks.groundPound(entity);
-        }
+
+            case "minesweeper":
+                if(args.length < 5)
+                    return true;
+                try {
+                    Minesweeper.setUp(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), player.getWorld());
+                }catch (NumberFormatException e){player.sendMessage("Invalid coordinates");}
+            }
         return true;
     }
 }

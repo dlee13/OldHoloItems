@@ -46,6 +46,8 @@ commands:
     usage: /<command> <x> <y> <z>
   groundpound:
     usage: /<command> <entityType>
+  minesweeper:
+    usage: /<command> <x1> <x2> <z1> <z2> <y> <world>
   spawn:
     usage: /<command> <index> <world> <x> <y> <z>
   payload:
