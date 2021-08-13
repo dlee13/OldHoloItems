@@ -61,7 +61,7 @@ public class Comet extends Item implements Interactable {
     public void registerRecipes(){
         ShapedRecipe recipe0 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
-        recipe0.shape("** ","*% "," % ");
+        recipe0.shape("**","*%"," %");
         recipe0.setIngredient('*', Material.NETHER_STAR);
         recipe0.setIngredient('%', Material.CHAIN);
         recipe0.setGroup(name);
@@ -69,27 +69,11 @@ public class Comet extends Item implements Interactable {
 
         ShapedRecipe recipe1 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
-        recipe1.shape("** ","%* ","%  ");
+        recipe1.shape("**","%*","% ");
         recipe1.setIngredient('*', Material.NETHER_STAR);
         recipe1.setIngredient('%', Material.CHAIN);
         recipe1.setGroup(name);
         Bukkit.getServer().addRecipe(recipe1);
-
-        ShapedRecipe recipe2 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"2"), item);
-        recipe2.shape("** ","*% "," % ");
-        recipe2.setIngredient('*', Material.NETHER_STAR);
-        recipe2.setIngredient('%', Material.CHAIN);
-        recipe2.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe2);
-
-        ShapedRecipe recipe3 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"3"), item);
-        recipe3.shape(" **"," %*"," % ");
-        recipe3.setIngredient('*', Material.NETHER_STAR);
-        recipe3.setIngredient('%', Material.CHAIN);
-        recipe3.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe3);
     }
 
     public void ability(PlayerInteractEvent event, Action action){

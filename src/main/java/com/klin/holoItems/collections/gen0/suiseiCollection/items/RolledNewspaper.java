@@ -14,13 +14,12 @@ import org.bukkit.inventory.ShapelessRecipe;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RolledNewspaper extends Item implements Responsible {
     public static final String name = "rolledNewspaper";
-    public static final Set<Enchantment> accepted = new HashSet<>(){{
-        add(Enchantment.DURABILITY);
-        add(Enchantment.MENDING);
-    }};
+    public static final Set<Enchantment> accepted = Stream.of(Enchantment.DURABILITY, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
 
     private static final Material material = Material.PAPER;
     private static final int quantity = 1;
@@ -29,7 +28,7 @@ public class RolledNewspaper extends Item implements Responsible {
             "Cause a mild annoyance at will";
     private static final int durability = 8;
     public static final boolean stackable = false;
-    private static final boolean shiny = true;
+    private static final boolean shiny = false;
 
     public static final int cost = 0;
     public static final char key = '3';

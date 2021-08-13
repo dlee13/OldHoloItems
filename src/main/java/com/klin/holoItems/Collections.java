@@ -58,6 +58,7 @@ import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
 import com.klin.holoItems.collections.misc.hiddenCollection.Recipes;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
+import com.klin.holoItems.collections.misc.utilityCollection.UtilityCollection;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Utility;
@@ -156,6 +157,8 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(RoberuCollection.key, new RoberuCollection());
         collections.put(ShienCollection.key, new ShienCollection());
         collections.put(OgaCollection.key, new OgaCollection());
+
+        collections.put(UtilityCollection.key, new UtilityCollection());
 
         collections.put(FranCollection.key, new FranCollection());
         collections.put(KlinCollection.key, new KlinCollection());

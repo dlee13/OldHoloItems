@@ -161,7 +161,7 @@ public class Utility {
         }});
     }};
 
-    private static final Set<EntityType> humanoids = Stream.of(
+    public static final Set<EntityType> humanoids = Stream.of(
             EntityType.PLAYER,
             EntityType.ZOMBIE,
             EntityType.ZOMBIE_VILLAGER,

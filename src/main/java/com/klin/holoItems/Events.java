@@ -41,6 +41,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -657,19 +658,45 @@ public class Events implements Listener {
                         String filling = cauldron.toString();
                         bucket = Material.getMaterial(filling.substring(0, filling.indexOf("CAULDRON")) + "BUCKET");
                     }
-                    event.setCancelled(true);
-                    new BukkitRunnable() {
-                        public void run() {
-                            Inventory inv = ((Dispenser) state).getInventory();
-                            if(!inv.removeItem(item).isEmpty()){
-                                Block input = block.getRelative(BlockFace.DOWN);
-                                if(input.getState() instanceof Hopper && !((Hopper) input.getState()).getInventory().removeItem(item).isEmpty()){
-                                    input = input.getRelative(BlockFace.DOWN);
-                                    if(input.getState() instanceof Container)
-                                        ((Container) input.getState()).getInventory().removeItem(item);
+//                    event.setCancelled(true);
+//                    new BukkitRunnable() {
+//                        public void run() {
+//                            Inventory inv = ((Dispenser) state).getInventory();
+//                            if(!inv.removeItem(item).isEmpty()){
+//                                Block input = block.getRelative(BlockFace.DOWN);
+//                                if(input.getState() instanceof Hopper && !((Hopper) input.getState()).getInventory().removeItem(item).isEmpty()){
+//                                    input = input.getRelative(BlockFace.DOWN);
+//                                    if(input.getState() instanceof Container)
+//                                        ((Container) input.getState()).getInventory().removeItem(item);
+//                                }
+//                            }
+//                            inv.addItem(new ItemStack(bucket));
+//                        }
+//                    }.runTask(HoloItems.getInstance());
+                    event.setVelocity(new Vector(0, 1, 0));
+                    new BukkitRunnable(){
+                        public void run(){
+                            ((Dispenser) state).getInventory().addItem(new ItemStack(bucket));
+                            Set<Player> players = new HashSet<>();
+                            boolean pickUp = true;
+                            for(Entity entity : relative.getWorld().getNearbyEntities(relative.getLocation().add(0.5, 0.5, 0.5), 1, 1, 1)){
+                                if(entity instanceof org.bukkit.entity.Item){
+                                    org.bukkit.entity.Item item = (org.bukkit.entity.Item) entity;
+                                    if(item.getItemStack().getType()==type) {
+                                        item.remove();
+                                        pickUp = false;
+                                        break;
+                                    }
+                                }
+                                else if(entity instanceof Player)
+                                    players.add((Player) entity);
+                            }
+                            if(pickUp){
+                                for(Player player : players) {
+                                    if(player.getInventory().removeItem(item).isEmpty())
+                                        break;
                                 }
                             }
-                            inv.addItem(new ItemStack(bucket));
                         }
                     }.runTask(HoloItems.getInstance());
                     return;
@@ -775,6 +802,23 @@ public class Events implements Listener {
         Responsible responsible = Utility.findItem(item, Responsible.class, player);
         if(responsible!=null && responsible.ability(event, item))
             Utility.addDurability(item, -1, player);
+    }
+
+    @EventHandler
+    public void fishAbility(PlayerFishEvent event){
+        if(event.isCancelled())
+            return;
+        PlayerInventory inv = event.getPlayer().getInventory();
+        ItemStack item = inv.getItemInMainHand();
+        Fishable fishable = Utility.findItem(item, Fishable.class);
+        if(fishable!=null) {
+            fishable.ability(event, item);
+            return;
+        }
+        item = inv.getItemInOffHand();
+        fishable = Utility.findItem(item, Fishable.class);
+        if(fishable!=null)
+            fishable.ability(event, item);
     }
 
     @EventHandler

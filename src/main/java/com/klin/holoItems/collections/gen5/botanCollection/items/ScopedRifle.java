@@ -15,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
@@ -64,14 +65,20 @@ public class ScopedRifle extends Item implements Interactable {
                         return;
                     RayTraceResult result = player.getWorld().rayTrace(player.getEyeLocation(), dir, 150, FluidCollisionMode.NEVER, true, 0.1,
                             entity -> (entity != player && entity instanceof LivingEntity && !(entity instanceof ArmorStand)));
+                    ItemStack item = event.getItem();
                     if (result != null) {
                         LivingEntity entity = (LivingEntity) result.getHitEntity();
                         if(entity!=null) {
                             entity.damage(5 + Math.pow((double) steadiness / 10, 2) * 3 / 5, player);
                             entity.setArrowsInBody(entity.getArrowsInBody()+1);
+                            if(player.getInventory().getItemInOffHand().equals(item))
+                                Utility.addDurability(item, -1, player);
                         }
+                        else
+                            Utility.addDurability(item, -1, player);
                     }
-                    Utility.addDurability(event.getItem(), -1, player);
+                    else
+                        Utility.addDurability(item, -1, player);
                     return;
                 }
                 Vector aim = player.getEyeLocation().getDirection();
