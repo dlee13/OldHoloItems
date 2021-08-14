@@ -16,6 +16,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,6 +44,10 @@ public class PiratesHook extends Item implements Fishable {
     }
 
     public void registerRecipes(){
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§6Pirate's Hook");
+        item.setItemMeta(meta);
+
         ShapedRecipe recipe0 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
         recipe0.shape("  a"," ab","a c");
@@ -79,7 +84,7 @@ public class PiratesHook extends Item implements Fishable {
             return;
         Map<ItemStack, EquipmentSlot> items = new HashMap<>();
         items.put(equipment.getItemInMainHand(), EquipmentSlot.HAND);
-        items.put(equipment.getItemInOffHand(), EquipmentSlot.OFF_HAND);
+//        items.put(equipment.getItemInOffHand(), EquipmentSlot.OFF_HAND);
         items.put(equipment.getHelmet(), EquipmentSlot.HEAD);
         items.put(equipment.getChestplate(), EquipmentSlot.CHEST);
         items.put(equipment.getLeggings(), EquipmentSlot.LEGS);
@@ -91,10 +96,20 @@ public class PiratesHook extends Item implements Fishable {
                 return;
             ItemStack strip = optional.get();
             if(strip.getType()!=Material.AIR){
-                entity.getWorld().dropItemNaturally(entity.getLocation(), strip);
-                equipment.setItem(items.get(strip), null);
-                hook = false;
-                Utility.addDurability(item, -1, event.getPlayer());
+                boolean remove = true;
+                Map<Enchantment, Integer> enchantments = strip.getEnchantments();
+                for(Enchantment enchantment : enchantments.keySet()){
+                    if(enchantment.getMaxLevel()<enchantments.get(enchantment)){
+                        remove = false;
+                        break;
+                    }
+                }
+                if(remove) {
+                    entity.getWorld().dropItemNaturally(entity.getLocation(), strip);
+                    equipment.setItem(items.get(strip), null);
+                    hook = false;
+                    Utility.addDurability(item, -1, event.getPlayer());
+                }
             }
             items.remove(strip);
         }

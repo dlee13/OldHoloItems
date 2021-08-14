@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen3.noelCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -18,6 +19,7 @@ public class NoelCollection extends Collection {
 
     public NoelCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(MilkBottle.key, new MilkBottle());
     }
 
     public Map<String, Integer> getStat(Player player){

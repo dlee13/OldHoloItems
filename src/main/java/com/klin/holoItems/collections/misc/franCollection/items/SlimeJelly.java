@@ -34,7 +34,7 @@ public class SlimeJelly extends LaserPointer implements Retaliable {
     @Override
     public void ability(LivingEntity entity, String info) {}
 
-    public void ability(EntityDamageByEntityEvent event, Entity damager) {
+    public void ability(EntityDamageByEntityEvent event, Entity damager, String info) {
         pair.remove(damager);
         Slime slime = (Slime) damager;
         LivingEntity entity = (LivingEntity) event.getEntity();

@@ -25,6 +25,7 @@ public class FranCollection extends Collection {
         collection.put(LaserPointer.key, new LaserPointer());
         collection.put(SlimeJelly.key, new SlimeJelly());
         collection.put(DyeConcentrate.key, new DyeConcentrate());
+        collection.put(SharpenedFangs.key, new SharpenedFangs());
     }
 
     public Map<String, Integer> getStat(Player player){

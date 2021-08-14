@@ -1,14 +1,24 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.collections.misc.franCollection.items.SharpenedFangs;
+import com.klin.holoItems.utility.Utility;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,6 +27,7 @@ import java.util.stream.Stream;
 import static org.bukkit.Bukkit.getServer;
 
 public class Minesweeper implements Listener {
+    private static Minesweeper instance = null;
     //minesweeper -27 -9 -294 -262 59
     private static final Set<Material> sand = Stream.of(Material.SAND, Material.SANDSTONE_SLAB, Material.SANDSTONE_STAIRS, Material.SMOOTH_SANDSTONE_SLAB, Material.SMOOTH_SANDSTONE).collect(Collectors.toCollection(HashSet::new));
     public static final Map<Integer, Material> flags = new HashMap<>() {{
@@ -28,6 +39,7 @@ public class Minesweeper implements Listener {
     }};
     private static Map<AbstractMap.SimpleEntry<Integer, Integer>, Boolean> squares = new HashMap<>();
     private static int y;
+    private static Map<Block, Material> reset = new HashMap<>();
 
     public static void setUp(int x1, int x2, int z1, int z2, int y1, World world){
         for(int x=x1; x<=x2; x++){
@@ -43,7 +55,8 @@ public class Minesweeper implements Listener {
             }
         }
         y = y1;
-        getServer().getPluginManager().registerEvents(new Minesweeper(), HoloItems.getInstance());
+        instance = new Minesweeper();
+        getServer().getPluginManager().registerEvents(instance, HoloItems.getInstance());
     }
 
     @EventHandler
@@ -52,11 +65,23 @@ public class Minesweeper implements Listener {
         Block block = event.getBlock();
         AbstractMap.SimpleEntry<Integer, Integer> key = new AbstractMap.SimpleEntry<>(block.getX(), block.getZ());
         Boolean mine = squares.get(key);
-        if(mine==null)
+        Material material = block.getType();
+        if(mine==null || !sand.contains(material))
             return;
+        reset.putIfAbsent(block, material);
         if(mine){
-            //spawn fang
-            event.getPlayer().sendMessage("snap");
+            block.setType(Material.ORANGE_GLAZED_TERRACOTTA);
+            World world = block.getWorld();
+            Player player = event.getPlayer();
+            Location loc = player.getLocation();
+            if(reset.size()<6) {
+                world.playSound(loc, Sound.BLOCK_GLASS_BREAK, 4, 1);
+                return;
+            }
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, 8));
+            Entity entity = world.spawnEntity(loc, EntityType.EVOKER_FANGS);
+            entity.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, SharpenedFangs.id+":20");
+            world.playSound(loc, Sound.AMBIENT_CAVE, 4, 1);
             return;
         }
         block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), new ItemStack(Material.SAND));
@@ -96,5 +121,16 @@ public class Minesweeper implements Listener {
             }
         }
         block.setType(flags.get(adjacent));
+    }
+
+    public static void reset(){
+        if(instance!=null) {
+            BlockBreakEvent.getHandlerList().unregister(instance);
+            instance = null;
+        }
+        for(Block block : reset.keySet())
+            block.setType(reset.get(block));
+        reset.clear();
+        squares.clear();
     }
 }

@@ -645,6 +645,12 @@ public class Utility {
         }
     }
 
+    public static boolean fireBlank(Entity damager, Entity damagee){
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager, damagee, EntityDamageEvent.DamageCause.CUSTOM, 0);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        return !event.isCancelled();
+    }
+
     public static int addDurability(ItemStack item, double addend, LivingEntity player){
         if(player instanceof Player && ((Player) player).getGameMode()==GameMode.CREATIVE && addend<0)
             return 0;

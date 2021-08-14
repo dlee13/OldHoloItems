@@ -41,7 +41,6 @@ public class LifeCrystal extends Item implements Combinable, Spawnable {
     public void ability(LivingEntity entity, String info) {
         try{
             entity.setMaxHealth(Math.max(0.1, Integer.parseInt(info)-0.1));
-        }
-        catch(NumberFormatException ignored){}
+        } catch(NumberFormatException ignored){}
     }
 }

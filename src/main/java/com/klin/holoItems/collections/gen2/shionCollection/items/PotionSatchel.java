@@ -1,8 +1,11 @@
 package com.klin.holoItems.collections.gen2.shionCollection.items;
 
-import com.klin.holoItems.abstractClasses.Pack;
+import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.Item;
+import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.collections.gen2.shionCollection.ShionCollection;
+import com.klin.holoItems.interfaces.Mixable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -69,21 +72,29 @@ public class PotionSatchel extends Pack {
         for(ItemStack content : inv.getContents()) {
             if(content==null || content.getType()==Material.AIR)
                 continue;
-            String type = content.getType().toString();
-            if(!type.contains("POTION") || type.equals("POTION")) {
+            Material material = content.getType();
+            ItemMeta meta = content.getItemMeta();
+            String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            boolean drop = id != null && !(Collections.findItem(id) instanceof Mixable);
+            if(material!=Material.SPLASH_POTION && material!=Material.LINGERING_POTION || drop) {
                 world.dropItemNaturally(player.getLocation(), content);
                 continue;
             }
-            PotionData potData = ((PotionMeta) content.getItemMeta()).getBasePotionData();
-            potions += type.substring(0,type.indexOf("_"))+"-"+potData.getType().toString();
-            if(potData.isExtended())
-                potions += "+";
-            else if(potData.isUpgraded())
-                potions += "*";
-            else
-                potions += "x";
+            String type = material.toString();
+            potions += type.substring(0,type.indexOf("_"))+"-";
+            if(id!=null)
+                potions += id + "x";
+            else {
+                PotionData potData = ((PotionMeta) meta).getBasePotionData();
+                potions += potData.getType();
+                if (potData.isExtended())
+                    potions += "+";
+                else if (potData.isUpgraded())
+                    potions += "*";
+                else
+                    potions += "x";
+            }
             potions += " ";
-
             size++;
         }
 
@@ -110,11 +121,18 @@ public class PotionSatchel extends Pack {
                 pot = new ItemStack(Material.LINGERING_POTION);
             else
                 pot = new ItemStack(Material.SPLASH_POTION);
-            PotionType type = PotionType.valueOf(data[1].substring(0, data[1].length()-1));
-            PotionMeta potMeta = (PotionMeta) pot.getItemMeta();
-            potMeta.setBasePotionData(new PotionData(type,
-                    data[1].endsWith("+"), data[1].endsWith("*")));
-            pot.setItemMeta(potMeta);
+            String potionType = data[1].substring(0, data[1].length() - 1);
+            try {
+                PotionType type = PotionType.valueOf(potionType);
+                PotionMeta potMeta = (PotionMeta) pot.getItemMeta();
+                potMeta.setBasePotionData(new PotionData(type,
+                        data[1].endsWith("+"), data[1].endsWith("*")));
+                pot.setItemMeta(potMeta);
+            }catch (IllegalArgumentException e){
+                Mixable mixable = Utility.findItem(potionType, Mixable.class);
+                if(mixable!=null)
+                    pot.setItemMeta(((Item) mixable).item.getItemMeta());
+            }
             inv.addItem(pot);
         }
     }
@@ -132,11 +150,18 @@ public class PotionSatchel extends Pack {
             pot = new ItemStack(Material.LINGERING_POTION);
         else
             pot = new ItemStack(Material.SPLASH_POTION);
-        PotionType type = PotionType.valueOf(data[1].substring(0, data[1].length()-1));
-        PotionMeta potMeta = (PotionMeta) pot.getItemMeta();
-        potMeta.setBasePotionData(new PotionData(type,
-                data[1].endsWith("+"), data[1].endsWith("*")));
-        pot.setItemMeta(potMeta);
+        String potionType = data[1].substring(0, data[1].length()-1);
+        try {
+            PotionType type = PotionType.valueOf(potionType);
+            PotionMeta potMeta = (PotionMeta) pot.getItemMeta();
+            potMeta.setBasePotionData(new PotionData(type,
+                    data[1].endsWith("+"), data[1].endsWith("*")));
+            pot.setItemMeta(potMeta);
+        }catch (IllegalArgumentException e){
+            Mixable mixable = Utility.findItem(potionType, Mixable.class);
+            if(mixable!=null)
+                pot.setItemMeta(((Item) mixable).item.getItemMeta());
+        }
 
         HumanEntity player = event.getPlayer();
         ThrownPotion potion = (player).launchProjectile(ThrownPotion.class,

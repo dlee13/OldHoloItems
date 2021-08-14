@@ -4,6 +4,7 @@ import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
+import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
 import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
@@ -28,10 +29,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.Damageable;
@@ -41,7 +39,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,8 +59,9 @@ public class Events implements Listener {
         add(DoubleUp.id);
         add(Sentry.id);
         add(ScopedRifle.id);
+        add(MilkBottle.id);
     }};
-
+    //add permissible interfaces for each prohibitedInv
     private static final Set<InventoryType> prohibitedInv = Stream.of(
         InventoryType.BEACON,
         InventoryType.BREWING,
@@ -367,7 +365,8 @@ public class Events implements Listener {
 
         //rewrite to account for new smeltable items
         if(prohibitedInv.contains(invType)) {
-            event.setCancelled(true);
+            if(!ingredients.contains(id))
+                event.setCancelled(true);
             return;
         }
 
@@ -523,19 +522,22 @@ public class Events implements Listener {
 
     @EventHandler
     public static void afflictAbility(EntityDamageByEntityEvent event){
-        if(event.isCancelled() || !(event.getDamager() instanceof LivingEntity))
+        if(event.isCancelled())
             return;
-        LivingEntity entity = (LivingEntity) event.getDamager();
+        Entity entity = event.getDamager();
         String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
         if(modifiers!=null){
             for(String modifier : modifiers.split("-")){
-                Retaliable retaliable = Utility.findItem(modifier, Retaliable.class);
+                Retaliable retaliable = Utility.findItem(modifier.substring(0, 2), Retaliable.class);
                 if(retaliable!=null)
-                    retaliable.ability(event, entity);
+                    retaliable.ability(event, entity, modifier.length() > 2 ? modifier.substring(3) : null);
             }
         }
 
-        EntityEquipment equipment = entity.getEquipment();
+        if(!(entity instanceof LivingEntity))
+            return;
+        LivingEntity living = (LivingEntity) entity;
+        EntityEquipment equipment = living.getEquipment();
         if(equipment==null)
             return;
         ItemStack item = equipment.getItemInMainHand();
@@ -543,12 +545,34 @@ public class Events implements Listener {
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id!=null) {
-            Utility.addDurability(item, -1, entity);
+            Utility.addDurability(item, -1, living);
             if (Collections.disabled.contains(id))
                 return;
             Item generic = Collections.findItem(id);
             if (generic instanceof Afflictable)
                 ((Afflictable) generic).ability(event, item);
+        }
+    }
+
+    @EventHandler
+    public static void brewAbility(BrewEvent event){
+        if(event.isCancelled())
+            return;
+        BrewerInventory inv = event.getContents();
+        ItemStack ingredient = inv.getIngredient();
+//        Brewable brewable = Utility.findItem(ingredient, Brewable.class);
+//        if(brewable!=null)
+//            brewable.ability(event, ingredient);
+//
+//        if(event.isCancelled())
+//            return;
+        for(int i=0; i<3; i++) {
+            ItemStack item = inv.getItem(i);
+            if(item==null)
+                continue;
+            Mixable mixable = Utility.findItem(item, Mixable.class);
+            if(mixable!=null)
+                mixable.ability(event, item ,ingredient, inv, i);
         }
     }
 
@@ -850,9 +874,15 @@ public class Events implements Listener {
     public static void hitAbility(ProjectileHitEvent event){
         //no isCancelled()
         Projectile projectile = event.getEntity();
-        if(!(projectile instanceof Arrow) || projectile.doesBounce())
+        if(projectile.doesBounce())
             return;
-        Hitable hitable = Utility.findItem(projectile, Hitable.class);
+        Hitable hitable;
+        if(projectile instanceof ThrownPotion)
+            hitable = Utility.findItem(((ThrownPotion) projectile).getItem(), Hitable.class);
+        else if(projectile instanceof ThrowableProjectile)
+            hitable = Utility.findItem(((ThrowableProjectile) projectile).getItem(), Hitable.class);
+        else
+            hitable = Utility.findItem(projectile, Hitable.class);
         if(hitable!=null)
             hitable.ability(event);
     }
@@ -920,8 +950,8 @@ public class Events implements Listener {
         if(!(entity instanceof LivingEntity))
             return;
         LivingEntity shooter = (LivingEntity) entity;
-        if(event.isCancelled())
-            return;
+//        if(event.isCancelled())
+//            return;
         EntityEquipment equipment = shooter.getEquipment();
         if(equipment==null)
             return;

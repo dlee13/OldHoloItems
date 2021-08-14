@@ -5,5 +5,5 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public interface Retaliable {
 
-    void ability(EntityDamageByEntityEvent event, Entity damager);
+    void ability(EntityDamageByEntityEvent event, Entity damager, String info);
 }
