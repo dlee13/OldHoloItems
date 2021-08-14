@@ -68,8 +68,8 @@ public class ScopedRifle extends Item implements Interactable {
                     ItemStack item = event.getItem();
                     if (result != null) {
                         LivingEntity entity = (LivingEntity) result.getHitEntity();
-                        if(entity!=null) {
-                            entity.damage(5 + Math.pow((double) steadiness / 10, 2) * 3 / 5, player);
+                        if(entity!=null && Utility.fireBlank(player, entity)) {
+                            entity.damage(result.getHitPosition().distance(entity.getEyeLocation().toVector())<0.6?10:5 + Math.pow((double) steadiness / 10, 2) * 3 / 5, player);
                             entity.setArrowsInBody(entity.getArrowsInBody()+1);
                             if(player.getInventory().getItemInOffHand().equals(item))
                                 Utility.addDurability(item, -1, player);

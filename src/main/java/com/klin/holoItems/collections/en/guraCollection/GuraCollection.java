@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.en.guraCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.en.guraCollection.items.TideRider;
 import org.bukkit.Statistic;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ public class GuraCollection extends Collection {
 
     public GuraCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(TideRider.key, new TideRider());
     }
 
     public Map<String, Integer> getStat(Player player){
