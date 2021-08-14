@@ -38,7 +38,7 @@ public class TideRider extends Item implements Interactable {
     private static final boolean stackable = false;
     private static final boolean shiny = false;
 
-    public static final int cost = 3210;
+    public static final int cost = 321;
     public static final char key = '0';
     public static final String id = ""+GuraCollection.key+key;
 

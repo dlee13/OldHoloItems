@@ -41,7 +41,7 @@ public class Hourglass extends BatteryPack implements Hitable {
 
     public void registerRecipes(){
         PotionMeta meta = (PotionMeta) item.getItemMeta();
-        meta.setColor(Color.ORANGE);
+        meta.setColor(Color.YELLOW);
         item.setItemMeta(meta);
 
         ShapedRecipe recipe =

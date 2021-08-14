@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.gen5.lamyCollection;
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Condensation;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.FrostLayer;
+import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -20,6 +21,7 @@ public class LamyCollection extends Collection {
 
     public LamyCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(Starch.key, new Starch());
         collection.put(Condensation.key, new Condensation());
         collection.put(FrostLayer.key, new FrostLayer());
     }

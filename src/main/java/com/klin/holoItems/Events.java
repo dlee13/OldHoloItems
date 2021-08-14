@@ -8,6 +8,7 @@ import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
 import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
+import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
 import com.klin.holoItems.collections.misc.hiddenCollection.items.GalleryFrame;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.interfaces.customMobs.Retaliable;
@@ -60,6 +61,7 @@ public class Events implements Listener {
         add(Sentry.id);
         add(ScopedRifle.id);
         add(MilkBottle.id);
+        add(Starch.id);
     }};
     //add permissible interfaces for each prohibitedInv
     private static final Set<InventoryType> prohibitedInv = Stream.of(
@@ -560,12 +562,12 @@ public class Events implements Listener {
             return;
         BrewerInventory inv = event.getContents();
         ItemStack ingredient = inv.getIngredient();
-//        Brewable brewable = Utility.findItem(ingredient, Brewable.class);
-//        if(brewable!=null)
-//            brewable.ability(event, ingredient);
-//
-//        if(event.isCancelled())
-//            return;
+        Brewable brewable = Utility.findItem(ingredient, Brewable.class);
+        if(brewable!=null)
+            brewable.ability(event, ingredient, inv);
+
+        if(event.isCancelled())
+            return;
         for(int i=0; i<3; i++) {
             ItemStack item = inv.getItem(i);
             if(item==null)

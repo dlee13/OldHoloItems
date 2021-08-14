@@ -32,6 +32,7 @@ public class GuraCollection extends Collection {
         stat.put("Guardian", player.getStatistic(Statistic.KILL_ENTITY, EntityType.GUARDIAN));
         stat.put("Salman", player.getStatistic(Statistic.KILL_ENTITY, EntityType.SALMON));
         stat.put("Squid", player.getStatistic(Statistic.KILL_ENTITY, EntityType.SQUID));
+        stat.put("Glow Squid", player.getStatistic(Statistic.KILL_ENTITY, EntityType.GLOW_SQUID));
         stat.put("Tropical Fish", player.getStatistic(Statistic.KILL_ENTITY, EntityType.TROPICAL_FISH));
         stat.put("Pufferfish", player.getStatistic(Statistic.KILL_ENTITY, EntityType.PUFFERFISH));
 
