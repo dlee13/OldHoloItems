@@ -3,9 +3,9 @@ package com.klin.holoItems.collections.gen5.botanCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen5.botanCollection.BotanCollection;
-import com.klin.holoItems.interfaces.Hitable;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.interfaces.Manipulatable;
+import com.klin.holoItems.interfaces.Retaliable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -13,18 +13,19 @@ import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class Sentry extends Item implements Interactable, Manipulatable, Hitable {
+public class Sentry extends Item implements Interactable, Manipulatable, Retaliable {
     public static final String name = "sentry";
     public static final Set<Enchantment> accepted = null;
     private static Map<Player, AbstractMap.SimpleEntry<Location, ArmorStand>> stands = new HashMap<>();
@@ -182,15 +183,18 @@ public class Sentry extends Item implements Interactable, Manipulatable, Hitable
         cause(event.getPlayerItem(), event.getPlayer());
     }
 
-    public void ability(ProjectileHitEvent event) {
-        Entity hit = event.getHitEntity();
-        if(hit instanceof LivingEntity) {
-            LivingEntity entity = (LivingEntity) hit;
-            entity.setNoDamageTicks(0);
-            if (event.getEntity() instanceof SpectralArrow) {
-                entity.damage(40);
-                entity.setNoDamageTicks(0);
-            }
+    public void ability(EntityDamageByEntityEvent event, Entity damager) {
+        Entity entity = event.getEntity();
+        if(entity instanceof LivingEntity) {
+            if (damager instanceof SpectralArrow)
+                event.setDamage(30);
+            else
+                event.setDamage(1);
+            new BukkitRunnable(){
+                public void run(){
+                    ((LivingEntity) entity).setNoDamageTicks(0);
+                }
+            }.runTask(HoloItems.getInstance());
         }
     }
 

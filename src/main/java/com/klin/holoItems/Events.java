@@ -527,12 +527,17 @@ public class Events implements Listener {
         if(event.isCancelled())
             return;
         Entity entity = event.getDamager();
-        String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
-        if(modifiers!=null){
-            for(String modifier : modifiers.split("-")){
-                Retaliable retaliable = Utility.findItem(modifier.substring(0, 2), Retaliable.class);
-                if(retaliable!=null)
-                    retaliable.ability(event, entity, modifier.length() > 2 ? modifier.substring(3) : null);
+        com.klin.holoItems.interfaces.Retaliable retaliable = Utility.findItem(entity, com.klin.holoItems.interfaces.Retaliable.class);
+        if(retaliable!=null)
+            retaliable.ability(event, entity);
+        else {
+            String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
+            if (modifiers != null) {
+                for (String modifier : modifiers.split("-")) {
+                    Retaliable modified = Utility.findItem(modifier.substring(0, 2), Retaliable.class);
+                    if (modified != null)
+                        modified.ability(event, entity, modifier.length() > 2 ? modifier.substring(3) : null);
+                }
             }
         }
 

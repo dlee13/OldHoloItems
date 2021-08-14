@@ -112,7 +112,8 @@ public class GroundPounder extends Pack {
                         Vector velocity = new Vector(0, Math.min(intensity/2, 2), 0);
                         for(Entity entity : player.getNearbyEntities(4, 1, 4)){
                             if(entity.isOnGround() && entity instanceof LivingEntity && !(entity instanceof ArmorStand)) {
-                                if(Utility.damage(null, intensity*4, true, player, (LivingEntity) entity, true, false, false))
+                                boolean squash = loc.distance(entity.getLocation())<=1;
+                                if(Utility.damage(null, intensity*(squash?4:2), true, player, (LivingEntity) entity, true, false, false) && !squash)
                                     entity.setVelocity(velocity);
                             }
                         }
