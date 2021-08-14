@@ -5,6 +5,7 @@ import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.en.guraCollection.GuraCollection;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Task;
+import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -18,17 +19,22 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TideRider extends Item implements Interactable {
     public static final String name = "tideRider";
+    public static final Set<Enchantment> accepted = Stream.of(Enchantment.DURABILITY, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
 
     private static final Material material = Material.TRIDENT;
     private static final int quantity = 1;
     private static final String lore =
             "§6Ability" +"/n"+
                 "Surf the waves";
-    private static final int durability = -1;
+    private static final int durability = 250;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
 
@@ -37,7 +43,7 @@ public class TideRider extends Item implements Interactable {
     public static final String id = ""+GuraCollection.key+key;
 
     public TideRider(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){
@@ -45,8 +51,8 @@ public class TideRider extends Item implements Interactable {
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aba"," c "," a ");
         recipe.setIngredient('a', Material.WAXED_OXIDIZED_CUT_COPPER);
-        recipe.setIngredient('b', Material.ENCHANTED_GOLDEN_APPLE);
-        recipe.setIngredient('c', Material.SEA_LANTERN);
+        recipe.setIngredient('b', Material.TRIDENT);
+        recipe.setIngredient('c', Material.ENCHANTED_GOLDEN_APPLE);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }
@@ -74,6 +80,7 @@ public class TideRider extends Item implements Interactable {
                     player.sendBlockChange(current.getLocation(), data.remove(current));
                     meta.removeEnchant(Enchantment.RIPTIDE);
                     item.setItemMeta(meta);
+                    Utility.addDurability(item, -1, player);
                     cancel();
                     return;
                 }
