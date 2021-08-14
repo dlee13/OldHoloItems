@@ -46,10 +46,10 @@ public class Hourglass extends BatteryPack implements Hitable {
 
         ShapedRecipe recipe =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("*/*"," * ","*%*");
-        recipe.setIngredient('*', Material.GLASS);
-        recipe.setIngredient('/', Material.HOPPER);
-        recipe.setIngredient('%', Material.DROPPER);
+        recipe.shape("a","b","c");
+        recipe.setIngredient('a', Material.IRON_NUGGET);
+        recipe.setIngredient('b', Material.GLASS_BOTTLE);
+        recipe.setIngredient('c', Material.GOLD_NUGGET);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

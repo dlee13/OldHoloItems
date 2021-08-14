@@ -40,14 +40,17 @@ public abstract class Pack extends Item implements Interactable, Sealable {
     }
 
     public void ability(PlayerInteractEvent event, Action action){
-        if(action==Action.LEFT_CLICK_AIR || action==Action.LEFT_CLICK_BLOCK) {
-            event.setCancelled(true);
-            Inventory inv = Bukkit.createInventory(null, size, title);
-            repack(event.getItem(), inv);
-            event.getPlayer().openInventory(inv);
-        }
+        if(action==Action.LEFT_CLICK_AIR || action==Action.LEFT_CLICK_BLOCK)
+            cause(event);
         else
             effect(event);
+    }
+
+    protected void cause(PlayerInteractEvent event){
+        event.setCancelled(true);
+        Inventory inv = Bukkit.createInventory(null, size, title);
+        repack(event.getItem(), inv);
+        event.getPlayer().openInventory(inv);
     }
 
     protected abstract void effect(PlayerInteractEvent event);

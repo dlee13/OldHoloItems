@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 public class TideRider extends Item implements Interactable {
     public static final String name = "tideRider";
-    public static final Set<Enchantment> accepted = Stream.of(Enchantment.DURABILITY, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
+    private static final Set<Enchantment> accepted = Stream.of(Enchantment.DURABILITY, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
 
     private static final Material material = Material.TRIDENT;
     private static final int quantity = 1;

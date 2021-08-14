@@ -26,6 +26,7 @@ public class WatsonCollection extends Collection {
         collection.put(GemKnife.key, new GemKnife());
         collection.put(Hourglass.key, new Hourglass());
         collection.put(MagnifyingGlass.key, new MagnifyingGlass());
+        collection.put(GroundPounder.key, new GroundPounder());
     }
 
     public Map<String, Integer> getStat(Player player){
