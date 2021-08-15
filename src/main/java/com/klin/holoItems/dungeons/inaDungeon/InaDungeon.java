@@ -7,13 +7,19 @@ import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class InaDungeon implements CommandExecutor{
     public static final String[][][][] builds = new String[][][][]{
@@ -22,28 +28,84 @@ public class InaDungeon implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player))
-            return true;
-        Player player = (Player) sender;
-        if(!player.isOp())
-            return true;
+        if(sender instanceof Player && args.length>0){
+            Location loc = ((Player) sender).getLocation();
+            for(int i=0; i<args.length; i++){
+                if(args[i].startsWith("~")){
+                    boolean update = true;
+                    for(int j=1; j<3; j++){
+                        if (i + j >= args.length || !args[i + j].startsWith("~")) {
+                            update = false;
+                            break;
+                        }
+                    }
+                    if(update){
+                        int x;
+                        try{
+                            x=Integer.parseInt(args[i].substring(1));
+                        }catch (NumberFormatException e){x=0;}
+                        args[i] = loc.getBlockX() + x +"";
+                        int y;
+                        try{
+                            y=Integer.parseInt(args[i+1].substring(1));
+                        }catch (NumberFormatException e){y=0;}
+                        args[i+1] = loc.getBlockY() + y +"";
+                        int z;
+                        try{
+                            z=Integer.parseInt(args[i+2].substring(1));
+                        }catch (NumberFormatException e){z=0;}
+                        args[i+2] = loc.getBlockX() + z +"";
+                    }
+                }
+            }
+        }
 
         switch(cmd.getName().toLowerCase()) {
+            case "build":
+                if (args.length < 5)
+                    return false;
+                int index;
+                try {
+                    index = Integer.parseInt(args[0]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid index");
+                    return true;
+                }
+                if (index < 0 || index >= builds.length) {
+                    System.out.println("Out of bounds index");
+                    return true;
+                }
+                World world = Bukkit.getWorld(args[1]);
+                if(world==null) {
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                Location loc;
+                try {
+                    loc = new Location(world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+                }catch(NumberFormatException e){
+                    System.out.println("Invalid coordinates");
+                    return true;
+                }
+                build(index, world, loc);
+                return true;
+
             case "tostring":
-                if (args.length < 6) {
-                    player.sendMessage("A pair of coordinates are required");
+                if (args.length < 7)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
                     return true;
                 }
                 int[] arguments = new int[6];
                 try {
-                    Location loc = player.getLocation();
-                    for (int i = 0; i < 6; i++)
-                        arguments[i] = args[i].startsWith("~") ? (i == 0 || i == 3 ? loc.getBlockX() : (i == 1 || i == 4 ? loc.getBlockY() : loc.getBlockZ())) + (args[i].substring(1).isEmpty() ? 0 : Integer.parseInt(args[i].substring(1))) : Integer.parseInt(args[i]);
+                    for (int i = 1; i <= 6; i++)
+                        arguments[i] = Integer.parseInt(args[i]);
                 } catch (NumberFormatException e) {
-                    player.sendMessage("Invalid coordinate(s)");
+                    System.out.println("Invalid coordinate(s)");
                     return true;
                 }
-                World world = player.getWorld();
                 String out = "{";
                 int x1 = Math.min(arguments[0], arguments[3]);
                 int x2 = Math.max(arguments[0], arguments[3]);
@@ -71,46 +133,32 @@ public class InaDungeon implements CommandExecutor{
                 System.out.println(out + "}");
                 return true;
 
-            case "build":
-                if (args.length < 1)
-                    return true;
-                int index;
-                try {
-                    index = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
-                    player.sendMessage("Invalid index");
+            case "groundpound":
+                if(!(sender instanceof Player)){
+                    System.out.println("Player only command");
                     return true;
                 }
-                if (index < 0 || index >= builds.length) {
-                    player.sendMessage("Out of bounds indnex");
-                    return true;
+                Entity entity;
+                Player player = (Player) sender;
+                if(args.length>0) {
+                    try {
+                        entity = player.getWorld().spawnEntity(player.getLocation(), EntityType.valueOf(args[0]));
+                    }catch(IllegalArgumentException e){return true;}
                 }
-                Location loc = player.getLocation();
-                world = player.getWorld();
-                for (int i = 0; i < builds[index].length; i++) {
-                    for (int j = 0; j < builds[index][i].length; j++) {
-                        for (int k = 0; k < builds[index][i][j].length; k++) {
-                            world.getBlockAt(loc.clone().add(i, j, k)).setBlockData(Bukkit.createBlockData(builds[index][i][j][k]));
-                        }
-                    }
-                }
-                return true;
-
-            case "spreadfire":
-                if (args.length < 3)
-                    return true;
-                world = player.getWorld();
-                try {
-                    Attacks.spreadFire(BlockFace.UP, world.getBlockAt(new Location(world, Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]))), Utility.cardinal.keySet(), new HashSet<>(), new HashSet<>(), args.length>3&&args[3].equals("true"));
-                }catch(NumberFormatException ignored){}
-                return true;
+                else entity = player;
+                Attacks.groundPound(entity);
+                return  true;
 
             case "paintbomb":
-                if (args.length < 3)
+                if (args.length < 4)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
                     return true;
-                world = player.getWorld();
+                }
                 try {
-                    loc = new Location(world, Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+                    loc = new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                 }catch(NumberFormatException e){return true;}
                 Block bloc = world.getBlockAt(loc);
                 Block drop = bloc;
@@ -141,30 +189,110 @@ public class InaDungeon implements CommandExecutor{
                 };
                 return true;
 
-            case "groundpound":
-                Entity entity;
-                if(args.length>0) {
-                    try {
-                        entity = player.getWorld().spawnEntity(player.getLocation(), EntityType.valueOf(args[0]));
-                    }catch(IllegalArgumentException e){return true;}
+            case "spreadfire":
+                if (args.length < 4)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
+                    return true;
                 }
-                else entity = player;
-                Attacks.groundPound(entity);
-                return  true;
+                try {
+                    Attacks.spreadFire(BlockFace.UP, world.getBlockAt(new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]))), Utility.cardinal.keySet(), new HashSet<>(), new HashSet<>(), args.length>3&&args[3].equals("true"));
+                }catch(NumberFormatException ignored){}
+                return true;
+
+            case "plant":
+                if(args.length<5)
+                    return false;
+                try {
+                    index = Integer.parseInt(args[0]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid index");
+                    return true;
+                }
+                if (index < 0 || index >= builds.length) {
+                    System.out.println("Out of bounds index");
+                    return true;
+                }
+                world = Bukkit.getWorld(args[1]);
+                if(world==null) {
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                try {
+                    loc = new Location(world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+                }catch(NumberFormatException e){
+                    System.out.println("Invalid coordinates");
+                    return true;
+                }
+                GettingWood.plant(index, world, loc);
+                return true;
+
+            case "resetGettingWood":
+                GettingWood.reset();
+                return true;
 
             case "minesweeper":
-                if(args.length < 5)
+                if(args.length < 6)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
                     return true;
+                }
                 try {
-                    Minesweeper.setUp(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), player.getWorld());
-                    player.sendMessage("Minesweeper [ON]");
-                }catch (NumberFormatException e){player.sendMessage("Invalid coordinates");}
+                    Minesweeper.setUp(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]), world);
+                    System.out.println("Minesweeper [ON]");
+                }catch (NumberFormatException e){System.out.println("Invalid coordinates");}
                 return  true;
 
-            case "reset":
+            case "resetMinesweeper":
                 Minesweeper.reset();
-                player.sendMessage("Minesweeper [OFF]");
+                System.out.println("Minesweeper [OFF]");
+
+            case "payload":
+                if(args.length>10)
+                    Payload.payload(args);
+                return true;
+
+            case "spawn":
+                if(args.length < 5)
+                    return false;
+                try {
+                    index = Integer.parseInt(args[0]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid index");
+                    return true;
+                }
+                if (index < 0 || index >= builds.length) {
+                    System.out.println("Out of bounds index");
+                    return true;
+                }
+                world = Bukkit.getWorld(args[1]);
+                if(world==null){
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                try {
+                    Payload.spawn(index, world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), BlockFace.UP);
+                }catch (NumberFormatException e){ System.out.println("Invalid argument(s)"); }
+                return true;
         }
         return true;
+    }
+
+    public static Map<Block, BlockData> build(int index, World world, Location loc){
+        Map<Block, BlockData> blocks = new HashMap<>();
+        for (int i = 0; i < builds[index].length; i++) {
+            for (int j = 0; j < builds[index][i].length; j++) {
+                for (int k = 0; k < builds[index][i][j].length; k++) {
+                    Block block = world.getBlockAt(loc.clone().add(i, j, k));
+                    blocks.put(block, block.getBlockData());
+                    block.setBlockData(Bukkit.createBlockData(builds[index][i][j][k]));
+                }
+            }
+        }
+        return blocks;
     }
 }

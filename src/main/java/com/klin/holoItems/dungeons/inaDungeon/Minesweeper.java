@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public class Minesweeper implements Listener {
     }};
     private static Map<AbstractMap.SimpleEntry<Integer, Integer>, Boolean> squares = new HashMap<>();
     private static int y;
-    private static Map<Block, Material> reset = new HashMap<>();
+    private static Map<Block, BlockData> reset = new HashMap<>();
 
     public static void setUp(int x1, int x2, int z1, int z2, int y1, World world){
         for(int x=x1; x<=x2; x++){
@@ -68,7 +69,7 @@ public class Minesweeper implements Listener {
         Material material = block.getType();
         if(mine==null || !sand.contains(material))
             return;
-        reset.putIfAbsent(block, material);
+        reset.putIfAbsent(block, block.getBlockData());
         if(mine){
             block.setType(Material.ORANGE_GLAZED_TERRACOTTA);
             World world = block.getWorld();
@@ -129,7 +130,7 @@ public class Minesweeper implements Listener {
             instance = null;
         }
         for(Block block : reset.keySet())
-            block.setType(reset.get(block));
+            block.setBlockData(reset.get(block));
         reset.clear();
         squares.clear();
     }

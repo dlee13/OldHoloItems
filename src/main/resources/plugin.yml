@@ -8,80 +8,87 @@ commands:
   collections:
     permission: holoItems.player
     usage: /<command>
-  worldname:
-    permission: holoItems.player
-    usage: /<command>
   custommodeldata:
     permission: holoItems.player
     usage: /<command>
   registry:
     permission: holoItems.player
     usage: /<command>
+  worldname:
+    permission: holoItems.player
+    usage: /<command>
 
   acquire:
     permission: holoItems.op
     usage: /<command> <id>
+  collect:
+    permission: holoItems.op
+    usage:
+      /<command> <stat> <type> <id>
+  clearactivatables:
+    permission: holoItems.op
+    usage: /<command>
   disable:
     permission: holoItems.op
     usage: /<command> <id>
   enable:
     permission: holoItems.op
     usage: /<command> <id>
-  collect:
-    permission: holoItems.op
-    usage: /<command> <stat> <type> <id>
-  gethead:
-    permission: holoItems.op
-    usage: /<command> <name>
-  setcustommodeldata:
-    permission: holoItems.op
-    usage: /<command> <custommodeldata>
-  settype:
-    permission: holoItems.op
-    usage: /<command> <type>
-  setenchantments:
-    permission: holoItems.op
-    usage: /<command> <enchantments>
-  removechunktickets:
-    permission: holoItems.op
-    usage: /<command>
   getactivatables:
     permission: holoItems.op
     usage: /<command>
-  clearactivatables:
+  gethead:
+    permission: holoItems.op
+    usage: /<command> <name>
+  removechunktickets:
     permission: holoItems.op
     usage: /<command>
+  setcustommodeldata:
+    permission: holoItems.op
+    usage: /<command> <custommodeldata>
+  setenchantments:
+    permission: holoItems.op
+    usage: /<command> <enchantments>
+  settype:
+    permission: holoItems.op
+    usage: /<command> <type>
   test:
     permission: holoItems.op
     usage: /<command>
 
-  tostring:
-    permission: holoItems.inaDungeon
-    usage: /<command> <x1> <y1> <z1> <x2> <y2> <z2>
   build:
     permission: holoItems.inaDungeon
-    usage: /<command> <index>
-  spreadfire:
+    usage: /<command> <index> <world> <x> <y> <z>
+  tostring:
     permission: holoItems.inaDungeon
-    usage: /<command> <x> <y> <z>
-  paintbomb:
-    permission: holoItems.inaDungeon
-    usage: /<command> <x> <y> <z>
+    usage: /<command> <world> <x1> <y1> <z1> <x2> <y2> <z2>
   groundpound:
     permission: holoItems.inaDungeon
     usage: /<command> <entityType>
-  minesweeper:
+  paintbomb:
     permission: holoItems.inaDungeon
-    usage: /<command> <x1> <x2> <z1> <z2> <y> <world>
-  reset:
+    usage: /<command> <world> <x> <y> <z>
+  spreadfire:
     permission: holoItems.inaDungeon
-    usage: /<command>
-  spawn:
+    usage: /<command> <world> <x> <y> <z>
+  plant:
     permission: holoItems.inaDungeon
     usage: /<command> <index> <world> <x> <y> <z>
+  resetGettingWood:
+    permission: holoItems.inaDungeon
+    usage: /<command>
+  minesweeper:
+    permission: holoItems.inaDungeon
+    usage: /<command> <world> <x1> <x2> <z1> <z2> <y>
+  resetMinesweeper:
+    permission: holoItems.inaDungeon
+    usage: /<command>
   payload:
     permission: holoItems.inaDungeon
     usage: /<command> <world> <xStart> <yStart> <zStart> <x1> <y1> <z1> <x2> <y2> <z2> <direction>
+  spawn:
+    permission: holoItems.inaDungeon
+    usage: /<command> <index> <world> <x> <y> <z>
 
 permissions:
   holoItems.*:

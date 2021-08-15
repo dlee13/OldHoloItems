@@ -25,7 +25,7 @@ public class Hourglass extends BatteryPack implements Hitable {
                 "equal to the quantity of sand in the" +"/n"+
                 "hourglass, return *here* when it ends";
     private static final int durability = 0;
-    private static final boolean shiny = false;
+    private static final boolean shiny = true;
 
     public static final Material content = Material.SAND;
     public static final double perFuel = 1;
