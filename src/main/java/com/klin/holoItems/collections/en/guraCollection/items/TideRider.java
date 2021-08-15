@@ -8,6 +8,7 @@ import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -47,6 +49,10 @@ public class TideRider extends Item implements Interactable {
     }
 
     public void registerRecipes(){
+        ItemMeta meta = item.getItemMeta();
+        meta.addEnchant(Enchantment.LOYALTY, 3, false);
+        item.setItemMeta(meta);
+
         ShapedRecipe recipe =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aba"," c "," a ");
@@ -79,12 +85,14 @@ public class TideRider extends Item implements Interactable {
                 if(increment>=1200 || !player.isValid() || !player.isHandRaised()){
                     player.sendBlockChange(current.getLocation(), data.remove(current));
                     meta.removeEnchant(Enchantment.RIPTIDE);
+                    meta.addEnchant(Enchantment.LOYALTY, 3, false);
                     item.setItemMeta(meta);
                     Utility.addDurability(item, -1, player);
                     cancel();
                     return;
                 }
                 else if(increment==0){
+                    meta.removeEnchant(Enchantment.LOYALTY);
                     meta.addEnchant(Enchantment.RIPTIDE, 3, false);
                     item.setItemMeta(meta);
                 }
@@ -95,8 +103,19 @@ public class TideRider extends Item implements Interactable {
                 Vector dir = loc.getDirection().setY(0).normalize();
                 Block rise = world.getBlockAt(loc.clone().add(dir));
                 Block fall = world.getBlockAt(loc.add(0, -1, 0));
-                player.setVelocity(player.getVelocity().add(dir).normalize().setY(
-                        rise.isPassable()&&!rise.isLiquid()?(fall.isPassable()&&!fall.isLiquid()?-1:0):1));
+                double multiplier = 1;
+                if(player.hasPotionEffect(PotionEffectType.DOLPHINS_GRACE))
+                    multiplier = 1.33;
+                ItemStack boots = player.getInventory().getBoots();
+                if(boots!=null && boots.getType()!=Material.AIR) {
+                    multiplier += ((double) boots.getEnchantmentLevel(Enchantment.DEPTH_STRIDER))/9
+                            +((fall.getType()==Material.SOUL_SAND || fall.getType()==Material.WATER
+                            && fall.getRelative(BlockFace.DOWN).getType()==Material.SOUL_SAND)
+                            && boots.containsEnchantment(Enchantment.SOUL_SPEED)?
+                            ((double) boots.getEnchantmentLevel(Enchantment.SOUL_SPEED))*0.11:-0.33);
+                }
+                player.setVelocity(player.getVelocity().add(dir).normalize().multiply(multiplier)
+                        .setY(rise.isPassable()&&!rise.isLiquid()?(fall.isPassable()&&!fall.isLiquid()?-1:0):1));
                 if(previous.equals(current))
                     return;
                 player.sendBlockChange(previous.getLocation(), data.remove(previous));
