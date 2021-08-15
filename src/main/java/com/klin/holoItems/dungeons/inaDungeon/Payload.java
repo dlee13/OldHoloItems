@@ -239,13 +239,13 @@ public class Payload implements CommandExecutor{
         Set<FallingBlock> blocks = new HashSet<>();
         FallingBlock center = null;
         Location loc = new Location(world, x, y, z);
-        int iI = Dungeon.builds[index].length;
-        int jJ = Dungeon.builds[index][0].length;
-        int kK = Dungeon.builds[index][0][0].length;
+        int iI = InaDungeon.builds[index].length;
+        int jJ = InaDungeon.builds[index][0].length;
+        int kK = InaDungeon.builds[index][0][0].length;
         for(int i=0; i<iI; i++){
             for(int j=0; j<jJ; j++){
                 for(int k=0; k<kK; k++){
-                    FallingBlock block = world.spawnFallingBlock(loc.clone().add(i+0.5, j, k+0.5), Bukkit.createBlockData(Dungeon.builds[index][i][j][k]));
+                    FallingBlock block = world.spawnFallingBlock(loc.clone().add(i+0.5, j, k+0.5), Bukkit.createBlockData(InaDungeon.builds[index][i][j][k]));
                     block.setGravity(false);
                     blocks.add(block);
                     switch(direction){

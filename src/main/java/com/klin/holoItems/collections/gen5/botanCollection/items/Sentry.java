@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.gen5.botanCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen5.botanCollection.BotanCollection;
+import com.klin.holoItems.interfaces.Hitable;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.interfaces.Manipulatable;
 import com.klin.holoItems.interfaces.Retaliable;
@@ -14,18 +15,18 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class Sentry extends Item implements Interactable, Manipulatable, Retaliable {
+public class Sentry extends Item implements Interactable, Manipulatable, Retaliable, Hitable {
     public static final String name = "sentry";
     public static final Set<Enchantment> accepted = null;
     private static Map<Player, AbstractMap.SimpleEntry<Location, ArmorStand>> stands = new HashMap<>();
@@ -190,12 +191,13 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
                 event.setDamage(30);
             else
                 event.setDamage(1);
-            new BukkitRunnable(){
-                public void run(){
-                    ((LivingEntity) entity).setNoDamageTicks(0);
-                }
-            }.runTask(HoloItems.getInstance());
         }
+    }
+
+    public void ability(ProjectileHitEvent event) {
+        Entity entity = event.getHitEntity();
+        if (entity instanceof LivingEntity)
+            ((LivingEntity) entity).setNoDamageTicks(0);
     }
 
     private boolean cause(ItemStack item, Player player){

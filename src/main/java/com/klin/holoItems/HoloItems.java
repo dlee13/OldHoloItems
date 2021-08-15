@@ -1,6 +1,6 @@
 package com.klin.holoItems;
 
-import com.klin.holoItems.dungeons.inaDungeon.Dungeon;
+import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
 import com.klin.holoItems.dungeons.inaDungeon.Payload;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,8 +19,9 @@ public class HoloItems extends JavaPlugin {
         getCommand("collections").setExecutor(collections);
         getCommand("worldname").setExecutor(collections);
         getCommand("custommodeldata").setExecutor(collections);
-        getCommand("acquire").setExecutor(collections);
         getCommand("registry").setExecutor(collections);
+
+        getCommand("acquire").setExecutor(collections);
         getCommand("disable").setExecutor(collections);
         getCommand("enable").setExecutor(collections);
         getCommand("collect").setExecutor(collections);
@@ -32,14 +33,15 @@ public class HoloItems extends JavaPlugin {
         getCommand("getactivatables").setExecutor(collections);
         getCommand("clearactivatables").setExecutor(collections);
         getCommand("test").setExecutor(collections);
-        Dungeon dungeon = new Dungeon();
-        getCommand("tostring").setExecutor(dungeon);
-        getCommand("build").setExecutor(dungeon);
-        getCommand("spreadfire").setExecutor(dungeon);
-        getCommand("paintbomb").setExecutor(dungeon);
-        getCommand("groundpound").setExecutor(dungeon);
-        getCommand("minesweeper").setExecutor(dungeon);
-        getCommand("reset").setExecutor(dungeon);
+
+        InaDungeon inaDungeon = new InaDungeon();
+        getCommand("tostring").setExecutor(inaDungeon);
+        getCommand("build").setExecutor(inaDungeon);
+        getCommand("spreadfire").setExecutor(inaDungeon);
+        getCommand("paintbomb").setExecutor(inaDungeon);
+        getCommand("groundpound").setExecutor(inaDungeon);
+        getCommand("minesweeper").setExecutor(inaDungeon);
+        getCommand("reset").setExecutor(inaDungeon);
         Payload payload = new Payload();
         getCommand("spawn").setExecutor(payload);
         getCommand("payload").setExecutor(payload);

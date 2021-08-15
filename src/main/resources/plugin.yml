@@ -3,54 +3,96 @@ version: 1.17
 author: klin
 main: com.klin.holoItems.HoloItems
 api-version: 1.14
+
 commands:
   collections:
+    permission: holoItems.player
     usage: /<command>
   worldname:
+    permission: holoItems.player
     usage: /<command>
   custommodeldata:
+    permission: holoItems.player
     usage: /<command>
-  acquire:
-    usage: /<command> <id>
   registry:
+    permission: holoItems.player
     usage: /<command>
+
+  acquire:
+    permission: holoItems.op
+    usage: /<command> <id>
   disable:
+    permission: holoItems.op
     usage: /<command> <id>
   enable:
+    permission: holoItems.op
     usage: /<command> <id>
   collect:
+    permission: holoItems.op
     usage: /<command> <stat> <type> <id>
   gethead:
+    permission: holoItems.op
     usage: /<command> <name>
   setcustommodeldata:
+    permission: holoItems.op
     usage: /<command> <custommodeldata>
   settype:
+    permission: holoItems.op
     usage: /<command> <type>
   setenchantments:
+    permission: holoItems.op
     usage: /<command> <enchantments>
   removechunktickets:
+    permission: holoItems.op
     usage: /<command>
   getactivatables:
+    permission: holoItems.op
     usage: /<command>
   clearactivatables:
+    permission: holoItems.op
     usage: /<command>
   test:
+    permission: holoItems.op
     usage: /<command>
+
   tostring:
+    permission: holoItems.inaDungeon
     usage: /<command> <x1> <y1> <z1> <x2> <y2> <z2>
   build:
+    permission: holoItems.inaDungeon
     usage: /<command> <index>
   spreadfire:
+    permission: holoItems.inaDungeon
     usage: /<command> <x> <y> <z>
   paintbomb:
+    permission: holoItems.inaDungeon
     usage: /<command> <x> <y> <z>
   groundpound:
+    permission: holoItems.inaDungeon
     usage: /<command> <entityType>
   minesweeper:
+    permission: holoItems.inaDungeon
     usage: /<command> <x1> <x2> <z1> <z2> <y> <world>
   reset:
+    permission: holoItems.inaDungeon
     usage: /<command>
   spawn:
+    permission: holoItems.inaDungeon
     usage: /<command> <index> <world> <x> <y> <z>
   payload:
+    permission: holoItems.inaDungeon
     usage: /<command> <world> <xStart> <yStart> <zStart> <x1> <y1> <z1> <x2> <y2> <z2> <direction>
+
+permissions:
+  holoItems.*:
+    default: op
+    children:
+      holoItems.player: true
+      holoItems.op: true
+      holoItems.inaDungeon: true
+  holoItems.player:
+    default: true
+  holoItems.op:
+    default: false
+  holoites.inaDungeon:
+    default: false
