@@ -123,6 +123,7 @@ public class TideRider extends Item implements Interactable {
                 player.sendBlockChange(previous.getLocation(), data.remove(previous));
                 data.put(current, current.getBlockData());
                 player.sendBlockChange(current.getLocation(), water);
+                player.setFallDistance(0);
             }
         };
     }

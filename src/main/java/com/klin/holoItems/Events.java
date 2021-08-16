@@ -1120,6 +1120,21 @@ public class Events implements Listener {
     }
 
     @EventHandler
+    public static void swapAbility(PlayerSwapHandItemsEvent event){
+        if(event.isCancelled())
+            return;
+        Player player = event.getPlayer();
+        ItemStack item = event.getMainHandItem();
+        Swappable swappable = Utility.findItem(item, Swappable.class, player);
+        if(swappable!=null)
+            swappable.ability(event, player, item, true);
+        item = event.getOffHandItem();
+        swappable = Utility.findItem(item, Swappable.class, player);
+        if(swappable!=null)
+            swappable.ability(event, player, item, false);
+    }
+
+    @EventHandler
     public static void targetAbility(EntityTargetLivingEntityEvent event){
         if(event.isCancelled())
             return;

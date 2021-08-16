@@ -21,22 +21,21 @@ import java.util.Set;
 
 public class MagnifyingGlass extends Item implements Interactable {
     public static final String name = "magnifyingGlass";
-    public static final Set<Enchantment> accepted = null;
 
     private static final Material material = Material.GLASS;
     private static final int quantity = 1;
     private static final String lore =
-            "Check out a dispenser's wiring";
+            "Check a tile entity's data";
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
 
     public static final int cost = 0;
     public static final char key = '4';
+    public static final String id = ""+WatsonCollection.key+key;
 
     public MagnifyingGlass(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+WatsonCollection.key+key, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){

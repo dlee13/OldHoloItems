@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gamers.koroneCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gamers.koroneCollection.items.Radar;
 import com.klin.holoItems.collections.gen4.watameCollection.items.UberSheepPackage;
 import com.klin.holoItems.collections.gen4.watameCollection.items.LaunchPad;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ public class KoroneCollection extends Collection {
 
     public KoroneCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
+        collection.put(Radar.key, new Radar());
     }
 
     public Map<String, Integer> getStat(Player player){

@@ -127,7 +127,7 @@ public class GroundPounder extends Pack {
                             Set<Block> pound = Stream.of(center).collect(Collectors.toCollection(HashSet::new));
                             Set<Block> pounded = Stream.of(center).collect(Collectors.toCollection(HashSet::new));
                             public void run(){
-                                if(increment>3){
+                                if(increment>4){
                                     cancel();
                                     return;
                                 }
@@ -143,7 +143,8 @@ public class GroundPounder extends Pack {
                                 for(Entity entity : world.getNearbyEntities(loc, 16, 16, 16, entity -> entity instanceof Player)) {
                                     Player player = (Player) entity;
                                     for (Block block : pound) {
-                                        player.sendBlockChange(block.getRelative(BlockFace.UP).getLocation(), air);
+                                        if(increment!=3)
+                                            player.sendBlockChange(block.getRelative(BlockFace.UP).getLocation(), air);
                                         if (increment >= 3)
                                             continue;
                                         for (BlockFace face : faces) {
@@ -159,7 +160,8 @@ public class GroundPounder extends Pack {
                                         }
                                     }
                                 }
-                                pound = temp;
+                                if(increment!=3)
+                                    pound = temp;
                                 increment++;
                             }
                         };

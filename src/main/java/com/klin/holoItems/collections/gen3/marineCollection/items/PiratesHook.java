@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -76,7 +77,8 @@ public class PiratesHook extends Item implements Fishable {
 
         event.getHook().remove();
         Entity entity = event.getCaught();
-        if(!Utility.humanoids.contains(entity.getType()))
+        EntityType type = entity.getType();
+        if(!Utility.humanoids.contains(type) || type==EntityType.PLAYER)
             return;
         EntityEquipment equipment = ((LivingEntity) entity).getEquipment();
         if(equipment==null)
