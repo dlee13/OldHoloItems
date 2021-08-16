@@ -38,8 +38,7 @@ public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable
     private static final Material material = Material.BOW;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Mark enemies with your arrows" +"/n"+
+            "Mark enemies with your arrows\n"+
             "Left click within 5sec to rend them";
     private static final int durability = 92;
     public static final boolean stackable = false;

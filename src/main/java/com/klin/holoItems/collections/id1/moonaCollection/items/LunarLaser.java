@@ -61,8 +61,7 @@ public class LunarLaser extends Enchant implements Interactable {
 
     private static final Material material = Material.IRON_SWORD;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Cut through glass like butter";
+            "Cut through glass";
     private static final int durability = 250;
     private static final boolean shiny = true;
 

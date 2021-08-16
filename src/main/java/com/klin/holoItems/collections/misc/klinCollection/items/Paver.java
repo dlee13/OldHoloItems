@@ -28,8 +28,7 @@ public class Paver extends SlidingPack {
 
     private static final Material material = Material.NETHERITE_SWORD;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "brrrrrrrrrr";
+            "brrrrrrrrrr";
     private static final int durability = -1;
     public static final boolean stackable = false;
     private static final boolean shiny = false;

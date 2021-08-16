@@ -25,8 +25,7 @@ public class SecondHand extends Wiring implements Interactable{
 
     private static final Material material = Material.STICK;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Sync dispensers";
+            "Sync dispensers";
     private static final boolean shiny = false;
 
     public static final int cost = -1;

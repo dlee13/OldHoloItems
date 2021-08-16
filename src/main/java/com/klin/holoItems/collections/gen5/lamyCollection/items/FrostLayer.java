@@ -32,8 +32,7 @@ public class FrostLayer extends BatteryPack implements Placeable {
 
     private static final Material material = Material.SNOW;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "Spreads snow";
+            "Spreads snow";
     private static final int durability = 0;
     private static final boolean shiny = true;
 

@@ -54,8 +54,8 @@ import com.klin.holoItems.collections.id2.ollieCollection.OllieCollection;
 import com.klin.holoItems.collections.id2.reineCollection.ReineCollection;
 import com.klin.holoItems.collections.misc.achanCollection.AchanCollection;
 import com.klin.holoItems.collections.misc.franCollection.FranCollection;
-import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
-import com.klin.holoItems.collections.misc.hiddenCollection.Recipes;
+import com.klin.holoItems.collections.misc.opCollection.OpCollection;
+import com.klin.holoItems.collections.misc.opCollection.Recipes;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
 import com.klin.holoItems.collections.misc.utilityCollection.UtilityCollection;
@@ -158,11 +158,10 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(ShienCollection.key, new ShienCollection());
         collections.put(OgaCollection.key, new OgaCollection());
 
-        collections.put(UtilityCollection.key, new UtilityCollection());
-
         collections.put(FranCollection.key, new FranCollection());
         collections.put(KlinCollection.key, new KlinCollection());
-        collections.put(HiddenCollection.key, new HiddenCollection());
+        collections.put(OpCollection.key, new OpCollection());
+        collections.put(UtilityCollection.key, new UtilityCollection());
 
         Recipes.registerRecipes();
 
@@ -196,8 +195,7 @@ public class Collections implements CommandExecutor, Listener {
             case "collections":
                 if (heads.isEmpty())
                     return true;
-                Inventory inv = Bukkit.createInventory(null,
-                        /*((collections.size() - 2) / 9 + 1) * 9*/54, "Collections");
+                Inventory inv = Bukkit.createInventory(null, 54, "Collections");
                 for (Collection collection : collections.values()) {
                     if (collection.uuid == null)
                         continue;

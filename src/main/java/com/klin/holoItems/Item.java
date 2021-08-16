@@ -47,5 +47,19 @@ public abstract class Item {
         this.key = key;
     }
 
+    public Item(String name, Material material, int quantity, int durability, boolean stackable, boolean shiny, int cost, String id, char key){
+        item = Utility.process(name, material, quantity, null, durability, shiny, id);
+        this.name = name;
+        this.accepted = null;
+        this.durability = durability;
+        this.stackable = stackable;
+
+        this.cost = cost;
+        if(cost!=-1)
+            registerRecipes();
+        this.id = id;
+        this.key = key;
+    }
+
     public abstract void registerRecipes();
 }

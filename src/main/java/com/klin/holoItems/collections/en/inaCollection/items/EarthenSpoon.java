@@ -19,9 +19,8 @@ public class EarthenSpoon extends Wiring {
     public static final String name = "earthenSpoon";
     private static final Material material = Material.WOODEN_SHOVEL;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Dispensers wired with this item will" +"/n"+
-            "plant crops from its inventory" + "/n"+
+            "Dispensers wired with this item will\n" +
+            "plant crops from its inventory\n" +
             "Break the dispenser to retrieve";
     private static final boolean shiny = true;
 

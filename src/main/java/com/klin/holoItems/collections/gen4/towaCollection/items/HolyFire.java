@@ -7,6 +7,7 @@ import com.klin.holoItems.collections.gen4.towaCollection.TowaCollection;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
+import com.klin.holoItems.interfaces.Spawnable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -27,7 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HolyFire extends Crate implements Activatable, Punchable, Placeable {
+public class HolyFire extends Crate implements Activatable, Punchable, Placeable, Spawnable {
     public static final String name = "holyFire";
     public static final HashSet<Enchantment> accepted = null;
     private static final Set<CreatureSpawnEvent.SpawnReason> reasons = Stream.of(
@@ -43,9 +44,8 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
     private static final Material material = Material.SOUL_CAMPFIRE;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Prevents natural mob spawning" +"/n"+
-                "within 100 blocks when lit";
+            "Prevents natural mob spawning\n"+
+            "within 100 blocks when lit";
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = true;

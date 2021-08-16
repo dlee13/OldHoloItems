@@ -1,7 +1,6 @@
 package com.klin.holoItems.collections.gen3.marineCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.gen3.marineCollection.items.DetonationWire;
 import com.klin.holoItems.collections.gen3.marineCollection.items.PiratesHook;
 import org.bukkit.entity.Player;
 
@@ -20,7 +19,6 @@ public class MarineCollection extends Collection {
 
     public MarineCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(DetonationWire.key, new DetonationWire());
         collection.put(PiratesHook.key, new PiratesHook());
     }
 

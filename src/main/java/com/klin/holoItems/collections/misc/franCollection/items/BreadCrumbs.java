@@ -26,8 +26,7 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
     private static final Material material = Material.BREAD;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Rename to set HP";
+            "Rename to set HP";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;

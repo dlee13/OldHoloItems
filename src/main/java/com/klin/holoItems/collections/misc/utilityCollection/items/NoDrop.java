@@ -12,7 +12,8 @@ public class NoDrop extends Item implements Collectable {
 
     private static final Material material = Material.GRAY_STAINED_GLASS_PANE;
     private static final int quantity = 1;
-    private static final String lore = "§7utility item";
+    private static final String lore =
+            "No drop falling block";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;

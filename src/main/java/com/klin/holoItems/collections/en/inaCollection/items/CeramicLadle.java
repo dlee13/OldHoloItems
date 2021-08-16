@@ -20,10 +20,9 @@ public class CeramicLadle  extends Wiring {
     public static final String name = "ceramicLadle";
     private static final Material material = Material.STONE_SHOVEL;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Dispensers wired with this item will" +"/n"+
-                "plant saplings, flowers, and mushrooms" + "/n"+
-                "Break the dispenser to retrieve";
+            "Dispensers wired with this item will\n" +
+            "plant saplings, flowers, and mushrooms\n" +
+            "Break the dispenser to retrieve";
     private static final boolean shiny = true;
 
     public static final int cost = 16720;

@@ -36,9 +36,8 @@ public class Record extends Item implements Dispensable, Interactable, Clickable
     private static final Material material = Material.PAPER;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Dispense once to start, and"+"/n"+
-                "again to save the final time";
+            "Dispense once to start, and\n"+
+            "again to save the final time";
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = true;

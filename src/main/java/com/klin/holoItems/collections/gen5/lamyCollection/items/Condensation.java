@@ -26,8 +26,7 @@ public class Condensation extends Item implements Placeable {
     private static final Material material = Material.SNOW_BLOCK;
     private static final int quantity = 64;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "The lava putter outer";
+            "The lava putter outer";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;

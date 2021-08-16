@@ -70,8 +70,7 @@ public class TetrisPiece extends Item implements Interactable {
     private static final Material material = Material.LIGHT_BLUE_CONCRETE_POWDER;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Spin";
+            "Spin";
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = false;

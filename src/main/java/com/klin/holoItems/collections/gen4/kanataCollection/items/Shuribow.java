@@ -25,9 +25,8 @@ public class Shuribow extends SlidingPack implements Launchable {
 
     private static final Material material = Material.CROSSBOW;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Multi-shot equal to quantity of" +"/n"+
-                "prismarine shards consumed";
+            "Multi-shot equal to quantity of\n"+
+            "prismarine shards consumed";
     private static final int durability = 162;
     private static final boolean shiny = false;
 

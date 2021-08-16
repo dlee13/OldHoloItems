@@ -1,13 +1,13 @@
-package com.klin.holoItems.collections.misc.hiddenCollection;
+package com.klin.holoItems.collections.misc.opCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.misc.hiddenCollection.items.*;
+import com.klin.holoItems.collections.misc.opCollection.items.*;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public class HiddenCollection extends Collection {
-    public static final String name = "Hidden";
+public class OpCollection extends Collection {
+    public static final String name = "Op";
     public static final String desc = null;
     public static final String theme = null;
     public static final String ign = null;
@@ -16,7 +16,7 @@ public class HiddenCollection extends Collection {
 
     public static final char key = 'Z';
 
-    public HiddenCollection(){
+    public OpCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(Sokoban.key, new Sokoban());
         collection.put(WheatPortal.key, new WheatPortal());

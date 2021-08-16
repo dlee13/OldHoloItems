@@ -32,9 +32,8 @@ public class Filter extends Wiring {
 
     private static final Material material = Material.IRON_BARS;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Dispensers wired with this item can" +"/n"+
-                "filter clay from soil using water" + "/n"+
+                "Dispensers wired with this item can\n"+
+                "filter clay from soil using water\n"+
                 "Break the dispenser to retrieve";
     private static final boolean shiny = true;
 

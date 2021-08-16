@@ -24,7 +24,6 @@ public class RolledNewspaper extends Item implements Responsible {
     private static final Material material = Material.PAPER;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
             "Cause a mild annoyance at will";
     private static final int durability = 8;
     public static final boolean stackable = false;

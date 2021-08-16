@@ -34,8 +34,7 @@ public class OnionRing extends Item implements Launchable, Holdable, Retainable 
     private static final Material material = Material.MUSIC_DISC_PIGSTEP;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Guarantees your arrows landing while" +"/n"+
+            "Guarantees your arrows landing while\n"+
             "this is held in your offhand";
     private static final int durability = 0;
     private static final boolean stackable = false;

@@ -19,7 +19,6 @@ public class SuperStar extends PowerUp {
     private static final Material material = Material.NETHER_STAR;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
             "Drift";
     private static final boolean shiny = true;
 

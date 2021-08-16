@@ -1,21 +1,17 @@
-package com.klin.holoItems.collections.misc.hiddenCollection.items;
+package com.klin.holoItems.collections.misc.opCollection.items;
 
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
+import com.klin.holoItems.collections.misc.opCollection.OpCollection;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Sokoban extends Item implements Interactable {
     public static final String name = "sokoban";
@@ -24,8 +20,7 @@ public class Sokoban extends Item implements Interactable {
     private static final Material material = Material.STONE_HOE;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Push a block by a block";
+            "Push a block by a block";
     private static final int durability = -1;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
@@ -35,7 +30,7 @@ public class Sokoban extends Item implements Interactable {
 
     public Sokoban(){
         super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+HiddenCollection.key+key, key);
+                ""+ OpCollection.key+key, key);
     }
 
     public void registerRecipes(){}

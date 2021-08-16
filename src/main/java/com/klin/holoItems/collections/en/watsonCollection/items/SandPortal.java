@@ -36,8 +36,7 @@ public class SandPortal extends Item implements Dispensable, Placeable {
     private static final Material material = Material.SAND;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Dispense to create a physical block" +"/n"+
+            "Dispense to create a physical block\n"+
             "Can also be placed infinitely";
     private static final int durability = 0;
     public static final boolean stackable = true;

@@ -28,10 +28,9 @@ public class QuartzBlossom extends BatteryPack implements Extractable, Dropable,
 
     private static final Material material = Material.LILY_OF_THE_VALLEY;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "When used after fully charging,"+"/n"+
-                "nether quartz ore will drop blocks"+"/n"+
-                "instead for 30 seconds";
+            "When used after fully charging\n"+
+            "nether quartz ore will drop blocks\n"+
+            "instead for 30 seconds";
     private static final int durability = 0;
     private static final boolean shiny = false;
 

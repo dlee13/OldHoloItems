@@ -19,10 +19,9 @@ public class WateringCan extends BatteryPack {
 
     private static final Material material = Material.BUCKET;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Right click to consume a charge and" +"/n"+
-                "advance the growth stage of all" +"/n"+
-                "vegetation around you";
+            "Right click to consume a charge and\n" +
+            "advance the growth stage of all\n" +
+            "vegetation around you";
     private static final int durability = 0;
     private static final boolean shiny = true;
 

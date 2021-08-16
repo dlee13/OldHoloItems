@@ -24,8 +24,7 @@ public class Vacuum extends Item implements Interactable {
     private static final Material material = Material.NETHERITE_HOE;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "brrrrrrrrrr";
+            "brrrrrrrrrr";
     private static final int durability = -1;
     private static final boolean stackable = false;
     private static final boolean shiny = false;

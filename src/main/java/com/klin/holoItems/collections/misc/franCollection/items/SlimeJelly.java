@@ -22,9 +22,7 @@ public class SlimeJelly extends LaserPointer implements Retaliable {
 
     private static final Material material = Material.SCUTE;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "Find opportunities to rejuvenate";
-
+            "Find opportunities to rejuvenate";
     public static final char key = '5';
 
     public SlimeJelly(){

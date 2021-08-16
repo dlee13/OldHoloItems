@@ -1,10 +1,10 @@
-package com.klin.holoItems.collections.misc.hiddenCollection.items;
+package com.klin.holoItems.collections.misc.opCollection.items;
 
 import com.klin.holoItems.interfaces.Dispensable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
+import com.klin.holoItems.collections.misc.opCollection.OpCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -37,8 +37,7 @@ public class WheatPortal extends Item implements Dispensable, Placeable {
     private static final Material material = Material.WHEAT_SEEDS;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Dispense to create a physical crop" +"/n"+
+            "Dispense to create a physical crop\n"+
             "Can also be placed infinitely";
     private static final int durability = 0;
     public static final boolean stackable = true;
@@ -49,7 +48,7 @@ public class WheatPortal extends Item implements Dispensable, Placeable {
 
     public WheatPortal(){
         super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+HiddenCollection.key+key, key);
+                ""+ OpCollection.key+key, key);
     }
 
     public void registerRecipes(){

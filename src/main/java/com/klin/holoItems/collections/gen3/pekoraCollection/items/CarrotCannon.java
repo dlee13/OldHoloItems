@@ -27,9 +27,8 @@ public class CarrotCannon extends BatteryPack {
 
     private static final Material material = Material.BLAZE_ROD;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Right click to consume a charge and" +"/n"+
-                "launch an explosive carrot";
+            "Right click to consume a charge and\n"+
+            "launch an explosive carrot";
     private static final int durability = 100;
     private static final boolean shiny = false;
 
@@ -119,7 +118,7 @@ public class CarrotCannon extends BatteryPack {
                     for(Entity entity : entities) {
                         if(Utility.damage(item, 1, false, player, (LivingEntity) entity, false, false, false)) {
                             ((LivingEntity) entity).setNoDamageTicks(0);
-                            entity.setVelocity(entity.getLocation().subtract(explosion).toVector().normalize());
+                            entity.setVelocity(new Vector(0, 0.1, 0));
                         }
                     }
                     cancel();

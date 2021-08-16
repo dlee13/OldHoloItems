@@ -1,7 +1,6 @@
 package com.klin.holoItems.collections.gen3.flareCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.gen3.flareCollection.items.MoltenCore;
 import com.klin.holoItems.collections.gen3.flareCollection.items.Splinter;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -22,7 +21,6 @@ public class FlareCollection extends Collection {
 
     public FlareCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(MoltenCore.key, new MoltenCore());
         collection.put(Splinter.key, new Splinter());
     }
 

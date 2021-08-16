@@ -34,9 +34,8 @@ public class Splinter extends Enchant implements Extractable {
 
     private static final Material material = Material.WOODEN_AXE;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Split apart logs of the same type" +"/n"+
-                "adjacent to the one you broke";
+            "Split apart logs of the same type\n"+
+            "adjacent to the one you broke";
     private static final int durability = 3136;
     private static final boolean shiny = false;
 

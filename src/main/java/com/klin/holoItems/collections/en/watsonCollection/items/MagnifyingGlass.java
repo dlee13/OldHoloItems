@@ -26,8 +26,7 @@ public class MagnifyingGlass extends Item implements Interactable {
     private static final Material material = Material.GLASS;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Check out a dispenser's wiring";
+            "Check out a dispenser's wiring";
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = false;

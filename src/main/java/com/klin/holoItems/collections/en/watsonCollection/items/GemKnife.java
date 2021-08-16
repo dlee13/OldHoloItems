@@ -33,10 +33,9 @@ public class GemKnife extends BatteryPack {
 
     private static final Material material = Material.EMERALD;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Right click to consume a charge and" +"/n"+
-                "break a piece off any ore softer than" +"/n"+
-                "an emerald";
+            "Right click to consume a charge an\n"+
+            "break a piece off any ore softer than\n"+
+            "an emerald";
     private static final int durability = 0;
     private static final boolean shiny = true;
 

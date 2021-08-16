@@ -28,8 +28,7 @@ public class WitchsBracelet extends Item implements Launchable, Holdable {
     private static final Material material = Material.MUSIC_DISC_MELLOHI;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Freely control the path your magic takes" +"/n"+
+            "Freely control the path your magic takes\n"+
             "this is held in your offhand";
     private static final int durability = 0;
     private static final boolean stackable = false;

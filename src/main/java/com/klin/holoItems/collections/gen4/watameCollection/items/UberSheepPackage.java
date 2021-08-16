@@ -30,8 +30,7 @@ public class UberSheepPackage extends Crate implements Placeable, Collectable {
     private static final Material material = Material.BARREL;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Contains goods to be delivered";
+            "Contains goods to be delivered";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;

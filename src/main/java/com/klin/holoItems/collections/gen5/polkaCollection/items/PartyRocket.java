@@ -28,9 +28,8 @@ public class PartyRocket extends Item implements Interactable, Craftable {
     private static final Material material = Material.FIREWORK_ROCKET;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Send all active players a"+"/n"+
-                "colorful surprise";
+            "Send all active players a\n"+
+            "colorful surprise";
     private static final int durability = 0;
     private static final boolean stackable = true;
     private static final boolean shiny = true;

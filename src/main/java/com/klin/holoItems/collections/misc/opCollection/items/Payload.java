@@ -1,8 +1,8 @@
-package com.klin.holoItems.collections.misc.hiddenCollection.items;
+package com.klin.holoItems.collections.misc.opCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.SlidingPack;
-import com.klin.holoItems.collections.misc.hiddenCollection.HiddenCollection;
+import com.klin.holoItems.collections.misc.opCollection.OpCollection;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -26,9 +26,8 @@ public class Payload extends SlidingPack {
 
     private static final Material material = Material.MINECART;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Set a time and destination,"+"/n"+
-                "line it up and watch it go";
+            "Set a time and destination,\n"+
+            "line it up and watch it go";
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = true;
@@ -40,7 +39,7 @@ public class Payload extends SlidingPack {
 
     public Payload(){
         super(name, accepted, material, lore, durability, shiny, cost, content,
-                ""+HiddenCollection.key+key, key);
+                ""+ OpCollection.key+key, key);
     }
 
     public void registerRecipes(){}

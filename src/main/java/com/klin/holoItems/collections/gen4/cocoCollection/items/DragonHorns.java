@@ -22,8 +22,7 @@ public class DragonHorns extends Item implements Flauntable {
     private static final Material material = Material.DRAGON_HEAD;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+ 
-                    "Good morning-";
+            "Good morning-";
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = false;

@@ -44,7 +44,6 @@ public class Comet extends Item implements Interactable {
     private static final Material material = Material.GOLDEN_AXE;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
             "Right click to throw an axe";
     private static final int durability = 32;
     public static final boolean stackable = false;

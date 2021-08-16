@@ -44,8 +44,7 @@ public class Trowel extends Pack {
 
     private static final Material material = Material.NETHERITE_SHOVEL;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "brrrrrrrrrr";
+            "brrrrrrrrrr";
     private static final int durability = -1;
     private static final boolean shiny = false;
     private static final int size = 54;

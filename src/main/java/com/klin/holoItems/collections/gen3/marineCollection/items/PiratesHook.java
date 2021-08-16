@@ -29,8 +29,7 @@ public class PiratesHook extends Item implements Fishable {
     private static final Material material = Material.FISHING_ROD;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "Strip a random item off a mob";
+            "Strip a random item off a mob";
     private static final int durability = 6;
     public static final boolean stackable = false;
     private static final boolean shiny = false;

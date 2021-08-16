@@ -9,7 +9,7 @@ import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
 import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
-import com.klin.holoItems.collections.misc.hiddenCollection.items.GalleryFrame;
+import com.klin.holoItems.collections.misc.opCollection.items.GalleryFrame;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
@@ -33,6 +33,7 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -209,17 +210,23 @@ public class Events implements Listener {
                             combinedMeta.setDisplayName("§6" + renameText);
                             levelCost++;
                         }
+                        List<String> lore = combinedMeta.getLore();
+                        if(lore!=null && !lore.isEmpty() && lore.get(0).startsWith("§b")){
+                            lore.add(0, "");
+                            combinedMeta.setLore(lore);
+                        }
                         combined.setItemMeta(combinedMeta);
 
-                        //if generated item matches item already in slot, then go to
-                        //!=null check where it'll pass and item will be sent to cursor by game
-                        if(curr==null ||
-                                !combined.getEnchantments().equals(curr.getEnchantments())) {
+                        if(!combined.equals(curr)) {
+                            event.setCancelled(true);
                             ((AnvilInventory) inv).setRepairCost(levelCost+
                                     Math.max(ReflectionUtils.getRepairCost(itemA),
                                             ReflectionUtils.getRepairCost(itemB)));
-                            inv.setItem(2, combined);
-                            event.setCancelled(true);
+                            new BukkitRunnable(){
+                                public void run() {
+                                    inv.setItem(2, combined);
+                                }
+                            }.runTask(HoloItems.getInstance());
                         }
                         return;
                     }
@@ -354,25 +361,30 @@ public class Events implements Listener {
                 }
             }
         }
-        if(slot<inv.getSize())
-            return;
-
         ItemStack item = event.getCurrentItem();
         if (item==null || item.getItemMeta()==null)
             return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if (id == null)
             return;
-
-        //rewrite to account for new smeltable items
-        if(prohibitedInv.contains(invType)) {
-            if(!ingredients.contains(id))
+        if(invType==InventoryType.GRINDSTONE){
+            if(Collections.findItem(id).accepted==null)
                 event.setCancelled(true);
-            return;
+            else if(slot==2){
+                ItemStack combined = inv.getItem(2);
+                ItemMeta meta = combined.getItemMeta();
+                List<String> lore = meta.getLore();
+                if (lore != null && !lore.isEmpty() && lore.get(0).isEmpty()) {
+                    event.setCancelled(true);
+                    lore.remove(0);
+                    meta.setLore(lore);
+                    combined.setItemMeta(meta);
+                    inv.setItem(2, combined);
+                }
+            }
         }
-
-        if(invType==InventoryType.GRINDSTONE && Collections.findItem(id).accepted==null)
+        //rewrite to account for new smeltable items
+        if(slot>=inv.getSize() && prohibitedInv.contains(invType) && !ingredients.contains(id))
             event.setCancelled(true);
     }
 
@@ -451,8 +463,8 @@ public class Events implements Listener {
         ItemStack item = event.getItem();
         if(item.getItemMeta()==null)
             return;
-        String id = item.getItemMeta().
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        ItemMeta meta = item.getItemMeta();
+        String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id==null)
             return;
 
@@ -460,6 +472,12 @@ public class Events implements Listener {
         if(accepted==null) {
             event.setCancelled(true);
             return;
+        }
+        List<String> lore = meta.getLore();
+        if(lore!=null && !lore.isEmpty() && lore.get(0).startsWith("§b")) {
+            lore.add(0, "");
+            meta.setLore(lore);
+            item.setItemMeta(meta);
         }
         int size = accepted.size();
         Enchantment[] acceptedArray = accepted.toArray(new Enchantment[size]);
@@ -518,8 +536,10 @@ public class Events implements Listener {
     public static void activateAbility(CreatureSpawnEvent event){
         if(event.isCancelled() || activatables.isEmpty())
             return;
-        for(Activatable activatable : activatables)
-            activatable.ability(event);
+        for(Activatable activatable : activatables) {
+            if(activatable instanceof Spawnable)
+                ((Spawnable) activatable).ability(event);
+        }
     }
 
     @EventHandler
@@ -862,6 +882,12 @@ public class Events implements Listener {
         Flauntable flauntable = Utility.findItem(item, Flauntable.class, player);
         if(flauntable!=null)
             flauntable.ability(event);
+        if(!activatables.isEmpty()) {
+            for (Activatable activatable : activatables) {
+                if (activatable instanceof Flauntable && activatable.survey().contains(player))
+                    ((Flauntable) activatable).ability(event);
+            }
+        }
     }
 
     @EventHandler
@@ -1146,6 +1172,16 @@ public class Events implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public static void writeAbility(PlayerEditBookEvent event){
+        Player player = event.getPlayer();
+        BookMeta meta = event.getNewBookMeta();
+        String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        Writable writable = Utility.findItem(id, Writable.class, player);
+        if(writable!=null)
+            writable.ability(event, meta);
     }
 
     private static int findMultiplier(Enchantment enchant){

@@ -25,8 +25,7 @@ public class Backdash extends Enchant implements Togglable {
 
     private static final Material material = Material.LEATHER_BOOTS;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Sneak to push yourself backwards";
+            "Sneak to backdash";
     private static final int durability = 65;
     private static final boolean shiny = false;
     public static final boolean stackable = false;

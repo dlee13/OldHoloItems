@@ -41,8 +41,7 @@ public class Gnaw extends Item implements Consumable {
     private static final Material material = Material.DRIED_KELP;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" + "/n" +
-                "Sate your hunger";
+            "Sate your hunger";
     private static final int durability = 13;
     public static final boolean stackable = false;
     private static final boolean shiny = false;

@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class Bore extends Item implements Extractable {
     public static final String name = "bore";
-    public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
+    public static final Set<Enchantment> accepted = new HashSet<>(){{
         add(Enchantment.DIG_SPEED);
         add(Enchantment.SILK_TOUCH);
     }};
@@ -25,8 +25,7 @@ public class Bore extends Item implements Extractable {
     private static final Material material = Material.NETHERITE_PICKAXE;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "brrrrrrrrrr";
+            "brrrrrrrrrr";
     private static final int durability = -1;
     public static final boolean stackable = false;
     private static final boolean shiny = false;

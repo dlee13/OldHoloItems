@@ -33,8 +33,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
     private static final Material material = Material.SMOKER;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "Light to launch a package";
+            "Light to launch a package";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;

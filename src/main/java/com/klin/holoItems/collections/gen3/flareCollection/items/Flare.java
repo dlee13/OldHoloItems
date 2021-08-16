@@ -24,9 +24,8 @@ public class Flare extends Item implements Interactable {
     private static final Material material = Material.GOLDEN_AXE;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "A fiery rocket that burns" +"/n"+
-                "everything around it";
+            "A fiery rocket that burns\n"+
+            "everything around it";
     private static final int durability = 32;
     public static final boolean stackable = true;
     private static final boolean shiny = true;

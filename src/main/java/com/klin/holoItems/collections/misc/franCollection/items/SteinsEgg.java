@@ -32,7 +32,6 @@ public class SteinsEgg extends Pack implements Dispensable {
 
     private static final Material material = Material.EGG;
     private static final String lore =
-            "§6Ability" +"/n"+
             "egg";
     private static final int durability = 0;
     private static final boolean shiny = true;

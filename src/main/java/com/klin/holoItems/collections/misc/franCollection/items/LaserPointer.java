@@ -25,8 +25,7 @@ public class LaserPointer extends Item implements Combinable, Targetable, Spawna
     private static final Material material = Material.END_ROD;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Will not be distracted";
+            "Will not be distracted";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;

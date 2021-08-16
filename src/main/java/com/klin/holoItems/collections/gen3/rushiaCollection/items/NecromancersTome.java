@@ -40,8 +40,7 @@ public class NecromancersTome extends Pack implements Perishable, Defensible {
 
     private static final Material material = Material.SHIELD;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Hold the shield to bring out" +"/n"+
+            "Hold the shield to bring out\n"+
             "defeated foes to defend yourself";
     private static final int durability = 12;
     private static final boolean shiny = true;

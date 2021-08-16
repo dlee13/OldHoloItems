@@ -1,4 +1,4 @@
-package com.klin.holoItems.collections.gen3.marineCollection.items;
+package com.klin.holoItems.collections.misc.archiveCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
@@ -30,9 +30,8 @@ public class DetonationWire extends Crate implements Powerable, Placeable, Punch
     private static final Material material = Material.COMPARATOR;
     private static final int quantity = 3;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "Burns when lit with a flint"+"/n"+
-                    "and steel or when powered";
+            "Burns when lit with a flint\n"+
+            "and steel or when powered";
     private static final int durability = 0;
     private static final boolean stackable = true;
     private static final boolean shiny = false;

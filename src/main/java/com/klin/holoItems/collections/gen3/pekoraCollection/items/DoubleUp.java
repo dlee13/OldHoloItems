@@ -36,10 +36,9 @@ public class DoubleUp extends Wiring {
 
     private static final Material material = Material.DISPENSER;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Dispensers wired with this item will" +"/n"+
-                "dispense multiple times when powered" + "/n"+
-                "Breaking the dispenser returns Double Up";
+            "Dispensers wired with this item will\n"+
+            "dispense multiple times when powered\n"+
+            "Breaking the dispenser returns Double Up";
     private static final boolean shiny = true;
 
     public static final int cost = 500;

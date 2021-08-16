@@ -1,4 +1,4 @@
-package com.klin.holoItems.collections.gen3.flareCollection.items;
+package com.klin.holoItems.collections.misc.archiveCollection.items;
 
 import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.HoloItems;
@@ -22,9 +22,8 @@ public class MoltenCore extends Wiring {
 
     private static final Material material = Material.DARK_OAK_WOOD;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Just a rock. Maybe something will" +"/n"+
-                "happen if you heat it up";
+            "Just a rock. Maybe something will\n"+
+            "happen if you heat it up";
     private static final boolean shiny = false;
 
     public static final int cost = 400;
@@ -43,10 +42,9 @@ public class MoltenCore extends Wiring {
         activatedMeta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
         activatedMeta.setDisplayName("§6Molten Core");
         activatedMeta.setLore(Utility.processStr(
-                "§6Ability" +"/n"+
-                    "Dispensers wired with this item can" +"/n"+
-                    "melt obsidian using fire charges" + "/n"+
-                    "Break the dispenser to retrieve"));
+                "Dispensers wired with this item can\n"+
+                "melt obsidian using fire charges\n"+
+                "Break the dispenser to retrieve"));
         activatedMeta.addEnchant(Enchantment.LUCK, 1, false);
         activatedMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         activated.setItemMeta(activatedMeta);

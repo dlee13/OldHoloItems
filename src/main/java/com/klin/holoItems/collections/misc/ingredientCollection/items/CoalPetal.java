@@ -14,12 +14,9 @@ import java.util.Set;
 
 public class CoalPetal extends Item {
     public static final String name = "coalPetal";
-    public static final Set<Enchantment> accepted = null;
 
     private static final Material material = Material.BLACK_DYE;
     private static final int quantity = 1;
-    private static final String lore =
-            "§7crafting ingredient";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
@@ -29,7 +26,7 @@ public class CoalPetal extends Item {
     public static final String id = ""+IngredientCollection.key+key;
 
     public CoalPetal(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){

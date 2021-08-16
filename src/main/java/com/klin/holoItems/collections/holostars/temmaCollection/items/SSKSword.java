@@ -29,9 +29,8 @@ public class SSKSword extends Item implements Afflictable {
     private static final Material material = Material.DIAMOND_SWORD;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Attacks heal when full hearts, and"+"/n"+
-                "damages when not";
+            "Attacks heal when full hearts, and\n"+
+            "damages when not";
     private static final int durability = 251;
     public static final boolean stackable = false;
     private static final boolean shiny = false;

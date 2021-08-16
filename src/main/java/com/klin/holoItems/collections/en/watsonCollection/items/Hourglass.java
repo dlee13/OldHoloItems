@@ -20,10 +20,9 @@ public class Hourglass extends BatteryPack implements Hitable {
 
     private static final Material material = Material.SPLASH_POTION;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Shatter to start a timer with duration" +"/n"+
-                "equal to the quantity of sand in the" +"/n"+
-                "hourglass, return *here* when it ends";
+            "Shatter to start a timer with duration\n"+
+            "equal to the quantity of sand in the\n"+
+            "hourglass, return *here* when it ends";
     private static final int durability = 0;
     private static final boolean shiny = true;
 

@@ -33,8 +33,7 @@ public class PotionSatchel extends Pack {
 
     private static final Material material = Material.LEAD;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Store up to 9 potions and throw them" +"/n"+
+            "Store up to 9 potions and throw them\n"+
             "with extended range";
     private static final int durability = 0;
     private static final boolean shiny = true;

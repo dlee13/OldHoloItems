@@ -24,10 +24,9 @@ public class Compactor extends Wiring {
 
     private static final Material material = BLAST_FURNACE;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Dispensers wired with this item will" +"/n"+
-                "auto craft using its inventory as the grid" + "/n"+
-                "Break the dispenser to retrieve";
+            "Dispensers wired with this item will\n"+
+            "auto craft using its inventory as the grid\n"+
+            "Break the dispenser to retrieve";
     private static final boolean shiny = true;
 
     public static final int cost = 0;

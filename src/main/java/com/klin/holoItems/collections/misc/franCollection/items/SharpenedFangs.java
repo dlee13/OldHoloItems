@@ -15,8 +15,7 @@ public class SharpenedFangs extends Item implements Combinable, Retaliable {
     private static final Material material = Material.GHAST_TEAR;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Rename to set attack";
+            "Rename to set attack";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;

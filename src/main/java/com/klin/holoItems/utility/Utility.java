@@ -479,6 +479,8 @@ public class Utility {
         List<String> lore = meta.getLore();
         if(lore==null)
             lore = new ArrayList<>(List.of(""));
+        else if(lore.get(0).startsWith("§b"))
+            lore.add(0, "");
         lore.add(0, "§7"+formatName(enchant.name));
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
@@ -510,6 +512,7 @@ public class Utility {
             meta.addEnchant(Enchantment.LUCK, 1, false);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
+        //boolean enchant = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING)!=null;
         else if(meta.hasEnchants())
             list.add(0, "");
         meta.setLore(list);
@@ -661,6 +664,8 @@ public class Utility {
             return 0;
         List<String> lore = meta.getLore();
         int[] durability = getDurability(lore);
+        if(durability==null)
+            return 0;
         if(durability[0]==-1 || addend>0 && durability[0]==durability[1])
             return (int) addend;
         int unbreaking = meta.getEnchantLevel(Enchantment.DURABILITY);
@@ -695,13 +700,17 @@ public class Utility {
     }
 
     public static int[] getDurability(List<String> lore){
-        int[] durability = new int[]{-1, -1};
-
+        if(lore==null || lore.isEmpty())
+            return null;
+        int[] durability = new int[2];
         String status = lore.get(lore.size()-1);
-        if(!status.contains("/"))
-            return durability;
-        durability[0] = Integer.parseInt(status.substring(14, status.indexOf("/")));
-        durability[1] = Integer.parseInt(status.substring(status.indexOf("/")+1));
+        if(!status.contains("/") || status.length()<15)
+            return null;
+        int index = status.indexOf("/");
+        if(index<15)
+            return null;
+        durability[0] = Integer.parseInt(status.substring(14, index));
+        durability[1] = Integer.parseInt(status.substring(index+1));
         return durability;
     }
 
@@ -750,9 +759,10 @@ public class Utility {
 //    }
 
     public static List<String> processStr(String str){
-        List<String> list = new ArrayList<>();
-        list.add("");
-        String[] lines = str.split("/n");
+        if(str==null)
+            return new ArrayList<>(List.of("§7Crafting ingredient"));
+        List<String> list = new ArrayList<>(List.of("§bAbility"));
+        String[] lines = str.split("\n");
         for(String line : lines)
             list.add("§7"+line);
         return list;

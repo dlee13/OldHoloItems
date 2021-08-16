@@ -101,7 +101,7 @@ public class InaDungeon implements CommandExecutor{
                 int[] arguments = new int[6];
                 try {
                     for (int i = 1; i <= 6; i++)
-                        arguments[i] = Integer.parseInt(args[i]);
+                        arguments[i-1] = Integer.parseInt(args[i]);
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid coordinate(s)");
                     return true;

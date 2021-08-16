@@ -33,8 +33,7 @@ public class MilkBottle extends Item implements Consumable, Hitable, Mixable {
     private static final Material material = Material.POTION;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Remove potion effects";
+            "Remove potion effects";
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = false;

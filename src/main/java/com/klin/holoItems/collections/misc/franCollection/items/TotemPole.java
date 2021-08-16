@@ -29,8 +29,7 @@ public class TotemPole extends Pack implements Dispensable {
 
     private static final Material material = Material.ARMOR_STAND;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "Stack eggs";
+            "Stack eggs";
     private static final int durability = 0;
     private static final boolean shiny = true;
 

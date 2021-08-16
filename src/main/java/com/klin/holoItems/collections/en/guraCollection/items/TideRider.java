@@ -34,8 +34,7 @@ public class TideRider extends Item implements Interactable {
     private static final Material material = Material.TRIDENT;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Surf the waves";
+            "Surf the waves";
     private static final int durability = 250;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
@@ -106,16 +105,19 @@ public class TideRider extends Item implements Interactable {
                 double multiplier = 1;
                 if(player.hasPotionEffect(PotionEffectType.DOLPHINS_GRACE))
                     multiplier = 1.33;
+                boolean slow = fall.getType()==Material.SOUL_SAND;
+                if(slow)
+                    multiplier -= 0.33;
                 ItemStack boots = player.getInventory().getBoots();
                 if(boots!=null && boots.getType()!=Material.AIR) {
                     multiplier += ((double) boots.getEnchantmentLevel(Enchantment.DEPTH_STRIDER))/9
-                            +((fall.getType()==Material.SOUL_SAND || fall.getType()==Material.WATER
+                            +((slow || fall.getType()==Material.WATER
                             && fall.getRelative(BlockFace.DOWN).getType()==Material.SOUL_SAND)
                             && boots.containsEnchantment(Enchantment.SOUL_SPEED)?
-                            ((double) boots.getEnchantmentLevel(Enchantment.SOUL_SPEED))*0.11:-0.33);
+                            ((double) boots.getEnchantmentLevel(Enchantment.SOUL_SPEED))*0.11+0.33:0);
                 }
                 player.setVelocity(player.getVelocity().add(dir).normalize().multiply(multiplier)
-                        .setY(rise.isPassable()&&!rise.isLiquid()?(fall.isPassable()&&!fall.isLiquid()?-1:0):1));
+                        .setY(rise.isPassable()&&!rise.isLiquid()?(fall.isPassable()&&!fall.isLiquid()?-0.5:0):0.5));
                 if(previous.equals(current))
                     return;
                 player.sendBlockChange(previous.getLocation(), data.remove(previous));

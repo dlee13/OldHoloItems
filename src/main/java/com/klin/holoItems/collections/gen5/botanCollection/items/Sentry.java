@@ -34,9 +34,8 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
     private static final Material material = Material.CROSSBOW;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Mount on a fence post and bring"+"/n"+
-                "down a hail of arrows";
+            "Mount on a fence post and bring\n"+
+            "down a hail of arrows";
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = false;

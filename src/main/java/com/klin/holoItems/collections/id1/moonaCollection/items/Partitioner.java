@@ -28,9 +28,8 @@ public class Partitioner extends Item implements Dispensable {
     private static final Material material = Material.CYAN_BANNER;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                    "Dispense to organize the target" +"/n"+
-                    "container";
+                "Dispense to organize the target\n"+
+                "container";
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = false;

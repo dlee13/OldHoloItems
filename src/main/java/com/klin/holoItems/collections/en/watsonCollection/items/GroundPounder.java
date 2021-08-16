@@ -21,6 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -37,8 +39,7 @@ public class GroundPounder extends Pack {
 
     private static final Material material = Material.STONE_PICKAXE;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Crush your foes";
+            "Crush your foes";
     private static final int durability = 131;
     private static final boolean shiny = false;
 
@@ -61,11 +62,9 @@ public class GroundPounder extends Pack {
 
         ShapedRecipe recipe =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("aba"," c "," d ");
-        recipe.setIngredient('a', Material.LODESTONE);
-        recipe.setIngredient('b', Material.BREWING_STAND);
-        recipe.setIngredient('c', Material.FERN);
-        recipe.setIngredient('d', Material.DEAD_BUSH);
+        recipe.shape("aaa"," b "," b ");
+        recipe.setIngredient('a', Material.AMETHYST_CLUSTER);
+        recipe.setIngredient('b', Material.POINTED_DRIPSTONE);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }
@@ -118,6 +117,11 @@ public class GroundPounder extends Pack {
                             }
                         }
                         Block center = block;
+                        BlockData[] data = new BlockData[]{
+                                Bukkit.createBlockData(Material.SMALL_AMETHYST_BUD),
+                                Bukkit.createBlockData(Material.MEDIUM_AMETHYST_BUD),
+                                Bukkit.createBlockData(Material.LARGE_AMETHYST_BUD),
+                                Bukkit.createBlockData(Material.AMETHYST_CLUSTER)};
                         new Task(HoloItems.getInstance(), 2, 2){
                             int increment = 0;
                             Set<Block> pound = Stream.of(center).collect(Collectors.toCollection(HashSet::new));
@@ -149,8 +153,7 @@ public class GroundPounder extends Pack {
                                             Block up = relative.getRelative(BlockFace.UP);
                                             if (!up.isEmpty())
                                                 continue;
-                                            BlockData data = relative.getBlockData();
-                                            player.sendBlockChange(up.getLocation(), data);
+                                            player.sendBlockChange(up.getLocation(), data[increment]);
                                             pounded.add(relative);
                                             temp.add(relative);
                                         }
@@ -163,13 +166,16 @@ public class GroundPounder extends Pack {
                     }
                     held.remove(player);
                     if(rewind) {
-                        if(player.getGameMode()==GameMode.CREATIVE || Utility.deplete(event.getItem())!=-1)
+                        if(player.getGameMode()==GameMode.CREATIVE || Utility.deplete(event.getItem())!=-1) {
                             player.teleport(location);
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 10, 1));
+                        }
                     }
                     cancel();
                     return;
                 }
-                player.setVelocity(player.getVelocity().add(new Vector(0, -0.3, 0)));
+                player.setVelocity(player.getVelocity().add(new Vector(0, -0.2, 0)));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 2, 3));
                 increment++;
                 if(increment%5==0)
                     offset++;

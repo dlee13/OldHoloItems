@@ -30,7 +30,6 @@ public class ReadingGlasses extends Armor {
 
     private static final Material material = Material.BLACK_STAINED_GLASS;
     private static final String lore =
-            "§6Ability" +"/n"+
             "Wear to gain night vision";
     private static final int durability = 1;
     public static final boolean stackable = true;

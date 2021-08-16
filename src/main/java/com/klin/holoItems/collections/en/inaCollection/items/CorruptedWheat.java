@@ -22,8 +22,7 @@ public class CorruptedWheat extends BatteryPack implements Placeable {
     public static final String name = "corruptedWheat";
     private static final Material material = Material.WHEAT_SEEDS;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Spreads to surrounding farmland" +"/n"+
+            "Spreads to surrounding farmland\n" +
             "up to the quantity stored";
     private static final int durability = 0;
     private static final boolean shiny = true;

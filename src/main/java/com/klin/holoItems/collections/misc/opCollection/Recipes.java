@@ -1,4 +1,4 @@
-package com.klin.holoItems.collections.misc.hiddenCollection;
+package com.klin.holoItems.collections.misc.opCollection;
 
 import com.klin.holoItems.HoloItems;
 import org.bukkit.Bukkit;
@@ -8,9 +8,6 @@ import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
 
 public class Recipes {
     private static final String[] colors = new String[]{

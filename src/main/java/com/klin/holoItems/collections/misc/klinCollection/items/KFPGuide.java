@@ -29,8 +29,7 @@ public class KFPGuide extends Item implements Interactable {
     private static final Material material = Material.EGG;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Escape the usual room";
+            "Escape the usual room";
     private static final int durability = -1;
     private static final boolean stackable = false;
     private static final boolean shiny = false;

@@ -31,8 +31,7 @@ public class Ingraining extends Enchant implements Extractable {
 
     private static final Material material = Material.FLINT;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Replant the crops you break";
+            "Replant the crops you break";
     private static final int durability = 256;
     private static final boolean shiny = false;
 

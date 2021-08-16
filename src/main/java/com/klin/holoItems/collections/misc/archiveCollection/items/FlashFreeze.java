@@ -1,4 +1,4 @@
-package com.klin.holoItems.collections.misc.hiddenCollection.items;
+package com.klin.holoItems.collections.misc.archiveCollection.items;
 
 import com.klin.holoItems.interfaces.Launchable;
 import com.klin.holoItems.HoloItems;
@@ -11,7 +11,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,8 +26,7 @@ public class FlashFreeze extends Item implements Launchable {
     private static final Material material = Material.SNOWBALL;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Instant ice rink";
+            "Instant ice rink";
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = true;

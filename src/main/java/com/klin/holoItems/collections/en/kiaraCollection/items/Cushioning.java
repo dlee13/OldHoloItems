@@ -21,9 +21,8 @@ public class Cushioning extends Item implements Holdable {
     private static final Material material = Material.WHITE_WOOL;
     private static final int quantity = 1;
     private static final String lore =
-            "§6Ability" +"/n"+
-                "Negate fall damage with feathers" +"/n"+
-                "Bursts on death";
+            "Negate fall damage with feathers\n" +
+            "Bursts on death";
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
