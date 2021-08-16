@@ -17,17 +17,17 @@ commands:
   worldname:
     permission: holoItems.player
     usage: /<command>
-
   acquire:
-    permission: holoItems.op
+    permission: holoItems.player
     usage: /<command> <id>
+
+  clearactivatables:
+    permission: holoItems.op
+    usage: /<command>
   collect:
     permission: holoItems.op
     usage:
       /<command> <stat> <type> <id>
-  clearactivatables:
-    permission: holoItems.op
-    usage: /<command>
   disable:
     permission: holoItems.op
     usage: /<command> <id>
@@ -40,6 +40,9 @@ commands:
   gethead:
     permission: holoItems.op
     usage: /<command> <name>
+  getmap:
+    permission: holoItems.op
+    usage: /<command> <index>
   removechunktickets:
     permission: holoItems.op
     usage: /<command>

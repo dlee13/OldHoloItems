@@ -48,7 +48,7 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable 
                 new ShapelessRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.addIngredient(4, Material.RABBIT_HIDE);
         recipe.addIngredient(3, Material.PAPER);
-        recipe.addIngredient(Material.GLOW_INK_SAC);
+        recipe.addIngredient(Material.INK_SAC);
         recipe.addIngredient(Material.FEATHER);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
@@ -92,14 +92,19 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable 
                 PekoNote instance = this;
                 if(players.isEmpty())
                     Events.activatables.add(instance);
-                players.add(player);
-                new BukkitRunnable(){
-                    public void run(){
-                        players.remove(player);
-                        if(players.isEmpty())
-                            Events.activatables.remove(instance);
-                    }
-                }.runTaskLater(HoloItems.getInstance(), 1200);
+                if(players.add(player)) {
+                    new BukkitRunnable() {
+                        public void run() {
+                            players.remove(player);
+                            if (players.isEmpty())
+                                Events.activatables.remove(instance);
+                        }
+                    }.runTaskLater(HoloItems.getInstance(), 1200);
+                }
+                else{
+                    event.setSigning(false);
+                    writer.sendMessage(name + "'s already peko'd");
+                }
             }
             else
                 writer.sendMessage(name + " found");

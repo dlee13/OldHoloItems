@@ -4,6 +4,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
 import com.klin.holoItems.interfaces.Brewable;
+import com.klin.holoItems.interfaces.Consumable;
 import com.klin.holoItems.interfaces.Mixable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -23,7 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Starch extends Item implements Brewable, Mixable {
+public class Starch extends Item implements Brewable, Mixable, Consumable {
     public static final String name = "starch";
 
     private static final Material material = Material.SUGAR;
@@ -104,4 +106,6 @@ public class Starch extends Item implements Brewable, Mixable {
             }
         }.runTask(HoloItems.getInstance());
     }
+
+    public void ability(PlayerItemConsumeEvent event, ItemStack item) {}
 }

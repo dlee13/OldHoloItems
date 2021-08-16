@@ -76,6 +76,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapView;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -190,7 +192,6 @@ public class Collections implements CommandExecutor, Listener {
             return true;
         Player player = (Player) sender;
         String command = cmd.getName().toLowerCase();
-
         switch(command) {
             case "collections":
                 if (heads.isEmpty())
@@ -213,10 +214,6 @@ public class Collections implements CommandExecutor, Listener {
                 player.openInventory(inv);
                 return true;
 
-            case "worldname":
-                player.sendMessage(player.getWorld().getName());
-                return true;
-
             case "custommodeldata":
                 ItemStack model = player.getInventory().getItemInMainHand();
                 if(model.getType()!=Material.AIR && model.getItemMeta()!=null){
@@ -237,32 +234,75 @@ public class Collections implements CommandExecutor, Listener {
                     player.sendMessage("Invalid item");
                 return true;
 
+            case "registry":
+                player.sendMessage(registry);
+                return true;
+
+            case "worldname":
+                player.sendMessage(player.getWorld().getName());
+                return true;
+
             case "acquire":
                 if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE)
                     return true;
-                if (args.length >= 1 && !(!player.isOp() &&
-                        (args[0].contains("X") || args[0].contains("Y") || args[0].contains("Z")))) {
-                    Item item = findItem(args[0]);
-                    if (item == null) {
-                        player.sendMessage("No such item");
-                        return true;
-                    }
-                    player.getInventory().addItem(item.item);
-                    player.sendMessage(Utility.formatName(item.name) + " acquired");
-                }
-                else
+                if(args.length<1)
+                    return false;
+                Collection collection = findCollection(args[0].charAt(0));
+                if(collection.name==null && !player.isOp()){
                     player.sendMessage("No such item");
-                return true;
-
-            case "registry":
-                player.sendMessage(registry);
+                    return true;
+                }
+                Item item = findItem(args[0]);
+                if (item == null) {
+                    player.sendMessage("No such item");
+                    return true;
+                }
+                player.getInventory().addItem(item.item);
+                player.sendMessage(Utility.formatName(item.name) + " acquired");
                 return true;
         }
 
         if(!player.isOp())
             return true;
-
         switch(command){
+            case "clearactivatables":
+                for(Activatable activatable : Events.activatables)
+                    activatable.survey().clear();
+                Events.activatables.clear();
+                player.sendMessage("Activatables cleared");
+                return true;
+
+            case "collect":
+                if(args.length<3)
+                    return false;
+                try {
+                    Statistic stat = Statistic.valueOf(args[0]);
+                    switch(stat.getType()){
+                        case ITEM:
+                        case BLOCK:
+                            Material type = Material.valueOf(args[1]);
+                            int i = Integer.parseInt(args[2]);
+                            player.setStatistic(stat, type, i);
+                            player.sendMessage(stat+":"+type+" set to "+i);
+                            break;
+                        case ENTITY:
+                            EntityType entity = EntityType.valueOf(args[1]);
+                            int j = Integer.parseInt(args[2]);
+                            player.setStatistic(stat, entity, j);
+                            player.sendMessage(stat+":"+entity+" set to "+j);
+                            break;
+                        case UNTYPED:
+                            int k = Integer.parseInt(args[1]);
+                            player.setStatistic(stat, k);
+                            player.sendMessage(stat+" set to "+k);
+                    }
+                }
+                catch(IllegalArgumentException e){
+                    player.sendMessage("Invalid argument/s");
+                    return true;
+                }
+                return true;
+
             case "disable":
                 if(args.length>=1) {
                     Item item = findItem(args[0]);
@@ -299,37 +339,18 @@ public class Collections implements CommandExecutor, Listener {
                     player.sendMessage("Disabled items: "+disabled.toString());
                 return true;
 
-            case "collect":
-                if(args.length>=3) {
-                    try {
-                        Statistic stat = Statistic.valueOf(args[0]);
-                        switch(stat.getType()){
-                            case ITEM:
-                            case BLOCK:
-                                Material type = Material.valueOf(args[1]);
-                                int i = Integer.parseInt(args[2]);
-                                player.setStatistic(stat, type, i);
-                                player.sendMessage(stat+":"+type+" set to "+i);
-                                break;
-                            case ENTITY:
-                                EntityType entity = EntityType.valueOf(args[1]);
-                                int j = Integer.parseInt(args[2]);
-                                player.setStatistic(stat, entity, j);
-                                player.sendMessage(stat+":"+entity+" set to "+j);
-                                break;
-                            case UNTYPED:
-                                int k = Integer.parseInt(args[1]);
-                                player.setStatistic(stat, k);
-                                player.sendMessage(stat+" set to "+k);
-                        }
-                    }
-                    catch(IllegalArgumentException e){
-                        player.sendMessage("Invalid argument/s");
-                        return true;
+            case "getactivatables":
+                if(Events.activatables.isEmpty())
+                    player.sendMessage("Activatables is empty");
+                else {
+                    boolean first = true;
+                    for (Activatable activatable : Events.activatables) {
+                        if(!first)
+                            player.sendMessage("");
+                        player.sendMessage(activatable.toString() + "\n-----------------------------------------------------\n" + activatable.survey());
+                        first = false;
                     }
                 }
-                else
-                    player.sendMessage("No such statistic");
                 return true;
 
             case "gethead":
@@ -345,12 +366,40 @@ public class Collections implements CommandExecutor, Listener {
                         player.sendMessage("No such head");
                 }
                 else
-                    player.sendMessage("No such head");
+                    return false;
+                return true;
+
+            case "getmap":
+                if(args.length<1)
+                    return false;
+                MapView view;
+                try{
+                    view = Bukkit.getMap(Integer.parseInt(args[0]));
+                }catch (NumberFormatException e){
+                    player.sendMessage("Invalid index");
+                    return true;
+                }
+                ItemStack map = new ItemStack(Material.FILLED_MAP);
+                MapMeta mapMeta = (MapMeta) map.getItemMeta();
+                mapMeta.setMapView(view);
+                map.setItemMeta(mapMeta);
+                player.getInventory().addItem(map);
+                return true;
+
+            case "removechunktickets":
+                World world = player.getWorld();
+                java.util.Collection<Chunk> chunks = world.getPluginChunkTickets().get(HoloItems.getInstance());
+                int quantity = chunks==null?0:chunks.size();
+                player.sendMessage("Chunk tickets to be removed: "+quantity);
+                if(quantity>0)
+                    world.removePluginChunkTickets(HoloItems.getInstance());
                 return true;
 
             case "setcustommodeldata":
+                if(args.length<1)
+                    return false;
                 ItemStack model = player.getInventory().getItemInMainHand();
-                if(args.length>=1 && model.getType()!=Material.AIR && model.getItemMeta()!=null) {
+                if(model.getType()!=Material.AIR && model.getItemMeta()!=null) {
                     ItemMeta meta = model.getItemMeta();
                     try {
                         int data = Integer.parseInt(args[0]);
@@ -367,21 +416,14 @@ public class Collections implements CommandExecutor, Listener {
                     player.sendMessage("Invalid item");
                 return true;
 
-            case "settype":
-                ItemStack item = player.getInventory().getItemInMainHand();
-                if(item.getType()!=Material.AIR && args.length>=1) {
-                    Material type = Material.getMaterial(args[0]);
-                    if(type!=null)
-                        item.setType(type);
-                }
-                return true;
-
             case "setenchantments":
+                if(args.length<1)
+                    return false;
                 ItemStack stack = player.getInventory().getItemInMainHand();
-                if(stack.getType()!=Material.AIR && stack.getItemMeta()!=null && args.length>=1) {
+                if(stack.getType()!=Material.AIR && stack.getItemMeta()!=null) {
                     String enchantments = "";
-                    for(int i=0; i<args.length; i++)
-                        enchantments += args[i] + " ";
+                    for (String arg : args)
+                        enchantments += arg + " ";
                     enchantments = enchantments.substring(0, enchantments.length()-1);
                     ItemMeta meta = stack.getItemMeta();
                     meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments);
@@ -390,34 +432,15 @@ public class Collections implements CommandExecutor, Listener {
                 }
                 return true;
 
-            case "removechunktickets":
-                World world = player.getWorld();
-                java.util.Collection<Chunk> chunks = world.getPluginChunkTickets().get(HoloItems.getInstance());
-                int quantity = chunks==null?0:chunks.size();
-                player.sendMessage("Chunk tickets to be removed: "+quantity);
-                if(quantity>0)
-                    world.removePluginChunkTickets(HoloItems.getInstance());
-                return true;
-
-            case "getactivatables":
-                if(Events.activatables.isEmpty())
-                    player.sendMessage("Activatables is empty");
-                else {
-                    boolean first = true;
-                    for (Activatable activatable : Events.activatables) {
-                        if(!first)
-                            player.sendMessage("");
-                        player.sendMessage(activatable.toString() + "\n-----------------------------------------------------\n" + activatable.survey());
-                        first = false;
-                    }
+            case "settype":
+                if(args.length<1)
+                    return false;
+                ItemStack item = player.getInventory().getItemInMainHand();
+                if(item.getType()!=Material.AIR) {
+                    Material type = Material.getMaterial(args[0]);
+                    if(type!=null)
+                        item.setType(type);
                 }
-                return true;
-
-            case "clearactivatables":
-                for(Activatable activatable : Events.activatables)
-                    activatable.survey().clear();
-                Events.activatables.clear();
-                player.sendMessage("Activatables cleared");
                 return true;
 
             case "test":

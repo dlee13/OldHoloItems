@@ -99,11 +99,12 @@ public class ScopedRifle extends Item implements Interactable {
                             entity -> (entity != player && entity instanceof LivingEntity && !(entity instanceof ArmorStand)));
                     if (result != null) {
                         LivingEntity entity = (LivingEntity) result.getHitEntity();
-                        if(entity!=null && Utility.fireBlank(player, entity)) {
-                            entity.damage(result.getHitPosition().distance(entity.getEyeLocation().toVector())<0.6?10:5 + Math.pow((double) steadiness / 10, 2) * 3 / 5, player);
-                            entity.setArrowsInBody(entity.getArrowsInBody()+1);
-                            if(player.getInventory().getItemInOffHand().equals(item))
-                                Utility.addDurability(item, -1, player);
+                        if(entity!=null) {
+                            if(Utility.damage(item, result.getHitPosition().distance(entity.getEyeLocation().toVector())<0.6?10:5 + Math.pow((double) steadiness / 10, 2) * 3 / 5, true, player, entity, false, true, true)) {
+                                entity.setArrowsInBody(entity.getArrowsInBody() + 1);
+                                if (player.getInventory().getItemInOffHand().equals(item))
+                                    Utility.addDurability(item, -1, player);
+                            }
                         }
                         else
                             Utility.addDurability(item, -1, player);

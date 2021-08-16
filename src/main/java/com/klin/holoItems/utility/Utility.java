@@ -526,9 +526,7 @@ public class Utility {
     public static boolean damage(ItemStack item, double damage, boolean crit,
                               LivingEntity attacker, LivingEntity target,
                               boolean strength, boolean projectile, boolean bypass){
-        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker, target, EntityDamageEvent.DamageCause.ENTITY_ATTACK, 0.1);
-        Bukkit.getServer().getPluginManager().callEvent(event);
-        if(event.isCancelled())
+        if(!fireBlank(attacker, target))
             return false;
 
         if(strength) {

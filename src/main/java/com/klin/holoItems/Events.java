@@ -279,8 +279,7 @@ public class Events implements Listener {
             int[] durabilityA = Utility.getDurability(itemA.getItemMeta().getLore());
             if(durabilityA[0]!=durabilityA[1] && itemB.getItemMeta().getLore()!=null) {
                 int[] durabilityB = Utility.getDurability(itemB.getItemMeta().getLore());
-                Utility.addDurability(combined,
-                        durabilityB[0] + (int) (0.12 * durabilityB[1]), player);
+                Utility.addDurability(combined, durabilityB[0] + (int) (0.12 * durabilityB[1]), player);
                 levelCost += 2;
             }
 
@@ -571,14 +570,18 @@ public class Events implements Listener {
         if(item.getType()==Material.AIR || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
         if(id!=null) {
-            Utility.addDurability(item, -1, living);
+            if(event.getDamage()>0)
+                Utility.addDurability(item, -1, living);
             if (Collections.disabled.contains(id))
                 return;
             Item generic = Collections.findItem(id);
             if (generic instanceof Afflictable)
                 ((Afflictable) generic).ability(event, item);
         }
+        else if(enchant!=null)
+            Utility.addDurability(item, -1, living);
     }
 
     @EventHandler
@@ -815,8 +818,8 @@ public class Events implements Listener {
             if(item.getType()==Material.AIR || item.getItemMeta()==null)
                 continue;
             String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            String enchantments = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-            if(id!=null || enchantments!=null)
+            String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+            if(id!=null || enchant!=null)
                 Utility.addDurability(item, -1, event.getPlayer());
             else
                 continue;
@@ -824,9 +827,9 @@ public class Events implements Listener {
             if(extractable !=null && i!=0 == extractable instanceof Holdable)
                 extractable.ability(event);
             if(i==0) {
-                if(enchantments==null)
+                if(enchant==null)
                     continue;
-                for (String enchantment : enchantments.split(" ")) {
+                for (String enchantment : enchant.split(" ")) {
                     Item generic = Collections.findItem(enchantment);
                     if (generic instanceof Extractable)
                         ((Extractable) generic).ability(event);
@@ -952,7 +955,7 @@ public class Events implements Listener {
         if(item==null || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        String enchantments = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
         if(id!=null) {
             if (block != null && deactive.contains(block.getType()))
                 event.setUseItemInHand(Event.Result.DENY);
@@ -964,8 +967,8 @@ public class Events implements Listener {
                     ((Interactable) generic).ability(event, action);
             }
         }
-        if(enchantments!=null) {
-            for (String enchantment : enchantments.split(" ")) {
+        if(enchant!=null) {
+            for (String enchantment : enchant.split(" ")) {
                 if (Collections.disabled.contains(enchantment))
                     return;
                 Item generic = Collections.findItem(enchantment);
@@ -1166,7 +1169,7 @@ public class Events implements Listener {
         if(item==null || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        String enchantments = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
         if(id!=null) {
             if (Collections.disabled.contains(id))
                 player.sendMessage("§cThis item has been disabled");
@@ -1176,8 +1179,8 @@ public class Events implements Listener {
                     ((Togglable) generic).ability(event, item);
             }
         }
-        if(enchantments!=null) {
-            for (String enchantment : enchantments.split(" ")) {
+        if(enchant!=null) {
+            for (String enchantment : enchant.split(" ")) {
                 if (Collections.disabled.contains(id))
                     player.sendMessage("§cThis item has been disabled");
                 else {

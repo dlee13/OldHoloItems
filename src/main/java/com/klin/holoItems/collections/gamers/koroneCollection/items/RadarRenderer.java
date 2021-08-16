@@ -25,7 +25,7 @@ public class RadarRenderer extends MapRenderer {
             increment = 0;
         int x = mapView.getCenterX();
         int z = mapView.getCenterZ();
-        for (Entity entity : player.getWorld().getNearbyEntities(player.getLocation(), 128, 1, 128, entity -> entity instanceof Player /*&& !player.equals(entity) && Radar.trackers.contains(entity)*/)) {
+        for (Entity entity : player.getWorld().getNearbyEntities(player.getLocation(), 128, 1, 128, entity -> entity instanceof Player && !player.equals(entity) && Radar.trackers.contains(entity))) {
             Location location = entity.getLocation();
             MapCursor cursor = collection.addCursor(location.getBlockX()-x, location.getBlockZ()-z, (byte) 8);
             cursor.setType(MapCursor.Type.RED_MARKER);

@@ -54,22 +54,27 @@ public class Radar extends Item implements Swappable {
         if(main)
             return;
         MapMeta meta = (MapMeta) item.getItemMeta();
-        if(!meta.hasMapView()) {
-            MapMeta mapMeta = (MapMeta) this.item.getItemMeta();
-            if(!mapMeta.hasMapView()) {
-                World world = player.getWorld();
-                MapView view = Bukkit.createMap(world);
-                view.setScale(MapView.Scale.CLOSE);
-                view.addRenderer(new CircleRenderer());
-                view.addRenderer(new RadarRenderer());
-                mapMeta.setMapView(view);
-                this.item.setItemMeta(mapMeta);
+        MapMeta mapMeta = (MapMeta) this.item.getItemMeta();
+        if(!mapMeta.hasMapView()) {
+            World world = player.getWorld();
+            MapView view = Bukkit.getMap(0);
+            if(view==null)
+                view = Bukkit.createMap(world);
+            view.setScale(MapView.Scale.CLOSE);
+            view.addRenderer(new CircleRenderer());
+            view.addRenderer(new RadarRenderer());
+            mapMeta.setMapView(view);
+            this.item.setItemMeta(mapMeta);
+            if(!meta.hasMapView()) {
                 meta.setMapView(view);
+                item.setItemMeta(meta);
             }
-            else
-                meta.setMapView(mapMeta.getMapView());
+        }
+        else if(!meta.hasMapView()) {
+            meta.setMapView(mapMeta.getMapView());
             item.setItemMeta(meta);
         }
+
         trackers.add(player);
         new Task(HoloItems.getInstance(), 1, 1){
             int increment = 0;

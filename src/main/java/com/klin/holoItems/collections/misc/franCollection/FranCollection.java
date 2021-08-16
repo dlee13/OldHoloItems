@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 
 public class FranCollection extends Collection {
-    public static final String name = "Fran";
+    public static final String name = null;
     public static final String desc = null;
     public static final String theme = null;
     public static final String ign = null;
