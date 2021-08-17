@@ -74,6 +74,12 @@ commands:
   spreadfire:
     permission: holoItems.inaDungeon
     usage: /<command> <world> <x> <y> <z>
+  conduit:
+    permission: holoItems.inaDungeon
+    usage: /<command> <world> <x> <y> <z>
+  resetconduit:
+    permission: holoItems.inaDungeon
+    usage: /<command>
   rotate:
     permission: holoItems.inaDungeon
     usage: /<command> <world> <x1> <x2> <z1> <z2> <y>

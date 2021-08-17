@@ -55,14 +55,13 @@ public class Radar extends Item implements Swappable {
             return;
         MapMeta meta = (MapMeta) item.getItemMeta();
         MapMeta mapMeta = (MapMeta) this.item.getItemMeta();
+        MapView view;
         if(!mapMeta.hasMapView()) {
             World world = player.getWorld();
-            MapView view = Bukkit.getMap(0);
+            view = Bukkit.getMap(0);
             if(view==null)
                 view = Bukkit.createMap(world);
             view.setScale(MapView.Scale.CLOSE);
-            view.addRenderer(new CircleRenderer(true));
-            view.addRenderer(new RadarRenderer(true));
             mapMeta.setMapView(view);
             this.item.setItemMeta(mapMeta);
             if(!meta.hasMapView()) {
@@ -71,15 +70,25 @@ public class Radar extends Item implements Swappable {
             }
         }
         else if(!meta.hasMapView()) {
-            meta.setMapView(mapMeta.getMapView());
+            view = mapMeta.getMapView();
+            meta.setMapView(view);
             item.setItemMeta(meta);
         }
+        else
+            view = meta.getMapView();
 
+        CircleRenderer circle = new CircleRenderer(true);
+        view.addRenderer(circle);
+        RadarRenderer radar = new RadarRenderer(true);
+        view.addRenderer(radar);
         trackers.add(player);
+        MapView mapView = view;
         new Task(HoloItems.getInstance(), 1, 1){
             int increment = 0;
             public void run(){
                 if(increment>=1200 || !item.equals(player.getInventory().getItemInOffHand())){
+                    mapView.removeRenderer(circle);
+                    mapView.removeRenderer(radar);
                     trackers.remove(player);
                     cancel();
                     return;

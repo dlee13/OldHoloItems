@@ -202,6 +202,25 @@ public class InaDungeon implements CommandExecutor{
                 }catch(NumberFormatException e){return false;}
                 return true;
             //conduit
+            case "conduit":
+                if(args.length<4)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                try {
+                    Conduit.setUp(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                }catch (NumberFormatException e){return false;}
+                System.out.println("Conduit [ON]");
+                return true;
+
+            case "resetconduit":
+                Conduit.reset();
+                System.out.println("Conduit [OFF]");
+                return true;
+
             case "rotate":
                 if(args.length<6)
                     return false;
@@ -266,6 +285,7 @@ public class InaDungeon implements CommandExecutor{
 
             case "resetGettingWood":
                 GettingWood.reset();
+                System.out.println("Getting Wood [OFF]");
                 return true;
             //minesweeper
             case "minesweeper":
@@ -301,6 +321,7 @@ public class InaDungeon implements CommandExecutor{
             case "resetMinesweeper":
                 Minesweeper.reset();
                 System.out.println("Minesweeper [OFF]");
+                return true;
             //payload
             case "payload":
                 if(args.length>10)

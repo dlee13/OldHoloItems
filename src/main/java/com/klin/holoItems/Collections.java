@@ -179,7 +179,7 @@ public class Collections implements CommandExecutor, Listener {
                 registry += ""+collection.key+item.key+" "+item.name+"\n";
             }
         }
-        registry = registry.substring(0, registry.length()-2);
+        registry = registry.substring(0, registry.length()-1);
 
         back = new ItemStack(Material.SPRUCE_TRAPDOOR);
         ItemMeta backMeta = back.getItemMeta();
