@@ -61,8 +61,8 @@ public class Radar extends Item implements Swappable {
             if(view==null)
                 view = Bukkit.createMap(world);
             view.setScale(MapView.Scale.CLOSE);
-            view.addRenderer(new CircleRenderer());
-            view.addRenderer(new RadarRenderer());
+            view.addRenderer(new CircleRenderer(true));
+            view.addRenderer(new RadarRenderer(true));
             mapMeta.setMapView(view);
             this.item.setItemMeta(mapMeta);
             if(!meta.hasMapView()) {

@@ -5,6 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.map.*;
 
 public class CircleRenderer extends MapRenderer {
+    public CircleRenderer(boolean contextual){
+        super(contextual);
+    }
+
     MapCursor center = null;
     public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
         Location loc = player.getLocation();

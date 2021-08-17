@@ -25,10 +25,9 @@ public class RiftWalker extends BatteryPack {
 
     private static final Material material = Material.POPPY;
     private static final String lore =
-            "§6Ability" +"/n"+
-            "Right click to consume a charge and" +"/n"+
-            "teleport yourself 8 blocks in the" +"/n"+
-            "direction you're facing up to 8 times" +"/n"+
+            "Right click to consume a charge and\n"+
+            "teleport yourself 8 blocks in the\n"+
+            "direction you're facing up to 8 times\n"+
             "in a row. 2 ender pearls/charge";
     private static final int durability = 0;
     private static final boolean shiny = true;

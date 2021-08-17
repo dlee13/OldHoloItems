@@ -12,6 +12,10 @@ public class RadarRenderer extends MapRenderer {
     Set<MapCursor> cursors = new HashSet<>();
     int increment = 0;
 
+    public RadarRenderer(boolean contextual){
+        super(contextual);
+    }
+
     public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
         increment++;
         MapCursorCollection collection = mapCanvas.getCursors();
