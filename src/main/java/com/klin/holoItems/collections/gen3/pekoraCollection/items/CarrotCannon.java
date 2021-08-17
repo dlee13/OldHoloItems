@@ -93,11 +93,10 @@ public class CarrotCannon extends BatteryPack {
     public void effect(PlayerInteractEvent event){
         event.setCancelled(true);
         ItemStack item = event.getItem();
-        int charge = Utility.deplete(item);
+        Player player = event.getPlayer();
+        int charge = Utility.deplete(item, player, cap);
         if(charge==-1)
             return;
-
-        Player player = event.getPlayer();
         Location loc = player.getEyeLocation();
         World world = loc.getWorld();
         ThrowableProjectile proj = (ThrowableProjectile) world.
@@ -129,8 +128,5 @@ public class CarrotCannon extends BatteryPack {
                 increment++;
             }
         };
-
-        if(charge==96 || charge==32 || charge==0)
-            player.sendMessage("§7" + charge + " remaining");
     }
 }

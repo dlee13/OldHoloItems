@@ -20,14 +20,7 @@ import java.util.Set;
 
 public class Ingraining extends Enchant implements Extractable {
     public static final String name = "ingraining";
-    public static final Set<Enchantment> accepted = new HashSet<>(){{
-        add(Enchantment.DURABILITY);
-        add(Enchantment.MENDING);
-        add(Enchantment.LOOT_BONUS_BLOCKS);
-    }};
-    public static final Set<String> acceptedIds = null;
-    public static final Set<Material> acceptedTypes = Utility.hoes;
-    public static final int expCost = 32;
+    public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.LOOT_BONUS_BLOCKS);
 
     private static final Material material = Material.FLINT;
     private static final String lore =
@@ -35,38 +28,25 @@ public class Ingraining extends Enchant implements Extractable {
     private static final int durability = 256;
     private static final boolean shiny = false;
 
+    public static final Set<String> acceptedIds = null;
+    public static final Set<Material> acceptedTypes = Utility.hoes;
+    public static final int expCost = 32;
+
     public static final int cost = 0;
     public static final char key = '4';
+    public static final String id = ""+InaCollection.key+key;
 
     public Ingraining(){
-        super(name, accepted, material, lore, durability, shiny, cost,
-                ""+InaCollection.key+key, key, acceptedIds, acceptedTypes, expCost);
+        super(name, accepted, material, lore, durability, shiny, cost, id, key, acceptedIds, acceptedTypes, expCost);
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe0 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
-        recipe0.shape("*  ","*  ","%  ");
-        recipe0.setIngredient('*', Material.NAUTILUS_SHELL);
-        recipe0.setIngredient('%', Material.STICK);
-        recipe0.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe0);
-
-        ShapedRecipe recipe1 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
-        recipe1.shape(" * "," * "," % ");
-        recipe1.setIngredient('*', Material.NAUTILUS_SHELL);
-        recipe1.setIngredient('%', Material.STICK);
-        recipe1.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe1);
-
-        ShapedRecipe recipe2 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"2"), item);
-        recipe2.shape("  *","  *","  %");
-        recipe2.setIngredient('*', Material.NAUTILUS_SHELL);
-        recipe2.setIngredient('%', Material.STICK);
-        recipe2.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe2);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        recipe.shape("a","a","b");
+        recipe.setIngredient('a', Material.NAUTILUS_SHELL);
+        recipe.setIngredient('b', Material.STICK);
+        recipe.setGroup(name);
+        Bukkit.getServer().addRecipe(recipe);
     }
 
     public void ability(BlockBreakEvent event){

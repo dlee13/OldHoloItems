@@ -3,6 +3,7 @@ package com.klin.holoItems;
 import com.klin.holoItems.collections.en.calliCollection.CalliCollection;
 import com.klin.holoItems.collections.en.guraCollection.GuraCollection;
 import com.klin.holoItems.collections.en.inaCollection.InaCollection;
+import com.klin.holoItems.collections.en.irysCollection.IrysCollection;
 import com.klin.holoItems.collections.en.kiaraCollection.KiaraCollection;
 import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
 import com.klin.holoItems.collections.gamers.koroneCollection.KoroneCollection;
@@ -54,10 +55,10 @@ import com.klin.holoItems.collections.id2.ollieCollection.OllieCollection;
 import com.klin.holoItems.collections.id2.reineCollection.ReineCollection;
 import com.klin.holoItems.collections.misc.achanCollection.AchanCollection;
 import com.klin.holoItems.collections.misc.franCollection.FranCollection;
-import com.klin.holoItems.collections.misc.opCollection.OpCollection;
-import com.klin.holoItems.collections.misc.opCollection.Recipes;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
+import com.klin.holoItems.collections.misc.opCollection.OpCollection;
+import com.klin.holoItems.collections.misc.opCollection.Recipes;
 import com.klin.holoItems.collections.misc.utilityCollection.UtilityCollection;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.utility.SkullCreator;
@@ -146,8 +147,7 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(AnyaCollection.key, new AnyaCollection());
         collections.put(ReineCollection.key, new ReineCollection());
 
-        //collections.put(IrysCollection.key, new IrysCollection());
-
+        collections.put(IrysCollection.key, new IrysCollection());
         collections.put(AchanCollection.key, new AchanCollection());
 
         collections.put(MiyabiCollection.key, new MiyabiCollection());
@@ -171,8 +171,11 @@ public class Collections implements CommandExecutor, Listener {
         for(Collection collection : collections.values()){
             if(collection.key=='X')
                 break;
+            java.util.Collection<Item> items = collection.collection.values();
+            if(items.isEmpty())
+                continue;
             registry += "§7"+collection.name+"\n§f";
-            for(Item item : collection.collection.values()){
+            for(Item item : items){
                 registry += ""+collection.key+item.key+" "+item.name+"\n";
             }
         }

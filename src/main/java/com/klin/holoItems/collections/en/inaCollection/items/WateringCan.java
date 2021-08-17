@@ -31,15 +31,14 @@ public class WateringCan extends BatteryPack {
 
     public static final int cost = 4430;
     public static final char key = '3';
+    public static final String id = ""+InaCollection.key+key;
 
     public WateringCan(){
-        super(name, material, lore, durability, shiny, cost, content, perFuel, cap,
-                ""+ InaCollection.key+key, key);
+        super(name, material, lore, durability, shiny, cost, content, perFuel, cap, id, key);
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe0 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
+        ShapedRecipe recipe0 = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
         recipe0.shape(" * ","/&%"," % ");
         recipe0.setIngredient('*', Material.IRON_TRAPDOOR);
         recipe0.setIngredient('/', Material.TRIPWIRE_HOOK);
@@ -48,8 +47,7 @@ public class WateringCan extends BatteryPack {
         recipe0.setGroup(name);
         Bukkit.getServer().addRecipe(recipe0);
 
-        ShapedRecipe recipe1 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
+        ShapedRecipe recipe1 = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
         recipe1.shape(" * ","%&/"," % ");
         recipe1.setIngredient('*', Material.IRON_TRAPDOOR);
         recipe1.setIngredient('/', Material.TRIPWIRE_HOOK);
@@ -70,11 +68,10 @@ public class WateringCan extends BatteryPack {
 
     public void effect(PlayerInteractEvent event){
         event.setCancelled(true);
-        int charge = Utility.deplete(event.getItem());
+        Player player = event.getPlayer();
+        int charge = Utility.deplete(event.getItem(), player, cap);
         if(charge==-1)
             return;
-
-        Player player = event.getPlayer();
         World world = player.getWorld();
         int farmland = world.getBlockAt(player.getLocation()).isEmpty() ? 0 : 1;
         Location center = player.getLocation();
@@ -96,12 +93,8 @@ public class WateringCan extends BatteryPack {
             }
         }
         world.spawnParticle(Particle.WATER_SPLASH, player.getLocation(), 100, 2.5, 0.25, 2.5);
-
-        if(charge==192 || charge==64 || charge==0) {
-            player.sendMessage("§7" + charge + " remaining");
-            if(charge==0)
-                event.getItem().setType(Material.BUCKET);
-        }
+        if(charge==0)
+            event.getItem().setType(Material.BUCKET);
     }
 }
 

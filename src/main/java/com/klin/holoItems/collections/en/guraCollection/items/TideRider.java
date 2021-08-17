@@ -21,15 +21,12 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TideRider extends Item implements Interactable {
     public static final String name = "tideRider";
-    private static final Set<Enchantment> accepted = Stream.of(Enchantment.DURABILITY, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
+    private static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING);
 
     private static final Material material = Material.TRIDENT;
     private static final int quantity = 1;
@@ -52,8 +49,7 @@ public class TideRider extends Item implements Interactable {
         meta.addEnchant(Enchantment.LOYALTY, 3, false);
         item.setItemMeta(meta);
 
-        ShapedRecipe recipe =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aba"," c "," a ");
         recipe.setIngredient('a', Material.WAXED_OXIDIZED_CUT_COPPER);
         recipe.setIngredient('b', Material.TRIDENT);

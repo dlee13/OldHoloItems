@@ -16,7 +16,7 @@ import java.util.HashSet;
 
 public class MomentoMori extends Item implements Retainable {
     public static final String name = "momento";
-    public static final HashSet<Enchantment> accepted = null;
+
     private static final Material material = Material.ENDER_CHEST;
     private static final int quantity = 1;
     private static final String lore =
@@ -28,17 +28,17 @@ public class MomentoMori extends Item implements Retainable {
 
     public static final int cost = 2700;
     public static final char key = '0';
+    public static final String id = ""+CalliCollection.key+key;
 
     public MomentoMori(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+CalliCollection.key+key, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("%%%","%*%","%%%");
-        recipe.setIngredient('*', Material.END_CRYSTAL);
-        recipe.setIngredient('%', Material.ENDER_CHEST);
+        recipe.shape("aaa","aba","aaa");
+        recipe.setIngredient('a', Material.ENDER_CHEST);
+        recipe.setIngredient('b', Material.END_CRYSTAL);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

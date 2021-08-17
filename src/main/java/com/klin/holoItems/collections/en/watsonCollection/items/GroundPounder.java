@@ -168,11 +168,13 @@ public class GroundPounder extends Pack {
                     }
                     held.remove(player);
                     if(rewind) {
-                        if(player.getGameMode()==GameMode.CREATIVE || Utility.deplete(event.getItem())!=-1) {
+                        if(player.getGameMode()==GameMode.CREATIVE || Utility.deplete(event.getItem(), player, size)!=-1) {
                             player.teleport(location);
                             player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 10, 1));
                         }
                     }
+                    else
+                        Utility.addDurability(event.getItem(), -1, player);
                     cancel();
                     return;
                 }

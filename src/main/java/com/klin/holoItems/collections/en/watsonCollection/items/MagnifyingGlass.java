@@ -41,9 +41,9 @@ public class MagnifyingGlass extends Item implements Interactable {
     public void registerRecipes(){
         ShapedRecipe recipe =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("*","&");
-        recipe.setIngredient('*', Material.GLASS);
-        recipe.setIngredient('&', Material.STICK);
+        recipe.shape("a","b");
+        recipe.setIngredient('a', Material.GLASS);
+        recipe.setIngredient('b', Material.STICK);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

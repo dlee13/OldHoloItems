@@ -98,8 +98,9 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable 
                             players.remove(player);
                             if (players.isEmpty())
                                 Events.activatables.remove(instance);
+                    //https://youtu.be/gvRPXNAKUp8
                         }
-                    }.runTaskLater(HoloItems.getInstance(), 1200);
+                    }.runTaskLater(HoloItems.getInstance(), 3580);
                 }
                 else{
                     event.setSigning(false);

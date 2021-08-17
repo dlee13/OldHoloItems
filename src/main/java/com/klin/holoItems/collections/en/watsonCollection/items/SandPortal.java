@@ -23,8 +23,6 @@ import java.util.HashSet;
 
 public class SandPortal extends Item implements Dispensable, Placeable {
     public static final String name = "sandPortal";
-    public static final HashSet<Enchantment> accepted = null;
-
     private static final String[] types = new String[]{"RED_SAND", "GRAVEL",
             "WHITE_CONCRETE_POWDER", "ORANGE_CONCRETE_POWDER", "MAGENTA_CONCRETE_POWDER",
             "LIGHT_BLUE_CONCRETE_POWDER", "YELLOW_CONCRETE_POWDER", "LIME_CONCRETE_POWDER",
@@ -44,10 +42,10 @@ public class SandPortal extends Item implements Dispensable, Placeable {
 
     public static final int cost = 19200;
     public static final char key = '0';
+    public static final String id = ""+WatsonCollection.key+key;
 
     public SandPortal(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+WatsonCollection.key+key, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){

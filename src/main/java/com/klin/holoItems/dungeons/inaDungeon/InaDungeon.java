@@ -132,7 +132,7 @@ public class InaDungeon implements CommandExecutor{
                 }
                 System.out.println(out + "}");
                 return true;
-
+            //attacks
             case "groundpound":
                 if(!(sender instanceof Player)){
                     System.out.println("Player only command");
@@ -190,7 +190,7 @@ public class InaDungeon implements CommandExecutor{
                 return true;
 
             case "spreadfire":
-                if (args.length < 4)
+                if (args.length<4)
                     return false;
                 world = Bukkit.getWorld(args[0]);
                 if(world==null){
@@ -198,10 +198,45 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    Attacks.spreadFire(BlockFace.UP, world.getBlockAt(new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]))), Utility.cardinal.keySet(), new HashSet<>(), new HashSet<>(), args.length>3&&args[3].equals("true"));
-                }catch(NumberFormatException ignored){}
+                    Attacks.spreadFire(BlockFace.UP, world.getBlockAt(new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]))), Utility.cardinal.keySet(), new HashSet<>(), new HashSet<>(), args[3].equals("true"));
+                }catch(NumberFormatException e){return false;}
                 return true;
-
+            //conduit
+            case "rotate":
+                if(args.length<6)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                try {
+                    int x = Integer.parseInt(args[2]);
+                    x1 = Integer.parseInt(args[1]);
+                    if(x1>x) {
+                        x2 = x1;
+                        x1 = x;
+                    }
+                    else
+                        x2 = x;
+                    int z = Integer.parseInt(args[4]);
+                    z1 = Integer.parseInt(args[3]);
+                    if(z1>z) {
+                        z2 = z1;
+                        z1 = z;
+                    }
+                    else
+                        z2 = z;
+                    Map<Block[], BlockFace> joints = Conduit.joint(world, x1, x2, z1, z2, Integer.parseInt(args[5]), null);
+                    if(joints==null){
+                        System.out.println("Invalid torch arrangement");
+                        return true;
+                    }
+                    for(Block[] torches : joints.keySet())
+                        Conduit.rotate(torches, joints.get(torches));
+                }catch(NumberFormatException e){return false;}
+                return true;
+            //gettingWood
             case "plant":
                 if(args.length<5)
                     return false;
@@ -232,7 +267,7 @@ public class InaDungeon implements CommandExecutor{
             case "resetGettingWood":
                 GettingWood.reset();
                 return true;
-
+            //minesweeper
             case "minesweeper":
                 if(args.length < 6)
                     return false;
@@ -242,7 +277,23 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    Minesweeper.setUp(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]), world);
+                    int x = Integer.parseInt(args[2]);
+                    x1 = Integer.parseInt(args[1]);
+                    if(x1>x) {
+                        x2 = x1;
+                        x1 = x;
+                    }
+                    else
+                        x2 = x;
+                    int z = Integer.parseInt(args[4]);
+                    z1 = Integer.parseInt(args[3]);
+                    if(z1>z) {
+                        z2 = z1;
+                        z1 = z;
+                    }
+                    else
+                        z2 = z;
+                    Minesweeper.setUp(world, x1, x2, z1, z2, Integer.parseInt(args[5]));
                     System.out.println("Minesweeper [ON]");
                 }catch (NumberFormatException e){System.out.println("Invalid coordinates");}
                 return  true;
@@ -250,7 +301,7 @@ public class InaDungeon implements CommandExecutor{
             case "resetMinesweeper":
                 Minesweeper.reset();
                 System.out.println("Minesweeper [OFF]");
-
+            //payload
             case "payload":
                 if(args.length>10)
                     Payload.payload(args);

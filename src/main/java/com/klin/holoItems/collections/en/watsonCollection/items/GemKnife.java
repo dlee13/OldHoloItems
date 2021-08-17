@@ -19,7 +19,6 @@ import java.util.Map;
 
 public class GemKnife extends BatteryPack {
     public static final String name = "gemKnife";
-
     private static final Map<Material, Material> ores = new HashMap<>() {{
         put(Material.COAL_ORE, Material.COAL);
         put(Material.IRON_ORE, Material.IRON_NUGGET);
@@ -45,15 +44,14 @@ public class GemKnife extends BatteryPack {
 
     public static final int cost = 24000;
     public static final char key = '2';
+    public static final String id = ""+WatsonCollection.key+key;
 
     public GemKnife(){
-        super(name, material, lore, durability, shiny, cost, content, perFuel, cap,
-                ""+WatsonCollection.key+key, key);
+        super(name, material, lore, durability, shiny, cost, content, perFuel, cap, id, key);
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("a","b");
         recipe.setIngredient('a', Material.EMERALD_BLOCK);
         recipe.setIngredient('b', Material.STICK);
@@ -70,10 +68,9 @@ public class GemKnife extends BatteryPack {
         if(type==null)
             return;
         ItemStack item = event.getItem();
-        int charge = Utility.deplete(item);
+        int charge = Utility.deplete(item, event.getPlayer(), cap);
         if(charge==-1)
             return;
-
         if(charge>=63){
             ItemMeta meta = item.getItemMeta();
             meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, charge-63);
@@ -82,8 +79,6 @@ public class GemKnife extends BatteryPack {
             return;
         }
         ore.getWorld().dropItemNaturally(ore.getLocation(), new ItemStack(type));
-        if(charge==192 || charge==64 || charge==0)
-            event.getPlayer().sendMessage("§7" + charge + " remaining");
     }
 }
 

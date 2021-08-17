@@ -1,7 +1,8 @@
 package com.klin.holoItems.collections.en.inaCollection.items;
 
-import com.klin.holoItems.abstractClasses.Wiring;
+import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.en.inaCollection.InaCollection;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class EarthenSpoon extends Wiring {
     public static final String name = "earthenSpoon";
+
     private static final Material material = Material.WOODEN_SHOVEL;
     private static final String lore =
             "Dispensers wired with this item will\n" +
@@ -26,46 +28,18 @@ public class EarthenSpoon extends Wiring {
 
     public static final int cost = 16720;
     public static final char key = '1';
+    public static final String id = ""+InaCollection.key+key;
 
     public EarthenSpoon(){
-        super(name, material, lore, shiny, cost, ""+InaCollection.key+key, key);
+        super(name, material, lore, shiny, cost, id, key);
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe0 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
-        recipe0.shape("*  ","%  ","%  ");
-        recipe0.setIngredient('*', Material.ANCIENT_DEBRIS);
-        recipe0.setIngredient('%', Material.STICK);
-        recipe0.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe0);
-
-        ShapedRecipe recipe1 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
-        recipe1.shape(" * "," % "," % ");
-        recipe1.setIngredient('*', Material.ANCIENT_DEBRIS);
-        recipe1.setIngredient('%', Material.STICK);
-        recipe1.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe1);
-
-        ShapedRecipe recipe2 =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"2"), item);
-        recipe2.shape("  *","  %","  %");
-        recipe2.setIngredient('*', Material.ANCIENT_DEBRIS);
-        recipe2.setIngredient('%', Material.STICK);
-        recipe2.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe2);
-
-        ItemStack ceramicLadle = Utility.process(
-                "ceramicLadle", Material.STONE_SHOVEL, 1,
-                "§6Ability" +"/n"+
-                        "Dispensers wired with this item will" +"/n"+
-                        "plant saplings from its inventory" + "/n"+
-                        "Break the dispenser to retrieve",
-                0, true, "L2");
-        BlastingRecipe recipe =
-                new BlastingRecipe(new NamespacedKey(HoloItems.getInstance(), "ceramicLadle"),
-                        ceramicLadle, new RecipeChoice.ExactChoice(item), 1, 900);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        recipe.shape("a","b","b");
+        recipe.setIngredient('a', Material.ANCIENT_DEBRIS);
+        recipe.setIngredient('b', Material.STICK);
+        recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }
 

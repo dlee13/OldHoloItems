@@ -16,7 +16,6 @@ import java.util.Set;
 
 public class Cushioning extends Item implements Holdable {
     public static final String name = "cushioning";
-    public static final Set<Enchantment> accepted = null;
 
     private static final Material material = Material.WHITE_WOOL;
     private static final int quantity = 1;
@@ -29,15 +28,14 @@ public class Cushioning extends Item implements Holdable {
 
     public static final int cost = 0;
     public static final char key = '0';
+    public static final String id = ""+KiaraCollection.key+key;
 
     public Cushioning(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+KiaraCollection.key+key, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("#&#","*%*","#&#");
         recipe.setIngredient('*', Material.COBWEB);
         recipe.setIngredient('%', Material.TOTEM_OF_UNDYING);

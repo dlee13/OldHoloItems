@@ -103,8 +103,8 @@ public class RiftWalker extends BatteryPack {
                 }
             }
 
-            Utility.deplete(item);
-            if(charge==24 || charge==8 || charge==0)
+            Utility.deplete(item, null, cap);
+            if(charge%8==0)
                 player.sendMessage("§7"+charge+" remaining");
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Jumps: "+jumps+"/8"));
         }

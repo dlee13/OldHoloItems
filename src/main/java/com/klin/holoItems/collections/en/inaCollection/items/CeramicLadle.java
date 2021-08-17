@@ -1,23 +1,24 @@
 package com.klin.holoItems.collections.en.inaCollection.items;
 
-import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.en.inaCollection.InaCollection;
 import com.klin.holoItems.utility.Utility;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 
 public class CeramicLadle  extends Wiring {
     public static final String name = "ceramicLadle";
+
     private static final Material material = Material.STONE_SHOVEL;
     private static final String lore =
             "Dispensers wired with this item will\n" +
@@ -27,12 +28,22 @@ public class CeramicLadle  extends Wiring {
 
     public static final int cost = 16720;
     public static final char key = '2';
+    public static final String id = ""+InaCollection.key+key;
 
     public CeramicLadle(){
-        super(name, material, lore, shiny, cost, ""+ InaCollection.key+key, key);
+        super(name, material, lore, shiny, cost, id, key);
     }
 
-    public void registerRecipes(){}
+    public void registerRecipes(){
+        BlastingRecipe blastingRecipe = new BlastingRecipe(new NamespacedKey(HoloItems.getInstance(), "ceramicLadle"),
+                item, new RecipeChoice.ExactChoice(
+                Utility.process("earthenSpoon", Material.WOODEN_SHOVEL, 1,
+                        "Dispensers wired with this item will\n" +
+                             "plant crops from its inventory\n" +
+                             "Break the dispenser to retrieve", 0, shiny, EarthenSpoon.id)
+        ), 1, 900);
+        Bukkit.getServer().addRecipe(blastingRecipe);
+    }
 
     public void ability(BlockDispenseEvent event){
         ItemStack item = event.getItem();

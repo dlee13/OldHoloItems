@@ -39,18 +39,18 @@ public class Filter extends Wiring {
 
     public static final int cost = 8360;
     public static final char key = '1';
+    public static final String id = ""+WatsonCollection.key+key;
 
     public Filter(){
-        super(name, material, lore, shiny, cost, ""+WatsonCollection.key+key, key);
+        super(name, material, lore, shiny, cost, id, key);
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
-        recipe.shape("&&&","***","%%%");
-        recipe.setIngredient('&', Material.HOPPER);
-        recipe.setIngredient('*', Material.COBWEB);
-        recipe.setIngredient('%', Material.BASALT);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        recipe.shape("aaa","bbb","ccc");
+        recipe.setIngredient('a', Material.HOPPER);
+        recipe.setIngredient('b', Material.COBWEB);
+        recipe.setIngredient('c', Material.BASALT);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

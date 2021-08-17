@@ -55,7 +55,7 @@ public class Hourglass extends BatteryPack implements Hitable {
 
     public void ability(ProjectileHitEvent event) {
         ThrownPotion projectile = (ThrownPotion) event.getEntity();
-        int charge = Utility.deplete(projectile.getItem());
+        int charge = Utility.deplete(projectile.getItem(), null, cap);
         if(charge==-1)
             return;
         charge += 1;

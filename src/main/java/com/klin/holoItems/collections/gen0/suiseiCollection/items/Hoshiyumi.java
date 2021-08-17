@@ -26,14 +26,14 @@ import java.util.Set;
 
 public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable {
     public static final String name = "hoshiyumi";
-    public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
-        add(Enchantment.ARROW_DAMAGE);
-        add(Enchantment.ARROW_FIRE);
-        add(Enchantment.ARROW_KNOCKBACK);
-        add(Enchantment.FIRE_ASPECT);
-        add(Enchantment.MENDING);
-        add(Enchantment.KNOCKBACK);
-    }};
+    public static final Set<Enchantment> accepted = Set.of(
+            Enchantment.ARROW_DAMAGE,
+            Enchantment.ARROW_FIRE,
+            Enchantment.ARROW_KNOCKBACK,
+            Enchantment.FIRE_ASPECT,
+            Enchantment.MENDING,
+            Enchantment.KNOCKBACK
+    );
 
     private static final Material material = Material.BOW;
     private static final int quantity = 1;
@@ -47,7 +47,7 @@ public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable
     public static final int cost = 1500;
     public static final char key = '1';
 
-    private Map<Player, Set<LivingEntity>> hits = new HashMap<>();
+    private static final Map<Player, Set<LivingEntity>> hits = new HashMap<>();
 
     public Hoshiyumi(){
         super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,

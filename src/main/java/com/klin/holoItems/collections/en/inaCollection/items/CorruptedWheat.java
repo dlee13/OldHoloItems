@@ -20,6 +20,7 @@ import java.util.*;
 
 public class CorruptedWheat extends BatteryPack implements Placeable {
     public static final String name = "corruptedWheat";
+
     private static final Material material = Material.WHEAT_SEEDS;
     private static final String lore =
             "Spreads to surrounding farmland\n" +
@@ -33,10 +34,10 @@ public class CorruptedWheat extends BatteryPack implements Placeable {
 
     public static final int cost = 8860;
     public static final char key = '0';
+    public static final String id = ""+InaCollection.key+key;
 
     public CorruptedWheat(){
-        super(name, material, lore, durability, shiny, cost, content, perCharge, cap,
-                ""+InaCollection.key+key, key);
+        super(name, material, lore, durability, shiny, cost, content, perCharge, cap, id, key);
     }
 
     public void registerRecipes(){
@@ -52,11 +53,10 @@ public class CorruptedWheat extends BatteryPack implements Placeable {
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName("§6"+Utility.formatName(key));
             item.setItemMeta(meta);
-            ShapedRecipe recipe =
-                    new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), key), item);
-            recipe.shape("%%%","%*%","%%%");
-            recipe.setIngredient('*', crop);
-            recipe.setIngredient('%', Material.LEATHER);
+            ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), key), item);
+            recipe.shape("aaa","aba","aaa");
+            recipe.setIngredient('a', Material.LEATHER);
+            recipe.setIngredient('b', crop);
             recipe.setGroup(name);
             Bukkit.getServer().addRecipe(recipe);
         }

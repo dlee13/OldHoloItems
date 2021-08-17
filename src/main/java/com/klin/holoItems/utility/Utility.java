@@ -801,7 +801,7 @@ public class Utility {
         return str;
     }
 
-    public static int deplete(ItemStack item){
+    public static int deplete(ItemStack item, Player player, int total){
         ItemMeta meta = item.getItemMeta();
         Integer charge = meta.getPersistentDataContainer().
                 get(Utility.pack, PersistentDataType.INTEGER);
@@ -812,6 +812,8 @@ public class Utility {
             meta.getPersistentDataContainer().
                     set(Utility.pack, PersistentDataType.INTEGER, charge);
             item.setItemMeta(meta);
+            if(player!=null)
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Remaining: "+charge+"/"+total));
             return charge;
         }
     }
