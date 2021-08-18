@@ -25,7 +25,7 @@ public class SuperStar extends PowerUp {
     private static final int interval = 5;
     private static final int increments = 20;
 
-    public static final int cost = 1000;
+    public static final int cost = -1;
     public static final char key = '0';
 
     public SuperStar(){

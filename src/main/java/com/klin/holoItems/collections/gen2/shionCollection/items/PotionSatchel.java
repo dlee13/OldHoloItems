@@ -7,12 +7,10 @@ import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.collections.gen2.shionCollection.ShionCollection;
 import com.klin.holoItems.interfaces.Mixable;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -68,24 +66,26 @@ public class PotionSatchel extends Pack {
         String potions = "";
 
         int size = 0;
+        Location loc = player.getLocation();
         for(ItemStack content : inv.getContents()) {
             if(content==null || content.getType()==Material.AIR)
                 continue;
             Material material = content.getType();
             ItemMeta meta = content.getItemMeta();
             String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            boolean drop = id != null && !(Collections.findItem(id) instanceof Mixable);
+            PotionData potData = ((PotionMeta) meta).getBasePotionData();
+            PotionType type = potData.getType();
+            boolean drop = id != null && !(Collections.findItem(id) instanceof Mixable) || type==PotionType.UNCRAFTABLE;
             if(material!=Material.SPLASH_POTION && material!=Material.LINGERING_POTION || drop) {
-                world.dropItemNaturally(player.getLocation(), content);
+                world.dropItemNaturally(loc, content);
                 continue;
             }
-            String type = material.toString();
-            potions += type.substring(0,type.indexOf("_"))+"-";
+            String potion = material.toString();
+            potions += potion.substring(0, potion.indexOf("_"))+"-";
             if(id!=null)
                 potions += id + "x";
             else {
-                PotionData potData = ((PotionMeta) meta).getBasePotionData();
-                potions += potData.getType();
+                potions += type;
                 if (potData.isExtended())
                     potions += "+";
                 else if (potData.isUpgraded())
@@ -162,16 +162,11 @@ public class PotionSatchel extends Pack {
                 pot.setItemMeta(((Item) mixable).item.getItemMeta());
         }
 
-        HumanEntity player = event.getPlayer();
-        ThrownPotion potion = (player).launchProjectile(ThrownPotion.class,
-                player.getLocation().getDirection().multiply(2));
+        Player player = event.getPlayer();
+        ThrownPotion potion = player.launchProjectile(ThrownPotion.class, player.getLocation().getDirection().multiply(2));
         potion.setItem(pot);
-
-        meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING,
-                potions.substring(potions.indexOf(" ")+1));
+        meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, potions.substring(potions.indexOf(" ")+1));
         item.setItemMeta(meta);
-        int length = potions.split(" ").length;
-        if(length==4 || length==2 || length ==1)
-            player.sendMessage("§7"+(length-1)+" remaining");
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Remaining: "+(potions.split(" ").length-1)+"/"+size));
     }
 }

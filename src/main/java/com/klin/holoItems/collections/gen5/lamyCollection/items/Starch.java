@@ -70,12 +70,11 @@ public class Starch extends Item implements Brewable, Mixable, Consumable {
                         multiplier = 4;
                     if(type==PotionType.MUNDANE)
                         meta.addCustomEffect(new PotionEffect(PotionEffectType.CONFUSION, 400/multiplier, 1), true);
-                    else if(type==PotionType.SPEED) {
-                        meta.setBasePotionData(new PotionData(PotionType.MUNDANE));
+                    else if(type==PotionType.SPEED)
                         meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 800/multiplier, 1), true);
-                    }
                     else
                         continue;
+                    meta.setBasePotionData(new PotionData(PotionType.UNCRAFTABLE));
                     meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
                     meta.setDisplayName("§6Sake");
                     meta.setColor(Color.SILVER);

@@ -23,7 +23,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -48,6 +50,7 @@ public class MilkBottle extends Item implements Consumable, Hitable, Mixable {
 
     public void registerRecipes() {
         PotionMeta meta = (PotionMeta) item.getItemMeta();
+        meta.setBasePotionData(new PotionData(PotionType.THICK));
         meta.setColor(Color.WHITE);
         item.setItemMeta(meta);
 
