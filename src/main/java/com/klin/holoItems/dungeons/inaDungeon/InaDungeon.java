@@ -351,6 +351,25 @@ public class InaDungeon implements CommandExecutor{
                     Payload.spawn(index, world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), BlockFace.UP);
                 }catch (NumberFormatException e){ System.out.println("Invalid argument(s)"); }
                 return true;
+            //waterfall
+            case "waterfall":
+                if(args.length<4)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                try {
+                    Waterfall.setUp(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                }catch (NumberFormatException e){return false;}
+                System.out.println("Waterfall [ON]");
+                return true;
+
+            case "resetwaterfall":
+                Waterfall.reset();
+                System.out.println("Waterfall [OFF]");
+                return true;
         }
         return true;
     }

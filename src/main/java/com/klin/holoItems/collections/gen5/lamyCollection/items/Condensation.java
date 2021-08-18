@@ -5,6 +5,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
 import com.klin.holoItems.utility.Task;
+import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -52,42 +53,6 @@ public class Condensation extends Item implements Placeable {
 
     public void ability(BlockPlaceEvent event){
         event.setCancelled(false);
-
-        Queue<Block> lava = new LinkedList<>();
-        Set<Block> checked = new HashSet<>();
-        Block block = event.getBlockPlaced();
-        lava.add(block);
-
-        new Task(HoloItems.getInstance(), 0, 1){
-            int charge = 65;
-
-            public void run(){
-                if(lava.isEmpty() || charge<0){
-                    cancel();
-                    return;
-                }
-
-                for(int i=0; i<4; i++) {
-                    Block center = lava.poll();
-                    checked.add(center);
-                    if(center==null || charge<0)
-                        break;
-
-                    center.setType(Material.AIR);
-                    charge--;
-                    for (Block block : new Block[]{
-                            center.getRelative(BlockFace.UP),
-                            center.getRelative(BlockFace.NORTH),
-                            center.getRelative(BlockFace.SOUTH),
-                            center.getRelative(BlockFace.EAST),
-                            center.getRelative(BlockFace.WEST),
-                            center.getRelative(BlockFace.DOWN)}) {
-                        if (block.getType()==Material.LAVA &&
-                                !checked.contains(block) && !lava.contains(block))
-                            lava.add(block);
-                    }
-                }
-            }
-        };
+        Utility.vacuum(event.getBlockPlaced(), Material.LAVA, 1, 65);
     }
 }

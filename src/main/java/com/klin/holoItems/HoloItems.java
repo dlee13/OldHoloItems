@@ -55,6 +55,9 @@ public class HoloItems extends JavaPlugin {
         //payload
         getCommand("payload").setExecutor(inaDungeon);
         getCommand("spawn").setExecutor(inaDungeon);
+        //waterfall
+        getCommand("waterfall").setExecutor(inaDungeon);
+        getCommand("resetwaterfall").setExecutor(inaDungeon);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "HoloItems [ON]");
     }

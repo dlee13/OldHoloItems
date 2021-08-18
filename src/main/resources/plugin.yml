@@ -101,6 +101,12 @@ commands:
   spawn:
     permission: holoItems.inaDungeon
     usage: /<command> <index> <world> <x> <y> <z>
+  waterfall:
+    permission: holoItems.inaDungeon
+    usage: /<command> <world> <x> <y> <z>
+  resetwaterfall:
+    permission: holoItems.inaDungeon
+    usage: /<command>
 
 permissions:
   holoItems.*:

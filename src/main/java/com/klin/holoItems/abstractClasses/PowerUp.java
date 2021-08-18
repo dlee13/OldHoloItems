@@ -1,10 +1,9 @@
 package com.klin.holoItems.abstractClasses;
 
-import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
+import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Task;
-import com.klin.holoItems.utility.Utility;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -32,8 +31,7 @@ public abstract class PowerUp extends Item implements Interactable {
 
     public void ability(PlayerInteractEvent event, Action action){
         Player player = event.getPlayer();
-        if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) ||
-                !Utility.isInBoat(player))
+        if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) || player.isInsideVehicle())
             return;
         ItemStack item = event.getItem();
         item.setAmount(item.getAmount()-1);
@@ -42,7 +40,7 @@ public abstract class PowerUp extends Item implements Interactable {
             int increment = 0;
 
             public void run(){
-                if(!Utility.isInBoat(player) || endCondition() || increment==increments) {
+                if(increment>=increments || player.isInsideVehicle() || endCondition()) {
                     cancel();
                     return;
                 }

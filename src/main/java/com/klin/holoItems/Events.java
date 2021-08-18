@@ -43,18 +43,18 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static org.bukkit.Material.*;
 
 public class Events implements Listener {
-    public static Set<Activatable> activatables = new HashSet<>();
-
-    private static final Set<Material> deactive = Stream.of(
-        Material.JUKEBOX,
-        Material.CAMPFIRE,
-        Material.SOUL_CAMPFIRE
-    ).collect(Collectors.toCollection(HashSet::new));
-
+    private static final Map<Material, Material> buckets = Map.of(
+            BUCKET, CAULDRON,
+            WATER_BUCKET, WATER_CAULDRON,
+            LAVA_BUCKET, LAVA_CAULDRON,
+            POWDER_SNOW_BUCKET, POWDER_SNOW_CAULDRON,
+            BOWL, BOWL
+    );
+    private static final Set<Material> deactive = Set.of(Material.JUKEBOX, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
     private static final Set<String> ingredients = new HashSet<>() {{
         for (Character key : Collections.findCollection('0').collection.keySet())
             add("0" + key);
@@ -65,17 +65,16 @@ public class Events implements Listener {
         add(Starch.id);
     }};
     //add permissible interfaces for each prohibitedInv
-    private static final Set<InventoryType> prohibitedInv = Stream.of(
-        InventoryType.BEACON,
-        InventoryType.BREWING,
-        InventoryType.CARTOGRAPHY,
-        InventoryType.LECTERN,
-        InventoryType.LOOM,
-        InventoryType.MERCHANT,
-        InventoryType.SMOKER,
-        InventoryType.STONECUTTER
-    ).collect(Collectors.toCollection(HashSet::new));
-
+    private static final Set<InventoryType> prohibitedInv = Set.of(
+            InventoryType.BEACON,
+            InventoryType.BREWING,
+            InventoryType.CARTOGRAPHY,
+            InventoryType.LECTERN,
+            InventoryType.LOOM,
+            InventoryType.MERCHANT,
+            InventoryType.SMOKER,
+            InventoryType.STONECUTTER
+    );
     private static final Map<Integer, Enchantment[]> multiplier = new HashMap<>() {{
         put(1, new Enchantment[]{
                 Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.DAMAGE_ALL,
@@ -103,6 +102,8 @@ public class Events implements Listener {
                 Enchantment.CHANNELING, Enchantment.SOUL_SPEED
         });
     }};
+
+    public static Set<Activatable> activatables = new HashSet<>();
 
     @EventHandler
     public static void clickItem(InventoryClickEvent event){
@@ -693,15 +694,15 @@ public class Events implements Listener {
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id==null){
             Material type = item.getType();
-            if(Utility.buckets.containsKey(type)){
+            if(buckets.containsKey(type)){
                 Block dispenser = event.getBlock();
                 Block relative = dispenser.getRelative(((org.bukkit.block.data.type.Dispenser) dispenser.getBlockData()).getFacing());
                 Material cauldron = relative.getType();
-                if(Utility.buckets.containsValue(cauldron) && type!=Material.BOWL) {
+                if(buckets.containsValue(cauldron) && type!=Material.BOWL) {
                     if(relative.getBlockData() instanceof Levelled && ((Levelled) relative.getBlockData()).getLevel()!=3 ||
                             (type==Material.BUCKET) == (cauldron==Material.CAULDRON))
                         return;
-                    relative.setType(Utility.buckets.get(type));
+                    relative.setType(buckets.get(type));
                     Material bucket;
                     if (relative.getBlockData() instanceof Levelled) {
                         bucket = Material.BUCKET;

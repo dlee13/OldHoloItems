@@ -5,6 +5,7 @@ import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Task;
+import com.klin.holoItems.utility.Utility;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,7 +20,6 @@ import java.util.Set;
 
 public class Vacuum extends Item implements Interactable {
     public static final String name = "vacuum";
-    public static final Set<Enchantment> accepted = null;
 
     private static final Material material = Material.NETHERITE_HOE;
     private static final int quantity = 1;
@@ -31,10 +31,10 @@ public class Vacuum extends Item implements Interactable {
 
     public static final int cost = -1;
     public static final char key = '3';
+    public static final String id = ""+KlinCollection.key+key;
 
     public Vacuum(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+KlinCollection.key+key, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){}
@@ -43,40 +43,6 @@ public class Vacuum extends Item implements Interactable {
         if(action!=Action.RIGHT_CLICK_BLOCK)
             return;
         Block block = event.getClickedBlock();
-        Material type = block.getType();
-        Queue<Block> clear = new LinkedList<>();
-        Set<Block> checked = new HashSet<>();
-        clear.add(block);
-
-        new Task(HoloItems.getInstance(), 0, 1){
-            int charge = 128;
-
-            public void run(){
-                if(clear.isEmpty() || charge<0){
-                    cancel();
-                    return;
-                }
-
-                for(int i=0; i<4; i++) {
-                    Block center = clear.poll();
-                    checked.add(center);
-                    if(center==null || charge<0)
-                        break;
-
-                    center.setType(Material.AIR);
-                    charge--;
-                    for (Block block : new Block[]{
-                            center.getRelative(BlockFace.UP),
-                            center.getRelative(BlockFace.NORTH),
-                            center.getRelative(BlockFace.SOUTH),
-                            center.getRelative(BlockFace.EAST),
-                            center.getRelative(BlockFace.WEST),
-                            center.getRelative(BlockFace.DOWN)}) {
-                        if (block.getType()==type && !checked.contains(block) && !clear.contains(block))
-                            clear.add(block);
-                    }
-                }
-            }
-        };
+        Utility.vacuum(block, block.getType(), 1, 64);
     }
 }
