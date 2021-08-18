@@ -217,6 +217,7 @@ public class InaDungeon implements CommandExecutor{
                 return true;
 
             case "resetconduit":
+                Conduit.water.setType(Material.AIR);
                 Conduit.reset();
                 System.out.println("Conduit [OFF]");
                 return true;

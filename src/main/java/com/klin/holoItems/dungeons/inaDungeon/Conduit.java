@@ -3,10 +3,7 @@ package com.klin.holoItems.dungeons.inaDungeon;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -17,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -31,6 +29,9 @@ public class Conduit implements Listener {
     private static final Map<Material, Set<Block[]>> buttons = new HashMap<>();
     private static final Map<Block[], BlockFace> joints = new HashMap<>();
     private static final Map<Block, BlockData> reset = new HashMap<>();
+    private static boolean pressing = false;
+//    private static Block center = null;
+    public static Block water = null;
 
     //water off until after set-up
     public static void setUp(World world, int x, int y, int z){
@@ -45,6 +46,7 @@ public class Conduit implements Listener {
                 }
             }
         }
+//        center = world.getBlockAt(x+9, y+1, z+9);
         buttons.put(Material.RED_GLAZED_TERRACOTTA, new HashSet<>());
         buttons.put(Material.LIME_GLAZED_TERRACOTTA, new HashSet<>());
         buttons.put(Material.LIGHT_BLUE_GLAZED_TERRACOTTA, new HashSet<>());
@@ -87,6 +89,9 @@ public class Conduit implements Listener {
                             block.setBlockData(plant);
                         }
                     }
+                    water = world.getBlockAt(x+22, y+9, z+9);
+                    water.setType(Material.WATER);
+                    pressing = false;
                     cancel();
                     return;
                 }
@@ -103,12 +108,15 @@ public class Conduit implements Listener {
                 increment++;
             }
         };
+        pressing = true;
         instance = new Conduit();
         getServer().getPluginManager().registerEvents(instance, HoloItems.getInstance());
     }
 
     @EventHandler
     public static void press(PlayerToggleSneakEvent event){
+        if(pressing)
+            return;
         Player player = event.getPlayer();
         if(player.getGameMode()==GameMode.SPECTATOR || ((Entity) player).isOnGround())
             return;
@@ -124,6 +132,7 @@ public class Conduit implements Listener {
         Material type = button.getType();
         if(!buttons.containsKey(type))
             return;
+        pressing = true;
         new Task(HoloItems.getInstance(), 1, 1){
             int increment = 0;
             public void run(){
@@ -140,8 +149,22 @@ public class Conduit implements Listener {
                     }
                     if(solved){
                         reset();
-                        player.sendMessage("Congratulations: solved");
+                        Location loc = player.getLocation();
+                        World world = player.getWorld();
+                        for(Entity player : world.getNearbyEntities(loc, 32, 32, 32, entity -> entity instanceof Player))
+                            ((Player) player).playSound(loc, Sound.UI_TOAST_CHALLENGE_COMPLETE, 4, 1);
+                        new BukkitRunnable(){
+                            public void run(){
+                                world.setStorm(true);
+                                new BukkitRunnable(){
+                                    public void run(){
+                                        world.setStorm(false);
+                                    }
+                                }.runTaskLater(HoloItems.getInstance(), 1200);
+                            }
+                        }.runTaskLater(HoloItems.getInstance(), 20);
                     }
+                    pressing = false;
                     cancel();
                     return;
                 }
@@ -170,6 +193,8 @@ public class Conduit implements Listener {
         reset.clear();
         buttons.clear();
         joints.clear();
+//        center = null;
+        water = null;
     }
 
     public static void rotate(Block[] torches, BlockFace flip){
@@ -243,3 +268,35 @@ public class Conduit implements Listener {
     }
 }
 
+//    private static void spiral(Block center, BlockFace face, Set<Player> players){
+//        List<BlockFace> spiral = List.of(BlockFace.NORTH_WEST, BlockFace.WEST, BlockFace.SOUTH_WEST, BlockFace.SOUTH, BlockFace.SOUTH_EAST, BlockFace.EAST, BlockFace.NORTH_EAST, BlockFace.NORTH);
+//        BlockData water = Bukkit.createBlockData(Material.WATER);
+//        Set<Block> reset = new HashSet<>();
+//        new Task(HoloItems.getInstance(), 2, 2){
+//            int increment = 0;
+//            Block block = center;
+//            int index = spiral.indexOf(face);
+//            public void run(){
+//                if(increment>=16){
+//                    BlockData air = Bukkit.createBlockData(Material.AIR);
+//                    for(Block relative : reset) {
+//                        for (Player player : players)
+//                            player.sendBlockChange(relative.getLocation(), air);
+//                    }
+//                    cancel();
+//                    return;
+//                }
+//                block = block.getRelative(BlockFace.DOWN);
+//                for(Player player : players) {
+//                    Block relative = block.getRelative(spiral.get(index));
+//                    player.sendBlockChange(relative.getLocation(), water);
+//                    reset.add(relative);
+//                }
+//                if(index>6)
+//                    index = 0;
+//                else
+//                    index++;
+//                increment++;
+//            }
+//        };
+//    }
