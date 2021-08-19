@@ -288,6 +288,20 @@ public class InaDungeon implements CommandExecutor{
                 GettingWood.reset();
                 System.out.println("Getting Wood [OFF]");
                 return true;
+            //maintenance
+            case "maintain":
+                if(args.length<4)
+                    return false;
+                try {
+                    Maintenance.setUp(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                }catch (NumberFormatException e){return false;}
+                System.out.println("Maintenance [ON]");
+                return true;
+
+            case "resetmaintenance":
+                Maintenance.reset();
+                System.out.println("Maintenance [OFF]");
+                return true;
             //minesweeper
             case "minesweeper":
                 if(args.length < 6)

@@ -48,10 +48,13 @@ public class HoloItems extends JavaPlugin {
         getCommand("resetconduit").setExecutor(inaDungeon);
         //gettingWood
         getCommand("plant").setExecutor(inaDungeon);
-        getCommand("resetGettingWood").setExecutor(inaDungeon);
+        getCommand("resetgettingwood").setExecutor(inaDungeon);
         //minesweeper
         getCommand("minesweeper").setExecutor(inaDungeon);
-        getCommand("resetMinesweeper").setExecutor(inaDungeon);
+        getCommand("resetminesweeper").setExecutor(inaDungeon);
+        //maintenance
+        getCommand("maintain").setExecutor(inaDungeon);
+        getCommand("resetmaintenance").setExecutor(inaDungeon);
         //payload
         getCommand("payload").setExecutor(inaDungeon);
         getCommand("spawn").setExecutor(inaDungeon);

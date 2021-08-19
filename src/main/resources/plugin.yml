@@ -86,13 +86,19 @@ commands:
   plant:
     permission: holoItems.inaDungeon
     usage: /<command> <index> <world> <x> <y> <z>
-  resetGettingWood:
+  resetgettingwood:
     permission: holoItems.inaDungeon
     usage: /<command>
   minesweeper:
     permission: holoItems.inaDungeon
     usage: /<command> <world> <x1> <x2> <z1> <z2> <y>
-  resetMinesweeper:
+  resetminesweeper:
+    permission: holoItems.inaDungeon
+    usage: /<command>
+  maintain:
+    permission: holoItems.inaDungeon
+    usage: /<command> <x1> <z1> <x2> <z2>
+  resetmaintenance:
     permission: holoItems.inaDungeon
     usage: /<command>
   payload:
