@@ -27,19 +27,19 @@ import java.util.Set;
 
 public class Comet extends Item implements Interactable {
     public static final String name = "comet";
-    public static final Set<Enchantment> accepted = new HashSet<>() {{
-        add(Enchantment.FIRE_ASPECT);
-        add(Enchantment.DAMAGE_ALL);
-        add(Enchantment.DAMAGE_ARTHROPODS);
-        add(Enchantment.DAMAGE_UNDEAD);
-        add(Enchantment.DIG_SPEED);
-        add(Enchantment.DURABILITY);
-        add(Enchantment.LOOT_BONUS_BLOCKS);
-        add(Enchantment.LOOT_BONUS_MOBS);
-        add(Enchantment.MENDING);
-        add(Enchantment.PIERCING);
-        add(Enchantment.SILK_TOUCH);
-    }};
+    public static final Set<Enchantment> accepted = Set.of(
+        Enchantment.FIRE_ASPECT,
+        Enchantment.DAMAGE_ALL,
+        Enchantment.DAMAGE_ARTHROPODS,
+        Enchantment.DAMAGE_UNDEAD,
+        Enchantment.DIG_SPEED,
+        Enchantment.DURABILITY,
+        Enchantment.LOOT_BONUS_BLOCKS,
+        Enchantment.LOOT_BONUS_MOBS,
+        Enchantment.MENDING,
+        Enchantment.PIERCING,
+        Enchantment.SILK_TOUCH
+    );
 
     private static final Material material = Material.GOLDEN_AXE;
     private static final int quantity = 1;
@@ -51,10 +51,10 @@ public class Comet extends Item implements Interactable {
 
     public static final int cost = 2100;
     public static final char key = '2';
+    public static final String id = ""+SuiseiCollection.key+key;
 
     public Comet(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+SuiseiCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){

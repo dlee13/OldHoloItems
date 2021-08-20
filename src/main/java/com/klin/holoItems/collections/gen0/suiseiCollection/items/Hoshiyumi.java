@@ -34,6 +34,7 @@ public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable
             Enchantment.MENDING,
             Enchantment.KNOCKBACK
     );
+    private static final Map<Player, Set<LivingEntity>> hits = new HashMap<>();
 
     private static final Material material = Material.BOW;
     private static final int quantity = 1;
@@ -46,12 +47,10 @@ public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable
 
     public static final int cost = 1500;
     public static final char key = '1';
-
-    private static final Map<Player, Set<LivingEntity>> hits = new HashMap<>();
+    public static final String id = ""+SuiseiCollection.key+key;
 
     public Hoshiyumi(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+SuiseiCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){

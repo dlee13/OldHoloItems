@@ -31,10 +31,10 @@ public class RolledNewspaper extends Item implements Responsible {
 
     public static final int cost = 0;
     public static final char key = '3';
+    public static final String id = ""+SuiseiCollection.key+key;
 
     public RolledNewspaper(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+SuiseiCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){

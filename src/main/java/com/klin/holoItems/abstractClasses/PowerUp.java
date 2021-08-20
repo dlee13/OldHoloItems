@@ -31,14 +31,12 @@ public abstract class PowerUp extends Item implements Interactable {
 
     public void ability(PlayerInteractEvent event, Action action){
         Player player = event.getPlayer();
-        if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) || player.isInsideVehicle())
+        if(action!=Action.LEFT_CLICK_AIR && action!=Action.LEFT_CLICK_BLOCK || !player.isInsideVehicle())
             return;
         ItemStack item = event.getItem();
         item.setAmount(item.getAmount()-1);
-
         new Task(HoloItems.getInstance(), 0, interval){
             int increment = 0;
-
             public void run(){
                 if(increment>=increments || player.isInsideVehicle() || endCondition()) {
                     cancel();
@@ -50,7 +48,7 @@ public abstract class PowerUp extends Item implements Interactable {
         };
     }
 
-    protected abstract void effect(Player player, Entity boat);
+    protected abstract void effect(Player player, Entity cart);
 
     protected abstract boolean endCondition();
 }

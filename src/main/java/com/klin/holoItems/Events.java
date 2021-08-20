@@ -818,17 +818,8 @@ public class Events implements Listener {
         ItemStack[] items = new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()};
         for(int i=0; i<items.length; i++) {
             ItemStack item = items[i];
-            if(item.getType()==Material.AIR || item.getItemMeta()==null) {
-                if(i==0 && block.getType()==BUDDING_AMETHYST){
-                    Material type;
-                    if(item.containsEnchantment(Enchantment.SILK_TOUCH))
-                        type = BUDDING_AMETHYST;
-                    else
-                        type = AMETHYST_BLOCK;
-                    block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), new ItemStack(type));
-                }
+            if(item.getType()==Material.AIR || item.getItemMeta()==null)
                 continue;
-            }
             String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
             if(id!=null || enchant!=null) {

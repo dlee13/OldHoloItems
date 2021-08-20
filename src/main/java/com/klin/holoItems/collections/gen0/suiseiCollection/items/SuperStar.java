@@ -1,14 +1,15 @@
 package com.klin.holoItems.collections.gen0.suiseiCollection.items;
 
-import com.klin.holoItems.abstractClasses.PowerUp;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.abstractClasses.PowerUp;
 import com.klin.holoItems.collections.gen0.suiseiCollection.SuiseiCollection;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.util.Vector;
 
 import java.util.Set;
 
@@ -22,15 +23,15 @@ public class SuperStar extends PowerUp {
             "Drift";
     private static final boolean shiny = true;
 
-    private static final int interval = 5;
-    private static final int increments = 20;
+    private static final int interval = 1;
+    private static final int increments = 100;
 
     public static final int cost = -1;
     public static final char key = '0';
+    public static final String id = ""+SuiseiCollection.key+key;
 
     public SuperStar(){
-        super(name, accepted, material, quantity, lore, shiny, cost, interval, increments,
-                ""+SuiseiCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, shiny, cost, interval, increments, id, key);
     }
 
     public void registerRecipes(){
@@ -43,10 +44,11 @@ public class SuperStar extends PowerUp {
         Bukkit.getServer().addRecipe(recipe);
     }
 
-    protected void effect(Player player, Entity boat){
-        Vector velocity = boat.getVelocity();
-        boat.teleport(player.getLocation());
-        boat.setVelocity(velocity);
+    protected void effect(Player player, Entity cart){
+        cart.setVelocity(cart.getVelocity().add(player.getLocation().getDirection()));
+        //test
+        System.out.println("star");
+        //
     }
 
     protected boolean endCondition(){
