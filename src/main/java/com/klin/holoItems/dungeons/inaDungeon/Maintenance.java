@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
@@ -47,19 +48,24 @@ public class Maintenance implements Listener {
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
-        Location location = player.getEyeLocation();
+        if(knockBack.contains(player))
+            return;
+        Location location = player.getLocation();
         int x = location.getBlockX();
         int z = location.getBlockZ();
         Vector velocity = player.getVelocity();
         double difference = 2 + Math.pow(velocity.getX(), 2);
+        boolean shatter;
         boolean axis = true;
         if(x-difference<=cage[0]) {
+            shatter = x<cage[0];
             x = cage[0];
             z -= 2;
             velocity.setX(1);
             velocity.setZ(0);
         }
         else if(x+difference>=cage[2]) {
+            shatter = x>cage[2];
             x = cage[2];
             z -= 2;
             velocity.setX(-1);
@@ -69,12 +75,14 @@ public class Maintenance implements Listener {
             axis = false;
             difference = 2 + Math.pow(player.getVelocity().getZ(), 2);
             if(z-difference<=cage[1]) {
+                shatter = z<cage[1];
                 z = cage[1];
                 x -= 2;
                 velocity.setZ(1);
                 velocity.setX(0);
             }
             else if (z+difference>=cage[3]) {
+                shatter = z>cage[3];
                 z = cage[3];
                 x -= 2;
                 velocity.setZ(-1);
@@ -82,12 +90,16 @@ public class Maintenance implements Listener {
             }
             else return;
         }
-        if(!knockBack.contains(player)) {
-            knockBack.add(player);
+        knockBack.add(player);
+        if(shatter)
+            velocity.multiply(2);
+        else{
             World world = player.getWorld();
             int y = location.getBlockY();
-            Location loc = new Location(world, x, y-2, z);
+            Location loc = new Location(world, x, y - 1, z);
             for (int i = 0; i < seal.length; i++) {
+                if (y + i > 256)
+                    break;
                 for (int j = 0; j < seal[i].length; j++) {
                     Block block = world.getBlockAt(loc.clone().add(!axis ? j : 0, i, axis ? j : 0));
                     if (block.isPassable() || decay.remove(block)) {
@@ -96,24 +108,15 @@ public class Maintenance implements Listener {
                     }
                 }
             }
-            if(y<128)
-                velocity.setY(0.5);
-            else
-                velocity.setY(0);
-            player.setVelocity(velocity);
-            new Task(HoloItems.getInstance(), 0, 1){
-                int increment = 0;
-                public void run(){
-                    if(increment>=8) {
-                        knockBack.remove(player);
-                        cancel();
-                        return;
-                    }
-                    player.setGliding(false);
-                    increment++;
-                }
-            };
         }
+        player.setGliding(false);
+        velocity.setY(0.5);
+        player.setVelocity(velocity);
+        new BukkitRunnable(){
+            public void run(){
+                knockBack.remove(player);
+            }
+        }.runTaskLater(HoloItems.getInstance(), 8);
     }
 
     @EventHandler

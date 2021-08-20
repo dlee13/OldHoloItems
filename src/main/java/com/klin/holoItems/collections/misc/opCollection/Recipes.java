@@ -5,9 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Server;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 
 public class Recipes {
     private static final String[] colors = new String[]{
@@ -96,5 +94,62 @@ public class Recipes {
         boneToBlock.addIngredient(9, Material.BONE);
         boneToBlock.setGroup("boneBlock");
         server.addRecipe(boneToBlock);
+
+        ShapelessRecipe tubeCoralBlock = new ShapelessRecipe(
+                new NamespacedKey(HoloItems.getInstance(), "tubeCoralBlock"), new ItemStack(Material.TUBE_CORAL_BLOCK));
+        for(int i=0; i<9; i++)
+            tubeCoralBlock.addIngredient(new RecipeChoice.MaterialChoice(Material.TUBE_CORAL, Material.TUBE_CORAL_FAN));
+        tubeCoralBlock.setGroup("tubeCoralBlock");
+        server.addRecipe(tubeCoralBlock);
+
+        ShapelessRecipe brainCoralBlock = new ShapelessRecipe(
+                new NamespacedKey(HoloItems.getInstance(), "brainCoralBlock"), new ItemStack(Material.BRAIN_CORAL_BLOCK));
+        for(int i=0; i<9; i++)
+            brainCoralBlock.addIngredient(new RecipeChoice.MaterialChoice(Material.BRAIN_CORAL, Material.BRAIN_CORAL_FAN));
+        brainCoralBlock.setGroup("brainCoralBlock");
+        server.addRecipe(brainCoralBlock);
+
+        ShapelessRecipe bubbleCoralBlock = new ShapelessRecipe(
+                new NamespacedKey(HoloItems.getInstance(), "bubbleCoralBlock"), new ItemStack(Material.BUBBLE_CORAL_BLOCK));
+        for(int i=0; i<9; i++)
+            bubbleCoralBlock.addIngredient(new RecipeChoice.MaterialChoice(Material.BUBBLE_CORAL, Material.BUBBLE_CORAL_FAN));
+        bubbleCoralBlock.setGroup("bubbleCoralBlock");
+        server.addRecipe(bubbleCoralBlock);
+
+        ShapelessRecipe fireCoralBlock = new ShapelessRecipe(
+                new NamespacedKey(HoloItems.getInstance(), "fireCoralBlock"), new ItemStack(Material.FIRE_CORAL_BLOCK));
+        for(int i=0; i<9; i++)
+            fireCoralBlock.addIngredient(new RecipeChoice.MaterialChoice(Material.FIRE_CORAL, Material.FIRE_CORAL_FAN));
+        fireCoralBlock.setGroup("fireCoralBlock");
+        server.addRecipe(fireCoralBlock);
+
+        ShapelessRecipe hornCoralBlock = new ShapelessRecipe(
+                new NamespacedKey(HoloItems.getInstance(), "hornCoralBlock"), new ItemStack(Material.HORN_CORAL_BLOCK));
+        for(int i=0; i<9; i++)
+            hornCoralBlock.addIngredient(new RecipeChoice.MaterialChoice(Material.HORN_CORAL, Material.HORN_CORAL_FAN));
+        hornCoralBlock.setGroup("hornCoralBlock");
+        server.addRecipe(hornCoralBlock);
+
+        ItemStack tuff = new ItemStack(Material.TUFF);
+        ShapedRecipe tuff0 = new ShapedRecipe(
+                new NamespacedKey(HoloItems.getInstance(), "tuff0"), tuff);
+        tuff0.shape("ab", "ba");
+        tuff0.setIngredient('a', Material.SMOOTH_BASALT);
+        tuff0.setIngredient('b', Material.DEEPSLATE);
+        tuff0.setGroup("tuff");
+        server.addRecipe(tuff0);
+
+        ShapedRecipe tuff1 = new ShapedRecipe(
+                new NamespacedKey(HoloItems.getInstance(), "tuff1"), tuff);
+        tuff1.shape("ab", "ba");
+        tuff1.setIngredient('a', Material.DEEPSLATE);
+        tuff1.setIngredient('b', Material.SMOOTH_BASALT);
+        tuff1.setGroup("tuff");
+        server.addRecipe(tuff1);
+
+        FurnaceRecipe calcite = new FurnaceRecipe(new NamespacedKey(HoloItems.getInstance(), "calcite"),
+                new ItemStack(Material.CALCITE), Material.TUFF, 1, 400);
+        calcite.setGroup("calcite");
+        server.addRecipe(calcite);
     }
 }

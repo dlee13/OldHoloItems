@@ -6,6 +6,7 @@ import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
+import com.klin.holoItems.collections.gen3.pekoraCollection.items.PekoNote;
 import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
@@ -59,9 +60,10 @@ public class Events implements Listener {
         for (Character key : Collections.findCollection('0').collection.keySet())
             add("0" + key);
         add(DoubleUp.id);
+        add(PekoNote.id);
+        add(MilkBottle.id);
         add(Sentry.id);
         add(ScopedRifle.id);
-        add(MilkBottle.id);
         add(Starch.id);
     }};
     //add permissible interfaces for each prohibitedInv
@@ -816,12 +818,23 @@ public class Events implements Listener {
         ItemStack[] items = new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()};
         for(int i=0; i<items.length; i++) {
             ItemStack item = items[i];
-            if(item.getType()==Material.AIR || item.getItemMeta()==null)
+            if(item.getType()==Material.AIR || item.getItemMeta()==null) {
+                if(i==0 && block.getType()==BUDDING_AMETHYST){
+                    Material type;
+                    if(item.containsEnchantment(Enchantment.SILK_TOUCH))
+                        type = BUDDING_AMETHYST;
+                    else
+                        type = AMETHYST_BLOCK;
+                    block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), new ItemStack(type));
+                }
                 continue;
+            }
             String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-            if(id!=null || enchant!=null)
-                Utility.addDurability(item, -1, event.getPlayer());
+            if(id!=null || enchant!=null) {
+                if(i==0)
+                    Utility.addDurability(item, -1, event.getPlayer());
+            }
             else
                 continue;
             Extractable extractable = Utility.findItem(id, Extractable.class, player);

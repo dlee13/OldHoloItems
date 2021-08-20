@@ -16,19 +16,26 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GemKnife extends BatteryPack {
     public static final String name = "gemKnife";
-    private static final Map<Material, Material> ores = new HashMap<>() {{
-        put(Material.COAL_ORE, Material.COAL);
-        put(Material.IRON_ORE, Material.IRON_NUGGET);
-        put(Material.GOLD_ORE, Material.GOLD_NUGGET);
-        put(Material.NETHER_GOLD_ORE, Material.GOLD_NUGGET);
-        put(Material.GILDED_BLACKSTONE, Material.GOLD_NUGGET);
-        put(Material.REDSTONE_ORE, Material.REDSTONE);
-        put(Material.LAPIS_ORE, Material.LAPIS_LAZULI);
-        put(Material.NETHER_QUARTZ_ORE, Material.QUARTZ);
-    }};
+    private static final Map<Material, Material> ores = Stream.of(new Material[][] {
+        {Material.COAL_ORE, Material.COAL},
+        {Material.DEEPSLATE_COAL_ORE, Material.COAL},
+        {Material.IRON_ORE, Material.IRON_NUGGET},
+        {Material.DEEPSLATE_IRON_ORE, Material.IRON_NUGGET},
+        {Material.GOLD_ORE, Material.GOLD_NUGGET},
+        {Material.DEEPSLATE_GOLD_ORE, Material.GOLD_NUGGET},
+        {Material.NETHER_GOLD_ORE, Material.GOLD_NUGGET},
+        {Material.GILDED_BLACKSTONE, Material.GOLD_NUGGET},
+        {Material.REDSTONE_ORE, Material.REDSTONE},
+        {Material.DEEPSLATE_REDSTONE_ORE, Material.REDSTONE},
+        {Material.LAPIS_ORE, Material.LAPIS_LAZULI},
+        {Material.DEEPSLATE_LAPIS_ORE, Material.LAPIS_LAZULI},
+        {Material.NETHER_QUARTZ_ORE, Material.QUARTZ}
+    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     private static final Material material = Material.EMERALD;
     private static final String lore =
