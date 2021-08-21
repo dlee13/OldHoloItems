@@ -21,6 +21,9 @@ commands:
     permission: holoItems.player
     usage: /<command> <id>
 
+  canceltasks:
+    permission: holoItems.op
+    usage: /<command>
   clearactivatables:
     permission: holoItems.op
     usage: /<command>

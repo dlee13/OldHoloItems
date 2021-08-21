@@ -80,12 +80,14 @@ import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.*;
 
 public class Collections implements CommandExecutor, Listener {
     public static Map<Character, Collection> collections = new LinkedHashMap<>();
-    private static Map<String, ItemStack> heads = new HashMap<>();
+    public static final Set<Integer> taskIds = new HashSet<>();
+    private static final Map<String, ItemStack> heads = new HashMap<>();
     private static String registry;
     private static ItemStack back;
     public static Set<String> disabled = new HashSet<>();
@@ -265,6 +267,13 @@ public class Collections implements CommandExecutor, Listener {
         if(!player.isOp())
             return true;
         switch(command){
+            case "canceltasks":
+                BukkitScheduler scheduler = Bukkit.getScheduler();
+                for(Integer taskId : taskIds)
+                    scheduler.cancelTask(taskId);
+                taskIds.clear();
+                return true;
+
             case "clearactivatables":
                 for(Activatable activatable : Events.activatables)
                     activatable.survey().clear();

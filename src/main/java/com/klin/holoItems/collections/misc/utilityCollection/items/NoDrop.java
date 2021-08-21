@@ -16,7 +16,7 @@ public class NoDrop extends Item implements Collectable {
             "No drop falling block";
     private static final int durability = 0;
     public static final boolean stackable = true;
-    private static final boolean shiny = true;
+    private static final boolean shiny = false;
 
     public static final int cost = -1;
     public static final char key = '0';

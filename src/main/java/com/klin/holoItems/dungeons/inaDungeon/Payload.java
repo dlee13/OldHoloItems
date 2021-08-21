@@ -114,6 +114,7 @@ public class Payload{
         //test
         upcoming.remove();
         upcoming.remove();
+        upcoming.remove();
         //
         new Task(HoloItems.getInstance(), 1, 1) {
             //length of payload*20
@@ -255,5 +256,9 @@ public class Payload{
             }
         }
         return new AbstractMap.SimpleEntry<>(blocks, center);
+    }
+
+    public static void add(){
+
     }
 }

@@ -22,9 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class InaDungeon implements CommandExecutor{
-    public static final String[][][][] builds = new String[][][][]{
-            {{{"minecraft:air", "minecraft:oak_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:air", "minecraft:air", "minecraft:oak_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:air", "minecraft:air"}, {"minecraft:air", "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air"}, {"minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air"}}, {{"minecraft:dark_oak_slab[type=top,waterlogged=false]", "minecraft:grindstone[face=ceiling,facing=south]", "minecraft:spruce_slab[type=top,waterlogged=false]", "minecraft:spruce_slab[type=top,waterlogged=false]", "minecraft:grindstone[face=ceiling,facing=north]", "minecraft:dark_oak_slab[type=top,waterlogged=false]", "minecraft:spruce_fence_gate[facing=east,in_wall=false,open=false,powered=false]"}, {"minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:barrel[facing=up,open=false]", "minecraft:air", "minecraft:air", "minecraft:gray_carpet", "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]", "minecraft:air"}, {"minecraft:air", "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air"}}, {{"minecraft:dark_oak_slab[type=top,waterlogged=false]", "minecraft:spruce_slab[type=top,waterlogged=false]", "minecraft:spruce_slab[type=top,waterlogged=false]", "minecraft:spruce_slab[type=top,waterlogged=false]", "minecraft:spruce_slab[type=top,waterlogged=false]", "minecraft:dark_oak_slab[type=top,waterlogged=false]", "minecraft:air"}, {"minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:spruce_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]", "minecraft:barrel[facing=west,open=false]", "minecraft:air", "minecraft:gray_carpet", "minecraft:air", "minecraft:air"}, {"minecraft:air", "minecraft:air", "minecraft:barrel[facing=south,open=false]", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air"}}, {{"minecraft:dark_oak_slab[type=top,waterlogged=false]", "minecraft:grindstone[face=ceiling,facing=south]", "minecraft:spruce_slab[type=top,waterlogged=false]", "minecraft:spruce_slab[type=top,waterlogged=false]", "minecraft:grindstone[face=ceiling,facing=north]", "minecraft:dark_oak_slab[type=top,waterlogged=false]", "minecraft:spruce_fence_gate[facing=west,in_wall=false,open=false,powered=false]"}, {"minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:barrel[facing=up,open=false]", "minecraft:chest[facing=east,type=left,waterlogged=false]", "minecraft:chest[facing=east,type=right,waterlogged=false]", "minecraft:gray_carpet", "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]", "minecraft:air"}, {"minecraft:air", "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air"}}, {{"minecraft:air", "minecraft:oak_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:air", "minecraft:air", "minecraft:oak_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:air", "minecraft:air"}, {"minecraft:air", "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air"}, {"minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air", "minecraft:air"}}}
-    };
+    public static final String[][][][] builds = new String[][][][]{};
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -132,6 +130,7 @@ public class InaDungeon implements CommandExecutor{
                 }
                 System.out.println(out + "}");
                 return true;
+
             //attacks
             case "groundpound":
                 if(!(sender instanceof Player)){
@@ -201,6 +200,7 @@ public class InaDungeon implements CommandExecutor{
                     Attacks.spreadFire(BlockFace.UP, world.getBlockAt(new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]))), Utility.cardinal.keySet(), new HashSet<>(), new HashSet<>(), args[3].equals("true"));
                 }catch(NumberFormatException e){return false;}
                 return true;
+
             //conduit
             case "conduit":
                 if(args.length<4)
@@ -256,6 +256,7 @@ public class InaDungeon implements CommandExecutor{
                         Conduit.rotate(torches, joints.get(torches));
                 }catch(NumberFormatException e){return false;}
                 return true;
+
             //gettingWood
             case "plant":
                 if(args.length<5)
@@ -288,6 +289,7 @@ public class InaDungeon implements CommandExecutor{
                 GettingWood.reset();
                 System.out.println("Getting Wood [OFF]");
                 return true;
+
             //maintenance
             case "maintain":
                 if(args.length<4)
@@ -302,6 +304,7 @@ public class InaDungeon implements CommandExecutor{
                 Maintenance.reset();
                 System.out.println("Maintenance [OFF]");
                 return true;
+
             //minesweeper
             case "minesweeper":
                 if(args.length < 6)
@@ -337,6 +340,7 @@ public class InaDungeon implements CommandExecutor{
                 Minesweeper.reset();
                 System.out.println("Minesweeper [OFF]");
                 return true;
+
             //payload
             case "payload":
                 if(args.length>10)
@@ -365,6 +369,7 @@ public class InaDungeon implements CommandExecutor{
                     Payload.spawn(index, world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), BlockFace.UP);
                 }catch (NumberFormatException e){ System.out.println("Invalid argument(s)"); }
                 return true;
+
             //waterfall
             case "waterfall":
                 if(args.length<4)

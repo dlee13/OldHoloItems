@@ -1,4 +1,4 @@
-package com.klin.holoItems.collections.misc.archiveCollection.items;
+package com.klin.holoItems.collections.misc.archiveCollection;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;

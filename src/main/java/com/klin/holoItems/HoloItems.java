@@ -20,8 +20,9 @@ public class HoloItems extends JavaPlugin {
         getCommand("custommodeldata").setExecutor(collections);
         getCommand("registry").setExecutor(collections);
         getCommand("worldname").setExecutor(collections);
-
         getCommand("acquire").setExecutor(collections);
+
+        getCommand("canceltasks").setExecutor(collections);
         getCommand("clearactivatables").setExecutor(collections);
         getCommand("collect").setExecutor(collections);
         getCommand("disable").setExecutor(collections);
