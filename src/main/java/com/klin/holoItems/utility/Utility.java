@@ -259,6 +259,13 @@ public class Utility {
         return list;
     }
 
+    public static String processType(String type){
+        String string = "";
+        for(String word : type.split("_"))
+            string += word.substring(0, 1)+word.substring(1).toLowerCase()+" ";
+        return string.substring(0, string.length()-1);
+    }
+
     public static ItemStack addEnchant(ItemStack itemStack, Enchant enchant){
         ItemMeta meta = itemStack.getItemMeta();
         String enchantments = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);

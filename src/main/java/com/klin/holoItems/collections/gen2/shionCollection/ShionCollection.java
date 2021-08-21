@@ -2,6 +2,7 @@ package com.klin.holoItems.collections.gen2.shionCollection;
 
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.gen2.shionCollection.items.PotionSatchel;
+import com.klin.holoItems.collections.gen2.shionCollection.items.SecretBrew;
 import com.klin.holoItems.collections.gen2.shionCollection.items.WitchsBracelet;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -24,6 +25,7 @@ public class ShionCollection extends Collection {
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(WitchsBracelet.key, new WitchsBracelet());
         collection.put(PotionSatchel.key, new PotionSatchel());
+        collection.put(SecretBrew.key, new SecretBrew());
     }
 
     public Map<String, Integer> getStat(Player player){

@@ -4,6 +4,7 @@ import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
+import com.klin.holoItems.collections.gen2.shionCollection.items.SecretBrew;
 import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.PekoNote;
@@ -59,6 +60,7 @@ public class Events implements Listener {
     private static final Set<String> ingredients = new HashSet<>() {{
         for (Character key : Collections.findCollection('0').collection.keySet())
             add("0" + key);
+        add(SecretBrew.id);
         add(DoubleUp.id);
         add(PekoNote.id);
         add(MilkBottle.id);
