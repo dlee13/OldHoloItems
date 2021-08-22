@@ -35,12 +35,12 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -606,7 +606,27 @@ public class Events implements Listener {
             if(item==null)
                 continue;
             Mixable mixable = Utility.findItem(item, Mixable.class);
-            if(mixable!=null)
+            if(mixable==null){
+                int slot = i;
+                Material material = item.getType();
+                PotionMeta meta = (PotionMeta) item.getItemMeta();
+                new BukkitRunnable() {
+                    public void run(){
+                        ItemStack item = inv.getItem(slot);
+                        if(item.getType()==Material.LINGERING_POTION && (material!=LINGERING_POTION)==(ingredient.getType()==DRAGON_BREATH)){
+                            for(PotionEffect effect : meta.getCustomEffects()){
+                                int duration = effect.getDuration()/4;
+                                int amplifier = effect.getAmplifier();
+                                PotionEffectType type = effect.getType();
+                                meta.addCustomEffect(new PotionEffect(type, duration, amplifier), true);
+                            }
+                            item.setItemMeta(meta);
+                            item.setType(LINGERING_POTION);
+                        }
+                    }
+                }.runTask(HoloItems.getInstance());
+            }
+            else
                 mixable.ability(event, item ,ingredient, inv, i);
         }
     }

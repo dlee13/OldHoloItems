@@ -3,11 +3,13 @@ package com.klin.holoItems.dungeons.inaDungeon;
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.gen1.haachamaCollection.items.RiftWalker;
+import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
 import com.klin.holoItems.utility.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,8 +19,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -35,6 +36,8 @@ public class Maintenance implements Listener {
     private static int[] cage = null;
     private static final Set<Block> decay = new HashSet<>();
     public static final Set<Player> knockBack = new HashSet<>();
+    public static Map<Player, Class> classes = null;
+    public static final Map<Player, List<BlockFace>> inputs = new HashMap<>();
 
     public static void setUp(int x1, int z1, int x2, int z2){
         Collections.disabled.add(RiftWalker.id);
@@ -48,6 +51,27 @@ public class Maintenance implements Listener {
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
+
+        List<BlockFace> input = inputs.computeIfAbsent(player, k -> new ArrayList<>());
+        BlockFace face = player.getFacing();
+        int size = input.size();
+        if(size>0) {
+            BlockFace blockFace = input.get(size - 1);
+            if (face != blockFace) {
+                for (int i = 1; i <= 3; i++) {
+                    int index = size - i;
+                    if (index < 0)
+                        break;
+                    if (blockFace == input.get(index))
+                        input.remove(index);
+                }
+                input.add(blockFace);
+            }
+        }
+        if(size>=8)
+            input.remove(0);
+        input.add(face);
+
         if(knockBack.contains(player))
             return;
         Location location = player.getLocation();
@@ -163,5 +187,6 @@ public class Maintenance implements Listener {
             block.breakNaturally();
         decay.clear();
         knockBack.clear();
+        classes = null;
     }
 }

@@ -5,8 +5,6 @@ import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
 import com.klin.holoItems.interfaces.Brewable;
 import com.klin.holoItems.interfaces.Consumable;
-import com.klin.holoItems.interfaces.Mixable;
-import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -18,14 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Starch extends Item implements Brewable, Mixable, Consumable {
+public class Starch extends Item implements Brewable, Consumable {
     public static final String name = "starch";
 
     private static final Material material = Material.SUGAR;
@@ -75,33 +72,10 @@ public class Starch extends Item implements Brewable, Mixable, Consumable {
                     else
                         continue;
                     meta.setBasePotionData(new PotionData(PotionType.UNCRAFTABLE));
-                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
                     meta.setDisplayName("§6Sake");
                     meta.setColor(Color.SILVER);
                     item.setItemMeta(meta);
                 }
-            }
-        }.runTask(HoloItems.getInstance());
-    }
-
-    public void ability(BrewEvent event, ItemStack item, ItemStack ingredient, BrewerInventory inv, int slot) {
-        PotionMeta meta = (PotionMeta) item.getItemMeta();
-        new BukkitRunnable() {
-            public void run(){
-                ItemStack item = inv.getItem(slot);
-                Material type = item.getType();
-                if(type==Material.LINGERING_POTION) {
-                    if (meta.hasCustomEffect(PotionEffectType.BLINDNESS)) {
-                        meta.removeCustomEffect(PotionEffectType.BLINDNESS);
-                        meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 1), true);
-                    }
-                    else if (meta.hasCustomEffect(PotionEffectType.CONFUSION)) {
-                        meta.removeCustomEffect(PotionEffectType.CONFUSION);
-                        meta.addCustomEffect(new PotionEffect(PotionEffectType.CONFUSION, 100, 1), true);
-                    }
-                }
-                item.setItemMeta(meta);
-                item.setType(type);
             }
         }.runTask(HoloItems.getInstance());
     }

@@ -77,6 +77,15 @@ commands:
   spreadfire:
     permission: holoItems.inaDungeon
     usage: /<command> <world> <x> <y> <z>
+  freeze:
+    permission: holoItems.inaDungeon
+    usage: /<command>
+  select:
+    permission: holoItems.inaDungeon
+    usage: /<command> <world> <x> <y> <z>
+  resetselect:
+    permission: holoItems.inaDungeon
+    usage: /<command>
   conduit:
     permission: holoItems.inaDungeon
     usage: /<command> <world> <x> <y> <z>

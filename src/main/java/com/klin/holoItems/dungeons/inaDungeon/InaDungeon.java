@@ -201,6 +201,30 @@ public class InaDungeon implements CommandExecutor{
                 }catch(NumberFormatException e){return false;}
                 return true;
 
+            //class
+            case "freeze":
+                ClassSelect.freeze();
+                return true;
+
+            case "select":
+                if(args.length<4)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                try {
+                    ClassSelect.setUp(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                }catch (NumberFormatException e){return false;}
+                System.out.println("Class Select [ON]");
+                return true;
+
+            case "resetselect":
+                ClassSelect.reset();
+                System.out.println("Class Select [OFF]");
+                return true;
+
             //conduit
             case "conduit":
                 if(args.length<4)

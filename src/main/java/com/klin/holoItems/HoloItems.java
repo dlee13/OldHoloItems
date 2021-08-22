@@ -43,6 +43,10 @@ public class HoloItems extends JavaPlugin {
         getCommand("groundpound").setExecutor(inaDungeon);
         getCommand("paintbomb").setExecutor(inaDungeon);
         getCommand("spreadfire").setExecutor(inaDungeon);
+        //classSelect
+        getCommand("freeze").setExecutor(inaDungeon);
+        getCommand("select").setExecutor(inaDungeon);
+        getCommand("resetselect").setExecutor(inaDungeon);
         //conduit
         getCommand("conduit").setExecutor(inaDungeon);
         getCommand("rotate").setExecutor(inaDungeon);

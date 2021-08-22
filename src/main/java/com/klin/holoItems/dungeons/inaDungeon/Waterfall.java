@@ -30,7 +30,7 @@ public class Waterfall implements Listener {
 
     public static void setUp(World world, int x, int y, int z){
         center = new Location(world, x, y, z);
-        pond = Utility.vacuum(center.getBlock(), Material.WATER, 12000);
+        pond = Utility.vacuum(center.getBlock(), Material.WATER, 3000, true);
         for(int i=0; i<=8; i++){
             for(int j=7; j<=16; j++){
                 for(int k=0; k<=16; k++){

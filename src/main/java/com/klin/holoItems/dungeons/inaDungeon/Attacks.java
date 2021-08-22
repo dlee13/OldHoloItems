@@ -246,4 +246,8 @@ public class Attacks {
             }
         };
     }
+
+    public static void chainShot(){
+
+    }
 }

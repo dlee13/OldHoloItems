@@ -652,7 +652,7 @@ public class Utility {
         };
     }
 
-    public static Set<Block> vacuum(Block block, Material type, int limit){
+    public static Set<Block> vacuum(Block block, Material type, int limit, boolean remove){
         Queue<Block> vacuum = new LinkedList<>();
         Set<Block> checked = new HashSet<>();
         vacuum.add(block);
@@ -663,7 +663,8 @@ public class Utility {
             Block center = vacuum.poll();
             if (center==null)
                 break;
-            center.setType(Material.AIR);
+            if(remove)
+                center.setType(Material.AIR);
             for (BlockFace face : opposites.keySet()) {
                 Block relative = center.getRelative(face);
                 if(relative.getType()==type && !checked.contains(relative)) {

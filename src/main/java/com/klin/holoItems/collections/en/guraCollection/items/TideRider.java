@@ -96,7 +96,8 @@ public class TideRider extends Item implements Interactable {
                 previous = current;
                 Location loc = player.getLocation();
                 current = world.getBlockAt(loc);
-                Vector dir = loc.getDirection().setY(0).normalize();
+                //test
+                Vector dir = loc.getDirection().setY(0.0001).normalize();
                 Block rise = world.getBlockAt(loc.clone().add(dir));
                 Block fall = world.getBlockAt(loc.add(0, -1, 0));
                 double multiplier = 1;
