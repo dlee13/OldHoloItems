@@ -5,6 +5,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.gen1.haachamaCollection.items.RiftWalker;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
 import com.klin.holoItems.utility.Task;
+import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -13,8 +14,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -174,12 +177,58 @@ public class Maintenance implements Listener {
         }
     }
 
+    @EventHandler
+    public static void input(PlayerInteractEvent event){
+        Action action = event.getAction();
+        if(action!=Action.RIGHT_CLICK_AIR && action!=Action.RIGHT_CLICK_BLOCK)
+            return;
+        Player player = event.getPlayer();
+        classes.get(player).ability(input(inputs.get(player)), event.getItem());
+    }
+
+    public static int input(List<BlockFace> inputs){
+        int size = inputs.size();
+        if(size<4)
+            return -1;
+        //test
+        for(int i=size-4; i<=size-1; i++)
+            System.out.println(inputs.get(i));
+        //
+        BlockFace prev;
+        BlockFace curr = inputs.get(size-4);
+        boolean leftFullCircle = true;
+        for(int i=size-3; i<=size-1; i++){
+            prev = curr;
+            curr = inputs.get(i);
+            if(Utility.left.get(prev)!=curr) {
+                leftFullCircle = false;
+                break;
+            }
+        }
+        if(leftFullCircle)
+            return 0;
+        curr = inputs.get(size-4);
+        boolean rightFullCircle = true;
+        for(int i=size-3; i<=size-1; i++){
+            prev = curr;
+            curr = inputs.get(i);
+            if(Utility.opposites.get(Utility.left.get(prev))!=curr) {
+                rightFullCircle = false;
+                break;
+            }
+        }
+        if(rightFullCircle)
+            return 0;
+        return -1;
+    }
+
     public static void reset(){
         Collections.disabled.remove(RiftWalker.id);
         if(instance!=null) {
             PlayerMoveEvent.getHandlerList().unregister(instance);
             BlockPlaceEvent.getHandlerList().unregister(instance);
             BlockBreakEvent.getHandlerList().unregister(instance);
+            PlayerInteractEvent.getHandlerList().unregister(instance);
             instance = null;
         }
         cage = null;

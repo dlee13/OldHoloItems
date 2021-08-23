@@ -21,6 +21,9 @@ commands:
     permission: holoItems.player
     usage: /<command> <id>
 
+  accelerate:
+    permission: holoItems.op
+    usage: /<command> <x> <y> <z>
   canceltasks:
     permission: holoItems.op
     usage: /<command>
@@ -107,6 +110,9 @@ commands:
   resetminesweeper:
     permission: holoItems.inaDungeon
     usage: /<command>
+  class:
+    permission: holoItems.inaDungeon
+    usage: /<command> <class>
   maintain:
     permission: holoItems.inaDungeon
     usage: /<command> <x1> <z1> <x2> <z2>

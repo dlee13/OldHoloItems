@@ -50,8 +50,10 @@ public class ClassSelect implements Listener {
         if(!(entity instanceof Player))
             return;
         Player player = (Player) entity;
-        Vector select = player.getLocation().subtract(center).toVector().setY(0).normalize();
-        if(ina && center.toVector().distance(select)<3)
+        Location loc = player.getLocation();
+        Vector select = loc.subtract(center).toVector().setY(0).normalize();
+        loc.setY(0);
+        if(ina && center.distance(loc)<3)
             classes.put(player, new Ina(player));
         else {
             double side = select.getX();

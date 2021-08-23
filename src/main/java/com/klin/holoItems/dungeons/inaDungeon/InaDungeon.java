@@ -2,6 +2,8 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.misc.franCollection.items.DyeConcentrate;
+import com.klin.holoItems.dungeons.inaDungeon.classes.*;
+import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -315,6 +317,38 @@ public class InaDungeon implements CommandExecutor{
                 return true;
 
             //maintenance
+            case "class":
+                if(!(sender instanceof Player)){
+                    System.out.println("Player only command");
+                    return true;
+                }
+                if(args.length<1)
+                    return false;
+                player = (Player) sender;
+                Class member;
+                switch (args[0].toLowerCase()){
+                    case "calli":
+                        member = new Calli(player); break;
+                    case "enma":
+                        member = new Enma(player); break;
+                    case "gura":
+                        member = new Gura(player); break;
+                    case "ina":
+                        member = new Ina(player); break;
+                    case "irys":
+                        member = new Irys(player); break;
+                    case "kiara":
+                        member = new Kiara(player); break;
+                    case "watson":
+                        member = new Watson(player); break;
+                    default:
+                        return false;
+                }
+                if(Maintenance.classes==null)
+                    Maintenance.classes = new HashMap<>();
+                Maintenance.classes.put(player, member);
+                return true;
+
             case "maintain":
                 if(args.length<4)
                     return false;

@@ -1,5 +1,6 @@
 package com.klin.holoItems;
 
+import com.klin.holoItems.collections.dungeons.inaDungeon.InaDungeon;
 import com.klin.holoItems.collections.en.calliCollection.CalliCollection;
 import com.klin.holoItems.collections.en.guraCollection.GuraCollection;
 import com.klin.holoItems.collections.en.inaCollection.InaCollection;
@@ -81,6 +82,7 @@ import org.bukkit.map.MapView;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 
@@ -165,6 +167,8 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(KlinCollection.key, new KlinCollection());
         collections.put(OpCollection.key, new OpCollection());
         collections.put(UtilityCollection.key, new UtilityCollection());
+
+        collections.put(InaDungeon.key, new InaDungeon());
 
         registry = "§6HoloItems"+"\n";
         for(Collection collection : collections.values()){
@@ -267,6 +271,14 @@ public class Collections implements CommandExecutor, Listener {
         if(!player.isOp())
             return true;
         switch(command){
+            case "accelerate":
+                if(args.length<3)
+                    return false;
+                try {
+                    player.setVelocity(new Vector(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2])));
+                }catch (NumberFormatException e){return false;}
+                return true;
+
             case "canceltasks":
                 BukkitScheduler scheduler = Bukkit.getScheduler();
                 for(Integer taskId : taskIds)

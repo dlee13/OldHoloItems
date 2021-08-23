@@ -22,6 +22,7 @@ public class HoloItems extends JavaPlugin {
         getCommand("worldname").setExecutor(collections);
         getCommand("acquire").setExecutor(collections);
 
+        getCommand("accelerate").setExecutor(collections);
         getCommand("canceltasks").setExecutor(collections);
         getCommand("clearactivatables").setExecutor(collections);
         getCommand("collect").setExecutor(collections);
@@ -58,6 +59,7 @@ public class HoloItems extends JavaPlugin {
         getCommand("minesweeper").setExecutor(inaDungeon);
         getCommand("resetminesweeper").setExecutor(inaDungeon);
         //maintenance
+        getCommand("class").setExecutor(inaDungeon);
         getCommand("maintain").setExecutor(inaDungeon);
         getCommand("resetmaintenance").setExecutor(inaDungeon);
         //payload
