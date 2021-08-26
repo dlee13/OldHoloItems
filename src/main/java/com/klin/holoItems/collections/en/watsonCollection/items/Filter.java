@@ -65,9 +65,9 @@ public class Filter extends Wiring {
             if(place.getType()!=Material.WATER_CAULDRON)
                 return;
             Levelled cauldron = (Levelled) place.getBlockData();
-            if(cauldron.getLevel()==1)
+            if(cauldron.getLevel()==1) {
                 place.setType(Material.CAULDRON);
-            else {
+            } else {
                 cauldron.setLevel(cauldron.getLevel()-1);
                 place.setBlockData(cauldron);
             }
