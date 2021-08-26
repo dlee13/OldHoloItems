@@ -78,7 +78,8 @@ public class TideRider extends Item implements Interactable {
             Block current = block;
             Block previous;
             public void run(){
-                if(increment>=1200 || !player.isValid() || !player.isHandRaised() || InaDungeon.maintenance.knockBack.contains(player)){
+                if(increment>=1200 || !player.isValid() || !player.isHandRaised() ||
+                        InaDungeon.maintenance!=null && InaDungeon.maintenance.knockBack.contains(player)){
                     player.sendBlockChange(current.getLocation(), data.remove(current));
                     meta.removeEnchant(Enchantment.RIPTIDE);
                     meta.addEnchant(Enchantment.LOYALTY, 3, false);
