@@ -193,7 +193,10 @@ public class GettingWood implements Listener {
             }
             Block leaf = leave.get();
             layer.remove(leaf);
-            BlockData data = Bukkit.createBlockData(ignite.get(leaf.getType()));
+            Material type = ignite.get(leaf.getType());
+            if(type==null)
+                continue;
+            BlockData data = Bukkit.createBlockData(type);
             leaf.setType(Material.AIR);
             Location loc = leaf.getLocation().add(0.5, 0, 0.5);
             world.spawnFallingBlock(loc, fire);
