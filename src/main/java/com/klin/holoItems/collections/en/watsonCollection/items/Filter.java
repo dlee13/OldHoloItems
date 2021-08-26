@@ -1,34 +1,30 @@
 package com.klin.holoItems.collections.en.watsonCollection.items;
 
-import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import com.klin.holoItems.utility.Utility;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.type.Dispenser;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.material.Colorable;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Filter extends Wiring {
     public static final String name = "filter";
-    private static final Set<Material> dirt = Stream.of(Material.DIRT, Material.COARSE_DIRT, Material.GRASS_BLOCK, Material.PODZOL, Material.MYCELIUM).collect(Collectors.toCollection(HashSet::new));
-    private static final Set<Material> dyes = Stream.of(Material.BLACK_DYE, Material.BLUE_DYE, Material.BROWN_DYE, Material.CYAN_DYE, Material.GRAY_DYE, Material.GREEN_DYE, Material.LIGHT_BLUE_DYE, Material.LIGHT_GRAY_DYE, Material.LIME_DYE, Material.MAGENTA_DYE, Material.ORANGE_DYE, Material.PINK_DYE, Material.PURPLE_DYE, Material.RED_DYE, Material.WHITE_DYE, Material.YELLOW_DYE).collect(Collectors.toCollection(HashSet::new));
-    private static final ItemStack clay = new ItemStack(Material.CLAY_BALL);
+    private final Set<Material> dirt;
+    private final Set<Material> dyes;
 
     private static final Material material = Material.IRON_BARS;
     private static final String lore =
@@ -43,6 +39,8 @@ public class Filter extends Wiring {
 
     public Filter(){
         super(name, material, lore, shiny, cost, id, key);
+        dirt = Utility.fertile;
+        dyes = Set.of(Material.BLACK_DYE, Material.BLUE_DYE, Material.BROWN_DYE, Material.CYAN_DYE, Material.GRAY_DYE, Material.GREEN_DYE, Material.LIGHT_BLUE_DYE, Material.LIGHT_GRAY_DYE, Material.LIME_DYE, Material.MAGENTA_DYE, Material.ORANGE_DYE, Material.PINK_DYE, Material.PURPLE_DYE, Material.RED_DYE, Material.WHITE_DYE, Material.YELLOW_DYE);
     }
 
     public void registerRecipes(){
@@ -64,14 +62,17 @@ public class Filter extends Wiring {
             Block block = event.getBlock();
             BlockFace face = ((Dispenser) block.getBlockData()).getFacing();
             Block place = block.getRelative(face);
-            if(place.getType()!=Material.CAULDRON)
+            if(place.getType()!=Material.WATER_CAULDRON)
                 return;
             Levelled cauldron = (Levelled) place.getBlockData();
-            if(cauldron.getLevel()==0)
-                return;
-            cauldron.setLevel(cauldron.getLevel()-1);
-            place.setBlockData(cauldron);
+            if(cauldron.getLevel()==1)
+                place.setType(Material.CAULDRON);
+            else {
+                cauldron.setLevel(cauldron.getLevel()-1);
+                place.setBlockData(cauldron);
+            }
 
+            ItemStack clay = new ItemStack(Material.CLAY_BALL);
             new BukkitRunnable(){
                 public void run(){
                     Inventory inv = ((InventoryHolder) block.getState()).getInventory();

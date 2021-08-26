@@ -2,8 +2,8 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.misc.franCollection.items.DyeConcentrate;
-import com.klin.holoItems.dungeons.inaDungeon.classes.*;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
+import com.klin.holoItems.dungeons.inaDungeon.classes.*;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -19,12 +19,31 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
 public class InaDungeon implements CommandExecutor{
-    public static final String[][][][] builds = new String[][][][]{};
+    public static ClassSelect classSelect;
+    public static Conduit conduit;
+    public static GettingWood gettingWood;
+    public static Maintenance maintenance;
+    public static Minesweeper minesweeper;
+    public static Passives passives;
+    public static Payload payload;
+    public static Waterfall waterfall;
+
+    public InaDungeon(){
+        classSelect = null;
+        conduit = null;
+        gettingWood = null;
+        maintenance = null;
+        minesweeper = null;
+        passives = null;
+        payload = null;
+        waterfall = null;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -64,17 +83,6 @@ public class InaDungeon implements CommandExecutor{
             case "build":
                 if (args.length < 5)
                     return false;
-                int index;
-                try {
-                    index = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid index");
-                    return true;
-                }
-                if (index < 0 || index >= builds.length) {
-                    System.out.println("Out of bounds index");
-                    return true;
-                }
                 World world = Bukkit.getWorld(args[1]);
                 if(world==null) {
                     System.out.println("Invalid world name");
@@ -83,15 +91,12 @@ public class InaDungeon implements CommandExecutor{
                 Location loc;
                 try {
                     loc = new Location(world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
-                }catch(NumberFormatException e){
-                    System.out.println("Invalid coordinates");
-                    return true;
-                }
-                build(index, world, loc);
+                }catch(NumberFormatException e){ return false; }
+                build(args[0], loc, null);
                 return true;
 
             case "tostring":
-                if (args.length < 7)
+                if (args.length < 8)
                     return false;
                 world = Bukkit.getWorld(args[0]);
                 if(world==null){
@@ -106,31 +111,34 @@ public class InaDungeon implements CommandExecutor{
                     System.out.println("Invalid coordinate(s)");
                     return true;
                 }
-                String out = "{";
                 int x1 = Math.min(arguments[0], arguments[3]);
                 int x2 = Math.max(arguments[0], arguments[3]);
                 int y1 = Math.min(arguments[1], arguments[4]);
                 int y2 = Math.max(arguments[1], arguments[4]);
                 int z1 = Math.min(arguments[2], arguments[5]);
                 int z2 = Math.max(arguments[2], arguments[5]);
+                String wall = "";
                 for (int i = x1; i <= x2; i++) {
-                    out += "{";
+                    String fence = "";
                     for (int j = y1; j <= y2; j++) {
-                        out += "{";
-                        for (int k = z1; k <= z2; k++) {
-                            out += "\"" + world.getBlockAt(i, j, k).getBlockData().getAsString() + "\"";
-                            if (k < z2)
-                                out += ", ";
-                        }
-                        out += "}";
-                        if (j < y2)
-                            out += ", ";
+                        String tile = "";
+                        for (int k = z1; k <= z2; k++)
+                            tile += " " + world.getBlockAt(i, j, k).getBlockData().getAsString();
+                        fence += "," + tile;
                     }
-                    out += "}";
-                    if (i < x2)
-                        out += ", ";
+                    wall += "\n" + fence.substring(2);
                 }
-                System.out.println(out + "}");
+                try {
+                    File file = new File(HoloItems.getInstance().getDataFolder(), args[7]+".txt");
+                    if (file.createNewFile()) {
+                        FileWriter writer = new FileWriter(file);
+                        writer.write(wall.substring(1));
+                        writer.close();
+                        System.out.println("File created: " + args[7]);
+                    } else {
+                        System.out.println("File already exists");
+                    }
+                } catch (IOException e) { e.printStackTrace(); }
                 return true;
 
             //attacks
@@ -205,7 +213,8 @@ public class InaDungeon implements CommandExecutor{
 
             //class
             case "freeze":
-                ClassSelect.freeze();
+                if(classSelect!=null)
+                    classSelect.freeze();
                 return true;
 
             case "select":
@@ -217,14 +226,19 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    ClassSelect.setUp(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    classSelect = new ClassSelect(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                 }catch (NumberFormatException e){return false;}
                 System.out.println("Class Select [ON]");
                 return true;
 
             case "resetselect":
-                ClassSelect.reset();
-                System.out.println("Class Select [OFF]");
+                if(classSelect!=null) {
+                    classSelect.reset();
+                    classSelect = null;
+                    System.out.println("Class Select [OFF]");
+                }
+                else
+                    System.out.println("Class Select already OFF");
                 return true;
 
             //conduit
@@ -237,19 +251,25 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    Conduit.setUp(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    conduit = new Conduit(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                 }catch (NumberFormatException e){return false;}
                 System.out.println("Conduit [ON]");
                 return true;
 
             case "resetconduit":
-                Conduit.water.setType(Material.AIR);
-                Conduit.reset();
-                System.out.println("Conduit [OFF]");
+                if(conduit!=null) {
+                    conduit.water.setType(Material.AIR);
+                    conduit.reset();
+                    conduit = null;
+                    System.out.println("Conduit [OFF]");
+                }
+                else
+                    System.out.println("Conduit already OFF");
                 return true;
 
-            case "rotate":
-                if(args.length<6)
+            //gettingWood
+            case "plant":
+                if(args.length<4)
                     return false;
                 world = Bukkit.getWorld(args[0]);
                 if(world==null){
@@ -257,63 +277,19 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    int x = Integer.parseInt(args[2]);
-                    x1 = Integer.parseInt(args[1]);
-                    if(x1>x) {
-                        x2 = x1;
-                        x1 = x;
-                    }
-                    else
-                        x2 = x;
-                    int z = Integer.parseInt(args[4]);
-                    z1 = Integer.parseInt(args[3]);
-                    if(z1>z) {
-                        z2 = z1;
-                        z1 = z;
-                    }
-                    else
-                        z2 = z;
-                    Map<Block[], BlockFace> joints = Conduit.joint(world, x1, x2, z1, z2, Integer.parseInt(args[5]), null);
-                    if(joints==null){
-                        System.out.println("Invalid torch arrangement");
-                        return true;
-                    }
-                    for(Block[] torches : joints.keySet())
-                        Conduit.rotate(torches, joints.get(torches));
-                }catch(NumberFormatException e){return false;}
+                    gettingWood = new GettingWood(new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));
+                }catch (NumberFormatException e){return false;}
+                System.out.println("Getting Wood [ON]");
                 return true;
 
-            //gettingWood
-            case "plant":
-                if(args.length<5)
-                    return false;
-                try {
-                    index = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid index");
-                    return true;
+            case "resetgettingwood":
+                if(gettingWood!=null){
+                    gettingWood.reset();
+                    gettingWood = null;
+                    System.out.println("Getting Wood [OFF]");
                 }
-                if (index < 0 || index >= builds.length) {
-                    System.out.println("Out of bounds index");
-                    return true;
-                }
-                world = Bukkit.getWorld(args[1]);
-                if(world==null) {
-                    System.out.println("Invalid world name");
-                    return true;
-                }
-                try {
-                    loc = new Location(world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
-                }catch(NumberFormatException e){
-                    System.out.println("Invalid coordinates");
-                    return true;
-                }
-                GettingWood.plant(index, world, loc);
-                return true;
-
-            case "resetGettingWood":
-                GettingWood.reset();
-                System.out.println("Getting Wood [OFF]");
+                else
+                    System.out.println("Getting Wood already OFF");
                 return true;
 
             //maintenance
@@ -344,23 +320,28 @@ public class InaDungeon implements CommandExecutor{
                     default:
                         return false;
                 }
-                if(Maintenance.classes==null)
-                    Maintenance.classes = new HashMap<>();
-                Maintenance.classes.put(player, member);
+                if(maintenance.classes==null)
+                    maintenance.classes = new HashMap<>();
+                maintenance.classes.put(player, member);
                 return true;
 
             case "maintain":
                 if(args.length<4)
                     return false;
                 try {
-                    Maintenance.setUp(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    maintenance = new Maintenance(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                 }catch (NumberFormatException e){return false;}
                 System.out.println("Maintenance [ON]");
                 return true;
 
             case "resetmaintenance":
-                Maintenance.reset();
-                System.out.println("Maintenance [OFF]");
+                if(maintenance!=null) {
+                    maintenance.reset();
+                    maintenance = null;
+                    System.out.println("Maintenance [OFF]");
+                }
+                else
+                    System.out.println("Maintenance already OFF");
                 return true;
 
             //minesweeper
@@ -389,14 +370,19 @@ public class InaDungeon implements CommandExecutor{
                     }
                     else
                         z2 = z;
-                    Minesweeper.setUp(world, x1, x2, z1, z2, Integer.parseInt(args[5]));
+                    minesweeper = new Minesweeper(world, x1, x2, z1, z2, Integer.parseInt(args[5]));
                     System.out.println("Minesweeper [ON]");
                 }catch (NumberFormatException e){System.out.println("Invalid coordinates");}
                 return  true;
 
             case "resetMinesweeper":
-                Minesweeper.reset();
-                System.out.println("Minesweeper [OFF]");
+                if(minesweeper!=null) {
+                    minesweeper.reset();
+                    minesweeper = null;
+                    System.out.println("Minesweeper [OFF]");
+                }
+                else
+                    System.out.println("Minesweeper already OFF");
                 return true;
 
             //payload
@@ -408,24 +394,15 @@ public class InaDungeon implements CommandExecutor{
             case "spawn":
                 if(args.length < 5)
                     return false;
-                try {
-                    index = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid index");
-                    return true;
-                }
-                if (index < 0 || index >= builds.length) {
-                    System.out.println("Out of bounds index");
-                    return true;
-                }
                 world = Bukkit.getWorld(args[1]);
                 if(world==null){
                     System.out.println("Invalid world name");
                     return true;
                 }
                 try {
-                    Payload.spawn(index, world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), BlockFace.UP);
-                }catch (NumberFormatException e){ System.out.println("Invalid argument(s)"); }
+                    loc = new Location(world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+                }catch(NumberFormatException e){ return false; }
+                Payload.spawn(args[0], world, loc, BlockFace.UP);
                 return true;
 
             //waterfall
@@ -438,30 +415,52 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    Waterfall.setUp(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    waterfall = new Waterfall(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                 }catch (NumberFormatException e){return false;}
                 System.out.println("Waterfall [ON]");
                 return true;
 
             case "resetwaterfall":
-                Waterfall.reset();
-                System.out.println("Waterfall [OFF]");
+                if(waterfall!=null) {
+                    waterfall.reset();
+                    waterfall = null;
+                    System.out.println("Waterfall [OFF]");
+                }
+                else
+                    System.out.println("Waterfall already OFF");
                 return true;
         }
         return true;
     }
 
-    public static Map<Block, BlockData> build(int index, World world, Location loc){
-        Map<Block, BlockData> blocks = new HashMap<>();
-        for (int i = 0; i < builds[index].length; i++) {
-            for (int j = 0; j < builds[index][i].length; j++) {
-                for (int k = 0; k < builds[index][i][j].length; k++) {
-                    Block block = world.getBlockAt(loc.clone().add(i, j, k));
-                    blocks.put(block, block.getBlockData());
-                    block.setBlockData(Bukkit.createBlockData(builds[index][i][j][k]));
+    public static Map<Location, BlockData> build(String fileName, Location loc, Map<Location, BlockData> build){
+        File file = new File(HoloItems.getInstance().getDataFolder(), fileName+".txt");
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String wall;
+            World world = loc.getWorld();
+            int increment = 0;
+            if(build==null)
+                build = new HashMap<>();
+            while ((wall = reader.readLine()) != null) {
+                String[] fence = wall.split(", ");
+                for (int i = 0; i < fence.length; i++) {
+                    String[] tile = fence[i].split(" ");
+                    for (int j = 0; j < tile.length; j++) {
+                        BlockData data = Bukkit.createBlockData(tile[j]);
+                        if(data.getMaterial().isAir())
+                            continue;
+                        Block block = world.getBlockAt(loc.clone().add(increment, i, j));
+                        build.putIfAbsent(block.getLocation(), block.getBlockData());
+                        block.setBlockData(data);
+                    }
                 }
+                increment++;
             }
+            return build;
+        } catch (IOException e) {
+            System.out.println("Invalid file");
+            return null;
         }
-        return blocks;
     }
 }

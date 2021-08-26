@@ -94,7 +94,7 @@ public class Collections implements CommandExecutor, Listener {
     private static ItemStack back;
     public static Set<String> disabled = new HashSet<>();
 
-    Collections(){
+    public Collections(){
         collections.put(IngredientCollection.key, new IngredientCollection());
 
         collections.put(SuiseiCollection.key, new SuiseiCollection());
@@ -218,6 +218,11 @@ public class Collections implements CommandExecutor, Listener {
                     inv.addItem(item);
                 }
                 player.openInventory(inv);
+                return true;
+
+            case "coordinates":
+                Location loc = player.getLocation();
+                player.sendMessage(loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ());
                 return true;
 
             case "custommodeldata":

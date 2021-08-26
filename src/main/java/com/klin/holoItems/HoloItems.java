@@ -1,5 +1,6 @@
 package com.klin.holoItems;
 
+import com.klin.holoItems.dungeons.Dungeons;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,6 +18,7 @@ public class HoloItems extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new StatManager(), this);
 
         getCommand("collections").setExecutor(collections);
+        getCommand("coordinates").setExecutor(collections);
         getCommand("custommodeldata").setExecutor(collections);
         getCommand("registry").setExecutor(collections);
         getCommand("worldname").setExecutor(collections);
@@ -37,37 +39,8 @@ public class HoloItems extends JavaPlugin {
         getCommand("settype").setExecutor(collections);
         getCommand("test").setExecutor(collections);
 
-        InaDungeon inaDungeon = new InaDungeon();
-        getCommand("build").setExecutor(inaDungeon);
-        getCommand("tostring").setExecutor(inaDungeon);
-        //attack
-        getCommand("groundpound").setExecutor(inaDungeon);
-        getCommand("paintbomb").setExecutor(inaDungeon);
-        getCommand("spreadfire").setExecutor(inaDungeon);
-        //classSelect
-        getCommand("freeze").setExecutor(inaDungeon);
-        getCommand("select").setExecutor(inaDungeon);
-        getCommand("resetselect").setExecutor(inaDungeon);
-        //conduit
-        getCommand("conduit").setExecutor(inaDungeon);
-        getCommand("rotate").setExecutor(inaDungeon);
-        getCommand("resetconduit").setExecutor(inaDungeon);
-        //gettingWood
-        getCommand("plant").setExecutor(inaDungeon);
-        getCommand("resetgettingwood").setExecutor(inaDungeon);
-        //minesweeper
-        getCommand("minesweeper").setExecutor(inaDungeon);
-        getCommand("resetminesweeper").setExecutor(inaDungeon);
-        //maintenance
-        getCommand("class").setExecutor(inaDungeon);
-        getCommand("maintain").setExecutor(inaDungeon);
-        getCommand("resetmaintenance").setExecutor(inaDungeon);
-        //payload
-        getCommand("payload").setExecutor(inaDungeon);
-        getCommand("spawn").setExecutor(inaDungeon);
-        //waterfall
-        getCommand("waterfall").setExecutor(inaDungeon);
-        getCommand("resetwaterfall").setExecutor(inaDungeon);
+        Dungeons dungeons = new Dungeons();
+        getCommand("inadungeon").setExecutor(dungeons);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "HoloItems [ON]");
     }

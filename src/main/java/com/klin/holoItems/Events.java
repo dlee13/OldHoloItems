@@ -11,16 +11,14 @@ import com.klin.holoItems.collections.gen3.pekoraCollection.items.PekoNote;
 import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
+import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.opCollection.items.GalleryFrame;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
 import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
@@ -58,8 +56,11 @@ public class Events implements Listener {
     );
     private static final Set<Material> deactive = Set.of(Material.JUKEBOX, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
     private static final Set<String> ingredients = new HashSet<>() {{
-        for (Character key : Collections.findCollection('0').collection.keySet())
-            add("0" + key);
+        add("!2");
+        add("!3");
+        char key = IngredientCollection.key;
+        for (char set : Collections.findCollection(key).collection.keySet())
+            add(""+key+set);
         add(SecretBrew.id);
         add(DoubleUp.id);
         add(PekoNote.id);
@@ -402,8 +403,15 @@ public class Events implements Listener {
                 String id = item.getItemMeta().getPersistentDataContainer().
                         get(Utility.key, PersistentDataType.STRING);
                 if(id!=null) {
-                    if(ingredients.contains(id))
+                    if(ingredients.contains(id)) {
+                        ItemStack result = event.getRecipe().getResult();
+                        ItemMeta meta = result.getItemMeta();
+                        if(meta==null || meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)==null){
+                            event.setCancelled(true);
+                            return;
+                        }
                         continue;
+                    }
                     event.setCancelled(true);
                     return;
                 }
@@ -414,8 +422,7 @@ public class Events implements Listener {
         if (curr == null || curr.getItemMeta() == null)
             return;
         ItemMeta currMeta = curr.getItemMeta();
-        String id = currMeta.
-                getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        String id = currMeta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if (id == null)
             return;
         Collection collection = Collections.findCollection(id.charAt(0));
@@ -1125,16 +1132,48 @@ public class Events implements Listener {
         ItemStack item = event.getItemInHand();
         if(item.getItemMeta()==null)
             return;
-        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id!=null) {
-            event.setCancelled(true);
-            if (Collections.disabled.contains(id))
-                event.getPlayer().sendMessage("§cThis item has been disabled");
-            else {
-                Item generic = Collections.findItem(id);
-                if (generic instanceof Placeable)
-                    ((Placeable) generic).ability(event);
+        ItemMeta meta = item.getItemMeta();
+        String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        if(id==null) {
+            Block block = event.getBlock();
+            Material type = block.getType();
+            if(!meta.hasDisplayName() || !Utility.fences.contains(block.getType()) && type!=IRON_TRAPDOOR)
+                return;
+            String data = block.getBlockData().getAsString();
+            for(String modifier : meta.getDisplayName().split(" ")){
+                int set = modifier.indexOf("=");
+                if(0>set){
+                    event.getPlayer().sendMessage("§7Invalid arguments: §f"+data.substring(
+                            data.indexOf("[")+1, data.length()-1).replaceAll(",", " "));
+                    return;
+                }
+                int index = data.indexOf(modifier.substring(0, set));
+                if(index>-1){
+                    String half = data.substring(index);
+                    int space = half.indexOf(",");
+                    data = data.substring(0, index)+modifier+(space>-1?half.substring(space):"]");
+                }
+                else{
+                    event.getPlayer().sendMessage("§7Invalid arguments: §f"+data.substring(
+                            data.indexOf("[")+1, data.length()-1).replaceAll(",", " "));
+                    return;
+                }
             }
+            try {
+                block.setBlockData(Bukkit.createBlockData(data));
+            } catch (IllegalArgumentException ignore) {
+                event.getPlayer().sendMessage("§7Invalid arguments: §f"+data.substring(
+                        data.indexOf("[")+1, data.length()-1).replaceAll(",", " "));
+            }
+            return;
+        }
+        event.setCancelled(true);
+        if (Collections.disabled.contains(id))
+            event.getPlayer().sendMessage("§cThis item has been disabled");
+        else {
+            Item generic = Collections.findItem(id);
+            if (generic instanceof Placeable)
+                ((Placeable) generic).ability(event);
         }
     }
 

@@ -92,7 +92,8 @@ public class Utility {
     public static final Set<Material> hoes = Set.of(DIAMOND_HOE, GOLDEN_HOE, IRON_HOE, STONE_HOE, NETHERITE_HOE, WOODEN_HOE);
     public static final Set<Material> pickaxes = Set.of(DIAMOND_PICKAXE, GOLDEN_PICKAXE, IRON_PICKAXE, STONE_PICKAXE, NETHERITE_PICKAXE, WOODEN_PICKAXE);
     public static final Set<Material> shovels = Set.of(DIAMOND_SHOVEL, GOLDEN_SHOVEL, IRON_SHOVEL, STONE_SHOVEL, NETHERITE_SHOVEL, WOODEN_SHOVEL);
-    private static final Set<Material> fertile = Set.of(GRASS_BLOCK, DIRT, COARSE_DIRT, PODZOL, FARMLAND, MYCELIUM);
+    public static final Set<Material> swords = Set.of(DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, STONE_SWORD, NETHERITE_SWORD, WOODEN_SWORD);
+    public static final Set<Material> fertile = Set.of(GRASS_BLOCK, DIRT, COARSE_DIRT, PODZOL, FARMLAND, MYCELIUM, ROOTED_DIRT);
     public static final Map<String, Set<Material>> dirt = new HashMap<>() {{
         put("SAPLING", fertile);
         put("FUNGUS", new HashSet<>() {{

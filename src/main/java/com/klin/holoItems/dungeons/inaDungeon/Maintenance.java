@@ -1,8 +1,6 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
-import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.gen1.haachamaCollection.items.RiftWalker;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
@@ -13,8 +11,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,30 +25,32 @@ import java.util.*;
 import static org.bukkit.Bukkit.getServer;
 
 public class Maintenance implements Listener {
-    private static Maintenance instance;
-    private static final Material[][] seal = new Material[][]{
-            {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
-            {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
-            {Material.WHITE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.WHITE_STAINED_GLASS},
-            {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
-            {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS}
-    };
+    private final Material[][] seal;
     //maintain -41 -292 -27 -267
-    private static int[] cage = null;
-    private static final Set<Block> decay = new HashSet<>();
-    public static final Set<Player> knockBack = new HashSet<>();
-    public static Map<Player, Class> classes = null;
-    public static final Map<Player, List<BlockFace>> inputs = new HashMap<>();
+    private final int[] cage;
+    private final Set<Block> decay;
+    public final Set<Player> knockBack;
+    public Map<Player, Class> classes;
+    public final Map<Player, List<BlockFace>> inputs;
 
-    public static void setUp(int x1, int z1, int x2, int z2){
-        Collections.disabled.add(RiftWalker.id);
+    public Maintenance(int x1, int z1, int x2, int z2){
+        seal = new Material[][]{
+                {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
+                {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
+                {Material.WHITE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.WHITE_STAINED_GLASS},
+                {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
+                {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS}
+        };
         cage = new int[]{x1, z1, x2, z2};
-        instance = new Maintenance();
-        getServer().getPluginManager().registerEvents(instance, HoloItems.getInstance());
+        decay = new HashSet<>();
+        knockBack = new HashSet<>();
+        classes = null;
+        inputs = new HashMap<>();
+        getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
 
     @EventHandler
-    public static void cage(PlayerMoveEvent event){
+    public void cage(PlayerMoveEvent event){
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
@@ -146,13 +146,23 @@ public class Maintenance implements Listener {
         }.runTaskLater(HoloItems.getInstance(), 8);
     }
 
-    @EventHandler
-    public static void track(BlockPlaceEvent event){
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void track(BlockPlaceEvent event){
         if(!event.isCancelled())
             decay(event.getBlock(), 80);
     }
 
-    private static void decay(Block block, int duration){
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void prevent(BlockBreakEvent event){
+        if(!event.isCancelled()) {
+            if(decay.remove(event.getBlock()))
+                event.setDropItems(false);
+            else
+                event.setCancelled(true);
+        }
+    }
+
+    private void decay(Block block, int duration){
         decay.add(block);
         new Task(HoloItems.getInstance(), 2, 1){
             int increment = 0;
@@ -168,32 +178,16 @@ public class Maintenance implements Listener {
     }
 
     @EventHandler
-    public static void prevent(BlockBreakEvent event){
-        if(!event.isCancelled()) {
-            if(decay.remove(event.getBlock()))
-                event.setDropItems(false);
-            else
-                event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public static void input(PlayerInteractEvent event){
-        Action action = event.getAction();
-        if(action!=Action.RIGHT_CLICK_AIR && action!=Action.RIGHT_CLICK_BLOCK)
-            return;
+    public void input(PlayerInteractEvent event){
         Player player = event.getPlayer();
-        classes.get(player).ability(input(inputs.get(player)), event.getItem());
+        if(input(inputs.get(player)))
+            classes.get(player).ability(event.getItem(), event.getAction());
     }
 
-    public static int input(List<BlockFace> inputs){
+    public boolean input(List<BlockFace> inputs){
         int size = inputs.size();
         if(size<4)
-            return -1;
-        //test
-        for(int i=size-4; i<=size-1; i++)
-            System.out.println(inputs.get(i));
-        //
+            return false;
         BlockFace prev;
         BlockFace curr = inputs.get(size-4);
         boolean leftFullCircle = true;
@@ -206,7 +200,7 @@ public class Maintenance implements Listener {
             }
         }
         if(leftFullCircle)
-            return 0;
+            return true;
         curr = inputs.get(size-4);
         boolean rightFullCircle = true;
         for(int i=size-3; i<=size-1; i++){
@@ -217,25 +211,15 @@ public class Maintenance implements Listener {
                 break;
             }
         }
-        if(rightFullCircle)
-            return 0;
-        return -1;
+        return rightFullCircle;
     }
 
-    public static void reset(){
-        Collections.disabled.remove(RiftWalker.id);
-        if(instance!=null) {
-            PlayerMoveEvent.getHandlerList().unregister(instance);
-            BlockPlaceEvent.getHandlerList().unregister(instance);
-            BlockBreakEvent.getHandlerList().unregister(instance);
-            PlayerInteractEvent.getHandlerList().unregister(instance);
-            instance = null;
-        }
-        cage = null;
+    public void reset(){
+        PlayerMoveEvent.getHandlerList().unregister(this);
+        BlockPlaceEvent.getHandlerList().unregister(this);
+        BlockBreakEvent.getHandlerList().unregister(this);
+        PlayerInteractEvent.getHandlerList().unregister(this);
         for(Block block : decay)
             block.breakNaturally();
-        decay.clear();
-        knockBack.clear();
-        classes = null;
     }
 }

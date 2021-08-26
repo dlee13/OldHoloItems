@@ -4,12 +4,14 @@ import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.BatteryPack;
 import com.klin.holoItems.collections.gen1.haachamaCollection.HaachamaCollection;
+import com.klin.holoItems.collections.misc.ingredientCollection.items.EmeraldLeaf;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,6 +21,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
 public class RiftWalker extends BatteryPack {
     public static final String name = "riftWalker";
@@ -50,7 +53,7 @@ public class RiftWalker extends BatteryPack {
         recipe0.shape(" * ","/%/");
         recipe0.setIngredient('*', new RecipeChoice.ExactChoice(new ItemStack(Material.COOKED_PORKCHOP, 64)));
         recipe0.setIngredient('%', Material.ELYTRA);
-        recipe0.setIngredient('/', new RecipeChoice.ExactChoice(Collections.findItem("00").item));
+        recipe0.setIngredient('/', new RecipeChoice.ExactChoice(Collections.findItem(EmeraldLeaf.id).item));
         recipe0.setGroup(name);
         Bukkit.getServer().addRecipe(recipe0);
     }
@@ -66,7 +69,6 @@ public class RiftWalker extends BatteryPack {
                 return;
             ItemMeta meta = item.getItemMeta();
             PersistentDataContainer container = meta.getPersistentDataContainer();
-
             int jumps = 1;
             Integer cooldown = container.get(Utility.cooldown, PersistentDataType.INTEGER);
             if (cooldown == null) {
@@ -101,25 +103,27 @@ public class RiftWalker extends BatteryPack {
                     item.setItemMeta(meta);
                 }
             }
-
             Utility.deplete(item, null, cap);
             if(charge%8==0)
                 player.sendMessage("§7"+charge+" remaining");
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Jumps: "+jumps+"/8"));
         }
-
         Block block = player.getTargetBlockExact(8);
         double dist = 8;
         Location loc = player.getLocation();
-        if(block!=null) {
-            dist = block.getLocation().add(0.5, 0.5, 0.5).
-                    distance(player.getLocation()) - 1.5;
-        }
+        if(block!=null)
+            dist = block.getLocation().add(0.5, 0.5, 0.5).distance(player.getLocation())-1.5;
         if(dist<=1)
             return;
-        loc.add(loc.getDirection().multiply(dist));
-        if(!player.getWorld().getBlockAt(loc.clone().add(0, -1.5, 0)).isEmpty())
-            loc.add(0, 1.5, 0);
+        Vector dir = loc.getDirection();
+        loc.add(dir.multiply(dist));
+        if(dir.getY()<0) {
+            block = player.getWorld().getBlockAt(loc.add(0, 1, 0));
+            while (!block.isPassable()) {
+                block = block.getRelative(BlockFace.UP);
+                loc.add(0, 1, 0);
+            }
+        }
         player.teleport(loc);
     }
 }

@@ -145,9 +145,8 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
         stand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.ADDING);
         stand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING);
         stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
-        stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
         stand.getEquipment().setItemInMainHand(item);
-        stand.setArms(true);
         stand.setRightArmPose(new EulerAngle(Math.PI/2, 3.405, 0));
 
         stands.put(player, new AbstractMap.SimpleEntry<>(reference.clone().add(0, -0.6, 0), stand));

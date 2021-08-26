@@ -22,21 +22,20 @@ import java.util.*;
 import static org.bukkit.Bukkit.getServer;
 
 public class Conduit implements Listener {
-    private static Conduit instance = null;
     //rotate world -65 -63 -205 -203 72
     //19x19: y+=1 (-10 -203)
     //conduit world -28 58 -221
-    private static final Map<Material, Set<Block[]>> buttons = new HashMap<>();
-    private static final Map<Block[], BlockFace> joints = new HashMap<>();
-    private static final Map<Block, BlockData> reset = new HashMap<>();
-    private static boolean pressing = false;
-//    private static Block center = null;
-    public static Block water = null;
+    private final Map<Material, Set<Block[]>> buttons;
+    private final Map<Block[], BlockFace> joints;
+    private final Map<Block, BlockData> reset;
+    private boolean pressing = false;
+    public Block water = null;
 
     //water off until after set-up
-    public static void setUp(World world, int x, int y, int z){
-        if(joints!=null)
-            reset();
+    public Conduit(World world, int x, int y, int z){
+        buttons = new HashMap<>();
+        joints = new HashMap<>();
+        reset = new HashMap<>();
         for(int i=-0; i<3; i++){
             for(int j=0; j<2; j++){
                 if(joint(world, x+8*i, x+8*i+2, z+16*j, z+16*j+2, y+i, joints)==null) {
@@ -109,12 +108,11 @@ public class Conduit implements Listener {
             }
         };
         pressing = true;
-        instance = new Conduit();
-        getServer().getPluginManager().registerEvents(instance, HoloItems.getInstance());
+        getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
 
     @EventHandler
-    public static void press(PlayerToggleSneakEvent event){
+    public void press(PlayerToggleSneakEvent event){
         if(pressing)
             return;
         Player player = event.getPlayer();
@@ -175,29 +173,21 @@ public class Conduit implements Listener {
     }
 
     @EventHandler
-    public static void plant(BlockFadeEvent event){
+    public void plant(BlockFadeEvent event){
         if(event.isCancelled())
             return;
         if(Set.of(Material.DEAD_FIRE_CORAL, Material.DEAD_TUBE_CORAL).contains(event.getNewState().getType()))
             event.setCancelled(true);
     }
 
-    public static void reset(){
-        if(instance!=null) {
-            PlayerToggleSneakEvent.getHandlerList().unregister(instance);
-            BlockFadeEvent.getHandlerList().unregister(instance);
-            instance = null;
-        }
+    public void reset(){
+        PlayerToggleSneakEvent.getHandlerList().unregister(this);
+        BlockFadeEvent.getHandlerList().unregister(this);
         for(Block block : reset.keySet())
             block.setBlockData(reset.get(block));
-        reset.clear();
-        buttons.clear();
-        joints.clear();
-//        center = null;
-        water = null;
     }
 
-    public static void rotate(Block[] torches, BlockFace flip){
+    public void rotate(Block[] torches, BlockFace flip){
         if(flip==null){
             for(Block block : torches) {
                 if(block.getType()!=Material.STONE_BUTTON)
@@ -212,14 +202,14 @@ public class Conduit implements Listener {
         }
     }
 
-    private static void rotate(Material type){
+    private void rotate(Material type){
         if(!buttons.containsKey(type))
             return;
         for(Block[] torches : buttons.get(type))
             rotate(torches, joints.get(torches));
     }
 
-    public static Map<Block[], BlockFace> joint(World world, int x1, int x2, int z1, int z2, int y, Map<Block[], BlockFace> joints){
+    private Map<Block[], BlockFace> joint(World world, int x1, int x2, int z1, int z2, int y, Map<Block[], BlockFace> joints){
         Block[] torches = new Block[5];
         int increment = 0;
         int check = 0;
@@ -268,7 +258,7 @@ public class Conduit implements Listener {
     }
 }
 
-//    private static void spiral(Block center, BlockFace face, Set<Player> players){
+//    private void spiral(Block center, BlockFace face, Set<Player> players){
 //        List<BlockFace> spiral = List.of(BlockFace.NORTH_WEST, BlockFace.WEST, BlockFace.SOUTH_WEST, BlockFace.SOUTH, BlockFace.SOUTH_EAST, BlockFace.EAST, BlockFace.NORTH_EAST, BlockFace.NORTH);
 //        BlockData water = Bukkit.createBlockData(Material.WATER);
 //        Set<Block> reset = new HashSet<>();

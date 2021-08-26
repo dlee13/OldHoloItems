@@ -11,6 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.util.Vector;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class Payload{
@@ -34,7 +38,7 @@ public class Payload{
             System.out.println("Invalid argument(s)");
             return;
         }
-        AbstractMap.SimpleEntry<Set<FallingBlock>, FallingBlock> payload = spawn(0, world, start[0], start[1], start[2], direction);
+        AbstractMap.SimpleEntry<Set<FallingBlock>, FallingBlock> payload = spawn("payload", world, new Location(world, start[0], start[1], start[2]), direction);
         FallingBlock center = payload.getValue();
         start[0] = center.getLocation().getBlockX();
         start[2] = center.getLocation().getBlockZ();
@@ -221,41 +225,53 @@ public class Payload{
         };
     }
 
-    public static AbstractMap.SimpleEntry<Set<FallingBlock>, FallingBlock> spawn(int index, World world, int x, int y, int z, BlockFace direction){
+    public static AbstractMap.SimpleEntry<Set<FallingBlock>, FallingBlock> spawn(String fileName, World world, Location loc, BlockFace direction){
         Set<FallingBlock> blocks = new HashSet<>();
         FallingBlock center = null;
-        Location loc = new Location(world, x, y, z);
-        int iI = InaDungeon.builds[index].length;
-        int jJ = InaDungeon.builds[index][0].length;
-        int kK = InaDungeon.builds[index][0][0].length;
-        for(int i=0; i<iI; i++){
-            for(int j=0; j<jJ; j++){
-                for(int k=0; k<kK; k++){
-                    FallingBlock block = world.spawnFallingBlock(loc.clone().add(i+0.5, j, k+0.5), Bukkit.createBlockData(InaDungeon.builds[index][i][j][k]));
-                    block.setGravity(false);
-                    blocks.add(block);
-                    switch(direction){
-                        case NORTH:
-                            if(i==0 && j==jJ/2 && k==kK/2)
-                                center = block;
-                            break;
-                        case SOUTH:
-                            if(i==iI-1 && j==jJ/2 && k==kK/2)
-                                center = block;
-                            break;
-                        case EAST:
-                            if(i==iI/2 && j==jJ/2 && k==kK-1)
-                                center = block;
-                            break;
-                        case WEST:
-                            if(i==iI/2 && j==jJ/2 && k==0)
-                                center = block;
-                            break;
+
+        File file = new File(HoloItems.getInstance().getDataFolder(), fileName+".txt");
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String wall;
+            int increment = 0;
+            long size = reader.lines().count();
+            while ((wall = reader.readLine()) != null) {
+                String[] fence = wall.split("\n");
+                for (int i = 0; i < fence.length; i++) {
+                    String[] tile = fence[i].split(", ");
+                    for (int j = 0; j < tile.length; j++) {
+                        FallingBlock block = world.spawnFallingBlock(loc.clone().add(increment+0.5, i, j+0.5), Bukkit.createBlockData(tile[j]));
+                        block.setGravity(false);
+                        blocks.add(block);
+                        if(i!=fence.length/2)
+                            continue;
+                        switch (direction) {
+                            case NORTH:
+                                if (increment==0 && j==tile.length/2)
+                                    center = block;
+                                break;
+                            case SOUTH:
+                                if (increment==size-1 && j==tile.length/2)
+                                    center = block;
+                                break;
+                            case EAST:
+                                if (increment==size/2 && j==tile.length-1)
+                                    center = block;
+                                break;
+                            case WEST:
+                                if (increment==size/2 && j==0)
+                                    center = block;
+                                break;
+                        }
                     }
                 }
+                increment++;
             }
+            return new AbstractMap.SimpleEntry<>(blocks, center);
+        } catch (IOException e) {
+            System.out.println("Invalid file");
+            return null;
         }
-        return new AbstractMap.SimpleEntry<>(blocks, center);
     }
 
     public static void add(){

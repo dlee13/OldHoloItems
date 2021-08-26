@@ -8,6 +8,9 @@ commands:
   collections:
     permission: holoItems.player
     usage: /<command>
+  coordinates:
+    permission: holoItems.player
+    usage: /<command>
   custommodeldata:
     permission: holoItems.player
     usage: /<command>
@@ -64,72 +67,73 @@ commands:
   test:
     permission: holoItems.op
     usage: /<command>
+  
+  inadungeon:
+    permission: holoItems.dungeon
+    usage: /<command>
 
   build:
-    permission: holoItems.inaDungeon
-    usage: /<command> <index> <world> <x> <y> <z>
+    permission: holoItems.dungeons.inaDungeon
+    usage: /<command> <name> <world> <x> <y> <z>
   tostring:
-    permission: holoItems.inaDungeon
-    usage: /<command> <world> <x1> <y1> <z1> <x2> <y2> <z2>
+    permission: holoItems.dungeons.inaDungeon
+    usage: /<command> <world> <x1> <y1> <z1> <x2> <y2> <z2> <name>
   groundpound:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <entityType>
   paintbomb:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
   spreadfire:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
   freeze:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command>
   select:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
   resetselect:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command>
   conduit:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
   resetconduit:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command>
-  rotate:
-    permission: holoItems.inaDungeon
-    usage: /<command> <world> <x1> <x2> <z1> <z2> <y>
   plant:
-    permission: holoItems.inaDungeon
-    usage: /<command> <index> <world> <x> <y> <z>
+    permission: holoItems.dungeons.inaDungeon
+    usage: /<command> <world> <x> <y> <z>
   resetgettingwood:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command>
   minesweeper:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x1> <x2> <z1> <z2> <y>
   resetminesweeper:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command>
   class:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <class>
   maintain:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <x1> <z1> <x2> <z2>
   resetmaintenance:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command>
   payload:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <xStart> <yStart> <zStart> <x1> <y1> <z1> <x2> <y2> <z2> <direction>
   spawn:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <index> <world> <x> <y> <z>
   waterfall:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
   resetwaterfall:
-    permission: holoItems.inaDungeon
+    permission: holoItems.dungeons.inaDungeon
     usage: /<command>
 
 permissions:
@@ -138,10 +142,10 @@ permissions:
     children:
       holoItems.player: true
       holoItems.op: true
-      holoItems.inaDungeon: true
+      holoItems.dungeons: true
   holoItems.player:
     default: true
   holoItems.op:
     default: false
-  holoites.inaDungeon:
+  holoitems.dungeons:
     default: false

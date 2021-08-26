@@ -19,18 +19,19 @@ import java.util.Set;
 import static org.bukkit.Bukkit.getServer;
 
 public class Waterfall implements Listener {
-    private static Waterfall instance = null;
     //waterfall buildteam 713 54 345
     //y:61 -> 721 70 361
     //waterfall world -6 60 -285
-    private static Location center = null;
-    private static final Set<Material> prohibited = Set.of(Material.PISTON, Material.STICKY_PISTON, Material.IRON_TRAPDOOR, Material.OAK_TRAPDOOR, Material.SPRUCE_TRAPDOOR, Material.BIRCH_TRAPDOOR, Material.JUNGLE_TRAPDOOR, Material.ACACIA_TRAPDOOR, Material.DARK_OAK_TRAPDOOR, Material.CRIMSON_TRAPDOOR, Material.WARPED_TRAPDOOR);
-    private static Set<Block> pond = null;
-    private static final Set<Block> rapids = new HashSet<>();
+    private Location center;
+    private final Set<Material> prohibited;
+    private Set<Block> pond;
+    private final Set<Block> rapids;
 
-    public static void setUp(World world, int x, int y, int z){
+    public Waterfall(World world, int x, int y, int z){
         center = new Location(world, x, y, z);
+        prohibited = Set.of(Material.PISTON, Material.STICKY_PISTON, Material.IRON_TRAPDOOR, Material.OAK_TRAPDOOR, Material.SPRUCE_TRAPDOOR, Material.BIRCH_TRAPDOOR, Material.JUNGLE_TRAPDOOR, Material.ACACIA_TRAPDOOR, Material.DARK_OAK_TRAPDOOR, Material.CRIMSON_TRAPDOOR, Material.WARPED_TRAPDOOR);
         pond = Utility.vacuum(center.getBlock(), Material.WATER, 3000, true);
+        rapids = new HashSet<>();
         for(int i=0; i<=8; i++){
             for(int j=7; j<=16; j++){
                 for(int k=0; k<=16; k++){
@@ -42,12 +43,11 @@ public class Waterfall implements Listener {
                 }
             }
         }
-        instance = new Waterfall();
-        getServer().getPluginManager().registerEvents(instance, HoloItems.getInstance());
+        getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
 
     @EventHandler
-    public static void fill(WeatherChangeEvent event){
+    public void fill(WeatherChangeEvent event){
         new BukkitRunnable(){
             public void run(){
                 if(event.getWorld().hasStorm())
@@ -57,20 +57,17 @@ public class Waterfall implements Listener {
     }
 
     @EventHandler
-    public static void decay(BlockPlaceEvent event){
-        if(!event.isCancelled() && instance!=null) {
+    public void decay(BlockPlaceEvent event){
+        if(!event.isCancelled()) {
             Block block = event.getBlock();
             if(prohibited.contains(block.getType()) && center.distance(block.getLocation())<24)
                 event.setCancelled(true);
         }
     }
 
-    public static void reset(){
-        if(instance!=null) {
-            WeatherChangeEvent.getHandlerList().unregister(instance);
-            BlockPlaceEvent.getHandlerList().unregister(instance);
-            instance = null;
-        }
+    public void reset(){
+        WeatherChangeEvent.getHandlerList().unregister(this);
+        BlockPlaceEvent.getHandlerList().unregister(this);
         for(Block block : pond)
             block.setType(Material.WATER);
         pond = null;

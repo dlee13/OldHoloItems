@@ -4,9 +4,12 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.dungeons.inaDungeon.items.Torrent;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -21,14 +24,20 @@ public class Gura extends Class{
 
     public Gura(Player player){
         super(player);
-        projectiles = Set.of(Material.BOW, Material.TRIDENT);
+        projectiles = Set.of(Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.FISHING_ROD, Material.EXPERIENCE_BOTTLE,
+                Material.LINGERING_POTION, Material.SPLASH_POTION, Material.EGG, Material.ENDER_PEARL, Material.ENDER_EYE, Material.SNOWBALL);
     }
 
-    public void ability(int type, ItemStack item) {
-        if(cooldown || type!=0 || !projectiles.contains(item.getType()))
+    public void ability(ItemStack item, Action action) {
+        if(cooldown || action!=Action.RIGHT_CLICK_AIR && action!=Action.RIGHT_CLICK_BLOCK)
             return;
-        cooldown = true;
+        Material material = item.getType();
+        if(!projectiles.contains(material))
+            return;
         ItemMeta meta = item.getItemMeta();
+//        if(material==Material.CROSSBOW && !((CrossbowMeta) meta).hasChargedProjectiles())
+//            return;
+        cooldown = true;
         meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Torrent.id);
         item.setItemMeta(meta);
         player.setVelocity(new Vector(0, 0.45+0.15*Utility.checkPotionEffect(player, PotionEffectType.JUMP), 0));
@@ -40,7 +49,7 @@ public class Gura extends Class{
             duration = effect.getDuration();
         if(duration<120)
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 120, 1));
-        player.sendMessage("gura full circle ability");
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Command: Torrent"));
         new Task(HoloItems.getInstance(), 1, 1){
             int increment = 0;
             public void run(){

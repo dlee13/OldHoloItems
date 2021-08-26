@@ -129,7 +129,7 @@ public class Comet extends Item implements Interactable {
         stand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING);
         stand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.ADDING);
         stand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING);
-        stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
 
         if(hand) {
             stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);

@@ -25,25 +25,23 @@ import java.util.Set;
 import static org.bukkit.Bukkit.getServer;
 
 public class ClassSelect implements Listener {
-    private static ClassSelect instance = null;
     //select buildteam 885 110 -189
     //select world 78 119 -231
-    private static Map<Player, Class> classes;
-    private static Location center;
-    private static Set<Block> source;
-    private static boolean ina;
+    private final Map<Player, Class> classes;
+    private final Location center;
+    private final Set<Block> source;
+    private boolean ina;
 
-    public static void setUp(World world, int x, int y, int z){
+    public ClassSelect(World world, int x, int y, int z){
         classes = new HashMap<>();
         center = new Location(world, x, y, z);
         source = Utility.vacuum(world.getBlockAt(center).getRelative(BlockFace.UP), Material.WATER, 500, false);
         ina = false;
-        instance = new ClassSelect();
-        getServer().getPluginManager().registerEvents(instance, HoloItems.getInstance());
+        getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
 
     @EventHandler
-    public static void select(EntityDamageEvent event){
+    public void select(EntityDamageEvent event){
         if(event.getCause()!=EntityDamageEvent.DamageCause.VOID)
             return;
         Entity entity = event.getEntity();
@@ -79,7 +77,7 @@ public class ClassSelect implements Listener {
     }
 
     @EventHandler
-    public static void select(EntityBlockFormEvent event){
+    public void select(EntityBlockFormEvent event){
         Block ice = event.getBlock();
         new BukkitRunnable(){
             public void run(){
@@ -96,22 +94,14 @@ public class ClassSelect implements Listener {
         }.runTask(HoloItems.getInstance());
     }
 
-    public static void freeze(){
-        if(instance==null){
-            System.out.println("Class select: uninitialized");
-            return;
-        }
+    public void freeze(){
         for(Block block : source)
             block.setType(Material.FROSTED_ICE);
     }
 
-    public static void reset(){
-        if(instance==null)
-            return;
-        else{
-            EntityDamageEvent.getHandlerList().unregister(instance);
-            EntityBlockFormEvent.getHandlerList().unregister(instance);
-        }
-        Maintenance.classes = classes;
+    public void reset(){
+        EntityDamageEvent.getHandlerList().unregister(this);
+        EntityBlockFormEvent.getHandlerList().unregister(this);
+        InaDungeon.maintenance.classes = classes;
     }
 }

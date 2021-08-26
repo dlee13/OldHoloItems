@@ -4,6 +4,7 @@ import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen1.haachamaCollection.HaachamaCollection;
+import com.klin.holoItems.collections.misc.ingredientCollection.items.CoalPetal;
 import com.klin.holoItems.interfaces.Consumable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -59,7 +60,7 @@ public class Gnaw extends Item implements Consumable {
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("a a", "bab", " b ");
         recipe.setIngredient('a', Material.WITHER_SKELETON_SKULL);
-        recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.findItem("01").item));
+        recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.findItem(CoalPetal.id).item));
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

@@ -28,21 +28,24 @@ import java.util.stream.Stream;
 import static org.bukkit.Bukkit.getServer;
 
 public class Minesweeper implements Listener {
-    private static Minesweeper instance = null;
     //minesweeper -27 -9 -294 -262 59
-    private static final Set<Material> sand = Stream.of(Material.SAND, Material.SANDSTONE_SLAB, Material.SANDSTONE_STAIRS, Material.SMOOTH_SANDSTONE_SLAB, Material.SMOOTH_SANDSTONE).collect(Collectors.toCollection(HashSet::new));
-    public static final Map<Integer, Material> flags = new HashMap<>() {{
-        put(0, Material.ORANGE_STAINED_GLASS);
-        put(1, Material.RED_SAND);
-        put(2, Material.RED_SANDSTONE_SLAB);
-        put(3, Material.RED_SANDSTONE_STAIRS);
-        put(4, Material.RED_SANDSTONE);
-    }};
-    private static Map<AbstractMap.SimpleEntry<Integer, Integer>, Boolean> squares = new HashMap<>();
-    private static int y;
-    private static Map<Block, BlockData> reset = new HashMap<>();
+    private final Set<Material> sand;
+    public final Map<Integer, Material> flags;
+    private final Map<AbstractMap.SimpleEntry<Integer, Integer>, Boolean> squares;
+    private final int y;
+    private final Map<Block, BlockData> reset;
 
-    public static void setUp(World world, int x1, int x2, int z1, int z2, int y1){
+    public Minesweeper(World world, int x1, int x2, int z1, int z2, int y1){
+        sand = Stream.of(Material.SAND, Material.SANDSTONE_SLAB, Material.SANDSTONE_STAIRS, Material.SMOOTH_SANDSTONE_SLAB, Material.SMOOTH_SANDSTONE).collect(Collectors.toCollection(HashSet::new));
+        flags = new HashMap<>() {{
+            put(0, Material.ORANGE_STAINED_GLASS);
+            put(1, Material.RED_SAND);
+            put(2, Material.RED_SANDSTONE_SLAB);
+            put(3, Material.RED_SANDSTONE_STAIRS);
+            put(4, Material.RED_SANDSTONE);
+        }};
+        squares = new HashMap<>();
+        reset = new HashMap<>();
         for(int x=x1; x<=x2; x++){
             for(int z=z1; z<z2; z++){
                 Block block = world.getBlockAt(x, y1, z);
@@ -56,13 +59,12 @@ public class Minesweeper implements Listener {
             }
         }
         y = y1;
-        instance = new Minesweeper();
-        getServer().getPluginManager().registerEvents(instance, HoloItems.getInstance());
+        getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
 
     @EventHandler
-    public static void mine(BlockBreakEvent event){
-        event.setCancelled(true);
+    public void mine(BlockBreakEvent event){
+//        event.setCancelled(true);
         Block block = event.getBlock();
         AbstractMap.SimpleEntry<Integer, Integer> key = new AbstractMap.SimpleEntry<>(block.getX(), block.getZ());
         Boolean mine = squares.get(key);
@@ -124,14 +126,9 @@ public class Minesweeper implements Listener {
         block.setType(flags.get(adjacent));
     }
 
-    public static void reset(){
-        if(instance!=null) {
-            BlockBreakEvent.getHandlerList().unregister(instance);
-            instance = null;
-        }
+    public void reset(){
+        BlockBreakEvent.getHandlerList().unregister(this);
         for(Block block : reset.keySet())
             block.setBlockData(reset.get(block));
-        reset.clear();
-        squares.clear();
     }
 }
