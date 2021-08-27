@@ -1,7 +1,6 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.misc.utilityCollection.items.NoDrop;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -145,7 +144,7 @@ public class Attacks {
                                     for(int i=0; i<5; i++){
                                         empty.setType(Material.AIR);
                                         FallingBlock fallingBlock = world.spawnFallingBlock(empty.getLocation().add(0.5, 0, 0.5), Bukkit.createBlockData(type));
-                                        fallingBlock.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, NoDrop.id);
+                                        fallingBlock.setDropItem(false);
                                         fallingBlock.setVelocity(axis);
                                         empty = empty.getRelative(BlockFace.DOWN);
                                     }

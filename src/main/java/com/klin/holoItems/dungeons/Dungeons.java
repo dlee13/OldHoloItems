@@ -1,6 +1,8 @@
 package com.klin.holoItems.dungeons;
 
+import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.InaDungeonCollection;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,8 +14,10 @@ public class Dungeons implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         switch(cmd.getName().toLowerCase()) {
             case "inadungeon":
+                Collections.collections.put(InaDungeonCollection.key, new InaDungeonCollection());
                 HoloItems holoItems = HoloItems.getInstance();
                 InaDungeon inaDungeon = new InaDungeon();
+
                 holoItems.getCommand("build").setExecutor(inaDungeon);
                 holoItems.getCommand("tostring").setExecutor(inaDungeon);
                 //attack

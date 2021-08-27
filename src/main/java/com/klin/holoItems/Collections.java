@@ -1,6 +1,5 @@
 package com.klin.holoItems;
 
-import com.klin.holoItems.collections.dungeons.inaDungeon.InaDungeon;
 import com.klin.holoItems.collections.en.calliCollection.CalliCollection;
 import com.klin.holoItems.collections.en.guraCollection.GuraCollection;
 import com.klin.holoItems.collections.en.inaCollection.InaCollection;
@@ -59,7 +58,6 @@ import com.klin.holoItems.collections.misc.franCollection.FranCollection;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
 import com.klin.holoItems.collections.misc.opCollection.OpCollection;
-import com.klin.holoItems.collections.misc.utilityCollection.UtilityCollection;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Utility;
@@ -166,9 +164,6 @@ public class Collections implements CommandExecutor, Listener {
         collections.put(FranCollection.key, new FranCollection());
         collections.put(KlinCollection.key, new KlinCollection());
         collections.put(OpCollection.key, new OpCollection());
-        collections.put(UtilityCollection.key, new UtilityCollection());
-
-        collections.put(InaDungeon.key, new InaDungeon());
 
         registry = "§6HoloItems"+"\n";
         for(Collection collection : collections.values()){
@@ -222,7 +217,7 @@ public class Collections implements CommandExecutor, Listener {
 
             case "coordinates":
                 Location loc = player.getLocation();
-                player.sendMessage(loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ());
+                player.sendMessage(player.getWorld().getName()+" "+loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ());
                 return true;
 
             case "custommodeldata":
@@ -249,17 +244,13 @@ public class Collections implements CommandExecutor, Listener {
                 player.sendMessage(registry);
                 return true;
 
-            case "worldname":
-                player.sendMessage(player.getWorld().getName());
-                return true;
-
             case "acquire":
                 if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE)
                     return true;
                 if(args.length<1)
                     return false;
                 Collection collection = findCollection(args[0].charAt(0));
-                if(collection.name==null && !player.isOp()){
+                if(collection==null || collection.name==null && !player.isOp()){
                     player.sendMessage("No such item");
                     return true;
                 }

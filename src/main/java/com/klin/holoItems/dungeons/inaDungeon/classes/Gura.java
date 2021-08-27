@@ -1,7 +1,7 @@
 package com.klin.holoItems.dungeons.inaDungeon.classes;
 
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.dungeons.inaDungeon.items.Torrent;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.Torrent;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import net.md_5.bungee.api.ChatMessageType;

@@ -21,7 +21,6 @@ public class HoloItems extends JavaPlugin {
         getCommand("coordinates").setExecutor(collections);
         getCommand("custommodeldata").setExecutor(collections);
         getCommand("registry").setExecutor(collections);
-        getCommand("worldname").setExecutor(collections);
         getCommand("acquire").setExecutor(collections);
 
         getCommand("accelerate").setExecutor(collections);

@@ -1,12 +1,12 @@
-package com.klin.holoItems.collections.dungeons.inaDungeon;
+package com.klin.holoItems.collections.dungeons.inaDungeonCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.dungeons.inaDungeon.items.*;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.*;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public class InaDungeon extends Collection {
+public class InaDungeonCollection extends Collection {
     public static final String name = null;
     public static final String desc = null;
     public static final String theme = null;
@@ -16,13 +16,14 @@ public class InaDungeon extends Collection {
 
     public static final char key = '!';
 
-    public InaDungeon(){
+    public InaDungeonCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(Payload.key, new Payload());
         collection.put(Torrent.key, new Torrent());
         collection.put(BoneFragment.key, new BoneFragment());
         collection.put(BoneShard.key, new BoneShard());
         collection.put(BoneCrystal.key, new BoneCrystal());
+        collection.put(AshWood.key, new AshWood());
     }
 
     public Map<String, Integer> getStat(Player player){

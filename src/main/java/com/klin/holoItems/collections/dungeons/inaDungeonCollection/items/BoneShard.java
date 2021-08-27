@@ -1,7 +1,7 @@
-package com.klin.holoItems.collections.dungeons.inaDungeon.items;
+package com.klin.holoItems.collections.dungeons.inaDungeonCollection.items;
 
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.dungeons.inaDungeon.InaDungeon;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.InaDungeonCollection;
 import org.bukkit.Material;
 
 public class BoneShard extends Item {
@@ -17,7 +17,7 @@ public class BoneShard extends Item {
 
     public static final int cost = -1;
     public static final char key = '3';
-    public static final String id = ""+InaDungeon.key+key;
+    public static final String id = ""+ InaDungeonCollection.key+key;
 
     public BoneShard(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);

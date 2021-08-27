@@ -17,9 +17,6 @@ commands:
   registry:
     permission: holoItems.player
     usage: /<command>
-  worldname:
-    permission: holoItems.player
-    usage: /<command>
   acquire:
     permission: holoItems.player
     usage: /<command> <id>

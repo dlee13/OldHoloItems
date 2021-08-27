@@ -10,6 +10,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class InaDungeon implements CommandExecutor{
     public static ClassSelect classSelect;
@@ -92,7 +94,7 @@ public class InaDungeon implements CommandExecutor{
                 try {
                     loc = new Location(world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
                 }catch(NumberFormatException e){ return false; }
-                build(args[0], loc, null);
+                build(args[0], loc, null, null);
                 return true;
 
             case "tostring":
@@ -433,7 +435,7 @@ public class InaDungeon implements CommandExecutor{
         return true;
     }
 
-    public static Map<Location, BlockData> build(String fileName, Location loc, Map<Location, BlockData> build){
+    public static Map<Location, BlockData> build(String fileName, Location loc, Map<Location, BlockData> build, Set<Material> overwrite){
         File file = new File(HoloItems.getInstance().getDataFolder(), fileName+".txt");
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -447,10 +449,11 @@ public class InaDungeon implements CommandExecutor{
                 for (int i = 0; i < fence.length; i++) {
                     String[] tile = fence[i].split(" ");
                     for (int j = 0; j < tile.length; j++) {
-                        BlockData data = Bukkit.createBlockData(tile[j]);
-                        if(data.getMaterial().isAir())
-                            continue;
                         Block block = world.getBlockAt(loc.clone().add(increment, i, j));
+                        BlockData data = Bukkit.createBlockData(tile[j]);
+                        //overwrite: null->skip air, new->replace all
+                        if((overwrite==null || !overwrite.contains(block.getType())) && data.getMaterial().isAir())
+                            continue;
                         build.putIfAbsent(block.getLocation(), block.getBlockData());
                         block.setBlockData(data);
                     }
@@ -459,8 +462,76 @@ public class InaDungeon implements CommandExecutor{
             }
             return build;
         } catch (IOException e) {
-            System.out.println("Invalid file");
+//            System.out.println("Invalid file");
             return null;
         }
+    }
+
+    public static Map<Location, BlockData> build(String fileName, Location loc, Map<Location, BlockData> build, Set<Material> overwrite, BlockFace face){
+        File file = new File(HoloItems.getInstance().getDataFolder(), fileName+".txt");
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String wall;
+            World world = loc.getWorld();
+            boolean flip;
+            boolean turn;
+            Map<BlockFace, BlockFace> rotate;
+            switch (face){
+                case NORTH:
+                    loc = loc.clone().add(0, 0, -1);
+                    flip = true;
+                    turn = false;
+                    rotate = Utility.opposites;
+                    break;
+                case EAST:
+                    flip = false;
+                    turn = true;
+                    rotate = Utility.left;
+                    break;
+                case WEST:
+                    loc = loc.clone().add(-1, 0, 0);
+                    flip = true;
+                    turn = true;
+                    rotate = new HashMap<>();
+                    for(BlockFace blockFace: Utility.left.keySet())
+                        rotate.put(blockFace, Utility.opposites.get(Utility.left.get(blockFace)));
+                    break;
+                default:
+                    flip = false;
+                    turn = false;
+                    rotate = null;
+            }
+            int increment = 0;
+            if(build==null)
+                build = new HashMap<>();
+            while ((wall = reader.readLine()) != null) {
+                String[] fence = wall.split(", ");
+                for (int i = 0; i < fence.length; i++) {
+                    String[] tile = fence[i].split(" ");
+                    for (int j = 0; j < tile.length; j++) {
+                        int x = increment;
+                        int z = (flip?tile.length:0) + j*(flip?-1:1);
+                        if(turn){
+                            int temp = x;
+                            x = z;
+                            z = temp;
+                        }
+                        Block block = world.getBlockAt(loc.clone().add(x, i ,z));
+                        BlockData data = Bukkit.createBlockData(tile[j]);
+                        //overwrite: null->skip air, new->replace all
+                        if((overwrite==null || !overwrite.contains(block.getType())) && data.getMaterial().isAir())
+                            continue;
+                        build.putIfAbsent(block.getLocation(), block.getBlockData());
+                        if(rotate!=null && data instanceof Directional) {
+                            Directional directional = (Directional) data;
+                            directional.setFacing(directional.getFacing());
+                        }
+                        block.setBlockData(data);
+                    }
+                }
+                increment++;
+            }
+            return build;
+        } catch (IOException e) { return null; }
     }
 }

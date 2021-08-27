@@ -1,15 +1,8 @@
-package com.klin.holoItems.collections.dungeons.inaDungeon.items;
+package com.klin.holoItems.collections.dungeons.inaDungeonCollection.items;
 
-import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.dungeons.inaDungeon.InaDungeon;
-import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.InaDungeonCollection;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.ShapedRecipe;
 
 public class BoneFragment extends Item {
     public static final String name = "boneFragment";
@@ -24,7 +17,7 @@ public class BoneFragment extends Item {
 
     public static final int cost = -1;
     public static final char key = '2';
-    public static final String id = ""+InaDungeon.key+key;
+    public static final String id = ""+ InaDungeonCollection.key+key;
 
     public BoneFragment(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
