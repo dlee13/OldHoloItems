@@ -30,7 +30,7 @@ public class Gura extends Class{
     }
 
     public void ability(double angle, PlayerInteractEvent event) {
-        if(Math.abs(angle)<Math.PI*1.5)
+        if(Math.abs(angle)<Math.PI*1.2 || ((Entity) player).isOnGround())
             return;
         Action action = event.getAction();
         if(cooldown || action!=Action.RIGHT_CLICK_AIR && action!=Action.RIGHT_CLICK_BLOCK)
@@ -52,12 +52,17 @@ public class Gura extends Class{
         player.setVelocity(new Vector(0, 0.45+0.15*Utility.checkPotionEffect(player, PotionEffectType.JUMP), 0));
         PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);
         int duration;
-        if(effect==null)
+        int amplifier;
+        if(effect==null) {
             duration = 0;
-        else
+            amplifier = 0;
+        }
+        else {
             duration = effect.getDuration();
-        if(duration<120)
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 120, 1));
+            amplifier = effect.getAmplifier();
+        }
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 6));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 120, 1));
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Command: Torrent"));
         new Task(HoloItems.getInstance(), 1, 1){
             int increment = 0;
@@ -66,18 +71,14 @@ public class Gura extends Class{
                     cooldown = false;
                     meta.getPersistentDataContainer().remove(Utility.key);
                     item.setItemMeta(meta);
-                    if(duration<120)
-                        player.removePotionEffect(PotionEffectType.SLOW_FALLING);
+                    player.removePotionEffect(PotionEffectType.SLOW);
+                    player.removePotionEffect(PotionEffectType.LEVITATION);
+                    if(duration-increment>0)
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration-increment, amplifier));
                     cancel();
                     return;
                 }
                 increment++;
-                if(increment>=20)
-                    return;
-                Vector velocity = player.getVelocity();
-                double y = velocity.getY();
-                if(y<0)
-                    player.setVelocity(velocity.setY(y*-1));
             }
         };
     }

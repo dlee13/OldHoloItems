@@ -63,7 +63,9 @@ public class Maintenance implements Listener {
             double total = input.getValue();
             double sign = Math.signum(total);
             double require;
-            if(total<Math.PI)
+            if(total<0.2)
+                require = 0;
+            else if(total<Math.PI)
                 require = 0.2;
             else
                 require = 0.1;
