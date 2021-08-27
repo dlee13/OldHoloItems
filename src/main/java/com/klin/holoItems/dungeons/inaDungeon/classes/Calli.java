@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -37,8 +38,12 @@ public class Calli extends Class{
         }};
     }
 
-    public void ability(ItemStack item, Action action) {
+    public void ability(double angle, PlayerInteractEvent event) {
+        Action action = event.getAction();
         if(cooldown || action!=Action.LEFT_CLICK_AIR && action!=Action.LEFT_CLICK_BLOCK)
+            return;
+        ItemStack item = event.getItem();
+        if(item==null)
             return;
         Material material = item.getType();
         if(!tools.contains(material))

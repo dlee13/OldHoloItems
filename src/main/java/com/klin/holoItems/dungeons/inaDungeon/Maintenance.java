@@ -3,12 +3,10 @@ package com.klin.holoItems.dungeons.inaDungeon;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
 import com.klin.holoItems.utility.Task;
-import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,7 +29,7 @@ public class Maintenance implements Listener {
     private final Set<Block> decay;
     public final Set<Player> knockBack;
     public Map<Player, Class> classes;
-    public final Map<Player, List<BlockFace>> inputs;
+    public final Map<Player, AbstractMap.SimpleEntry<Vector, Double>> inputs;
 
     public Maintenance(int x1, int z1, int x2, int z2){
         seal = new Material[][]{
@@ -54,30 +52,30 @@ public class Maintenance implements Listener {
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
+        Location location = player.getLocation();
 
-        List<BlockFace> input = inputs.computeIfAbsent(player, k -> new ArrayList<>());
-        BlockFace face = player.getFacing();
-        int size = input.size();
-        if(size>0) {
-            BlockFace blockFace = input.get(size - 1);
-            if (face != blockFace) {
-                for (int i = 1; i <= 3; i++) {
-                    int index = size - i;
-                    if (index < 0)
-                        break;
-                    if (blockFace == input.get(index))
-                        input.remove(index);
-                }
-                input.add(blockFace);
-            }
+        AbstractMap.SimpleEntry<Vector, Double> input = inputs.get(player);
+        Vector dir = location.getDirection().setY(0).normalize();
+        if(input==null)
+            inputs.put(player, new AbstractMap.SimpleEntry<>(dir, 0.0));
+        else {
+            double angle = input.getKey().crossProduct(dir).getY();
+            double total = input.getValue();
+            double sign = Math.signum(total);
+            double require;
+            if(total<Math.PI)
+                require = 0.2;
+            else
+                require = 0.1;
+            if((angle-sign*require)*sign<0)
+                angle = 0;
+            else
+                angle += total;
+            inputs.replace(player, new AbstractMap.SimpleEntry<>(dir, angle));
         }
-        if(size>=8)
-            input.remove(0);
-        input.add(face);
 
         if(knockBack.contains(player))
             return;
-        Location location = player.getLocation();
         int x = location.getBlockX();
         int z = location.getBlockZ();
         Vector velocity = player.getVelocity();
@@ -180,38 +178,7 @@ public class Maintenance implements Listener {
     @EventHandler
     public void input(PlayerInteractEvent event){
         Player player = event.getPlayer();
-        if(input(inputs.get(player)))
-            classes.get(player).ability(event.getItem(), event.getAction());
-    }
-
-    public boolean input(List<BlockFace> inputs){
-        int size = inputs.size();
-        if(size<4)
-            return false;
-        BlockFace prev;
-        BlockFace curr = inputs.get(size-4);
-        boolean leftFullCircle = true;
-        for(int i=size-3; i<=size-1; i++){
-            prev = curr;
-            curr = inputs.get(i);
-            if(Utility.left.get(prev)!=curr) {
-                leftFullCircle = false;
-                break;
-            }
-        }
-        if(leftFullCircle)
-            return true;
-        curr = inputs.get(size-4);
-        boolean rightFullCircle = true;
-        for(int i=size-3; i<=size-1; i++){
-            prev = curr;
-            curr = inputs.get(i);
-            if(Utility.opposites.get(Utility.left.get(prev))!=curr) {
-                rightFullCircle = false;
-                break;
-            }
-        }
-        return rightFullCircle;
+        classes.get(player).ability(inputs.get(player).getValue(), event);
     }
 
     public void reset(){
@@ -223,3 +190,53 @@ public class Maintenance implements Listener {
             block.breakNaturally();
     }
 }
+
+//    List<BlockFace> input = inputs.computeIfAbsent(player, k -> new ArrayList<>());
+//    BlockFace face = player.getFacing();
+//    int size = input.size();
+//        if(size>0) {
+//                BlockFace blockFace = input.get(size - 1);
+//                if (face != blockFace) {
+//                for (int i = 1; i <= 3; i++) {
+//                int index = size - i;
+//                if (index < 0)
+//        break;
+//        if (blockFace == input.get(index))
+//        input.remove(index);
+//        }
+//        input.add(blockFace);
+//        }
+//        }
+//        if(size>=8)
+//        input.remove(0);
+//        input.add(face);
+
+//    public boolean input(List<BlockFace> inputs){
+//        int size = inputs.size();
+//        if(size<4)
+//            return false;
+//        BlockFace prev;
+//        BlockFace curr = inputs.get(size-4);
+//        boolean leftFullCircle = true;
+//        for(int i=size-3; i<=size-1; i++){
+//            prev = curr;
+//            curr = inputs.get(i);
+//            if(Utility.left.get(prev)!=curr) {
+//                leftFullCircle = false;
+//                break;
+//            }
+//        }
+//        if(leftFullCircle)
+//            return true;
+//        curr = inputs.get(size-4);
+//        boolean rightFullCircle = true;
+//        for(int i=size-3; i<=size-1; i++){
+//            prev = curr;
+//            curr = inputs.get(i);
+//            if(Utility.opposites.get(Utility.left.get(prev))!=curr) {
+//                rightFullCircle = false;
+//                break;
+//            }
+//        }
+//        return rightFullCircle;
+//    }

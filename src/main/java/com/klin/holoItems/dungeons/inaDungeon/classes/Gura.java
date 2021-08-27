@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -28,13 +29,21 @@ public class Gura extends Class{
                 Material.LINGERING_POTION, Material.SPLASH_POTION, Material.EGG, Material.ENDER_PEARL, Material.ENDER_EYE, Material.SNOWBALL);
     }
 
-    public void ability(ItemStack item, Action action) {
+    public void ability(double angle, PlayerInteractEvent event) {
+        if(Math.abs(angle)<Math.PI*1.5)
+            return;
+        Action action = event.getAction();
         if(cooldown || action!=Action.RIGHT_CLICK_AIR && action!=Action.RIGHT_CLICK_BLOCK)
+            return;
+        ItemStack item = event.getItem();
+        if(item==null)
             return;
         Material material = item.getType();
         if(!projectiles.contains(material))
             return;
         ItemMeta meta = item.getItemMeta();
+        if(meta==null)
+            return;
 //        if(material==Material.CROSSBOW && !((CrossbowMeta) meta).hasChargedProjectiles())
 //            return;
         cooldown = true;
