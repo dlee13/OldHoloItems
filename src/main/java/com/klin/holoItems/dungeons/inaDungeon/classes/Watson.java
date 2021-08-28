@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Watson extends Class{
+public class Watson extends Member {
     public int teleport;
     public Location to;
     public Location from;

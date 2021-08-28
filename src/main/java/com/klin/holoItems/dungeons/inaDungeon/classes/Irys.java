@@ -3,7 +3,7 @@ package com.klin.holoItems.dungeons.inaDungeon.classes;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class Irys extends Class{
+public class Irys extends Member {
 
     public Irys(Player player){
         super(player);

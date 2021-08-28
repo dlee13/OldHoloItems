@@ -2,7 +2,7 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.inaDungeon.classes.*;
-import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
+import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,7 +27,7 @@ import static org.bukkit.Bukkit.getServer;
 public class ClassSelect implements Listener {
     //select buildteam 885 110 -189
     //select world 78 119 -231
-    private final Map<Player, Class> classes;
+    private final Map<Player, Member> classes;
     private final Location center;
     private final Set<Block> source;
     private boolean ina;

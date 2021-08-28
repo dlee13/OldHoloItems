@@ -30,6 +30,7 @@ public class SuiseiCollection extends Collection {
         collection.put(RolledNewspaper.key, new RolledNewspaper());
         collection.put(TetrisPiece.key, new TetrisPiece());
         collection.put(RaceBook.key, new RaceBook());
+        collection.put(Backstab.key, new Backstab());
     }
 
     public Map<String, Integer> getStat(Player player){

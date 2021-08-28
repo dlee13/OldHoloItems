@@ -108,22 +108,23 @@ public class RiftWalker extends BatteryPack {
                 player.sendMessage("§7"+charge+" remaining");
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Jumps: "+jumps+"/8"));
         }
+
         Block block = player.getTargetBlockExact(8);
-        double dist = 8;
         Location loc = player.getLocation();
-        if(block!=null)
+        double dist;
+        if(block==null)
+            dist = 8;
+        else
             dist = block.getLocation().add(0.5, 0.5, 0.5).distance(player.getLocation())-1.5;
         if(dist<=1)
             return;
         Vector dir = loc.getDirection();
-        loc.add(dir.multiply(dist));
-        if(dir.getY()<0) {
-            block = player.getWorld().getBlockAt(loc.add(0, 1, 0));
-            while (!block.isPassable()) {
-                block = block.getRelative(BlockFace.UP);
-                loc.add(0, 1, 0);
-            }
-        }
+        loc.add(dir.clone().multiply(dist));
+        if(dir.getY()<0)
+            block = loc.add(0, 1, 0).getBlock();
+        dir.multiply(-1);
+        while (block!=null && (!block.isPassable() || !block.getRelative(BlockFace.UP).isPassable()))
+            block = loc.add(dir).getBlock();
         player.teleport(loc);
     }
 }

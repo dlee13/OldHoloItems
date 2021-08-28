@@ -1,7 +1,7 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
+import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Watson;
 import com.klin.holoItems.utility.Task;
 import org.bukkit.Location;
@@ -30,7 +30,7 @@ public class Maintenance implements Listener {
     private final int[] cage;
     private final Set<Block> decay;
     public final Set<Player> knockBack;
-    public Map<Player, Class> classes;
+    public Map<Player, Member> classes;
     public final Map<Player, AbstractMap.SimpleEntry<Vector, Double>> inputs;
 
     public Maintenance(int x1, int z1, int x2, int z2){
@@ -198,7 +198,7 @@ public class Maintenance implements Listener {
     @EventHandler
     public void input(PlayerInteractEvent event){
         Player player = event.getPlayer();
-        Class member = classes.get(player);
+        Member member = classes.get(player);
         if(member!=null)
             member.ability(inputs.get(player).getValue(), event);
     }
@@ -206,7 +206,7 @@ public class Maintenance implements Listener {
     @EventHandler
     public void input(PlayerTeleportEvent event){
         Player player = event.getPlayer();
-        Class member = classes.get(player);
+        Member member = classes.get(player);
         if(member instanceof Watson) {
             Watson watson = (Watson) member;
             watson.to = event.getTo();

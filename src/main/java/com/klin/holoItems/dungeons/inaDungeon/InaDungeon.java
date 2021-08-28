@@ -2,7 +2,7 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.misc.franCollection.items.DyeConcentrate;
-import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
+import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
 import com.klin.holoItems.dungeons.inaDungeon.classes.*;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
@@ -303,7 +303,7 @@ public class InaDungeon implements CommandExecutor{
                 if(args.length<1)
                     return false;
                 player = (Player) sender;
-                Class member;
+                Member member;
                 switch (args[0].toLowerCase()){
                     case "calli":
                         member = new Calli(player); break;

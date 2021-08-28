@@ -43,6 +43,7 @@ public class GettingWood implements Listener {
     private final Set<Location> cut;
     private final Map<Material, Material> ignite;
     private boolean bloom;
+    private int y;
 
     GettingWood(Location loc){
         locations = new Location[]{loc.clone().add(7, 0, 0), loc.add(-9, 0, -10)};
@@ -65,6 +66,7 @@ public class GettingWood implements Listener {
                 Material.SNOW_BLOCK, Material.RED_TERRACOTTA
         );
         bloom = true;
+        y = 256;
         getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
 
@@ -113,6 +115,7 @@ public class GettingWood implements Listener {
         World world = locations[0].getWorld();
         leaves = new HashMap<>();
         stem = new HashSet<>();
+        y = 256;
         new Task(HoloItems.getInstance(), 20, 10){
             char subStage = '`';
             public void run(){
@@ -121,7 +124,9 @@ public class GettingWood implements Listener {
                         Block block = world.getBlockAt(loc);
                         Material type = block.getType();
                         if(white.contains(type)) {
-                            Set<Block> layer = leaves.computeIfAbsent(block.getY(), s -> new HashSet<>());
+                            int blockY = block.getY();
+                            y = Math.min(blockY, y);
+                            Set<Block> layer = leaves.computeIfAbsent(blockY, s -> new HashSet<>());
                             layer.add(block);
                         }
                         else if(spruce.contains(type)) {
@@ -132,7 +137,10 @@ public class GettingWood implements Listener {
                         }
                     }
                     if(bloom && stage>=5){
-                        int blockY = event.getPlayer().getLocation().getBlockY();
+                        Map<Integer, Set<Block>> layers = new HashMap<>();
+                        for(Integer key : leaves.keySet())
+                            layers.put(key, new HashSet<>(leaves.get(key)));
+                        int blockY = y;
                         while(!leaves.containsKey(blockY)){
                             if(blockY>256){
                                 cancel();
@@ -141,9 +149,6 @@ public class GettingWood implements Listener {
                             blockY++;
                         }
                         int tempY = blockY;
-                        Map<Integer, Set<Block>> layers = new HashMap<>();
-                        for(Integer key : leaves.keySet())
-                            layers.put(key, new HashSet<>(leaves.get(key)));
                         new Task(HoloItems.getInstance(), 10, 2){
                             int y = tempY;
                             Set<Block> layer = layers.get(y);
@@ -209,13 +214,13 @@ public class GettingWood implements Listener {
         World world = block.getWorld();
         if(spruce.contains(block.getType()))
             world.dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), Collections.findItem(AshWood.id).item);
-        int y = event.getPlayer().getLocation().getBlockY();
-        while(!leaves.containsKey(y)){
-            if(y>256)
+        int blockY = y;
+        while(!leaves.containsKey(blockY)){
+            if(blockY>256)
                 return true;
-            y++;
+            blockY++;
         }
-        Set<Block> layer = leaves.get(y);
+        Set<Block> layer = leaves.get(blockY);
         BlockData fire = Bukkit.createBlockData(Material.FIRE);
         if(bloom && stage>=5){
             new Task(HoloItems.getInstance(), 10, 2){
@@ -229,8 +234,8 @@ public class GettingWood implements Listener {
         for(int i=0; i<10; i++){
             Optional<Block> leave = Utility.getRandom(layer);
             if(leave.isEmpty()) {
-                y++;
-                layer = leaves.get(y);
+                blockY++;
+                layer = leaves.get(blockY);
                 if(layer==null)
                     return true;
                 i--;

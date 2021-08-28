@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
 
 import java.util.Set;
 
-public class Gura extends Class{
+public class Gura extends Member {
     private final Set<Material> projectiles;
 
     public Gura(Player player){

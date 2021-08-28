@@ -24,7 +24,7 @@ import org.bukkit.util.Vector;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Calli extends Class{
+public class Calli extends Member {
     private final Set<Material> tools;
 
     public Calli(Player player){
