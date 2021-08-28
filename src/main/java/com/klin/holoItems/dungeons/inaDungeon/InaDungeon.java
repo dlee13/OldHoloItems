@@ -322,8 +322,8 @@ public class InaDungeon implements CommandExecutor{
                     default:
                         return false;
                 }
-                if(maintenance.classes==null)
-                    maintenance.classes = new HashMap<>();
+                if(maintenance==null)
+                    maintenance = new Maintenance();
                 maintenance.classes.put(player, member);
                 return true;
 

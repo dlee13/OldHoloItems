@@ -2,6 +2,7 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Class;
+import com.klin.holoItems.dungeons.inaDungeon.classes.Watson;
 import com.klin.holoItems.utility.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -42,7 +44,23 @@ public class Maintenance implements Listener {
         cage = new int[]{x1, z1, x2, z2};
         decay = new HashSet<>();
         knockBack = new HashSet<>();
-        classes = null;
+        classes = new HashMap<>();
+        inputs = new HashMap<>();
+        getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
+    }
+
+    public Maintenance(){
+        seal = new Material[][]{
+                {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
+                {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
+                {Material.WHITE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.WHITE_STAINED_GLASS},
+                {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS},
+                {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS}
+        };
+        cage = null;
+        decay = new HashSet<>();
+        knockBack = new HashSet<>();
+        classes = new HashMap<>();
         inputs = new HashMap<>();
         getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
@@ -76,7 +94,7 @@ public class Maintenance implements Listener {
             inputs.replace(player, new AbstractMap.SimpleEntry<>(dir, angle));
         }
 
-        if(knockBack.contains(player))
+        if(cage==null || knockBack.contains(player))
             return;
         int x = location.getBlockX();
         int z = location.getBlockZ();
@@ -180,7 +198,32 @@ public class Maintenance implements Listener {
     @EventHandler
     public void input(PlayerInteractEvent event){
         Player player = event.getPlayer();
-        classes.get(player).ability(inputs.get(player).getValue(), event);
+        Class member = classes.get(player);
+        if(member!=null)
+            member.ability(inputs.get(player).getValue(), event);
+    }
+
+    @EventHandler
+    public void input(PlayerTeleportEvent event){
+        Player player = event.getPlayer();
+        Class member = classes.get(player);
+        if(member instanceof Watson) {
+            Watson watson = (Watson) member;
+            watson.to = event.getTo();
+            watson.from = event.getFrom();
+            int teleport = watson.teleport+=10;
+            if(teleport==10){
+                new Task(HoloItems.getInstance(), 1, 1){
+                    public void run(){
+                        if(watson.teleport<=0){
+                            cancel();
+                            return;
+                        }
+                        watson.teleport--;
+                    }
+                };
+            }
+        }
     }
 
     public void reset(){
