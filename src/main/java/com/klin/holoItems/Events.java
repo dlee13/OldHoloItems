@@ -529,8 +529,7 @@ public class Events implements Listener {
         //no isCancelled()
         Player player = event.getPlayer();
         PlayerInventory inv = player.getInventory();
-        for(ItemStack item : new ItemStack[]{
-                inv.getItemInMainHand(), inv.getItemInOffHand()}) {
+        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand(), inv.getBoots()}) {
             if (item.getType()==Material.AIR || item.getItemMeta() == null ||
                     !item.getItemMeta().hasEnchant(Enchantment.MENDING))
                 continue;
@@ -539,7 +538,10 @@ public class Events implements Listener {
             String enchant = container.get(Utility.enchant, PersistentDataType.STRING);
             if (id==null && enchant==null)
                 continue;
-            event.setAmount(Utility.addDurability(item, event.getAmount(), player));
+            int amount = Utility.addDurability(item, event.getAmount(), player);
+            event.setAmount(amount);
+            if(amount==0)
+                return;
         }
     }
 
