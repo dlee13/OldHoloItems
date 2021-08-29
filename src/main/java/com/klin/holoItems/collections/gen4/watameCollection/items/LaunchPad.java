@@ -10,7 +10,6 @@ import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -24,11 +23,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class LaunchPad extends Crate implements Placeable, Punchable {
     public static final String name = "launchPad";
-    public static final HashSet<Enchantment> accepted = null;
 
     private static final Material material = Material.SMOKER;
     private static final int quantity = 1;

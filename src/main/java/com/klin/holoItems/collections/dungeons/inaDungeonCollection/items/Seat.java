@@ -6,7 +6,7 @@ import com.klin.holoItems.interfaces.Reactable;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-public class Payload extends Item implements Reactable {
+public class Seat extends Item implements Reactable {
     public static final String name = "noDrop";
 
     private static final Material material = Material.TNT;
@@ -21,13 +21,12 @@ public class Payload extends Item implements Reactable {
     public static final char key = '0';
     public static final String id = ""+ InaDungeonCollection.key+key;
 
-    public Payload(){
+    public Seat(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 
     public void registerRecipes(){}
 
     public void ability(PlayerInteractEntityEvent event) {
-        com.klin.holoItems.dungeons.inaDungeon.Payload.add();
     }
 }

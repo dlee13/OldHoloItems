@@ -29,23 +29,13 @@ import java.util.Set;
 public class InaDungeon implements CommandExecutor{
     public static ClassSelect classSelect;
     public static Conduit conduit;
+    public static Cookie cookie;
     public static GettingWood gettingWood;
     public static Maintenance maintenance;
     public static Minesweeper minesweeper;
     public static Passives passives;
     public static Payload payload;
     public static Waterfall waterfall;
-
-    public InaDungeon(){
-        classSelect = null;
-        conduit = null;
-        gettingWood = null;
-        maintenance = null;
-        minesweeper = null;
-        passives = null;
-        payload = null;
-        waterfall = null;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -269,6 +259,22 @@ public class InaDungeon implements CommandExecutor{
                     System.out.println("Conduit already OFF");
                 return true;
 
+            //cookie
+            case "cookie":
+                cookie = new Cookie();
+                System.out.println("Cookie [ON]");
+                return true;
+
+            case "resetcookie":
+                if(cookie !=null) {
+                    cookie.reset();
+                    cookie = null;
+                    System.out.println("Cookie [OFF]");
+                }
+                else
+                    System.out.println("Cookie already OFF");
+                return true;
+
             //gettingWood
             case "plant":
                 if(args.length<4)
@@ -389,22 +395,27 @@ public class InaDungeon implements CommandExecutor{
 
             //payload
             case "payload":
-                if(args.length>10)
-                    Payload.payload(args);
-                return true;
-
-            case "spawn":
                 if(args.length < 5)
                     return false;
-                world = Bukkit.getWorld(args[1]);
+                world = Bukkit.getWorld(args[0]);
                 if(world==null){
                     System.out.println("Invalid world name");
                     return true;
                 }
                 try {
-                    loc = new Location(world, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+                    payload = new Payload(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+                    System.out.println("Payload [ON]");
                 }catch(NumberFormatException e){ return false; }
-                Payload.spawn(args[0], world, loc, BlockFace.UP);
+                return true;
+
+            case "resetpayload":
+                if(payload!=null) {
+                    payload.reset();
+                    payload = null;
+                    System.out.println("Payload [OFF]");
+                }
+                else
+                    System.out.println("Payload already OFF");
                 return true;
 
             //waterfall

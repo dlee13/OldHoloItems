@@ -1,15 +1,24 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
+import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.AshWood;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.DepthCharge;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.Seat;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.util.Vector;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,263 +27,188 @@ import java.io.IOException;
 import java.util.*;
 
 public class Payload{
-    //payload buildteam 599 56 307 597 69 416 597 70 417 SOUTH
+    //payload world -77 74 -204 -155
+    public Map<AbstractMap.SimpleEntry<Integer, Integer>, List<FallingBlock>> payload;
+    private Set<FallingBlock> plates;
+    private Set<FallingBlock> doors;
+    private int taskId;
 
-    public static void payload(String[] args) {
-        World world = Bukkit.getWorld(args[0]);
-        if (world == null) {
-            System.out.println("Invalid world name");
-            return;
-        }
-        int[] start;
-        int[] coords;
-        BlockFace direction;
-        try {
-            start = new int[]{Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])};
-            coords = new int[]{Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]),
-                    Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9])};
-            direction = BlockFace.valueOf(args[10]);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid argument(s)");
-            return;
-        }
-        AbstractMap.SimpleEntry<Set<FallingBlock>, FallingBlock> payload = spawn("payload", world, new Location(world, start[0], start[1], start[2]), direction);
-        FallingBlock center = payload.getValue();
-        start[0] = center.getLocation().getBlockX();
-        start[2] = center.getLocation().getBlockZ();
-
-        int x = 0;
-        int z = 0;
-        int[] finish;
-        switch (direction) {
-            case NORTH:
-                z = -1;
-            case SOUTH:
-                if (z == 0)
-                    z = 1;
-                finish = new int[]{start[0], (coords[1] + coords[4]) / 2, (Math.abs(coords[2] - start[2]) > Math.abs(coords[5] - start[2]) ? coords[5] : coords[2]) - 2 * z};
-                break;
-            case EAST:
-                x = 1;
-            case WEST:
-                if (x == 0)
-                    x = -1;
-                finish = new int[]{(Math.abs(coords[0] - start[0]) > Math.abs(coords[3] - start[0]) ? coords[3] : coords[0]) - 2 * x, (coords[1] + coords[4]) / 2, start[2]};
-                break;
-            default:
-                return;
-        }
-
-        Queue<Double> upcoming = new LinkedList<>();
-        Location loc = new Location(world, start[0], start[1], start[2]);
-        Block current = world.getBlockAt(loc);
-        boolean found = false;
-        for (int i = 0; i < 327; i++) {
-            if (current.isEmpty()) {
-                if (!Utility.slabs.contains(current.getRelative(BlockFace.DOWN).getType()) &&
-                        Utility.slabs.contains(current.getRelative(Utility.opposites.get(direction)).getRelative(BlockFace.DOWN).getType()))
-                    upcoming.add(0.5);
-                else
-                    upcoming.add(0d);
-            } else {
-                double y = Utility.slabs.contains(current.getType()) ? 0.5 : 1;
-                current = current.getRelative(BlockFace.UP);
-                if (current.isEmpty())
-                    upcoming.add(y);
-                else {
-                    System.out.println("Error: the path rises more than a single block at once");
-                    return;
-                }
-            }
-            if (current.getX() == finish[0] && current.getZ() == finish[2]) {
-                start[1] = current.getY();
-                found = true;
-                break;
-            }
-            current = current.getRelative(direction);
-        }
-        if (!found) {
-            System.out.println("Error: no valid path");
-            return;
-        }
-
-        //map path, including where to throw tnt at end
-        int above = Integer.signum(finish[1] - start[1]);
-        for (int i = 0; i <= Math.abs(finish[1] - start[1]); i += 1) {
-            for (int j = 0; j <= 1; j++) {
-                if (!world.getBlockAt(finish[0] + x * j, start[1] + i * above, finish[2] + z * j).isEmpty()) {
-                    System.out.println("Error: firing area isn't clear");
-                    return;
-                }
-            }
-        }
-
-        //adjust index to build corresponding to payload
-        Set<FallingBlock> blocks = payload.getKey();
-        Block explode = world.getBlockAt(finish[0] + 2 * x, finish[1], finish[2] + 2 * z);
-        int[] copy = coords.clone();
-        final double xInterval = ((double) x) / 20;
-        final double zInterval = ((double) z) / 20;
-        //test
-        upcoming.remove();
-        upcoming.remove();
-        upcoming.remove();
-        //
-        new Task(HoloItems.getInstance(), 1, 1) {
-            //length of payload*20
-            int increment = 0;
-            Double y;
-
-            public void run() {
-                //end reached
-                if (upcoming.isEmpty() && increment % 20 == 0) {
-                    for (FallingBlock block : blocks) {
-                        if (block.getBlockData().getMaterial() == Material.TNT)
-                            block.remove();
-                    }
-                    cancel();
-
-                    TNTPrimed tnt = world.spawn(center.getLocation(), TNTPrimed.class);
-                    tnt.setFuseTicks(64);
-                    Vector aim;
-                    if (center.getLocation().getY() > finish[1])
-                        aim = new Vector(xInterval, 0.25, zInterval);
-                    else
-                        aim = new Vector(xInterval / 2, ((float) (finish[1] - start[1])) / 2.5, zInterval / 2);
-                    tnt.setVelocity(aim);
-                    new Task(HoloItems.getInstance(), 1, 1) {
-                        int increment = 0;
-
-                        public void run() {
-                            Location loc = tnt.getLocation();
-                            if (tnt.getVelocity().getY() < 0 && Math.abs(loc.getY() - finish[1]) < 3 || increment >= 60) {
-                                world.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
-                                world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.4f, 1f);
-                                for (FallingBlock block : blocks)
-                                    block.remove();
-                                tnt.remove();
-                                cancel();
-
-                                Queue<Block> toExplode = new LinkedList<>();
-                                Set<Block> checked = new HashSet<>();
-                                toExplode.add(explode);
-                                new Task(HoloItems.getInstance(), 2, 2) {
-                                    public void run() {
-                                        if (toExplode.isEmpty()) {
-                                            cancel();
-                                            return;
-                                        }
-
-                                        for (int i = 0; i < 2; i++) {
-                                            Block center = toExplode.poll();
-                                            if (center == null)
-                                                break;
-                                            checked.add(center);
-
-                                            center.setType(Material.AIR);
-                                            world.spawnParticle(Particle.EXPLOSION_LARGE, center.getLocation().add(0.5, 0, 0.5), 1);
-                                            world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.1f, 1f);
-                                            for (Block block : new Block[]{
-                                                    center.getRelative(BlockFace.UP),
-                                                    center.getRelative(BlockFace.NORTH),
-                                                    center.getRelative(BlockFace.SOUTH),
-                                                    center.getRelative(BlockFace.EAST),
-                                                    center.getRelative(BlockFace.WEST),
-                                                    center.getRelative(BlockFace.DOWN)}) {
-                                                if (!block.isEmpty() && (copy[0] - block.getX()) * (copy[3] - block.getX()) <= 0 && (copy[1] - block.getY()) * (copy[4] - block.getY()) <= 0 && (copy[2] - block.getZ()) * (copy[5] - block.getZ()) <= 0 && !checked.contains(block) && !toExplode.contains(block))
-                                                    toExplode.add(block);
-                                            }
-                                        }
-                                    }
-                                };
-                                return;
-                            }
-                            increment++;
-                        }
-                    };
-                    return;
-                }
-
-                //game over
-                if (increment >= 1200) {
-                    Location loc = center.getLocation();
-                    world.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
-                    world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1f, 1f);
-                    for (FallingBlock block : blocks)
-                        block.remove();
-
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.damage(100);
-                        world.spawnParticle(Particle.EXPLOSION_LARGE, player.getLocation(), 1);
-                    }
-                    cancel();
-                    return;
-                }
-
-                //upcoming elevation increase, toDo: wave effect
-                if (increment % 20 == 0) {
-                    y = upcoming.poll();
-                    for (FallingBlock block : blocks)
-                        block.setVelocity(new Vector(xInterval, y, zInterval));
-                } else {
-                    for (FallingBlock block : blocks)
-                        block.setVelocity(new Vector(xInterval, 0, zInterval));
-                }
-                increment++;
-            }
-        };
-    }
-
-    public static AbstractMap.SimpleEntry<Set<FallingBlock>, FallingBlock> spawn(String fileName, World world, Location loc, BlockFace direction){
-        Set<FallingBlock> blocks = new HashSet<>();
-        FallingBlock center = null;
-
-        File file = new File(HoloItems.getInstance().getDataFolder(), fileName+".txt");
+    public Payload(World world, int x, int y, int z1, int z2) {
+        Location loc = new Location(world, x, y, z1);
+        File file = new File(HoloItems.getInstance().getDataFolder(), "payload.txt");
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String wall;
             int increment = 0;
-            long size = reader.lines().count();
+            payload = new HashMap<>();
+            plates = new HashSet<>();
+            doors = new HashSet<>();
             while ((wall = reader.readLine()) != null) {
-                String[] fence = wall.split("\n");
+                String[] fence = wall.split(", ");
                 for (int i = 0; i < fence.length; i++) {
-                    String[] tile = fence[i].split(", ");
+                    String[] tile = fence[i].split(" ");
                     for (int j = 0; j < tile.length; j++) {
-                        FallingBlock block = world.spawnFallingBlock(loc.clone().add(increment+0.5, i, j+0.5), Bukkit.createBlockData(tile[j]));
-                        block.setGravity(false);
-                        blocks.add(block);
-                        if(i!=fence.length/2)
+                        BlockData data = Bukkit.createBlockData(tile[j]);
+                        Material type = data.getMaterial();
+                        if(type.isAir())
                             continue;
-                        switch (direction) {
-                            case NORTH:
-                                if (increment==0 && j==tile.length/2)
-                                    center = block;
-                                break;
-                            case SOUTH:
-                                if (increment==size-1 && j==tile.length/2)
-                                    center = block;
-                                break;
-                            case EAST:
-                                if (increment==size/2 && j==tile.length-1)
-                                    center = block;
-                                break;
-                            case WEST:
-                                if (increment==size/2 && j==0)
-                                    center = block;
-                                break;
-                        }
+                        Location location = loc.clone().add(increment+0.5, i, j+0.5);
+                        FallingBlock block = world.spawnFallingBlock(location, data);
+                        block.setGravity(false);
+                        block.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Seat.id);
+                        AbstractMap.SimpleEntry<Integer, Integer> key = new AbstractMap.SimpleEntry<>(location.getBlockX(), location.getBlockZ());
+                        List<FallingBlock> falling = payload.computeIfAbsent(key, k -> new ArrayList<>());
+                        falling.add(block);
+                        if(type==Material.SPRUCE_PRESSURE_PLATE || type==Material.DARK_OAK_PRESSURE_PLATE)
+                            plates.add(block);
+                        else if(type==Material.SPRUCE_TRAPDOOR && tile[j].contains("open=false"))
+                            doors.add(block);
                     }
                 }
                 increment++;
             }
-            return new AbstractMap.SimpleEntry<>(blocks, center);
-        } catch (IOException e) {
-            System.out.println("Invalid file");
-            return null;
+        } catch (IOException e) { return; }
+
+        double i = ((double) (z2-z1))/360;
+        if(i<=0)
+            return;
+        int pause = (int) (0.1/i)+1;
+        taskId = new Task(HoloItems.getInstance(), 10, 10) {
+            int increment = 0;
+            Location location = loc;
+            final int interval = (int) (i/pause*20);
+            public void run() {
+                if(increment>=36){
+                    cancel();
+                    return;
+                }
+                if(increment%2==0) {
+                    Set<AbstractMap.SimpleEntry<Integer, Integer>> remove = new HashSet<>();
+                    Map<AbstractMap.SimpleEntry<Integer, Integer>, List<FallingBlock>> add = new HashMap<>();
+                    boolean update = true;
+                    for (AbstractMap.SimpleEntry<Integer, Integer> key : payload.keySet()) {
+                        List<FallingBlock> falling = payload.get(key);
+                        FallingBlock bottom = falling.get(0);
+                        Location loc = bottom.getLocation().add(0, 0, interval);
+                        Block bloc = loc.getBlock();
+                        double diff = loc.getY() - loc.getBlockY();
+                        if (Math.abs(diff - 1) > 0.01 && Utility.slabs.contains(bloc.getType()))
+                            loc.add(0, 0.5, 0);
+                        else if (!bloc.isPassable())
+                            loc.add(0, diff > 0.01 ? 0.5 : 1, 0);
+                        loc.add(0, -1, 0);
+                        for (FallingBlock block : falling)
+                            block.teleport(loc.add(0, 1, 0));
+                        if (update) {
+                            location = bottom.getLocation();
+                            update = false;
+                        }
+                        remove.add(key);
+                        add.put(new AbstractMap.SimpleEntry<>(loc.getBlockX(), loc.getBlockZ()), falling);
+                    }
+                    for (AbstractMap.SimpleEntry<Integer, Integer> key : remove)
+                        payload.remove(key);
+                    payload.putAll(add);
+                }
+                else {
+                    int wood = 0;
+                    int tnt = 0;
+                    for (Entity nearby : world.getNearbyEntities(location, 5, 1, 5)) {
+                        if (!(nearby instanceof Item))
+                            continue;
+                        ItemStack item = ((Item) nearby).getItemStack();
+                        if (item.getType() == Material.AIR)
+                            return;
+                        ItemMeta meta = item.getItemMeta();
+                        if (meta == null)
+                            return;
+                        String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+                        if (id == null)
+                            return;
+                        if (id.equals(AshWood.id)) {
+                            wood += item.getAmount();
+                            nearby.remove();
+                        } else if (id.equals(DepthCharge.id)) {
+                            tnt += item.getAmount();
+                            nearby.remove();
+                        }
+                    }
+                    for (int i = 0; i < wood / 5; i++)
+                        seat();
+                    for (int i = 0; i < tnt; i++)
+                        arm();
+                    if (wood % 5 > 0) {
+                        ItemStack drop = Collections.findItem(AshWood.id).item.clone();
+                        drop.setAmount(wood % 5);
+                        world.dropItemNaturally(loc, drop);
+                    }
+                }
+                increment++;
+            }
+        }.getTaskId();
+    }
+
+    public void seat(){
+        Optional<FallingBlock> plate = Utility.getRandom(plates);
+        if(plate.isEmpty())
+            return;
+        Location loc = plate.get().getLocation();
+        List<FallingBlock> falling = payload.get(new AbstractMap.SimpleEntry<>(loc.getBlockX(), loc.getBlockZ()));
+        if(falling==null)
+            return;
+        FallingBlock top = falling.get(falling.size()-1);
+        doors.remove(top);
+
+        Material material = top.getBlockData().getMaterial();
+        Material type;
+        if(material==Material.SPRUCE_PRESSURE_PLATE)
+            type = Material.SPRUCE_TRAPDOOR;
+        else if(material==Material.DARK_OAK_PRESSURE_PLATE)
+            type = Material.DARK_OAK_TRAPDOOR;
+        else
+            return;
+        Location location = top.getLocation();
+        top.remove();
+        FallingBlock block = location.getWorld().spawnFallingBlock(location, Bukkit.createBlockData(type));
+        block.setGravity(false);
+        block.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Seat.id);
+        falling.add(block);
+        doors.add(block);
+    }
+
+    public void arm(){
+        Optional<FallingBlock> door = Utility.getRandom(doors);
+        if(door.isEmpty())
+            return;
+        Location loc = door.get().getLocation();
+        List<FallingBlock> falling = payload.get(new AbstractMap.SimpleEntry<>(loc.getBlockX(), loc.getBlockZ()));
+        if(falling==null)
+            return;
+        FallingBlock top = falling.get(falling.size()-1);
+
+        Material type = top.getBlockData().getMaterial();
+        if(type==Material.SPRUCE_TRAPDOOR || type==Material.DARK_OAK_TRAPDOOR){
+            Location location = top.getLocation();
+            top.remove();
+            FallingBlock block = location.getWorld().spawnFallingBlock(location, Bukkit.createBlockData(Material.TNT));
+            block.setGravity(false);
+            block.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Seat.id);
+            falling.add(block);
+        }
+        else if(type==Material.TNT){
+            Location location = top.getLocation();
+            FallingBlock block = location.getWorld().spawnFallingBlock(location.add(0, 1, 0), Bukkit.createBlockData(Material.TNT));
+            block.setGravity(false);
+            block.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Seat.id);
+            falling.add(block);
         }
     }
 
-    public static void add(){
-
+    public void reset(){
+        for(List<FallingBlock> falling : payload.values()) {
+            for(FallingBlock block : falling)
+                block.remove();
+        }
+        Bukkit.getScheduler().cancelTask(taskId);
     }
 }

@@ -530,7 +530,7 @@ public class Events implements Listener {
         Player player = event.getPlayer();
         PlayerInventory inv = player.getInventory();
         for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand(), inv.getBoots()}) {
-            if (item.getType()==Material.AIR || item.getItemMeta() == null ||
+            if (item==null || item.getType()==Material.AIR || item.getItemMeta() == null ||
                     !item.getItemMeta().hasEnchant(Enchantment.MENDING))
                 continue;
             PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();

@@ -18,12 +18,14 @@ public class InaDungeonCollection extends Collection {
 
     public InaDungeonCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(Payload.key, new Payload());
+        collection.put(Seat.key, new Seat());
         collection.put(Torrent.key, new Torrent());
         collection.put(BoneFragment.key, new BoneFragment());
         collection.put(BoneShard.key, new BoneShard());
         collection.put(BoneCrystal.key, new BoneCrystal());
         collection.put(AshWood.key, new AshWood());
+        collection.put(DepthCharge.key, new DepthCharge());
+        collection.put(CookieJar.key, new CookieJar());
     }
 
     public Map<String, Integer> getStat(Player player){

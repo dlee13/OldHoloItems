@@ -31,6 +31,9 @@ public class Dungeons implements CommandExecutor {
                 //conduit
                 holoItems.getCommand("conduit").setExecutor(inaDungeon);
                 holoItems.getCommand("resetconduit").setExecutor(inaDungeon);
+                //cookie
+                holoItems.getCommand("cookie").setExecutor(inaDungeon);
+                holoItems.getCommand("resetcookie").setExecutor(inaDungeon);
                 //gettingWood
                 holoItems.getCommand("plant").setExecutor(inaDungeon);
                 holoItems.getCommand("resetgettingwood").setExecutor(inaDungeon);
@@ -43,7 +46,7 @@ public class Dungeons implements CommandExecutor {
                 holoItems.getCommand("resetmaintenance").setExecutor(inaDungeon);
                 //payload
                 holoItems.getCommand("payload").setExecutor(inaDungeon);
-                holoItems.getCommand("spawn").setExecutor(inaDungeon);
+                holoItems.getCommand("resetpayload").setExecutor(inaDungeon);
                 //waterfall
                 holoItems.getCommand("waterfall").setExecutor(inaDungeon);
                 holoItems.getCommand("resetwaterfall").setExecutor(inaDungeon);

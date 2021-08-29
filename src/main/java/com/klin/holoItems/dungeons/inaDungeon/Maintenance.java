@@ -6,14 +6,17 @@ import com.klin.holoItems.dungeons.inaDungeon.classes.Watson;
 import com.klin.holoItems.utility.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -94,6 +97,22 @@ public class Maintenance implements Listener {
             inputs.replace(player, new AbstractMap.SimpleEntry<>(dir, angle));
         }
 
+        if(InaDungeon.cookie!=null){
+            double[] buff = InaDungeon.cookie.buffs.get(player);
+            if(buff!=null && buff[6]>0) {
+                Block block = location.clone().add(location.getDirection().setY(0).normalize().multiply(-1.5)).getBlock();
+                if(block.isEmpty()) {
+                    block.setType(Material.FIRE);
+                    new BukkitRunnable(){
+                        public void run(){
+                            if(block.getType()==Material.FIRE)
+                                block.setType(Material.AIR);
+                        }
+                    }.runTaskLater(HoloItems.getInstance(), 80);
+                }
+            }
+        }
+
         if(cage==null || knockBack.contains(player))
             return;
         int x = location.getBlockX();
@@ -164,13 +183,13 @@ public class Maintenance implements Listener {
         }.runTaskLater(HoloItems.getInstance(), 8);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void track(BlockPlaceEvent event){
         if(!event.isCancelled())
             decay(event.getBlock(), 80);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void prevent(BlockBreakEvent event){
         if(!event.isCancelled()) {
             if(decay.remove(event.getBlock()))
@@ -180,12 +199,46 @@ public class Maintenance implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void regen(EntityExplodeEvent event){
+        if(event.isCancelled())
+            return;
+        event.setYield(0);
+        Map<Integer, Map<Block, BlockData>> blast = new HashMap<>();
+        Location center = event.getLocation();
+        int max = -1;
+        for(Block block : event.blockList()) {
+            int radius = (int) center.distance(block.getLocation().add(0.5, 0.5, 0.5));
+            blast.computeIfAbsent(radius, k -> new HashMap<>()).put(block, block.getBlockData());
+            max = Math.max(max, radius);
+        }
+        int temp = max;
+        new Task(HoloItems.getInstance(), 80, 1){
+            int radius = temp;
+            Map<Block, BlockData> regen;
+            public void run(){
+                regen = blast.get(radius);
+                if(regen==null){
+                    cancel();
+                    return;
+                }
+                for(Block block : regen.keySet()){
+                    BlockData data = regen.get(block);
+                    if(!data.getMaterial().isAir())
+                        block.setBlockData(data);
+                }
+                radius--;
+            }
+        };
+    }
+
     private void decay(Block block, int duration){
         decay.add(block);
         new Task(HoloItems.getInstance(), 2, 1){
             int increment = 0;
             public void run(){
                 if(increment>=duration || !decay.contains(block)) {
+                    block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5,0.5,0.5), 40, 0, 0, 0, 4, block.getType().createBlockData());
                     block.setType(Material.AIR);
                     cancel();
                     return;
