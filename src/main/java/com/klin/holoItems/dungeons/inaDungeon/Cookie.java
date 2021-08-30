@@ -1,6 +1,7 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Task;
 import org.bukkit.entity.Entity;
@@ -21,7 +22,7 @@ import java.util.Map;
 import static org.bukkit.Bukkit.getOnlinePlayers;
 import static org.bukkit.Bukkit.getServer;
 
-public class Cookie implements Listener{
+public class Cookie implements Listener, Resetable {
     public ItemStack[] heads;
     public Map<Player, double[]> buffs;
     private final Map<Player, Integer> shield;

@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class Seat extends Item implements Reactable {
-    public static final String name = "noDrop";
+    public static final String name = "seat";
 
     private static final Material material = Material.TNT;
     private static final int quantity = 1;

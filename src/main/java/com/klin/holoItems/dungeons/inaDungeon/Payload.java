@@ -5,6 +5,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.AshWood;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.DepthCharge;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.Seat;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -26,7 +27,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class Payload{
+public class Payload implements Resetable {
     //payload world -77 74 -204 -155
     public Map<AbstractMap.SimpleEntry<Integer, Integer>, List<FallingBlock>> payload;
     private Set<FallingBlock> plates;

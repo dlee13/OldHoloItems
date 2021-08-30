@@ -1,6 +1,7 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
@@ -18,7 +19,7 @@ import java.util.Set;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class Waterfall implements Listener {
+public class Waterfall implements Listener, Resetable {
     //waterfall buildteam 713 54 345
     //y:61 -> 721 70 361
     //waterfall world -6 60 -285

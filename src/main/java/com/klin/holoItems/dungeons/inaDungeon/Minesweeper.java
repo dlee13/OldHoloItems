@@ -2,6 +2,7 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.misc.franCollection.items.SharpenedFangs;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class Minesweeper implements Listener {
+public class Minesweeper implements Listener, Resetable {
     //minesweeper -27 -9 -294 -262 59
     private final Set<Material> sand;
     public final Map<Integer, Material> flags;

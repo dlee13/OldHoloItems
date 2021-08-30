@@ -73,7 +73,12 @@ commands:
   tostring:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x1> <y1> <z1> <x2> <y2> <z2> <name>
-
+  reset:
+    permission: holoItems.dungeons.inaDungeon
+    usage: /<command> <name>
+  shop:
+    permission: holoItems.dungeons.inaDungeon
+    usage: /<command> <world> <x> <y> <z>
   groundpound:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <entityType>
@@ -83,68 +88,36 @@ commands:
   spreadfire:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
-
   freeze:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command>
   select:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
-  resetselect:
-    permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
-
   conduit:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
-  resetconduit:
-    permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
-
   cookie:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command>
-  resetcookie:
-    permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
-
   plant:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
-  resetgettingwood:
-    permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
-
   minesweeper:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x1> <x2> <z1> <z2> <y>
-  resetminesweeper:
-    permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
-
   class:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <class>
   maintain:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <x1> <z1> <x2> <z2>
-  resetmaintenance:
-    permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
-
   payload:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z1> <z2>
-  resetpayload:
-    permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
-
   waterfall:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
-  resetwaterfall:
-    permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
 
 permissions:
   holoItems.*:

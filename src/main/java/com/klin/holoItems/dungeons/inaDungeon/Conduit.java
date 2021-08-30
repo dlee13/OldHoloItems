@@ -1,6 +1,7 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -21,7 +22,7 @@ import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class Conduit implements Listener {
+public class Conduit implements Listener, Resetable {
     //rotate world -65 -63 -205 -203 72
     //19x19: y+=1 (-10 -203)
     //conduit world -28 58 -221

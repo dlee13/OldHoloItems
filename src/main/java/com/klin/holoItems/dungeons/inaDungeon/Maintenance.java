@@ -1,6 +1,7 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Watson;
 import com.klin.holoItems.utility.Task;
@@ -27,7 +28,7 @@ import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class Maintenance implements Listener {
+public class Maintenance implements Listener, Resetable {
     private final Material[][] seal;
     //maintain -41 -292 -27 -267
     private final int[] cage;
@@ -97,8 +98,9 @@ public class Maintenance implements Listener {
             inputs.replace(player, new AbstractMap.SimpleEntry<>(dir, angle));
         }
 
-        if(InaDungeon.cookie!=null){
-            double[] buff = InaDungeon.cookie.buffs.get(player);
+        Cookie cookie = (Cookie) InaDungeon.presets.get("cookie");
+        if(cookie!=null){
+            double[] buff = cookie.buffs.get(player);
             if(buff!=null && buff[6]>0) {
                 Block block = location.clone().add(location.getDirection().setY(0).normalize().multiply(-1.5)).getBlock();
                 if(block.isEmpty()) {

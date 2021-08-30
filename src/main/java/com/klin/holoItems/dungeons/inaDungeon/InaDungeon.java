@@ -2,6 +2,7 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.misc.franCollection.items.DyeConcentrate;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
 import com.klin.holoItems.dungeons.inaDungeon.classes.*;
 import com.klin.holoItems.utility.Task;
@@ -27,15 +28,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class InaDungeon implements CommandExecutor{
-    public static ClassSelect classSelect;
-    public static Conduit conduit;
-    public static Cookie cookie;
-    public static GettingWood gettingWood;
-    public static Maintenance maintenance;
-    public static Minesweeper minesweeper;
-    public static Passives passives;
-    public static Payload payload;
-    public static Waterfall waterfall;
+    public static Map<String, Resetable> presets;
+
+    public InaDungeon(){
+        presets = new HashMap<>();
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -133,7 +130,37 @@ public class InaDungeon implements CommandExecutor{
                 } catch (IOException e) { e.printStackTrace(); }
                 return true;
 
-            //attacks
+            case "reset":
+                if(args.length<1) {
+                    System.out.println(presets.keySet());
+                    return true;
+                }
+                Resetable preset = presets.remove(args[0].toLowerCase());
+                if(preset!=null) {
+                    preset.reset();
+                    System.out.println(preset.getClass().getSimpleName() + " [OFF]");
+                    return true;
+                }
+                return false;
+
+            case "shop":
+                if(presets.get("aoshop")!=null){
+                    System.out.println("Ao-Shop already ON");
+                    return true;
+                }
+                if (args.length<4)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                try {
+                    presets.put("aoshop", new AoShop(world, new Location(world, Double.parseDouble(args[1]), Double.parseDouble(args[2]), Double.parseDouble(args[3]))));
+                    System.out.println("Ao-Shop [ON]");
+                }catch(NumberFormatException e){return false;}
+                return true;
+
             case "groundpound":
                 if(!(sender instanceof Player)){
                     System.out.println("Player only command");
@@ -203,13 +230,17 @@ public class InaDungeon implements CommandExecutor{
                 }catch(NumberFormatException e){return false;}
                 return true;
 
-            //class
             case "freeze":
+                ClassSelect classSelect = (ClassSelect) presets.get("classselect");
                 if(classSelect!=null)
                     classSelect.freeze();
                 return true;
 
             case "select":
+                if(presets.get("classselect")!=null){
+                    System.out.println("Class Select already ON");
+                    return true;
+                }
                 if(args.length<4)
                     return false;
                 world = Bukkit.getWorld(args[0]);
@@ -218,23 +249,16 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    classSelect = new ClassSelect(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    presets.put("classselect", new ClassSelect(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));
+                    System.out.println("Class Select [ON]");
                 }catch (NumberFormatException e){return false;}
-                System.out.println("Class Select [ON]");
                 return true;
 
-            case "resetselect":
-                if(classSelect!=null) {
-                    classSelect.reset();
-                    classSelect = null;
-                    System.out.println("Class Select [OFF]");
-                }
-                else
-                    System.out.println("Class Select already OFF");
-                return true;
-
-            //conduit
             case "conduit":
+                if(presets.get("conduit")!=null){
+                    System.out.println("Conduit already ON");
+                    return true;
+                }
                 if(args.length<4)
                     return false;
                 world = Bukkit.getWorld(args[0]);
@@ -243,40 +267,25 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    conduit = new Conduit(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    presets.put("conduit", new Conduit(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));
+                    System.out.println("Conduit [ON]");
                 }catch (NumberFormatException e){return false;}
-                System.out.println("Conduit [ON]");
                 return true;
 
-            case "resetconduit":
-                if(conduit!=null) {
-                    conduit.water.setType(Material.AIR);
-                    conduit.reset();
-                    conduit = null;
-                    System.out.println("Conduit [OFF]");
-                }
-                else
-                    System.out.println("Conduit already OFF");
-                return true;
-
-            //cookie
             case "cookie":
-                cookie = new Cookie();
+                if(presets.get("cookie")!=null){
+                    System.out.println("Cookie already ON");
+                    return true;
+                }
+                presets.put("cookie", new Cookie());
                 System.out.println("Cookie [ON]");
                 return true;
 
-            case "resetcookie":
-                if(cookie !=null) {
-                    cookie.reset();
-                    cookie = null;
-                    System.out.println("Cookie [OFF]");
-                }
-                else
-                    System.out.println("Cookie already OFF");
-                return true;
-
-            //gettingWood
             case "plant":
+                if(presets.get("gettingwood")!=null){
+                    System.out.println("Getting Wood already ON");
+                    return true;
+                }
                 if(args.length<4)
                     return false;
                 world = Bukkit.getWorld(args[0]);
@@ -285,30 +294,38 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    gettingWood = new GettingWood(new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));
+                    presets.put("gettingwood", new GettingWood(new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]))));
+                    System.out.println("Getting Wood [ON]");
                 }catch (NumberFormatException e){return false;}
-                System.out.println("Getting Wood [ON]");
                 return true;
 
-            case "resetgettingwood":
-                if(gettingWood!=null){
-                    gettingWood.reset();
-                    gettingWood = null;
-                    System.out.println("Getting Wood [OFF]");
-                }
-                else
-                    System.out.println("Getting Wood already OFF");
-                return true;
-
-            //maintenance
             case "class":
                 if(!(sender instanceof Player)){
-                    System.out.println("Player only command");
-                    return true;
+                    if(args.length<2) {
+                        System.out.println("Specify player");
+                        return true;
+                    }
+                    else {
+                        player = Bukkit.getPlayer(args[1]);
+                        if(player==null) {
+                            System.out.println("Unknown player");
+                            return true;
+                        }
+                    }
                 }
-                if(args.length<1)
+                else if(args.length>0) {
+                    if(args.length!=1) {
+                        player = Bukkit.getPlayer(args[1]);
+                        if(player==null){
+                            sender.sendMessage("Unknown player");
+                            return true;
+                        }
+                    }
+                    else
+                        player = (Player) sender;
+                }
+                else
                     return false;
-                player = (Player) sender;
                 Member member;
                 switch (args[0].toLowerCase()){
                     case "calli":
@@ -328,32 +345,27 @@ public class InaDungeon implements CommandExecutor{
                     default:
                         return false;
                 }
-                if(maintenance==null)
-                    maintenance = new Maintenance();
-                maintenance.classes.put(player, member);
+                ((Maintenance) presets.computeIfAbsent("maintenance", k -> new Maintenance())).classes.put(player, member);
                 return true;
 
             case "maintain":
+                if(presets.get("maintenance")!=null){
+                    System.out.println("Maintenance already ON");
+                    return true;
+                }
                 if(args.length<4)
                     return false;
                 try {
-                    maintenance = new Maintenance(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    presets.put("maintenance", new Maintenance(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));
+                    System.out.println("Maintenance [ON]");
                 }catch (NumberFormatException e){return false;}
-                System.out.println("Maintenance [ON]");
                 return true;
 
-            case "resetmaintenance":
-                if(maintenance!=null) {
-                    maintenance.reset();
-                    maintenance = null;
-                    System.out.println("Maintenance [OFF]");
-                }
-                else
-                    System.out.println("Maintenance already OFF");
-                return true;
-
-            //minesweeper
             case "minesweeper":
+                if(presets.get("minesweeper")!=null){
+                    System.out.println("Minesweeper already ON");
+                    return true;
+                }
                 if(args.length < 6)
                     return false;
                 world = Bukkit.getWorld(args[0]);
@@ -378,23 +390,16 @@ public class InaDungeon implements CommandExecutor{
                     }
                     else
                         z2 = z;
-                    minesweeper = new Minesweeper(world, x1, x2, z1, z2, Integer.parseInt(args[5]));
+                    presets.put("minesweeper", new Minesweeper(world, x1, x2, z1, z2, Integer.parseInt(args[5])));
                     System.out.println("Minesweeper [ON]");
                 }catch (NumberFormatException e){System.out.println("Invalid coordinates");}
                 return  true;
 
-            case "resetMinesweeper":
-                if(minesweeper!=null) {
-                    minesweeper.reset();
-                    minesweeper = null;
-                    System.out.println("Minesweeper [OFF]");
-                }
-                else
-                    System.out.println("Minesweeper already OFF");
-                return true;
-
-            //payload
             case "payload":
+                if(presets.get("payload")!=null){
+                    System.out.println("Payload already ON");
+                    return true;
+                }
                 if(args.length < 5)
                     return false;
                 world = Bukkit.getWorld(args[0]);
@@ -403,23 +408,16 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    payload = new Payload(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+                    presets.put("payload", new Payload(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])));
                     System.out.println("Payload [ON]");
                 }catch(NumberFormatException e){ return false; }
                 return true;
 
-            case "resetpayload":
-                if(payload!=null) {
-                    payload.reset();
-                    payload = null;
-                    System.out.println("Payload [OFF]");
-                }
-                else
-                    System.out.println("Payload already OFF");
-                return true;
-
-            //waterfall
             case "waterfall":
+                if(presets.get("waterfall")!=null){
+                    System.out.println("Waterfall already ON");
+                    return true;
+                }
                 if(args.length<4)
                     return false;
                 world = Bukkit.getWorld(args[0]);
@@ -428,19 +426,9 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    waterfall = new Waterfall(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    presets.put("waterfall", new Waterfall(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));
+                    System.out.println("Waterfall [ON]");
                 }catch (NumberFormatException e){return false;}
-                System.out.println("Waterfall [ON]");
-                return true;
-
-            case "resetwaterfall":
-                if(waterfall!=null) {
-                    waterfall.reset();
-                    waterfall = null;
-                    System.out.println("Waterfall [OFF]");
-                }
-                else
-                    System.out.println("Waterfall already OFF");
                 return true;
         }
         return true;

@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.dungeons.inaDungeonCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.InaDungeonCollection;
+import com.klin.holoItems.dungeons.inaDungeon.Cookie;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
@@ -39,7 +40,7 @@ public class CookieJar  extends Item implements Placeable, Punchable {
     private static final boolean shiny = false;
 
     public static final int cost = -1;
-    public static final char key = '9';
+    public static final char key = '8';
 
     public CookieJar(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost, ""+InaDungeonCollection.key+key, key);
@@ -58,7 +59,8 @@ public class CookieJar  extends Item implements Placeable, Punchable {
     }
 
     public void ability(PlayerInteractEvent event, Action action){
-        if(InaDungeon.cookie==null || action!=Action.RIGHT_CLICK_BLOCK)
+        Cookie cookie = (Cookie) InaDungeon.presets.get("cookie");
+        if(cookie==null || action!=Action.RIGHT_CLICK_BLOCK)
             return;
 
         Block block = event.getClickedBlock();
@@ -83,7 +85,7 @@ public class CookieJar  extends Item implements Placeable, Punchable {
                 roll = 7;
         }
         else roll = 6;
-        stand.getEquipment().setHelmet(InaDungeon.cookie.heads[roll==7?1:roll]);
+        stand.getEquipment().setHelmet(cookie.heads[roll==7?1:roll]);
         String desc;
         switch (roll){
             case 0:
@@ -129,7 +131,7 @@ public class CookieJar  extends Item implements Placeable, Punchable {
                 for(Entity nearby : stand.getNearbyEntities(0.375, 1, 0.375)){
                     if(nearby instanceof Player){
                         Player player = (Player) nearby;
-                        double[] buffs = InaDungeon.cookie.buffs.get(player);
+                        double[] buffs = cookie.buffs.get(player);
                         if(buffs!=null) {
                             if(index==7) player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 80, 2));
                             else buffs[index]++;

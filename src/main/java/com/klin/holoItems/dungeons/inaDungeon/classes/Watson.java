@@ -2,6 +2,7 @@ package com.klin.holoItems.dungeons.inaDungeon.classes;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
+import com.klin.holoItems.dungeons.inaDungeon.Maintenance;
 import com.klin.holoItems.utility.Task;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -44,7 +45,8 @@ public class Watson extends Member {
         double abs = Math.abs(angle);
         if(abs<Math.PI*0.5 || abs>Math.PI*1.2)
             return;
-        InaDungeon.maintenance.inputs.replace(player, new AbstractMap.SimpleEntry<>(InaDungeon.maintenance.inputs.get(player).getKey(), 0.0));
+        Maintenance maintenance = (Maintenance) InaDungeon.presets.get("maintenance");
+        maintenance.inputs.replace(player, new AbstractMap.SimpleEntry<>(maintenance.inputs.get(player).getKey(), 0.0));
         teleport = 1;
         World world = player.getWorld();
         Set<LivingEntity> targets = new HashSet<>();

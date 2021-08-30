@@ -1,6 +1,7 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.dungeons.inaDungeon.classes.*;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
 import com.klin.holoItems.utility.Utility;
@@ -24,7 +25,7 @@ import java.util.Set;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class ClassSelect implements Listener {
+public class ClassSelect implements Listener, Resetable {
     //select buildteam 885 110 -189
     //select world 78 119 -231
     private final Map<Player, Member> classes;
@@ -102,6 +103,6 @@ public class ClassSelect implements Listener {
     public void reset(){
         EntityDamageEvent.getHandlerList().unregister(this);
         EntityBlockFormEvent.getHandlerList().unregister(this);
-        InaDungeon.maintenance.classes = classes;
+        ((Maintenance) InaDungeon.presets.get("maintenance")).classes = classes;
     }
 }

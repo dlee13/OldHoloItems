@@ -4,6 +4,7 @@ import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.AshWood;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.BoneCrystal;
+import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -31,7 +32,7 @@ import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class GettingWood implements Listener {
+public class GettingWood implements Listener, Resetable {
     //plant world 45 64 -284
     private final Location[] locations;
     private final List<Integer> stages;

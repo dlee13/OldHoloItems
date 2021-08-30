@@ -4,6 +4,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.en.guraCollection.GuraCollection;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
+import com.klin.holoItems.dungeons.inaDungeon.Maintenance;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
@@ -78,8 +79,9 @@ public class TideRider extends Item implements Interactable {
             Block current = block;
             Block previous;
             public void run(){
+                Maintenance maintenance = (Maintenance) InaDungeon.presets.get("maintenance");
                 if(increment>=1200 || !player.isValid() || !player.isHandRaised() ||
-                        InaDungeon.maintenance!=null && InaDungeon.maintenance.knockBack.contains(player)){
+                        maintenance!=null && maintenance.knockBack.contains(player)){
                     player.sendBlockChange(current.getLocation(), data.remove(current));
                     meta.removeEnchant(Enchantment.RIPTIDE);
                     meta.addEnchant(Enchantment.LOYALTY, 3, false);
