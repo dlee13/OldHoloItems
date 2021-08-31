@@ -663,13 +663,13 @@ public class Utility {
         };
     }
 
-    public static Set<Block> vacuum(Block block, Material type, int limit, boolean remove){
+    public static List<Block> vacuum(Block block, Material type, int limit, boolean remove){
         Queue<Block> vacuum = new LinkedList<>();
         Set<Block> checked = new HashSet<>();
         vacuum.add(block);
         checked.add(block);
         boolean levelled = type==WATER;
-        Set<Block> source = new HashSet<>();
+        List<Block> source = new ArrayList<>();
         while(!vacuum.isEmpty() && checked.size()<limit) {
             Block center = vacuum.poll();
             if (center==null)

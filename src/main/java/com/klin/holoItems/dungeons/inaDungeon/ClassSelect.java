@@ -3,40 +3,40 @@ package com.klin.holoItems.dungeons.inaDungeon;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.dungeons.inaDungeon.classes.*;
-import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
+import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.bukkit.Bukkit.getServer;
 
 public class ClassSelect implements Listener, Resetable {
     //select buildteam 885 110 -189
-    //select world 78 119 -231
+    //select world 78 120 -231
     private final Map<Player, Member> classes;
     private final Location center;
-    private final Set<Block> source;
+    private final List<Block> source;
     private boolean ina;
 
     public ClassSelect(World world, int x, int y, int z){
         classes = new HashMap<>();
         center = new Location(world, x, y, z);
-        source = Utility.vacuum(world.getBlockAt(center).getRelative(BlockFace.UP), Material.WATER, 500, false);
+        source = Utility.vacuum(world.getBlockAt(center), Material.WATER, 500, false);
         ina = false;
         getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
@@ -50,9 +50,9 @@ public class ClassSelect implements Listener, Resetable {
             return;
         Player player = (Player) entity;
         Location loc = player.getLocation();
-        Vector select = loc.subtract(center).toVector().setY(0).normalize();
-        loc.setY(0);
-        if(ina && center.distance(loc)<3)
+        Vector select = loc.clone().subtract(center).toVector().setY(0).normalize();
+        loc.setY(center.getY());
+        if(ina && center.distance(loc)<4.25)
             classes.put(player, new Ina(player));
         else {
             double side = select.getX();
@@ -74,25 +74,55 @@ public class ClassSelect implements Listener, Resetable {
             }
         }
         event.setCancelled(true);
+        player.setFallDistance(0);
         player.teleport(center);
     }
 
     @EventHandler
     public void select(EntityBlockFormEvent event){
         Block ice = event.getBlock();
-        new BukkitRunnable(){
-            public void run(){
-                if(ice.getType()==Material.FROSTED_ICE && source.contains(ice)){
-                    for(Block block : source){
-                        if(block.getType()!=Material.FROSTED_ICE)
-                            return;
+        if(source.contains(ice)) {
+            new BukkitRunnable() {
+                public void run() {
+                    if(ice.getType()!=Material.FROSTED_ICE)
+                        return;
+                    boolean melt = false;
+                    for (Block block : source) {
+                        if (block.getType()!=Material.FROSTED_ICE) {
+                            melt = true;
+                            break;
+                        }
                     }
-                    //spawn capsule at center
-                    System.out.println("frosted");
+                    if(melt){
+                        new BukkitRunnable(){
+                            public void run(){
+                                ice.setType(Material.WATER);
+                            }
+                        }.runTaskLater(HoloItems.getInstance(), 120);
+                        return;
+                    }
+                    new Task(HoloItems.getInstance(), 1, 1){
+                        public void run(){
+                            for(int i=0; i<4; i++){
+                                Block block = source.remove(0);
+                                block.setType(Material.ICE);
+                                if(source.isEmpty()){
+                                    cancel();
+                                    return;
+                                }
+                            }
+                        }
+                    };
                     ina = true;
                 }
-            }
-        }.runTask(HoloItems.getInstance());
+            }.runTask(HoloItems.getInstance());
+        }
+    }
+
+    @EventHandler
+    public void melt(BlockFadeEvent event){
+        if(!event.isCancelled() && event.getNewState().getType()==Material.WATER)
+            event.setCancelled(true);
     }
 
     public void freeze(){
@@ -103,6 +133,7 @@ public class ClassSelect implements Listener, Resetable {
     public void reset(){
         EntityDamageEvent.getHandlerList().unregister(this);
         EntityBlockFormEvent.getHandlerList().unregister(this);
-        ((Maintenance) InaDungeon.presets.get("maintenance")).classes = classes;
+        BlockFadeEvent.getHandlerList().unregister(this);
+        ((Maintenance) InaDungeon.presets.computeIfAbsent("maintenance", k -> new Maintenance())).classes = classes;
     }
 }

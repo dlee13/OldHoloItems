@@ -19,14 +19,14 @@ public class BoneCrystal extends Item {
     private static final Material material = Material.BONE_BLOCK;
     private static final int quantity = 1;
     private static final String lore =
-            "A peculiar fertilizer";
+            "Souls call out for it";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
 
     public static final int cost = 0;
-    public static final char key = '4';
-    public static final String id = ""+ InaDungeonCollection.key+key;
+    public static final char key = 'd';
+    public static final String id = ""+InaDungeonCollection.key+key;
 
     public BoneCrystal(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);

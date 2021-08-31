@@ -20,13 +20,17 @@ public class InaDungeonCollection extends Collection {
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(Seat.key, new Seat());
         collection.put(Torrent.key, new Torrent());
+        collection.put(CookieJar.key, new CookieJar());
+
         collection.put(AshWood.key, new AshWood());
         collection.put(BoneFragment.key, new BoneFragment());
         collection.put(BoneCrystal.key, new BoneCrystal());
         collection.put(BlackPowder.key, new BlackPowder());
-        collection.put(FineGrainSand.key, new FineGrainSand());
+        collection.put(CoarseSand.key, new CoarseSand());
         collection.put(DepthCharge.key, new DepthCharge());
-        collection.put(CookieJar.key, new CookieJar());
+        collection.put(PieceOfEight.key, new PieceOfEight());
+        collection.put(TemperedGlass.key, new TemperedBottle());
+        collection.put(TemperedBottle.key, new TemperedBottle());
     }
 
     public Map<String, Integer> getStat(Player player){

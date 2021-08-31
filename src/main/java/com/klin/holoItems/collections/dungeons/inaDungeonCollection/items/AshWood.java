@@ -16,7 +16,7 @@ public class AshWood extends Item{
     private static final boolean shiny = false;
 
     public static final int cost = -1;
-    public static final char key = '2';
+    public static final char key = 'a';
     public static final String id = ""+InaDungeonCollection.key+key;
 
     public AshWood(){

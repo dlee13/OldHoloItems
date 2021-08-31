@@ -4,22 +4,22 @@ import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.InaDungeonCollection;
 import org.bukkit.Material;
 
-public class FineGrainSand extends Item {
-    public static final String name = "fineGrainSand";
+public class PieceOfEight extends Item {
+    public static final String name = "pieceOfEight";
 
-    private static final Material material = Material.SAND;
+    private static final Material material = Material.GOLD_NUGGET;
     private static final int quantity = 1;
     private static final String lore =
-            "A tasty treat";
+            "Currency of the Ancient One";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
 
     public static final int cost = -1;
-    public static final char key = '6';
+    public static final char key = 'g';
     public static final String id = ""+InaDungeonCollection.key+key;
 
-    public FineGrainSand(){
+    public PieceOfEight(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
     }
 

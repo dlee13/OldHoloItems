@@ -10,13 +10,13 @@ public class BoneFragment extends Item {
     private static final Material material = Material.BONE_MEAL;
     private static final int quantity = 1;
     private static final String lore =
-            "3x3";
+            "Parts of a larger whole";
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
 
     public static final int cost = -1;
-    public static final char key = '3';
+    public static final char key = 'c';
     public static final String id = ""+ InaDungeonCollection.key+key;
 
     public BoneFragment(){

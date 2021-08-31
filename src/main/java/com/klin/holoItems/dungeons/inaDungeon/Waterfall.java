@@ -15,6 +15,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.bukkit.Bukkit.getServer;
@@ -25,7 +26,7 @@ public class Waterfall implements Listener, Resetable {
     //waterfall world -6 60 -285
     private Location center;
     private final Set<Material> prohibited;
-    private Set<Block> pond;
+    private List<Block> pond;
     private final Set<Block> rapids;
 
     public Waterfall(World world, int x, int y, int z){
