@@ -2,22 +2,28 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.AshWood;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.BlackPowder;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.TemperedBottle;
 import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -72,9 +78,62 @@ public class AoShop implements Resetable {
                     }
                     else if(entity instanceof Item){
                         Item item = (Item) entity;
-                        if(focus.getUniqueId().equals(item.getThrower())) {
+                        if(item.getPickupDelay()==0 && focus.getUniqueId().equals(item.getThrower())) {
                             ItemStack itemStack = item.getItemStack();
-                            if (itemStack.isSimilar(new ItemStack(Material.GLASS_BOTTLE)) && mix()) {
+                            ItemMeta meta = itemStack.getItemMeta();
+                            String id = meta==null?"":meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+                            id = id==null?"":id;
+                            boolean accept = false;
+                            switch(id){
+                                case AshWood.id:
+                                case BlackPowder.id:
+                                case TemperedBottle.id:
+                                    accept = mix(itemStack, Collections.findItem(MilkBottle.id).item);
+                                    break;
+                                case "":
+                                    double divisor;
+                                    switch (itemStack.getType()){
+                                        case POTION:
+                                        case SPLASH_POTION:
+                                            divisor = 1;
+                                            break;
+                                        case LINGERING_POTION:
+                                            divisor = 4;
+                                            break;
+                                        default:
+                                            divisor = -1;
+                                    }
+                                    if(divisor==-1) {
+                                        serve(focus, itemStack);
+                                        accept = true;
+                                        break;
+                                    }
+                                    PotionMeta potionMeta = (PotionMeta) meta;
+                                    PotionData potionData = potionMeta.getBasePotionData();
+                                    PotionType type = potionData.getType();
+                                    PotionEffectType effectType = type.getEffectType();
+                                    Integer duration = Utility.durations.get(type);
+                                    if(effectType==null || duration==null) {
+                                        serve(focus, itemStack);
+                                        accept = true;
+                                        break;
+                                    }
+                                    String name = potionMeta.getDisplayName();
+                                    if(name.isEmpty())
+                                        name = "§6Enhanced Potion";
+                                    Color color = potionMeta.getColor();
+                                    potionMeta.setBasePotionData(new PotionData(PotionType.MUNDANE));
+                                    potionMeta.setColor(color);
+                                    potionMeta.setDisplayName(name);
+                                    potionMeta.addCustomEffect(new PotionEffect(effectType, (int) (duration/(divisor*(potionData.isExtended()?0.5:potionData.isUpgraded()?2:1))), potionData.isUpgraded()?3:2), true);
+                                    ItemStack glass = itemStack.clone();
+                                    itemStack.setItemMeta(potionMeta);
+                                    accept = mix(glass, itemStack);
+                                    break;
+                                default:
+                                    serve(focus, itemStack);
+                            }
+                            if(accept){
                                 int amount = itemStack.getAmount();
                                 if (amount == 1)
                                     item.remove();
@@ -102,11 +161,10 @@ public class AoShop implements Resetable {
         }.getTaskId();
     }
 
-    public boolean mix(){
+    public boolean mix(ItemStack glass, ItemStack drink){
         if(mixing)
             return false;
         mixing = true;
-        stand.teleport(loc);
         ArmorStand bottle = world.spawn(loc.clone().add(0, -1, 0), ArmorStand.class);
         bottle.setInvisible(true);
         bottle.setInvulnerable(true);
@@ -119,31 +177,30 @@ public class AoShop implements Resetable {
         bottle.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING);
         bottle.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
         bottle.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
-        bottle.getEquipment().setHelmet(new ItemStack(Material.GLASS_BOTTLE));
+        bottle.getEquipment().setHelmet(glass);
 
         Vector dir = new Vector(0.15, 0, 0.05);
         Bukkit.getScheduler().cancelTask(taskId);
         taskId = new Task(HoloItems.getInstance(), 1, 1){
             int increment = 0;
             public void run(){
-                Location loc = stand.getLocation();
+                Location location = stand.getLocation();
                 if(increment>=20){
                     if(increment==20) {
-                        bottle.remove();
-                        stand.teleport(loc.setDirection(new Vector(0, 0, 1)));
+                        stand.teleport(location.setDirection(new Vector(0, 0, 1)));
+                        bottle.getEquipment().setHelmet(null);
                     }
                     else if(increment>=80){
                         if(increment==80) {
                             dir.multiply(-1);
-                            loc.setDirection(dir);
+                            location.setDirection(dir);
+                            bottle.getEquipment().setHelmet(drink);
                         }
-                        stand.teleport(loc.add(dir));
+                        stand.teleport(location.add(dir));
+                        bottle.teleport(location.add(0, -1, 0));
                         if(increment>=100) {
-                            Location location = focus.getEyeLocation();
-                            Vector dir = location.getDirection();
-                            Item item = world.spawn(location.add(dir), Item.class);
-                            item.setItemStack(Collections.findItem(MilkBottle.id).item);
-                            item.setVelocity(dir.multiply(-1));
+                            bottle.remove();
+                            serve(focus, drink);
                             mixing = false;
                             idle();
                             cancel();
@@ -152,14 +209,26 @@ public class AoShop implements Resetable {
                 }
                 else {
                     if(increment==0)
-                        loc.setDirection(dir);
-                    stand.teleport(loc.add(dir));
-                    bottle.teleport(loc.add(0, -1, 0));
+                        location = loc.clone().setDirection(dir);
+                    stand.teleport(location.add(dir));
+                    bottle.teleport(location.add(0, -1, 0));
                 }
                 increment++;
             }
         }.getTaskId();
         return true;
+    }
+
+    private void serve(Player player, ItemStack drink){
+        Location eyeLocation = player.getEyeLocation();
+        Vector dir = eyeLocation.getDirection();
+        Item item = world.spawn(eyeLocation.add(dir), Item.class);
+        item.setItemStack(drink);
+        item.setVelocity(dir.multiply(-1));
+    }
+
+    private void pocket(Player player, int amount){
+
     }
 
     public void reset(){

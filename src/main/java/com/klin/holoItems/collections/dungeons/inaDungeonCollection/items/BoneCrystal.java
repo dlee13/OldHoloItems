@@ -1,5 +1,6 @@
 package com.klin.holoItems.collections.dungeons.inaDungeonCollection.items;
 
+import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.InaDungeonCollection;
@@ -10,6 +11,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class BoneCrystal extends Item {
     public static final String name = "boneCrystal";
@@ -31,17 +33,14 @@ public class BoneCrystal extends Item {
     }
 
     public void registerRecipes() {
-        ItemStack fragment = Utility.process("boneFragment", Material.BONE_MEAL, 1, "2x2", 0, true, "!2");
-        ItemStack shard = Utility.process("boneShard", Material.BONE, 1, "2x2", 0, true, "!3");
-        ShapedRecipe shards = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), "boneShard"), shard);
-        shards.shape("aa","aa");
-        shards.setIngredient('a', new RecipeChoice.ExactChoice(fragment));
-        shards.setGroup(name);
-        Bukkit.getServer().addRecipe(shards);
-        ShapedRecipe crystal = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        crystal.shape("aa","aa");
-        crystal.setIngredient('a', new RecipeChoice.ExactChoice(shard));
-        crystal.setGroup(name);
-        Bukkit.getServer().addRecipe(crystal);
+        new BukkitRunnable(){
+            public void run(){
+                ShapedRecipe crystal = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+                crystal.shape("aaa","aaa", "aaa");
+                crystal.setIngredient('a', new RecipeChoice.ExactChoice(Collections.findItem(BoneFragment.id).item));
+                crystal.setGroup(name);
+                Bukkit.getServer().addRecipe(crystal);
+            }
+        }.runTask(HoloItems.getInstance());
     }
 }

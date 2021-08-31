@@ -20,10 +20,11 @@ public class InaDungeonCollection extends Collection {
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(Seat.key, new Seat());
         collection.put(Torrent.key, new Torrent());
-        collection.put(BoneFragment.key, new BoneFragment());
-        collection.put(BoneShard.key, new BoneShard());
-        collection.put(BoneCrystal.key, new BoneCrystal());
         collection.put(AshWood.key, new AshWood());
+        collection.put(BoneFragment.key, new BoneFragment());
+        collection.put(BoneCrystal.key, new BoneCrystal());
+        collection.put(BlackPowder.key, new BlackPowder());
+        collection.put(FineGrainSand.key, new FineGrainSand());
         collection.put(DepthCharge.key, new DepthCharge());
         collection.put(CookieJar.key, new CookieJar());
     }

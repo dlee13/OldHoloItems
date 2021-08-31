@@ -103,21 +103,23 @@ public class Utility {
             add(SOUL_SOIL);
         }});
     }};
-    private static final Map<PotionType, Double> durations = new HashMap<>() {{
-        put(PotionType.FIRE_RESISTANCE, 3.0);
-        put(PotionType.INVISIBILITY, 3.0);
-        put(PotionType.JUMP, 3.0);
-        put(PotionType.LUCK, 5.0);
-        put(PotionType.NIGHT_VISION, 3.0);
-        put(PotionType.POISON, 0.75);
-        put(PotionType.REGEN, 0.75);
-        put(PotionType.SLOW_FALLING, 1.5);
-        put(PotionType.SLOWNESS, 1.5);
-        put(PotionType.SPEED, 3.0);
-        put(PotionType.STRENGTH, 3.0);
-        put(PotionType.TURTLE_MASTER, 0.333);
-        put(PotionType.WATER_BREATHING, 3.0);
-        put(PotionType.WEAKNESS, 1.5);
+    public static final Map<PotionType, Integer> durations = new HashMap<>() {{
+        put(PotionType.FIRE_RESISTANCE, 3600);
+        put(PotionType.INSTANT_DAMAGE, 0);
+        put(PotionType.INSTANT_HEAL, 0);
+        put(PotionType.INVISIBILITY, 3600);
+        put(PotionType.JUMP, 3600);
+        put(PotionType.LUCK, 6000);
+        put(PotionType.NIGHT_VISION, 3600);
+        put(PotionType.POISON, 900);
+        put(PotionType.REGEN, 900);
+        put(PotionType.SLOW_FALLING, 1800);
+        put(PotionType.SLOWNESS, 1800);
+        put(PotionType.SPEED, 3600);
+        put(PotionType.STRENGTH, 3600);
+        put(PotionType.TURTLE_MASTER, 400);
+        put(PotionType.WATER_BREATHING, 3600);
+        put(PotionType.WEAKNESS, 1800);
     }};
     public static final HashMap<DyeColor, Set<Material>> colors = new HashMap<>(){{
         put(DyeColor.BLACK, Stream.of(/*BLACK_BED, BLACK_CARPET,*/ BLACK_CONCRETE/*, BLACK_CONCRETE_POWDER*/, BLACK_GLAZED_TERRACOTTA/*, BLACK_SHULKER_BOX*/, BLACK_STAINED_GLASS, BLACK_STAINED_GLASS_PANE, BLACK_TERRACOTTA, BLACK_WOOL, BLACKSTONE, BLACKSTONE_SLAB, BLACKSTONE_STAIRS, BLACKSTONE_WALL, COAL_BLOCK, CHISELED_POLISHED_BLACKSTONE, CRACKED_POLISHED_BLACKSTONE_BRICKS, GILDED_BLACKSTONE, OBSIDIAN, POLISHED_BLACKSTONE, POLISHED_BLACKSTONE_BRICK_SLAB, POLISHED_BLACKSTONE_BRICK_STAIRS, POLISHED_BLACKSTONE_BRICK_WALL, POLISHED_BLACKSTONE_BRICKS/*, POLISHED_BLACKSTONE_PRESSURE_PLATE*/, POLISHED_BLACKSTONE_SLAB, POLISHED_BLACKSTONE_STAIRS, POLISHED_BLACKSTONE_WALL).collect(Collectors.toSet()));
@@ -371,7 +373,7 @@ public class Utility {
                     } else
                         damage = 12;
                 } else {
-                    double duration = durations.get(data.getType())/8*60*20*multishot;
+                    double duration = durations.get(data.getType())/8*multishot;
                     target.addPotionEffect(new PotionEffect(type,
                             data.isExtended() ? (int) (duration * 2.666) :
                                     data.isUpgraded() ? (int) (duration / 2) : (int) duration,

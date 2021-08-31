@@ -2,25 +2,27 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.Resetable;
+import com.klin.holoItems.dungeons.inaDungeon.classes.Kiara;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Watson;
 import com.klin.holoItems.utility.Task;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -205,33 +207,40 @@ public class Maintenance implements Listener, Resetable {
     public void regen(EntityExplodeEvent event){
         if(event.isCancelled())
             return;
-        event.setYield(0);
-        Map<Integer, Map<Block, BlockData>> blast = new HashMap<>();
-        Location center = event.getLocation();
-        int max = -1;
-        for(Block block : event.blockList()) {
-            int radius = (int) center.distance(block.getLocation().add(0.5, 0.5, 0.5));
-            blast.computeIfAbsent(radius, k -> new HashMap<>()).put(block, block.getBlockData());
-            max = Math.max(max, radius);
+        Set<Block> remove = new HashSet<>();
+        List<Block> blocks = event.blockList();
+        for(Block block : blocks) {
+            if(!decay.contains(block))
+                remove.add(block);
         }
-        int temp = max;
-        new Task(HoloItems.getInstance(), 80, 1){
-            int radius = temp;
-            Map<Block, BlockData> regen;
-            public void run(){
-                regen = blast.get(radius);
-                if(regen==null){
-                    cancel();
-                    return;
-                }
-                for(Block block : regen.keySet()){
-                    BlockData data = regen.get(block);
-                    if(!data.getMaterial().isAir())
-                        block.setBlockData(data);
-                }
-                radius--;
-            }
-        };
+        blocks.removeAll(remove);
+        event.setYield(0);
+//        Map<Integer, Map<Block, BlockData>> blast = new HashMap<>();
+//        Location center = event.getLocation();
+//        int max = -1;
+//        for(Block block : event.blockList()) {
+//            int radius = (int) center.distance(block.getLocation().add(0.5, 0.5, 0.5));
+//            blast.computeIfAbsent(radius, k -> new HashMap<>()).put(block, block.getBlockData());
+//            max = Math.max(max, radius);
+//        }
+//        int temp = max;
+//        new Task(HoloItems.getInstance(), 80, 1){
+//            int radius = temp;
+//            Map<Block, BlockData> regen;
+//            public void run(){
+//                regen = blast.get(radius);
+//                if(regen==null){
+//                    cancel();
+//                    return;
+//                }
+//                for(Block block : regen.keySet()){
+//                    BlockData data = regen.get(block);
+//                    if(!data.getMaterial().isAir())
+//                        block.setBlockData(data);
+//                }
+//                radius--;
+//            }
+//        };
     }
 
     private void decay(Block block, int duration){
@@ -250,34 +259,86 @@ public class Maintenance implements Listener, Resetable {
         };
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void input(PlayerInteractEvent event){
         Player player = event.getPlayer();
         Member member = classes.get(player);
-        if(member!=null)
+        if(member==null)
+            return;
+        if(!(member instanceof Kiara)) {
             member.ability(inputs.get(player).getValue(), event);
+            return;
+        }
+        ItemStack item = event.getItem();
+        if(item==null || item.getType()!=Material.SHIELD)
+            return;
+        Kiara kiara = (Kiara) member;
+        kiara.cooldown = false;
+        if(kiara.taskId!=-1){
+            Bukkit.getScheduler().cancelTask(kiara.taskId);
+            kiara.taskId = -1;
+        }
+        new Task(HoloItems.getInstance(), 1, 1){
+            int increment = 0;
+            public void run(){
+                if(increment>=1200 || !player.isValid() || player.isDead()){
+                    cancel();
+                    return;
+                }
+                if(!player.isHandRaised()){
+                    kiara.ability(inputs.get(player).getValue(), event);
+                    cancel();
+                    return;
+                }
+                increment++;
+            }
+        };
     }
 
     @EventHandler
+    public void input(EntityDamageByEntityEvent event){
+        Entity entity = event.getEntity();
+        if(entity instanceof Player){
+            Member member = classes.get((Player) entity);
+            if(member instanceof Kiara){
+                Kiara kiara = (Kiara) member;
+                if(kiara.cooldown) {
+                    event.setCancelled(true);
+                    kiara.reversal(event.getDamager());
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
     public void input(PlayerTeleportEvent event){
+        if(event.isCancelled())
+            return;
         Player player = event.getPlayer();
         Member member = classes.get(player);
         if(member instanceof Watson) {
             Watson watson = (Watson) member;
             watson.to = event.getTo();
             watson.from = event.getFrom();
-            int teleport = watson.teleport+=10;
-            if(teleport==10){
-                new Task(HoloItems.getInstance(), 1, 1){
-                    public void run(){
-                        if(watson.teleport<=0){
-                            cancel();
-                            return;
-                        }
-                        watson.teleport--;
-                    }
-                };
-            }
+            if(watson.taskId==-1)
+                watson.cooldown = true;
+            else
+                Bukkit.getScheduler().cancelTask(watson.taskId);
+            watson.taskId = new BukkitRunnable(){
+                public void run(){
+                    watson.cooldown = false;
+                    watson.taskId = -1;
+                }
+            }.runTaskLater(HoloItems.getInstance(), 20).getTaskId();
+        }
+    }
+
+    @EventHandler
+    public void pickUp(PlayerDropItemEvent event){
+        if(!event.isCancelled()) {
+            Item item = event.getItemDrop();
+            if (item.getPickupDelay()>10)
+                item.setPickupDelay(10);
         }
     }
 
@@ -286,6 +347,8 @@ public class Maintenance implements Listener, Resetable {
         BlockPlaceEvent.getHandlerList().unregister(this);
         BlockBreakEvent.getHandlerList().unregister(this);
         PlayerInteractEvent.getHandlerList().unregister(this);
+        EntityDamageByEntityEvent.getHandlerList().unregister(this);
+        PlayerDropItemEvent.getHandlerList().unregister(this);
         for(Block block : decay)
             block.breakNaturally();
     }

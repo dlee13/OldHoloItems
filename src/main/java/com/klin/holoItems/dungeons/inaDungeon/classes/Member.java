@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public abstract class Member {
-    Player player;
-    boolean cooldown;
+    public Player player;
+    public boolean cooldown;
 
     public Member(Player player){
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Class selected: "+this.getClass().getSimpleName()));

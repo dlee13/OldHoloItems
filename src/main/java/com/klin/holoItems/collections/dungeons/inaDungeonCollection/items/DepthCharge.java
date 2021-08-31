@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class DepthCharge extends Item {
     public static final String name = "depthCharge";
@@ -22,7 +23,7 @@ public class DepthCharge extends Item {
     private static final boolean shiny = true;
 
     public static final int cost = 0;
-    public static final char key = '6';
+    public static final char key = '7';
     public static final String id = ""+InaDungeonCollection.key+key;
 
     public DepthCharge(){
@@ -30,11 +31,15 @@ public class DepthCharge extends Item {
     }
 
     public void registerRecipes() {
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("aba","bab", "aba");
-//        recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.findItem(BlackPowder.id).item));
-//        recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.findItem(FineGrainSand.id).item));
-        recipe.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe);
+        new BukkitRunnable(){
+            public void run(){
+                ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+                recipe.shape("aba","bab", "aba");
+                recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.findItem(BlackPowder.id).item));
+                recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.findItem(FineGrainSand.id).item));
+                recipe.setGroup(name);
+                Bukkit.getServer().addRecipe(recipe);
+            }
+        }.runTask(HoloItems.getInstance());
     }
 }

@@ -6,10 +6,7 @@ import com.klin.holoItems.dungeons.inaDungeon.Maintenance;
 import com.klin.holoItems.utility.Task;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -25,20 +22,25 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Watson extends Member {
-    public int teleport;
     public Location to;
     public Location from;
+    public int taskId;
     private final Set<LivingEntity> airborne;
 
     public Watson(Player player){
         super(player);
-        teleport = 0;
+        taskId = -1;
         airborne = new HashSet<>();
     }
 
     public void ability(double angle, PlayerInteractEvent event) {
-        if(teleport==0)
+        if(!cooldown)
             return;
+        cooldown = false;
+        if(taskId!=-1) {
+            Bukkit.getScheduler().cancelTask(taskId);
+            taskId = -1;
+        }
         double distance = to.distance(from);
         if(distance==0)
             return;
@@ -47,7 +49,6 @@ public class Watson extends Member {
             return;
         Maintenance maintenance = (Maintenance) InaDungeon.presets.get("maintenance");
         maintenance.inputs.replace(player, new AbstractMap.SimpleEntry<>(maintenance.inputs.get(player).getKey(), 0.0));
-        teleport = 1;
         World world = player.getWorld();
         Set<LivingEntity> targets = new HashSet<>();
         LivingEntity living;
