@@ -67,9 +67,7 @@ public class UberSheepPackage extends Crate implements Placeable, Collectable {
     }
 
     public void ability(BlockBreakEvent event) {
-        event.setDropItems(false);
         super.ability(event);
-
         Block block = event.getBlock();
         Location loc = block.getLocation();
         World world = loc.getWorld();

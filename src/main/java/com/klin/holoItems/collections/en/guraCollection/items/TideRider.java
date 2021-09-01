@@ -79,7 +79,7 @@ public class TideRider extends Item implements Interactable {
             Block current = block;
             Block previous;
             public void run(){
-                Maintenance maintenance = (Maintenance) InaDungeon.presets.get("maintenance");
+                Maintenance maintenance = InaDungeon.presets==null?null:(Maintenance) InaDungeon.presets.get("maintenance");
                 if(increment>=1200 || !player.isValid() || !player.isHandRaised() ||
                         maintenance!=null && maintenance.knockBack.contains(player)){
                     player.sendBlockChange(current.getLocation(), data.remove(current));
