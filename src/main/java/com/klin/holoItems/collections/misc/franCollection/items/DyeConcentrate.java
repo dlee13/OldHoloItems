@@ -67,7 +67,7 @@ public class DyeConcentrate extends Item implements Combinable, Spawnable{
         if(entity instanceof Colorable)
             ((Colorable) entity).setColor(dye);
         entity.setAI(false);
-        Map<Block, BlockData> blast = Utility.explode(entity.getLocation(), 4, false);
+        Map<Block, BlockData> blast = Utility.explode(entity.getLocation(), 4, null);
         World world = entity.getWorld();
         Color ink = dye.getColor();
         for(Entity nearby : entity.getNearbyEntities(4, 4, 4)){
@@ -91,7 +91,7 @@ public class DyeConcentrate extends Item implements Combinable, Spawnable{
             public void run(){
                 if(increment>=40 || !entity.isValid()){
                     if(entity.isValid()){
-                        Map<Block, BlockData> post = Utility.explode(entity.getLocation(), 8, false);
+                        Map<Block, BlockData> post = Utility.explode(entity.getLocation(), 8, null);
                         for(Entity nearby : entity.getNearbyEntities(8, 8, 8)){
                             if(nearby instanceof LivingEntity){
                                 LivingEntity livingEntity = (LivingEntity) nearby;

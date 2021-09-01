@@ -62,7 +62,7 @@ public class InaDungeon implements CommandExecutor{
                         try{
                             z=Integer.parseInt(args[i+2].substring(1));
                         }catch (NumberFormatException e){z=0;}
-                        args[i+2] = loc.getBlockX() + z +"";
+                        args[i+2] = loc.getBlockZ() + z +"";
                     }
                 }
             }
@@ -231,14 +231,14 @@ public class InaDungeon implements CommandExecutor{
                 return true;
 
             case "freeze":
-                ClassSelect classSelect = (ClassSelect) presets.get("classselect");
-                if(classSelect!=null)
-                    classSelect.freeze();
+                Select select = (Select) presets.get("select");
+                if(select !=null)
+                    select.freeze();
                 return true;
 
             case "select":
-                if(presets.get("classselect")!=null){
-                    System.out.println("Class Select already ON");
+                if(presets.get("select")!=null){
+                    System.out.println("Select already ON");
                     return true;
                 }
                 if(args.length<4)
@@ -249,8 +249,8 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    presets.put("classselect", new ClassSelect(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));
-                    System.out.println("Class Select [ON]");
+                    presets.put("select", new Select(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));
+                    System.out.println("Select [ON]");
                 }catch (NumberFormatException e){return false;}
                 return true;
 
@@ -517,8 +517,8 @@ public class InaDungeon implements CommandExecutor{
                         }
                         Block block = world.getBlockAt(loc.clone().add(x, i ,z));
                         BlockData data = Bukkit.createBlockData(tile[j]);
-                        //overwrite: null->skip air, new->replace all
-                        if((overwrite==null || !overwrite.contains(block.getType())) && data.getMaterial().isAir())
+                        //overwrite: null->skip air, empty->replace all
+                        if((overwrite==null || !overwrite.isEmpty() && !overwrite.contains(block.getType())) && data.getMaterial().isAir())
                             continue;
                         build.putIfAbsent(block.getLocation(), block.getBlockData());
                         if(rotate!=null && data instanceof Directional) {

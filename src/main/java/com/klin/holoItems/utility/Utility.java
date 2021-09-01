@@ -599,12 +599,15 @@ public class Utility {
                 .findFirst();
     }
 
-    public static Map<Block, BlockData> explode(Location loc, int radius, boolean remove){
+    public static Map<Block, BlockData> explode(Location loc, int radius, Map<Material, Material> remove){
         World world = loc.getWorld();
         Map<Block, BlockData> blast = new HashMap<>();
         for(int i=-1*radius; i<=radius; i++){
             for(int j=-1*radius; j<=radius; j++) {
                 for (int k=-1*radius; k<=radius; k++) {
+                    Block block = world.getBlockAt(loc.clone().add(i, j, k));
+                    if(block.isPassable())
+                        continue;
                     double distance = Math.sqrt(Math.pow(i, 2)+Math.pow(j, 2)+Math.pow(k, 2));
                     if(distance>radius)
                         continue;
@@ -614,12 +617,12 @@ public class Utility {
                         if((offset-difference)/offset<Math.random())
                             continue;
                     }
-                    Block block = world.getBlockAt(loc.clone().add(i, j, k));
-                    if(block.isPassable())
-                        continue;
                     blast.put(block, block.getBlockData());
-                    if(remove)
-                        block.setType(AIR);
+                    if(remove!=null) {
+                        Material type = remove.get(block.getType());
+                        if(type!=null)
+                            block.setType(type);
+                    }
                 }
             }
         }

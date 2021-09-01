@@ -31,13 +31,13 @@ import java.util.Set;
 public class GalleryFrame extends Item implements Hangable, Reactable {
     public static final String name = "galleryFrame";
 
-    private static Map<Player, Hanging> reference = new HashMap<>();
+    private final Map<Player, Hanging> reference;
     private static final ItemStack buy = new ItemStack(Material.SPRUCE_TRAPDOOR);
     private static final ItemStack pay = new ItemStack(Material.MAP);
 
     public static final Set<Enchantment> accepted = null;
 
-    private static final Material material = Material.ITEM_FRAME;
+    private static final Material material = Material.GLOW_ITEM_FRAME;
     private static final int quantity = 1;
     private static final String lore =
             "Display map art";
@@ -51,6 +51,7 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
     public GalleryFrame(){
         super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
                 "" + OpCollection.key + key, key);
+        reference = new HashMap<>();
         ItemMeta meta = buy.getItemMeta();
         meta.setDisplayName("§6Buy");
         buy.setItemMeta(meta);
