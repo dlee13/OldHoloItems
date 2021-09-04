@@ -1,215 +1,170 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
-import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.AshWood;
-import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.DepthCharge;
-import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.Seat;
 import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.Entity;
+import org.bukkit.block.data.Rail;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.util.Vector;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class Payload implements Resetable {
-    //payload world -77 74 -204 -155
-    public Map<AbstractMap.SimpleEntry<Integer, Integer>, List<FallingBlock>> payload;
-    private Set<FallingBlock> plates;
-    private Set<FallingBlock> doors;
-    private int taskId;
+    //payload world -138 59 -380 -294
+    public Map<Location, BlockData> payload;
+    public List<Block> spikes;
+    private boolean shop;
 
-    public Payload(World world, int x, int y, int z1, int z2) {
-        Location loc = new Location(world, x, y, z1);
-        File file = new File(HoloItems.getInstance().getDataFolder(), "payload.txt");
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String wall;
-            int increment = 0;
-            payload = new HashMap<>();
-            plates = new HashSet<>();
-            doors = new HashSet<>();
-            while ((wall = reader.readLine()) != null) {
-                String[] fence = wall.split(", ");
-                for (int i = 0; i < fence.length; i++) {
-                    String[] tile = fence[i].split(" ");
-                    for (int j = 0; j < tile.length; j++) {
-                        BlockData data = Bukkit.createBlockData(tile[j]);
-                        Material type = data.getMaterial();
-                        if(type.isAir())
-                            continue;
-                        Location location = loc.clone().add(increment+0.5, i, j+0.5);
-                        FallingBlock block = world.spawnFallingBlock(location, data);
-                        block.setGravity(false);
-                        block.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Seat.id);
-                        AbstractMap.SimpleEntry<Integer, Integer> key = new AbstractMap.SimpleEntry<>(location.getBlockX(), location.getBlockZ());
-                        List<FallingBlock> falling = payload.computeIfAbsent(key, k -> new ArrayList<>());
-                        falling.add(block);
-                        if(type==Material.SPRUCE_PRESSURE_PLATE || type==Material.DARK_OAK_PRESSURE_PLATE)
-                            plates.add(block);
-                        else if(type==Material.SPRUCE_TRAPDOOR && tile[j].contains("open=false"))
-                            doors.add(block);
-                    }
-                }
-                increment++;
-            }
-        } catch (IOException e) { return; }
-
-        double i = ((double) (z2-z1))/360;
-        if(i<=0)
+    public Payload(Location loc, int z, boolean shop) {
+        payload = InaDungeon.build("payload", loc.clone().add(0, 0, -6), null, null, BlockFace.SOUTH);
+        if(payload==null){
+            reset();
             return;
-        int pause = (int) (0.1/i)+1;
-        taskId = new Task(HoloItems.getInstance(), 10, 10) {
-            int increment = 0;
-            Location location = loc;
-            final int interval = (int) (i/pause*20);
-            public void run() {
-                if(increment>=36){
+        }
+        Block block = loc.clone().add(2, -1, 0).getBlock();
+        spikes = new ArrayList<>();
+        while(block.getZ()<=z){
+            Block relative;
+            while(!(relative = block.getRelative(BlockFace.UP)).isPassable())
+                block = relative;
+            spikes.add(block);
+            block = block.getRelative(BlockFace.SOUTH);
+        }
+        this.shop = shop;
+    }
+
+    public void push(int z){
+        Map<Integer, Map<Location, BlockData>> train = new HashMap<>();
+        for(Location loc : payload.keySet()){
+            Map<Location, BlockData> car = train.computeIfAbsent(loc.getBlockZ(), k -> new HashMap<>());
+            Block block = loc.getBlock();
+            car.put(loc, block.getBlockData());
+            block.setBlockData(payload.get(loc));
+        }
+        Map<Integer, Set<Player>> riders = new HashMap<>();
+        for(Player player : Bukkit.getOnlinePlayers()){
+            Location loc = player.getLocation().getBlock().getLocation();
+            if(payload.containsKey(loc)){
+                player.setNoDamageTicks(0);
+                player.damage(10);
+                player.setVelocity(new Vector(0, 0.45, 0));
+            }
+            else if(payload.containsKey(loc.add(0, -1, 0)))
+                riders.computeIfAbsent(loc.getBlockZ(), k -> new HashSet<>()).add(player);
+        }
+        payload = new HashMap<>();
+        Map<Location, BlockData> car;
+        while((car = train.get(z))!=null){
+            boolean up = false;
+            for(Location loc : car.keySet()){
+                if(!loc.getBlock().getRelative(BlockFace.SOUTH).isPassable()){
+                    up = true;
+                    break;
+                }
+            }
+            for(Location loc : car.keySet()){
+                Block block = loc.getBlock();
+                block = block.getRelative(BlockFace.SOUTH);
+                if(up)
+                    block = block.getRelative(BlockFace.UP);
+                payload.put(block.getLocation(), block.getBlockData());
+                block.setBlockData(car.get(loc));
+            }
+            Set<Player> players = riders.get(z);
+            if(players!=null){
+                for(Player player : players)
+                    player.teleport(player.getLocation().add(0, up?1:0, 1));
+            }
+            z--;
+        }
+    }
+
+    public void fire(Location location){
+        World world = Utility.getRandom(payload.keySet()).get().getWorld();
+        List<Location> charges = new ArrayList<>();
+        Map<Location, BlockData> frame = new HashMap<>();
+        Map<Location, FallingBlock> mirage = new HashMap<>();
+        for(Location loc : payload.keySet()){
+            Block block = loc.getBlock();
+            BlockData data = block.getBlockData();
+            if(data.getMaterial()==Material.TNT || payload.containsKey(block.getRelative(BlockFace.DOWN).getLocation())){
+                if(data.getMaterial()==Material.TNT)
+                    charges.add(loc);
+                else
+                    frame.put(loc, data);
+                block.setBlockData(payload.get(loc));
+                FallingBlock fallingBlock = world.spawnFallingBlock(loc.clone().add(0.5, 0, 0.5), data);
+                fallingBlock.setGravity(false);
+                mirage.put(loc, fallingBlock);
+            }
+        }
+        world.playSound(location.add(0, 1, 0), Sound.EVENT_RAID_HORN, 10, 1);
+        Location aim = location.clone().add(0, 10, 16);
+        new Task(HoloItems.getInstance(), 40, 5){
+            public void run(){
+                if(charges.isEmpty()){
+                    for(FallingBlock fallingBlock : mirage.values())
+                        fallingBlock.remove();
+                    for(Location loc : frame.keySet())
+                        loc.getBlock().setBlockData(frame.get(loc));
+                    if(shop) {
+                        AoShop aoShop = (AoShop) InaDungeon.presets.get("aoshop");
+                        if (aoShop == null)
+                            InaDungeon.presets.put("aoshop", new AoShop(world, location.add(0.5, -5.9, 30.5)));
+                    }
                     cancel();
                     return;
                 }
-                if(increment%2==0) {
-                    Set<AbstractMap.SimpleEntry<Integer, Integer>> remove = new HashSet<>();
-                    Map<AbstractMap.SimpleEntry<Integer, Integer>, List<FallingBlock>> add = new HashMap<>();
-                    boolean update = true;
-                    for (AbstractMap.SimpleEntry<Integer, Integer> key : payload.keySet()) {
-                        List<FallingBlock> falling = payload.get(key);
-                        FallingBlock bottom = falling.get(0);
-                        Location loc = bottom.getLocation().add(0, 0, interval);
-                        Block bloc = loc.getBlock();
-                        double diff = loc.getY() - loc.getBlockY();
-                        if (Math.abs(diff - 1) > 0.01 && Utility.slabs.contains(bloc.getType()))
-                            loc.add(0, 0.5, 0);
-                        else if (!bloc.isPassable())
-                            loc.add(0, diff > 0.01 ? 0.5 : 1, 0);
-                        loc.add(0, -1, 0);
-                        for (FallingBlock block : falling)
-                            block.teleport(loc.add(0, 1, 0));
-                        if (update) {
-                            location = bottom.getLocation();
-                            update = false;
+                Location loc = charges.remove(0);
+                mirage.get(loc).remove();
+                TNTPrimed tnt = world.spawn(loc.clone().add(0.5, 0.5, 0.5), TNTPrimed.class);
+                tnt.setVelocity(aim.clone().subtract(loc).toVector().multiply(0.1));
+                new Task(HoloItems.getInstance(), 10, 1){
+                    int increment = 0;
+                    public void run(){
+                        Location loc = tnt.getLocation();
+                        if(increment>60 || tnt.isOnGround() || tnt.getVelocity().getZ()<0.1){
+                            world.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
+                            world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 4, 1);
+                            tnt.remove();
+                            cancel();
+                            return;
                         }
-                        remove.add(key);
-                        add.put(new AbstractMap.SimpleEntry<>(loc.getBlockX(), loc.getBlockZ()), falling);
+                        world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(Color.RED, 1));
+                        increment++;
                     }
-                    for (AbstractMap.SimpleEntry<Integer, Integer> key : remove)
-                        payload.remove(key);
-                    payload.putAll(add);
-                }
-                else {
-                    int wood = 0;
-                    int tnt = 0;
-                    for (Entity nearby : world.getNearbyEntities(location, 5, 1, 5)) {
-                        if (!(nearby instanceof Item))
-                            continue;
-                        ItemStack item = ((Item) nearby).getItemStack();
-                        if (item.getType() == Material.AIR)
-                            return;
-                        ItemMeta meta = item.getItemMeta();
-                        if (meta == null)
-                            return;
-                        String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-                        if (id == null)
-                            return;
-                        if (id.equals(AshWood.id)) {
-                            wood += item.getAmount();
-                            nearby.remove();
-                        } else if (id.equals(DepthCharge.id)) {
-                            tnt += item.getAmount();
-                            nearby.remove();
-                        }
-                    }
-                    for (int i = 0; i < wood / 5; i++)
-                        seat();
-                    for (int i = 0; i < tnt; i++)
-                        arm();
-                    if (wood % 5 > 0) {
-                        ItemStack drop = Collections.findItem(AshWood.id).item.clone();
-                        drop.setAmount(wood % 5);
-                        world.dropItemNaturally(loc, drop);
-                    }
-                }
-                increment++;
+                };
             }
-        }.getTaskId();
+        };
     }
 
-    public void seat(){
-        Optional<FallingBlock> plate = Utility.getRandom(plates);
-        if(plate.isEmpty())
-            return;
-        Location loc = plate.get().getLocation();
-        List<FallingBlock> falling = payload.get(new AbstractMap.SimpleEntry<>(loc.getBlockX(), loc.getBlockZ()));
-        if(falling==null)
-            return;
-        FallingBlock top = falling.get(falling.size()-1);
-        doors.remove(top);
-
-        Material material = top.getBlockData().getMaterial();
-        Material type;
-        if(material==Material.SPRUCE_PRESSURE_PLATE)
-            type = Material.SPRUCE_TRAPDOOR;
-        else if(material==Material.DARK_OAK_PRESSURE_PLATE)
-            type = Material.DARK_OAK_TRAPDOOR;
-        else
-            return;
-        Location location = top.getLocation();
-        top.remove();
-        FallingBlock block = location.getWorld().spawnFallingBlock(location, Bukkit.createBlockData(type));
-        block.setGravity(false);
-        block.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Seat.id);
-        falling.add(block);
-        doors.add(block);
-    }
-
-    public void arm(){
-        Optional<FallingBlock> door = Utility.getRandom(doors);
-        if(door.isEmpty())
-            return;
-        Location loc = door.get().getLocation();
-        List<FallingBlock> falling = payload.get(new AbstractMap.SimpleEntry<>(loc.getBlockX(), loc.getBlockZ()));
-        if(falling==null)
-            return;
-        FallingBlock top = falling.get(falling.size()-1);
-
-        Material type = top.getBlockData().getMaterial();
-        if(type==Material.SPRUCE_TRAPDOOR || type==Material.DARK_OAK_TRAPDOOR){
-            Location location = top.getLocation();
-            top.remove();
-            FallingBlock block = location.getWorld().spawnFallingBlock(location, Bukkit.createBlockData(Material.TNT));
-            block.setGravity(false);
-            block.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Seat.id);
-            falling.add(block);
-        }
-        else if(type==Material.TNT){
-            Location location = top.getLocation();
-            FallingBlock block = location.getWorld().spawnFallingBlock(location.add(0, 1, 0), Bukkit.createBlockData(Material.TNT));
-            block.setGravity(false);
-            block.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Seat.id);
-            falling.add(block);
-        }
+    public void guide(){
+        Iterator<Block> guide = spikes.iterator();
+        Rail rail = (Rail) Material.RAIL.createBlockData();
+        rail.setShape(Rail.Shape.NORTH_SOUTH);
+        new Task(HoloItems.getInstance(), 0, 2){
+            Block prev;
+            Block current = null;
+            public void run(){
+                if(current!=null)
+                    (prev = current).setType(Material.AIR);
+                if(!guide.hasNext())
+                    cancel();
+                else
+                    (current = guide.next().getRelative(BlockFace.UP)).setBlockData(rail);
+            }
+        };
     }
 
     public void reset(){
-        for(List<FallingBlock> falling : payload.values()) {
-            for(FallingBlock block : falling)
-                block.remove();
-        }
-        Bukkit.getScheduler().cancelTask(taskId);
+        for (Location loc : payload.keySet())
+            loc.getBlock().setBlockData(payload.get(loc));
     }
 }

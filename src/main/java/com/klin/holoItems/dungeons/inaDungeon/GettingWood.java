@@ -160,6 +160,7 @@ public class GettingWood implements Listener, Resetable {
                                         y++;
                                         layer = layers.get(y);
                                         if(layer==null){
+                                            locations[0].getWorld().dropItemNaturally(locations[0], Collections.findItem(AshWood.id).item);
                                             cancel();
                                             return;
                                         }

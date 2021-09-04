@@ -280,6 +280,7 @@ public class Collections implements CommandExecutor, Listener {
                 for(Integer taskId : taskIds)
                     scheduler.cancelTask(taskId);
                 taskIds.clear();
+                player.sendMessage("Tasks cancelled");
                 return true;
 
             case "clearactivatables":
@@ -458,6 +459,10 @@ public class Collections implements CommandExecutor, Listener {
                     if(type!=null)
                         item.setType(type);
                 }
+                return true;
+
+            case "tasks":
+                player.sendMessage(taskIds.toString());
                 return true;
 
             case "test":

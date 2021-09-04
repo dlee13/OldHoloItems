@@ -18,7 +18,7 @@ public class InaDungeonCollection extends Collection {
 
     public InaDungeonCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(Seat.key, new Seat());
+        collection.put(SteelRail.key, new SteelRail());
         collection.put(Torrent.key, new Torrent());
         collection.put(CookieJar.key, new CookieJar());
 

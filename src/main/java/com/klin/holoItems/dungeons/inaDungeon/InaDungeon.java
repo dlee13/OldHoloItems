@@ -408,9 +408,15 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    presets.put("payload", new Payload(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])));
+                    presets.put("payload", new Payload(new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])), Integer.parseInt(args[4]), args.length>5 && args[5].equals("true")));
                     System.out.println("Payload [ON]");
                 }catch(NumberFormatException e){ return false; }
+                return true;
+
+            case "guide":
+                Payload payload = (Payload) presets.get("payload");
+                if(payload!=null)
+                    payload.guide();
                 return true;
 
             case "waterfall":

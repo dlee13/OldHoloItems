@@ -33,6 +33,7 @@ public class Dungeons implements CommandExecutor {
                 holoItems.getCommand("class").setExecutor(inaDungeon);
                 holoItems.getCommand("maintain").setExecutor(inaDungeon);
                 holoItems.getCommand("payload").setExecutor(inaDungeon);
+                holoItems.getCommand("guide").setExecutor(inaDungeon);
                 holoItems.getCommand("waterfall").setExecutor(inaDungeon);
                 return true;
         }

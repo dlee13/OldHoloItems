@@ -1,13 +1,16 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.DepthCharge;
 import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Kiara;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
 import com.klin.holoItems.dungeons.inaDungeon.classes.Watson;
 import com.klin.holoItems.utility.Task;
+import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -23,6 +26,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -189,8 +194,17 @@ public class Maintenance implements Listener, Resetable {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void track(BlockPlaceEvent event){
-        if(!event.isCancelled())
-            decay(event.getBlock(), 80);
+        if(event.isCancelled())
+            return;
+        Payload payload = (Payload) InaDungeon.presets.get("payload");
+        if(payload!=null && payload.payload.containsKey(event.getBlockAgainst().getLocation())) {
+            ItemMeta meta = event.getItemInHand().getItemMeta();
+            if(meta==null) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+        decay(event.getBlock(), 80);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -261,6 +275,10 @@ public class Maintenance implements Listener, Resetable {
 
     @EventHandler(priority = EventPriority.LOW)
     public void input(PlayerInteractEvent event){
+        Block block = event.getClickedBlock();
+        if(block!=null && !decay.contains(block) && block.getBlockData() instanceof Openable)
+            event.setCancelled(true);
+
         Player player = event.getPlayer();
         Member member = classes.get(player);
         if(member==null)
@@ -346,6 +364,7 @@ public class Maintenance implements Listener, Resetable {
         PlayerMoveEvent.getHandlerList().unregister(this);
         BlockPlaceEvent.getHandlerList().unregister(this);
         BlockBreakEvent.getHandlerList().unregister(this);
+        EntityExplodeEvent.getHandlerList().unregister(this);
         PlayerInteractEvent.getHandlerList().unregister(this);
         EntityDamageByEntityEvent.getHandlerList().unregister(this);
         PlayerDropItemEvent.getHandlerList().unregister(this);

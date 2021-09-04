@@ -60,6 +60,9 @@ commands:
   settype:
     permission: holoItems.op
     usage: /<command> <type>
+  tasks:
+    permission: holoItems.op
+    usage: /<command>
   test:
     permission: holoItems.op
     usage: /<command>
@@ -115,6 +118,9 @@ commands:
   payload:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z1> <z2>
+  guide:
+    permission: holoItems.dungeons.inaDungeon
+    usage: /<command>
   waterfall:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
