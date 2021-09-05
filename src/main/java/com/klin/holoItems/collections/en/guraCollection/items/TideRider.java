@@ -23,6 +23,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,6 +50,9 @@ public class TideRider extends Item implements Interactable {
     public void registerRecipes(){
         ItemMeta meta = item.getItemMeta();
         meta.addEnchant(Enchantment.LOYALTY, 3, false);
+        List<String> lore = meta.getLore();
+        lore.add(0, "");
+        meta.setLore(lore);
         item.setItemMeta(meta);
 
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);

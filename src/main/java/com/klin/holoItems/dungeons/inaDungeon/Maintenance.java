@@ -1,15 +1,13 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.DepthCharge;
 import com.klin.holoItems.dungeons.Resetable;
-import com.klin.holoItems.dungeons.inaDungeon.classes.Kiara;
-import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
-import com.klin.holoItems.dungeons.inaDungeon.classes.Watson;
+import com.klin.holoItems.dungeons.inaDungeon.members.Member;
+import com.klin.holoItems.dungeons.inaDungeon.members.Watson;
 import com.klin.holoItems.utility.Task;
-import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.Container;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -21,13 +19,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -41,7 +33,7 @@ public class Maintenance implements Listener, Resetable {
     private final int[] cage;
     private final Set<Block> decay;
     public final Set<Player> knockBack;
-    public Map<Player, Member> classes;
+    public Map<Player, Member> members;
     public final Map<Player, AbstractMap.SimpleEntry<Vector, Double>> inputs;
 
     public Maintenance(int x1, int z1, int x2, int z2){
@@ -55,7 +47,7 @@ public class Maintenance implements Listener, Resetable {
         cage = new int[]{x1, z1, x2, z2};
         decay = new HashSet<>();
         knockBack = new HashSet<>();
-        classes = new HashMap<>();
+        members = new HashMap<>();
         inputs = new HashMap<>();
         getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
@@ -71,7 +63,7 @@ public class Maintenance implements Listener, Resetable {
         cage = null;
         decay = new HashSet<>();
         knockBack = new HashSet<>();
-        classes = new HashMap<>();
+        members = new HashMap<>();
         inputs = new HashMap<>();
         getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
     }
@@ -111,7 +103,7 @@ public class Maintenance implements Listener, Resetable {
             if(buff!=null && buff[6]>0) {
                 Block block = location.clone().add(location.getDirection().setY(0).normalize().multiply(-1.5)).getBlock();
                 if(block.isEmpty()) {
-                    block.setType(Material.FIRE);
+                    block.setType(block.getLightLevel()<=7?Material.SOUL_FIRE:Material.FIRE);
                     new BukkitRunnable(){
                         public void run(){
                             if(block.getType()==Material.FIRE)
@@ -194,17 +186,8 @@ public class Maintenance implements Listener, Resetable {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void track(BlockPlaceEvent event){
-        if(event.isCancelled())
-            return;
-        Payload payload = (Payload) InaDungeon.presets.get("payload");
-        if(payload!=null && payload.payload.containsKey(event.getBlockAgainst().getLocation())) {
-            ItemMeta meta = event.getItemInHand().getItemMeta();
-            if(meta==null) {
-                event.setCancelled(true);
-                return;
-            }
-        }
-        decay(event.getBlock(), 80);
+        if(!event.isCancelled())
+            decay(event.getBlock(), 80);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -229,32 +212,6 @@ public class Maintenance implements Listener, Resetable {
         }
         blocks.removeAll(remove);
         event.setYield(0);
-//        Map<Integer, Map<Block, BlockData>> blast = new HashMap<>();
-//        Location center = event.getLocation();
-//        int max = -1;
-//        for(Block block : event.blockList()) {
-//            int radius = (int) center.distance(block.getLocation().add(0.5, 0.5, 0.5));
-//            blast.computeIfAbsent(radius, k -> new HashMap<>()).put(block, block.getBlockData());
-//            max = Math.max(max, radius);
-//        }
-//        int temp = max;
-//        new Task(HoloItems.getInstance(), 80, 1){
-//            int radius = temp;
-//            Map<Block, BlockData> regen;
-//            public void run(){
-//                regen = blast.get(radius);
-//                if(regen==null){
-//                    cancel();
-//                    return;
-//                }
-//                for(Block block : regen.keySet()){
-//                    BlockData data = regen.get(block);
-//                    if(!data.getMaterial().isAir())
-//                        block.setBlockData(data);
-//                }
-//                radius--;
-//            }
-//        };
     }
 
     private void decay(Block block, int duration){
@@ -276,55 +233,27 @@ public class Maintenance implements Listener, Resetable {
     @EventHandler(priority = EventPriority.LOW)
     public void input(PlayerInteractEvent event){
         Block block = event.getClickedBlock();
-        if(block!=null && !decay.contains(block) && block.getBlockData() instanceof Openable)
+        if(block!=null && (!decay.contains(block) && (block.getBlockData() instanceof Openable || block.getState() instanceof Container)))
             event.setCancelled(true);
-
         Player player = event.getPlayer();
-        Member member = classes.get(player);
-        if(member==null)
-            return;
-        if(!(member instanceof Kiara)) {
+        Member member = members.get(player);
+        if(member!=null)
             member.ability(inputs.get(player).getValue(), event);
-            return;
-        }
-        ItemStack item = event.getItem();
-        if(item==null || item.getType()!=Material.SHIELD)
-            return;
-        Kiara kiara = (Kiara) member;
-        kiara.cooldown = false;
-        if(kiara.taskId!=-1){
-            Bukkit.getScheduler().cancelTask(kiara.taskId);
-            kiara.taskId = -1;
-        }
-        new Task(HoloItems.getInstance(), 1, 1){
-            int increment = 0;
-            public void run(){
-                if(increment>=1200 || !player.isValid() || player.isDead()){
-                    cancel();
-                    return;
-                }
-                if(!player.isHandRaised()){
-                    kiara.ability(inputs.get(player).getValue(), event);
-                    cancel();
-                    return;
-                }
-                increment++;
-            }
-        };
     }
 
     @EventHandler
     public void input(EntityDamageByEntityEvent event){
+        Entity damager = event.getDamager();
         Entity entity = event.getEntity();
-        if(entity instanceof Player){
-            Member member = classes.get((Player) entity);
-            if(member instanceof Kiara){
-                Kiara kiara = (Kiara) member;
-                if(kiara.cooldown) {
-                    event.setCancelled(true);
-                    kiara.reversal(event.getDamager());
-                }
-            }
+        if(damager instanceof Player) {
+            Member member = members.get((Player) damager);
+            if(member!=null)
+                member.attack(event, damager, entity);
+        }
+        if(entity instanceof Player) {
+            Member member = members.get((Player) entity);
+            if(member!=null)
+                member.defend(event, damager, entity);
         }
     }
 
@@ -333,7 +262,7 @@ public class Maintenance implements Listener, Resetable {
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
-        Member member = classes.get(player);
+        Member member = members.get(player);
         if(member instanceof Watson) {
             Watson watson = (Watson) member;
             watson.to = event.getTo();
@@ -352,6 +281,13 @@ public class Maintenance implements Listener, Resetable {
     }
 
     @EventHandler
+    public void burst(PlayerToggleSneakEvent event){
+        Member member = members.get(event.getPlayer());
+        if(member!=null)
+            member.burst(event);
+    }
+
+    @EventHandler
     public void pickUp(PlayerDropItemEvent event){
         if(!event.isCancelled()) {
             Item item = event.getItemDrop();
@@ -367,58 +303,9 @@ public class Maintenance implements Listener, Resetable {
         EntityExplodeEvent.getHandlerList().unregister(this);
         PlayerInteractEvent.getHandlerList().unregister(this);
         EntityDamageByEntityEvent.getHandlerList().unregister(this);
+        PlayerToggleSneakEvent.getHandlerList().unregister(this);
         PlayerDropItemEvent.getHandlerList().unregister(this);
         for(Block block : decay)
             block.breakNaturally();
     }
 }
-
-//    List<BlockFace> input = inputs.computeIfAbsent(player, k -> new ArrayList<>());
-//    BlockFace face = player.getFacing();
-//    int size = input.size();
-//        if(size>0) {
-//                BlockFace blockFace = input.get(size - 1);
-//                if (face != blockFace) {
-//                for (int i = 1; i <= 3; i++) {
-//                int index = size - i;
-//                if (index < 0)
-//        break;
-//        if (blockFace == input.get(index))
-//        input.remove(index);
-//        }
-//        input.add(blockFace);
-//        }
-//        }
-//        if(size>=8)
-//        input.remove(0);
-//        input.add(face);
-
-//    public boolean input(List<BlockFace> inputs){
-//        int size = inputs.size();
-//        if(size<4)
-//            return false;
-//        BlockFace prev;
-//        BlockFace curr = inputs.get(size-4);
-//        boolean leftFullCircle = true;
-//        for(int i=size-3; i<=size-1; i++){
-//            prev = curr;
-//            curr = inputs.get(i);
-//            if(Utility.left.get(prev)!=curr) {
-//                leftFullCircle = false;
-//                break;
-//            }
-//        }
-//        if(leftFullCircle)
-//            return true;
-//        curr = inputs.get(size-4);
-//        boolean rightFullCircle = true;
-//        for(int i=size-3; i<=size-1; i++){
-//            prev = curr;
-//            curr = inputs.get(i);
-//            if(Utility.opposites.get(Utility.left.get(prev))!=curr) {
-//                rightFullCircle = false;
-//                break;
-//            }
-//        }
-//        return rightFullCircle;
-//    }

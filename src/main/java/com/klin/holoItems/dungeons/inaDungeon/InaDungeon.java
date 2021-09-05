@@ -3,8 +3,8 @@ package com.klin.holoItems.dungeons.inaDungeon;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.misc.franCollection.items.DyeConcentrate;
 import com.klin.holoItems.dungeons.Resetable;
-import com.klin.holoItems.dungeons.inaDungeon.classes.Member;
-import com.klin.holoItems.dungeons.inaDungeon.classes.*;
+import com.klin.holoItems.dungeons.inaDungeon.members.Member;
+import com.klin.holoItems.dungeons.inaDungeon.members.*;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -345,7 +345,7 @@ public class InaDungeon implements CommandExecutor{
                     default:
                         return false;
                 }
-                ((Maintenance) presets.computeIfAbsent("maintenance", k -> new Maintenance())).classes.put(player, member);
+                ((Maintenance) presets.computeIfAbsent("maintenance", k -> new Maintenance())).members.put(player, member);
                 return true;
 
             case "maintain":

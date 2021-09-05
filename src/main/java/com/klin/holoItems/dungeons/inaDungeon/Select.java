@@ -2,7 +2,7 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.Resetable;
-import com.klin.holoItems.dungeons.inaDungeon.classes.*;
+import com.klin.holoItems.dungeons.inaDungeon.members.*;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -283,7 +283,7 @@ public class Select implements Listener, Resetable {
         BlockFadeEvent.getHandlerList().unregister(this);
         EntityChangeBlockEvent.getHandlerList().unregister(this);
         if(!classes.isEmpty())
-            ((Maintenance) InaDungeon.presets.computeIfAbsent("maintenance", k -> new Maintenance())).classes = classes;
+            ((Maintenance) InaDungeon.presets.computeIfAbsent("maintenance", k -> new Maintenance())).members = classes;
         if(cage!=null){
             for(Location loc : cage.keySet())
                 loc.getBlock().setBlockData(cage.get(loc));

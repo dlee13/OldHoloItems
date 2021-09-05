@@ -1,4 +1,4 @@
-package com.klin.holoItems.dungeons.inaDungeon.classes;
+package com.klin.holoItems.dungeons.inaDungeon.members;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
@@ -8,8 +8,10 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -111,5 +113,13 @@ public class Watson extends Member {
                 }
             }.runTaskLater(HoloItems.getInstance(), 6);
         }
+    }
+
+    public void attack(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+
+    }
+
+    public void defend(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+
     }
 }

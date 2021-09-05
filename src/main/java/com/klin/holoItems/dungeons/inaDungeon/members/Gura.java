@@ -1,4 +1,4 @@
-package com.klin.holoItems.dungeons.inaDungeon.classes;
+package com.klin.holoItems.dungeons.inaDungeon.members;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.Torrent;
@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -81,5 +82,13 @@ public class Gura extends Member {
                 increment++;
             }
         };
+    }
+
+    public void attack(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+
+    }
+
+    public void defend(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+
     }
 }

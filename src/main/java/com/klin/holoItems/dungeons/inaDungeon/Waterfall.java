@@ -10,7 +10,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -24,14 +23,12 @@ public class Waterfall implements Listener, Resetable {
     //waterfall buildteam 713 54 345
     //y:61 -> 721 70 361
     //waterfall world -6 60 -285
-    private Location center;
-    private final Set<Material> prohibited;
-    private List<Block> pond;
+    private final Location center;
+    private final List<Block> pond;
     private final Set<Block> rapids;
 
     public Waterfall(World world, int x, int y, int z){
         center = new Location(world, x, y, z);
-        prohibited = Set.of(Material.PISTON, Material.STICKY_PISTON, Material.IRON_TRAPDOOR, Material.OAK_TRAPDOOR, Material.SPRUCE_TRAPDOOR, Material.BIRCH_TRAPDOOR, Material.JUNGLE_TRAPDOOR, Material.ACACIA_TRAPDOOR, Material.DARK_OAK_TRAPDOOR, Material.CRIMSON_TRAPDOOR, Material.WARPED_TRAPDOOR);
         pond = Utility.vacuum(center.getBlock(), Material.WATER, 3000, true);
         rapids = new HashSet<>();
         for(int i=0; i<=8; i++){
@@ -58,23 +55,11 @@ public class Waterfall implements Listener, Resetable {
         }.runTask(HoloItems.getInstance());
     }
 
-    @EventHandler
-    public void decay(BlockPlaceEvent event){
-        if(!event.isCancelled()) {
-            Block block = event.getBlock();
-            if(prohibited.contains(block.getType()) && center.distance(block.getLocation())<24)
-                event.setCancelled(true);
-        }
-    }
-
     public void reset(){
         WeatherChangeEvent.getHandlerList().unregister(this);
-        BlockPlaceEvent.getHandlerList().unregister(this);
         for(Block block : pond)
             block.setType(Material.WATER);
-        pond = null;
         Block block = center.getBlock();
-        center = null;
         new Task(HoloItems.getInstance(), 20, 20){
             int increment = 0;
             public void run(){

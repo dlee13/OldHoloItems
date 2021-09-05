@@ -1,4 +1,4 @@
-package com.klin.holoItems.dungeons.inaDungeon.classes;
+package com.klin.holoItems.dungeons.inaDungeon.members;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.utility.Task;
@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -101,5 +102,13 @@ public class Calli extends Member {
                 increment++;
             }
         };
+    }
+
+    public void attack(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+
+    }
+
+    public void defend(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+
     }
 }

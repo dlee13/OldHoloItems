@@ -1,17 +1,16 @@
 package com.klin.holoItems.collections.misc.opCollection.items;
 
-import com.klin.holoItems.interfaces.Hangable;
-import com.klin.holoItems.interfaces.Reactable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.misc.opCollection.OpCollection;
+import com.klin.holoItems.interfaces.Hangable;
+import com.klin.holoItems.interfaces.Reactable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -26,16 +25,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class GalleryFrame extends Item implements Hangable, Reactable {
     public static final String name = "galleryFrame";
-
-    private final Map<Player, Hanging> reference;
-    private static final ItemStack buy = new ItemStack(Material.SPRUCE_TRAPDOOR);
-    private static final ItemStack pay = new ItemStack(Material.MAP);
-
-    public static final Set<Enchantment> accepted = null;
+    private static final Map<Player, Hanging> reference = new HashMap<>();
+    private final ItemStack buy;
+    private final ItemStack pay;
 
     private static final Material material = Material.GLOW_ITEM_FRAME;
     private static final int quantity = 1;
@@ -49,12 +44,13 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
     public static final char key = '2';
 
     public GalleryFrame(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
+        super(name, material, quantity, lore, durability, stackable, shiny, cost,
                 "" + OpCollection.key + key, key);
-        reference = new HashMap<>();
+        buy = new ItemStack(Material.SPRUCE_TRAPDOOR);
         ItemMeta meta = buy.getItemMeta();
         meta.setDisplayName("§6Buy");
         buy.setItemMeta(meta);
+        pay = new ItemStack(Material.MAP);
     }
 
     public void registerRecipes() {}

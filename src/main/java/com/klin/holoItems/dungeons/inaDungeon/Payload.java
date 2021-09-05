@@ -51,13 +51,13 @@ public class Payload implements Resetable {
         Map<Integer, Set<Player>> riders = new HashMap<>();
         for(Player player : Bukkit.getOnlinePlayers()){
             Location loc = player.getLocation().getBlock().getLocation();
-            if(payload.containsKey(loc)){
+            if(payload.containsKey(loc.clone().add(0, -1, 0)))
+                riders.computeIfAbsent(loc.getBlockZ(), k -> new HashSet<>()).add(player);
+            else if(payload.containsKey(loc)){
                 player.setNoDamageTicks(0);
                 player.damage(10);
                 player.setVelocity(new Vector(0, 0.45, 0));
             }
-            else if(payload.containsKey(loc.add(0, -1, 0)))
-                riders.computeIfAbsent(loc.getBlockZ(), k -> new HashSet<>()).add(player);
         }
         payload = new HashMap<>();
         Map<Location, BlockData> car;
