@@ -4,9 +4,13 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
 import com.klin.holoItems.dungeons.inaDungeon.Maintenance;
 import com.klin.holoItems.utility.Task;
+import com.klin.holoItems.utility.Utility;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,7 +26,7 @@ public class Kiara extends Member {
     private boolean dunk;
 
     public Kiara(Player player){
-        super(player);
+        super(player, BarColor.GREEN);
         taskId = -1;
         dunk = false;
     }
@@ -109,22 +113,22 @@ public class Kiara extends Member {
         };
     }
 
-    public void attack(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+    public void attack(EntityDamageByEntityEvent event, Entity entity) {
 
     }
 
-    public void defend(EntityDamageByEntityEvent event, Entity damager, Entity entity){
+    public void defend(EntityDamageByEntityEvent event, Entity damager){
         if(!cooldown || !(damager instanceof LivingEntity)) //reversal
             return;
         event.setCancelled(true);
         LivingEntity living = (LivingEntity) damager;
         living.setFireTicks(160);
-        Vector velocity = living.getLocation().subtract(entity.getLocation()).toVector().setY(0).normalize().setY(1);
+        Vector velocity = living.getLocation().subtract(player.getLocation()).toVector().setY(0).normalize().setY(1);
         Vector twirl = new Vector(-velocity.getZ(), velocity.getY(), -velocity.getX());
         Vector helix = twirl.clone();
         velocity.multiply(0.5);
         Vector axis = velocity.multiply(0.5);
-        World world = entity.getWorld();
+        World world = player.getWorld();
         Location loc = living.getLocation();
         new Task(HoloItems.getInstance(), 0, 1){
             int increment = 0;
@@ -151,6 +155,32 @@ public class Kiara extends Member {
 
     @Override
     public void burst(PlayerToggleSneakEvent event){
-        //night raid vortex
+        BossBar bossbar = Bukkit.createBossBar(com.klin.holoItems.utility.Utility.key, "charging. . .", barColor, BarStyle.SEGMENTED_20);
+        bossbar.addPlayer(player);
+        new Task(HoloItems.getInstance(), 0, 1) {
+            int increment = 0;
+            boolean cap = false;
+            @Override
+            public void run() {
+                if (!player.isSneaking() || !player.isSneaking() && increment>=16) {
+                    bossbar.removePlayer(player);
+                    Bukkit.removeBossBar(Utility.key);
+                    burst(increment);
+                    cancel();
+                    return;
+                }
+                bossbar.setProgress(increment*0.05);
+                if(cap)
+                    increment = Math.max(16, increment-1);
+                else if(increment>=20)
+                    cap = true;
+                else
+                    increment++;
+            }
+        };
+    }
+
+    public void burst(int charge) {
+
     }
 }

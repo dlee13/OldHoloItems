@@ -7,6 +7,7 @@ import com.klin.holoItems.utility.Task;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -30,7 +31,7 @@ public class Watson extends Member {
     private final Set<LivingEntity> airborne;
 
     public Watson(Player player){
-        super(player);
+        super(player, BarColor.YELLOW);
         taskId = -1;
         airborne = new HashSet<>();
     }
@@ -115,11 +116,15 @@ public class Watson extends Member {
         }
     }
 
-    public void attack(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+    public void attack(EntityDamageByEntityEvent event, Entity entity) {
 
     }
 
-    public void defend(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+    public void defend(EntityDamageByEntityEvent event, Entity damager) {
+
+    }
+
+    public void burst(int charge) {
 
     }
 }

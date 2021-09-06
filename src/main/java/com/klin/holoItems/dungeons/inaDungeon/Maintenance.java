@@ -4,7 +4,6 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.dungeons.inaDungeon.members.Member;
 import com.klin.holoItems.dungeons.inaDungeon.members.Watson;
-import com.klin.holoItems.utility.Task;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
@@ -31,7 +30,7 @@ public class Maintenance implements Listener, Resetable {
     private final Material[][] seal;
     //maintain -41 -292 -27 -267
     private final int[] cage;
-    private final Set<Block> decay;
+    private final Map<Block, Integer> decay;
     public final Set<Player> knockBack;
     public Map<Player, Member> members;
     public final Map<Player, AbstractMap.SimpleEntry<Vector, Double>> inputs;
@@ -45,7 +44,7 @@ public class Maintenance implements Listener, Resetable {
                 {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS}
         };
         cage = new int[]{x1, z1, x2, z2};
-        decay = new HashSet<>();
+        decay = new HashMap<>();
         knockBack = new HashSet<>();
         members = new HashMap<>();
         inputs = new HashMap<>();
@@ -61,7 +60,7 @@ public class Maintenance implements Listener, Resetable {
                 {Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.WHITE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS, Material.PURPLE_STAINED_GLASS}
         };
         cage = null;
-        decay = new HashSet<>();
+        decay = new HashMap<>();
         knockBack = new HashSet<>();
         members = new HashMap<>();
         inputs = new HashMap<>();
@@ -103,7 +102,7 @@ public class Maintenance implements Listener, Resetable {
             if(buff!=null && buff[6]>0) {
                 Block block = location.clone().add(location.getDirection().setY(0).normalize().multiply(-1.5)).getBlock();
                 if(block.isEmpty()) {
-                    block.setType(block.getLightLevel()<=7?Material.SOUL_FIRE:Material.FIRE);
+                    block.setType(Material.FIRE);
                     new BukkitRunnable(){
                         public void run(){
                             if(block.getType()==Material.FIRE)
@@ -167,7 +166,7 @@ public class Maintenance implements Listener, Resetable {
                     break;
                 for (int j = 0; j < seal[i].length; j++) {
                     Block block = world.getBlockAt(loc.clone().add(!axis ? j : 0, i, axis ? j : 0));
-                    if (block.isPassable() || decay.remove(block)) {
+                    if (block.isPassable() || decay.remove(block)!=null) {
                         block.setType(seal[i][j]);
                         decay(block, 4 + 2 * (Math.abs(2 - i) + Math.abs(2 - j)));
                     }
@@ -186,15 +185,20 @@ public class Maintenance implements Listener, Resetable {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void track(BlockPlaceEvent event){
-        if(!event.isCancelled())
-            decay(event.getBlock(), 80);
+        if(!event.isCancelled()) {
+            Block block = event.getBlockPlaced();
+            decay(block, block.getType()==Material.WATER?10:80);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void prevent(BlockBreakEvent event){
         if(!event.isCancelled()) {
-            if(decay.remove(event.getBlock()))
+            Integer taskId = decay.remove(event.getBlock());
+            if(taskId!=null) {
                 event.setDropItems(false);
+                Bukkit.getScheduler().cancelTask(taskId);
+            }
             else
                 event.setCancelled(true);
         }
@@ -207,7 +211,7 @@ public class Maintenance implements Listener, Resetable {
         Set<Block> remove = new HashSet<>();
         List<Block> blocks = event.blockList();
         for(Block block : blocks) {
-            if(!decay.contains(block))
+            if(!decay.containsKey(block))
                 remove.add(block);
         }
         blocks.removeAll(remove);
@@ -215,25 +219,20 @@ public class Maintenance implements Listener, Resetable {
     }
 
     private void decay(Block block, int duration){
-        decay.add(block);
-        new Task(HoloItems.getInstance(), 2, 1){
-            int increment = 0;
+        decay.put(block,
+        new BukkitRunnable(){
             public void run(){
-                if(increment>=duration || !decay.contains(block)) {
-                    block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5,0.5,0.5), 40, 0, 0, 0, 4, block.getType().createBlockData());
-                    block.setType(Material.AIR);
-                    cancel();
-                    return;
-                }
-                increment++;
+                block.setType(Material.AIR);
+                block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5,0.5,0.5), 40, 0, 0, 0, 4, block.getType().createBlockData());
+                decay.remove(block);
             }
-        };
+        }.runTaskLater(HoloItems.getInstance(), duration).getTaskId());
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void input(PlayerInteractEvent event){
         Block block = event.getClickedBlock();
-        if(block!=null && (!decay.contains(block) && (block.getBlockData() instanceof Openable || block.getState() instanceof Container)))
+        if(block!=null && (!decay.containsKey(block) && (block.getBlockData() instanceof Openable || block.getState() instanceof Container)))
             event.setCancelled(true);
         Player player = event.getPlayer();
         Member member = members.get(player);
@@ -241,19 +240,21 @@ public class Maintenance implements Listener, Resetable {
             member.ability(inputs.get(player).getValue(), event);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void input(EntityDamageByEntityEvent event){
         Entity damager = event.getDamager();
         Entity entity = event.getEntity();
         if(damager instanceof Player) {
-            Member member = members.get((Player) damager);
+            Player player = (Player) damager;
+            Member member = members.get(player);
             if(member!=null)
-                member.attack(event, damager, entity);
+                member.attack(event, entity);
         }
         if(entity instanceof Player) {
-            Member member = members.get((Player) entity);
+            Player player = (Player) entity;
+            Member member = members.get(player);
             if(member!=null)
-                member.defend(event, damager, entity);
+                member.defend(event, player);
         }
     }
 
@@ -282,9 +283,11 @@ public class Maintenance implements Listener, Resetable {
 
     @EventHandler
     public void burst(PlayerToggleSneakEvent event){
-        Member member = members.get(event.getPlayer());
-        if(member!=null)
-            member.burst(event);
+        if(event.isSneaking()){
+            Member member = members.get(event.getPlayer());
+            if (member!=null)
+                member.burst(event);
+        }
     }
 
     @EventHandler
@@ -305,7 +308,5 @@ public class Maintenance implements Listener, Resetable {
         EntityDamageByEntityEvent.getHandlerList().unregister(this);
         PlayerToggleSneakEvent.getHandlerList().unregister(this);
         PlayerDropItemEvent.getHandlerList().unregister(this);
-        for(Block block : decay)
-            block.breakNaturally();
     }
 }

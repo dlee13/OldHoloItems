@@ -7,6 +7,7 @@ import com.klin.holoItems.utility.Utility;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
+import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -25,7 +26,7 @@ public class Gura extends Member {
     private final Set<Material> projectiles;
 
     public Gura(Player player){
-        super(player);
+        super(player, BarColor.BLUE);
         projectiles = Set.of(Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.FISHING_ROD, Material.EXPERIENCE_BOTTLE,
                 Material.LINGERING_POTION, Material.SPLASH_POTION, Material.EGG, Material.ENDER_PEARL, Material.ENDER_EYE, Material.SNOWBALL);
     }
@@ -84,11 +85,15 @@ public class Gura extends Member {
         };
     }
 
-    public void attack(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+    public void attack(EntityDamageByEntityEvent event, Entity entity) {
 
     }
 
-    public void defend(EntityDamageByEntityEvent event, Entity damager, Entity entity) {
+    public void defend(EntityDamageByEntityEvent event, Entity damager) {
+
+    }
+
+    public void burst(int charge) {
 
     }
 }

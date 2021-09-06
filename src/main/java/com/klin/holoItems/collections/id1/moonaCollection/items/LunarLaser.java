@@ -19,6 +19,8 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 
@@ -111,8 +113,7 @@ public class LunarLaser extends Enchant implements Interactable {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String id = container.get(Utility.key, PersistentDataType.STRING);
-        if(id!=null && id.equals(this.id) &&
-                container.get(Utility.cooldown, PersistentDataType.STRING)==null) {
+        if(id!=null && id.equals(this.id) && container.get(Utility.pack, PersistentDataType.INTEGER)==null) {
             List<String> lore = meta.getLore();
             String durability = lore.remove(lore.size()-1);
             lore.remove(lore.size()-1);
@@ -121,19 +122,11 @@ public class LunarLaser extends Enchant implements Interactable {
             lore.add("");
             lore.add(durability);
             meta.setLore(lore);
-            container.set(Utility.cooldown, PersistentDataType.STRING, "");
+            container.set(Utility.pack, PersistentDataType.INTEGER, 0);
             item.setItemMeta(meta);
         }
         LivingEntity entity = (LivingEntity) result.getHitEntity();
-        if(entity.isGlowing())
-            return;
-
-        entity.setGlowing(true);
+        entity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 120, 1));
         Utility.addDurability(item, -1, player);
-        new BukkitRunnable(){
-            public void run(){
-                entity.setGlowing(false);
-            }
-        }.runTaskLater(HoloItems.getInstance(), 100);
     }
 }
