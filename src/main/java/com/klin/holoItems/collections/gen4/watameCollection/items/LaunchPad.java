@@ -23,9 +23,12 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LaunchPad extends Crate implements Placeable, Punchable {
     public static final String name = "launchPad";
+    private final Map<Chunk, Integer> tickets;
 
     private static final Material material = Material.SMOKER;
     private static final int quantity = 1;
@@ -40,6 +43,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
 
     public LaunchPad(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost, ""+WatameCollection.key+key, key);
+        tickets = new HashMap<>();
     }
 
     public void registerRecipes(){
@@ -114,7 +118,11 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             }
         }
         Chunk chunk = dest.getChunk();
-        chunk.addPluginChunkTicket(HoloItems.getInstance());
+        if(chunk.getPluginChunkTickets().contains(HoloItems.getInstance())) {
+            Integer ticket = tickets.get(chunk);
+            tickets.put(chunk, ticket==null?2:(ticket+1));
+        } else
+            chunk.addPluginChunkTicket(HoloItems.getInstance());
         Block launchPad = dest.getWorld().getHighestBlockAt(dest);
         while(launchPad.getType()==Material.BARREL && UberSheepPackage.id.equals(((TileState) launchPad.getState()).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
             launchPad = launchPad.getRelative(BlockFace.DOWN);
@@ -172,7 +180,15 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                                             world.dropItemNaturally(loc, content);
                                     }
                                 }
-                                chunk.removePluginChunkTicket(HoloItems.getInstance());
+                                Integer ticket = tickets.remove(chunk);
+                                if(ticket!=null) {
+                                    ticket--;
+                                    if(ticket>1)
+                                        tickets.put(chunk, ticket);
+                                    else
+                                        chunk.removePluginChunkTicket(HoloItems.getInstance());
+                                } else
+                                    chunk.removePluginChunkTicket(HoloItems.getInstance());
                                 cancel();
                                 return;
                             }

@@ -281,6 +281,25 @@ public class InaDungeon implements CommandExecutor{
                 System.out.println("Cookie [ON]");
                 return true;
 
+            case "deadbeats":
+                if(presets.get("deadbeats")!=null){
+                    System.out.println("Deadbeats already ON");
+                    return true;
+                }
+                if(args.length<6)
+                    return false;
+                world = Bukkit.getWorld(args[0]);
+                if(world==null){
+                    System.out.println("Invalid world name");
+                    return true;
+                }
+                try {
+                    presets.put("deadbeats", new Deadbeats(world, new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])), EntityType.valueOf(args[4]), Integer.parseInt(args[5])));
+                    System.out.println("Deadbeats [ON]");
+                }catch (IllegalArgumentException e){return false;}
+                System.out.println("Deadbeats [ON]");
+                return true;
+
             case "plant":
                 if(presets.get("gettingwood")!=null){
                     System.out.println("Getting Wood already ON");

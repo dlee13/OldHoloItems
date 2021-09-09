@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 public class GroundPounder extends Pack {
     public static final String name = "groundPounder";
     private static final Set<Enchantment> accepted = Set.of(Enchantment.MENDING);
-    private static final Map<Player, Integer> held = new HashMap<>();
+    private final Map<Player, Integer> held;
 
     private static final Material material = Material.STONE_PICKAXE;
     private static final String lore =
@@ -49,10 +49,11 @@ public class GroundPounder extends Pack {
 
     public static final int cost = 0;
     public static final char key = '5';
+    public static final String id = ""+WatsonCollection.key+key;
 
     public GroundPounder(){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost,
-                ""+WatsonCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost, id, key);
+        held = new HashMap<>();
     }
 
     public void registerRecipes(){
@@ -125,7 +126,7 @@ public class GroundPounder extends Pack {
                         new Task(HoloItems.getInstance(), 2, 2){
                             int increment = 0;
                             Set<Block> pound = Stream.of(center).collect(Collectors.toCollection(HashSet::new));
-                            Set<Block> pounded = Stream.of(center).collect(Collectors.toCollection(HashSet::new));
+                            final Set<Block> pounded = Stream.of(center).collect(Collectors.toCollection(HashSet::new));
                             public void run(){
                                 if(increment>4){
                                     cancel();

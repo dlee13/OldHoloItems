@@ -103,6 +103,9 @@ commands:
   cookie:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command>
+  deadbeats:
+    permission: holoItems.dungeons.inaDungeon
+    usage: /<command>
   plant:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>

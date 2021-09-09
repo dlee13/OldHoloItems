@@ -65,6 +65,10 @@ public class Maintenance implements Listener, Resetable {
         members = new HashMap<>();
         inputs = new HashMap<>();
         getServer().getPluginManager().registerEvents(this, HoloItems.getInstance());
+        BlockPlaceEvent.getHandlerList().unregister(this);
+        BlockBreakEvent.getHandlerList().unregister(this);
+        EntityExplodeEvent.getHandlerList().unregister(this);
+        PlayerDropItemEvent.getHandlerList().unregister(this);
     }
 
     @EventHandler

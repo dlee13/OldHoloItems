@@ -9,14 +9,19 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class Dungeons implements CommandExecutor {
+    InaDungeon inaDungeon;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         switch(cmd.getName().toLowerCase()) {
             case "inadungeon":
+                if(inaDungeon!=null){
+                    System.out.println("Ina Dungeon already ON");
+                    return true;
+                }
                 Collections.collections.put(InaDungeonCollection.key, new InaDungeonCollection());
                 HoloItems holoItems = HoloItems.getInstance();
-                InaDungeon inaDungeon = new InaDungeon();
+                inaDungeon = new InaDungeon();
                 holoItems.getCommand("build").setExecutor(inaDungeon);
                 holoItems.getCommand("tostring").setExecutor(inaDungeon);
                 holoItems.getCommand("reset").setExecutor(inaDungeon);
@@ -27,6 +32,7 @@ public class Dungeons implements CommandExecutor {
                 holoItems.getCommand("freeze").setExecutor(inaDungeon);
                 holoItems.getCommand("select").setExecutor(inaDungeon);
                 holoItems.getCommand("conduit").setExecutor(inaDungeon);
+                holoItems.getCommand("deadbeats").setExecutor(inaDungeon);
                 holoItems.getCommand("cookie").setExecutor(inaDungeon);
                 holoItems.getCommand("plant").setExecutor(inaDungeon);
                 holoItems.getCommand("minesweeper").setExecutor(inaDungeon);
@@ -35,6 +41,7 @@ public class Dungeons implements CommandExecutor {
                 holoItems.getCommand("payload").setExecutor(inaDungeon);
                 holoItems.getCommand("guide").setExecutor(inaDungeon);
                 holoItems.getCommand("waterfall").setExecutor(inaDungeon);
+                System.out.println("Ina Dungeon [ON]");
                 return true;
         }
         return true;

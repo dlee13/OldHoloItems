@@ -29,7 +29,7 @@ public class SuiseiCollection extends Collection {
         collection.put(Comet.key, new Comet());
         collection.put(RolledNewspaper.key, new RolledNewspaper());
         collection.put(TetrisPiece.key, new TetrisPiece());
-        collection.put(RaceBook.key, new RaceBook());
+        collection.put(SteeringWheel.key, new SteeringWheel());
         collection.put(Backstab.key, new Backstab());
     }
 
