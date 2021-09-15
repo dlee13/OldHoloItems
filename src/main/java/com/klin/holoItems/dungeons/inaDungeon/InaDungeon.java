@@ -294,7 +294,7 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    presets.put("deadbeats", new Deadbeats(world, new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])), Integer.parseInt(args[4])));
+                    presets.put("deadbeats", new Deadbeats(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])));
                     System.out.println("Deadbeats [ON]");
                 }catch (IllegalArgumentException e){return false;}
                 System.out.println("Deadbeats [ON]");
