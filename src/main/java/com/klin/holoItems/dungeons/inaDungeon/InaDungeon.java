@@ -286,7 +286,7 @@ public class InaDungeon implements CommandExecutor{
                     System.out.println("Deadbeats already ON");
                     return true;
                 }
-                if(args.length<6)
+                if(args.length<5)
                     return false;
                 world = Bukkit.getWorld(args[0]);
                 if(world==null){
@@ -294,7 +294,7 @@ public class InaDungeon implements CommandExecutor{
                     return true;
                 }
                 try {
-                    presets.put("deadbeats", new Deadbeats(world, new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])), EntityType.valueOf(args[4]), Integer.parseInt(args[5])));
+                    presets.put("deadbeats", new Deadbeats(world, new Location(world, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])), Integer.parseInt(args[4])));
                     System.out.println("Deadbeats [ON]");
                 }catch (IllegalArgumentException e){return false;}
                 System.out.println("Deadbeats [ON]");

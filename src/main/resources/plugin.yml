@@ -105,7 +105,7 @@ commands:
     usage: /<command>
   deadbeats:
     permission: holoItems.dungeons.inaDungeon
-    usage: /<command>
+    usage: /<command> <world> <x> <y> <z> <amount>
   plant:
     permission: holoItems.dungeons.inaDungeon
     usage: /<command> <world> <x> <y> <z>
