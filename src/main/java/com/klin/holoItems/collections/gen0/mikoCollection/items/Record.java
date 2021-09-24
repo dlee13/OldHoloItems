@@ -77,7 +77,7 @@ public class Record extends Item implements Dispensable, Interactable, Clickable
                     for (ItemStack content : inv.getStorageContents()) {
                         if (content!=null && content.getItemMeta()!=null && content.getAmount()==1) {
                             ItemMeta meta = content.getItemMeta();
-                            if (id.equals(meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))){
+                            if (name.equals(meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))){
                                 String time = meta.getDisplayName();
                                 if(!(time.startsWith("§6") && !time.equals("§6Record")))
                                     records.add(content);

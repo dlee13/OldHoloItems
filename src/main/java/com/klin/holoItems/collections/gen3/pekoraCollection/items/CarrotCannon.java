@@ -31,17 +31,14 @@ public class CarrotCannon extends BatteryPack {
             "launch an explosive carrot";
     private static final int durability = 100;
     private static final boolean shiny = false;
+    public static final int cost = 1000;
 
     public static final Material content = Material.CARROT;
     public static final double perFuel = 0.5;
     public static final int cap = 288;
 
-    public static final int cost = 1000;
-    public static final char key = '1';
-
     public CarrotCannon(){
-        super(name, accepted, material, lore, durability, shiny, cost, content, perFuel, cap,
-                ""+PekoraCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, cost, content, perFuel, cap);
     }
 
     public void registerRecipes(){

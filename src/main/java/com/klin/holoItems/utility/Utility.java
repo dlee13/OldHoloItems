@@ -146,24 +146,46 @@ public class Utility {
         if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
             return null;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        return findItem(id, cls);
+
+        T t = findItem(id, cls);
+        if(t!=null && id.length()<=2) {
+            ItemMeta meta = item.getItemMeta();
+            meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
+            item.setItemMeta(meta);
+        }
+        return t;
     }
 
     public static <T> T findItem(ItemStack item, Class<T> cls, Player player){
         if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
             return null;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        return findItem(id, cls, player);
+
+        T t = findItem(id, cls, player);
+        if(t!=null && id.length()<=2) {
+            ItemMeta meta = item.getItemMeta();
+            meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
+            item.setItemMeta(meta);
+        }
+        return t;
     }
 
     public static <T> T findItem(Entity entity, Class<T> cls){
         String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        return findItem(id, cls);
+
+        T t = findItem(id, cls);
+        if(t!=null && id.length()<=2)
+            entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
+        return t;
     }
 
     public static <T> T findItem(Entity entity, Class<T> cls, Player player){
         String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        return findItem(id, cls, player);
+
+        T t = findItem(id, cls, player);
+        if(t!=null && id.length()<=2)
+            entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
+        return t;
     }
 
     public static <T> T findItem(Block block, Class<T> cls){
@@ -171,7 +193,13 @@ public class Utility {
         if(!(state instanceof TileState))
             return null;
         String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        return findItem(id, cls);
+
+        T t = findItem(id, cls);
+        if(t!=null && id.length()<=2) {
+            ((TileState) state).getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
+            state.update();
+        }
+        return t;
     }
 
     public static <T> T findItem(Block block, Class<T> cls, Player player){
@@ -179,13 +207,19 @@ public class Utility {
         if(!(state instanceof TileState))
             return null;
         String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        return findItem(id, cls, player);
+
+        T t = findItem(id, cls, player);
+        if(t!=null && id.length()<=2) {
+            ((TileState) state).getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
+            state.update();
+        }
+        return t;
     }
 
     public static <T> T findItem(String id, Class<T> cls){
         if(id==null || Collections.disabled.contains(id))
             return null;
-        Item generic = Collections.findItem(id);
+        Item generic = Collections.temp.get(id);
         if(!cls.isInstance(generic))
             return null;
         return cls.cast(generic);
@@ -199,14 +233,13 @@ public class Utility {
                 player.sendMessage("§cThis item has been disabled");
             return null;
         }
-        Item generic = Collections.findItem(id);
+        Item generic = Collections.temp.get(id);
         if(!cls.isInstance(generic))
             return null;
         return cls.cast(generic);
     }
 
-    public static ItemStack process(String name, Material material, int quantity,
-                 String lore, int durability, boolean shiny, String id){
+    public static ItemStack process(String name, Material material, int quantity, String lore, int durability, boolean shiny){
         ItemStack item = new ItemStack(material, quantity);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§6"+formatName(name));
@@ -234,8 +267,11 @@ public class Utility {
         else if(meta.hasEnchants())
             list.add(0, "");
         meta.setLore(list);
-        meta.setCustomModelData(id.charAt(0)*10 + Character.getNumericValue(id.charAt(1)));
-        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, id);
+        int modelData = 0;
+        for(char letter : name.toCharArray())
+            modelData = modelData * 10 + letter;
+        meta.setCustomModelData(modelData);
+        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, name);
         item.setItemMeta(meta);
 
         return item;
@@ -265,7 +301,7 @@ public class Utility {
     public static String processType(String type){
         String string = "";
         for(String word : type.split("_"))
-            string += word.substring(0, 1)+word.substring(1).toLowerCase()+" ";
+            string += word.charAt(0)+word.substring(1).toLowerCase()+" ";
         return string.substring(0, string.length()-1);
     }
 
@@ -276,7 +312,7 @@ public class Utility {
             enchantments = "";
         else
             enchantments += " ";
-        meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments+enchant.id);
+        meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments+enchant.name);
         List<String> lore = meta.getLore();
         if(lore==null)
             lore = new ArrayList<>(List.of(""));

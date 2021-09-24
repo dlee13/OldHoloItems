@@ -22,8 +22,8 @@ public abstract class SlidingPack extends Pack implements Clickable {
     public final ItemStack content;
 
     public SlidingPack(String name, Set<Enchantment> accepted, Material material, String lore,
-                       int durability, boolean shiny, int cost, ItemStack content, String id, char key){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost, id, key);
+                       int durability, boolean shiny, int cost, ItemStack content){
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
         this.content = content;
     }
 
@@ -34,7 +34,7 @@ public abstract class SlidingPack extends Pack implements Clickable {
     protected void repack(ItemStack item, Inventory inv) {
         ItemStack selection = content.clone();
         ItemMeta meta = selection.getItemMeta();
-        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
         selection.setItemMeta(meta);
 
         for(int i=0; i<9; i++) {

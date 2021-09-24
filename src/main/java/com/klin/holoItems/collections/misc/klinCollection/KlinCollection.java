@@ -19,8 +19,8 @@ public class KlinCollection extends Collection {
     public KlinCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(Bore.key, new Bore());
-        collection.put(Trowel.key, new Trowel());
-        collection.put(Paver.key, new Paver());
+        collection.put('1', new Trowel());
+        collection.put('2', new Paver());
         collection.put(Vacuum.key, new Vacuum());
         collection.put(KFPGuide.key, new KFPGuide());
         collection.put(SecondHand.key, new SecondHand());

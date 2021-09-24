@@ -56,7 +56,7 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
             return;
         }
         entity.setAI(false);
-        entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
 
         Location location = entity.getLocation();
         Set<Block> visited = new HashSet<>();

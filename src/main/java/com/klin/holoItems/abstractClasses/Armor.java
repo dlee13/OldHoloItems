@@ -6,7 +6,10 @@ import com.klin.holoItems.interfaces.Wearable;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -14,7 +17,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -29,8 +31,8 @@ public abstract class Armor extends Item implements Wearable, Responsible {
     public final int armorPiece;
 
     public Armor(String name, Set<Enchantment> accepted, Material material, String lore,
-                 int durability, boolean stackable, int cost, int armorPiece, String id, char key){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+                 int durability, boolean stackable, int cost, int armorPiece){
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
         this.armorPiece = armorPiece;
     }
 

@@ -79,7 +79,7 @@ public class SlimeJelly extends LaserPointer implements Retaliable {
                 if(!(nearby instanceof Slime))
                     continue;
                 String modifiers = nearby.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
-                if(modifiers==null || !Arrays.stream(modifiers.split("-")).collect(Collectors.toSet()).contains(id))
+                if(modifiers==null || !Arrays.stream(modifiers.split("-")).collect(Collectors.toSet()).contains(name))
                     continue;
                 double distance = loc.distance(nearby.getLocation());
                 if(distance < closest){

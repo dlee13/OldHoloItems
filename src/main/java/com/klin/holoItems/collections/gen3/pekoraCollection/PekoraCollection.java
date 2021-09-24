@@ -25,7 +25,7 @@ public class PekoraCollection extends Collection {
     public PekoraCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(DoubleUp.key, new DoubleUp());
-        collection.put(CarrotCannon.key, new CarrotCannon());
+        collection.put('1', new CarrotCannon());
         collection.put(Compactor.key, new Compactor());
         collection.put(PekoNote.key, new PekoNote());
     }

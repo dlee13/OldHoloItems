@@ -24,13 +24,10 @@ public class Sokoban extends Item implements Interactable {
     private static final int durability = -1;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '0';
 
     public Sokoban(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+ OpCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){}

@@ -21,7 +21,7 @@ public class RushiaCollection extends Collection {
 
     public RushiaCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(NecromancersTome.key, new NecromancersTome());
+        collection.put('0', new NecromancersTome());
     }
 
     public Map<String, Integer> getStat(Player player){

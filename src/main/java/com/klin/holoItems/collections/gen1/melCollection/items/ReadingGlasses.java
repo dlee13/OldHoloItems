@@ -40,8 +40,7 @@ public class ReadingGlasses extends Armor {
     public static final char key = '0';
 
     public ReadingGlasses(){
-        super(name, accepted, material, lore, durability, stackable, cost, armorPiece,
-                ""+MelCollection.key+key, key);
+        super(name, accepted, material, lore, durability, stackable, cost, armorPiece);
     }
 
     public void registerRecipes(){

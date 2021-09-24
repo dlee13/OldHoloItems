@@ -32,15 +32,12 @@ public class Paver extends SlidingPack {
     private static final int durability = -1;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
+    public static final int cost = -1;
 
     private static final ItemStack content = new ItemStack(Material.DARK_OAK_WOOD);
 
-    public static final int cost = -1;
-    public static final char key = '2';
-
     public Paver(){
-        super(name, accepted, material, lore, durability, shiny, cost, content,
-                ""+KlinCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, cost, content);
     }
 
     public void registerRecipes(){}

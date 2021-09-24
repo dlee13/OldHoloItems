@@ -51,13 +51,10 @@ public class Trowel extends Pack {
 
     private static final String title = "Blueprint";
     private static final boolean display = false;
-
     public static final int cost = -1;
-    public static final char key = '1';
 
     public Trowel(){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost,
-                ""+KlinCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
     }
 
     public void registerRecipes(){}

@@ -46,13 +46,10 @@ public class GroundPounder extends Pack {
     private static  final int size = 18;
     public static final String title = "Rewinding. . .";
     public static final boolean display = false;
-
     public static final int cost = 0;
-    public static final char key = '5';
-    public static final String id = ""+WatsonCollection.key+key;
 
     public GroundPounder(){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost, id, key);
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
         held = new HashMap<>();
     }
 

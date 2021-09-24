@@ -29,15 +29,12 @@ public class Shuribow extends SlidingPack implements Launchable {
             "prismarine shards consumed";
     private static final int durability = 162;
     private static final boolean shiny = false;
+    public static final int cost = -1;
 
     private static final ItemStack content = new ItemStack(Material.PRISMARINE_SHARD);
 
-    public static final int cost = -1;
-    public static final char key = '0';
-
     public Shuribow(){
-        super(name, accepted, material, lore, durability, shiny, cost, content,
-                ""+KanataCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, cost, content);
     }
 
     public void registerRecipes(){

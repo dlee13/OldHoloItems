@@ -39,13 +39,10 @@ public class SteinsEgg extends Pack implements Dispensable {
     private static final int size = 9;
     public static final String title = "egg";
     public static final boolean display = false;
-
     public static final int cost = -1;
-    public static final char key = '1';
-    public static final String id = ""+FranCollection.key+key;
 
     public SteinsEgg(){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost, id, key);
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
     }
 
     public void registerRecipes(){}

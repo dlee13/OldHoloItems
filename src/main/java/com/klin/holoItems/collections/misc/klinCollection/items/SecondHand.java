@@ -62,7 +62,7 @@ public class SecondHand extends Wiring implements Interactable{
         if(action!=Action.RIGHT_CLICK_BLOCK)
             return;
         Block block = event.getClickedBlock();
-        if(block.getType()==Material.DISPENSER && !id.equals(((Dispenser) block.getState()).
+        if(block.getType()==Material.DISPENSER && !name.equals(((Dispenser) block.getState()).
                 getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
             if(dispensers.add(block))
                 event.getPlayer().sendMessage("Dispenser added");

@@ -24,7 +24,7 @@ public class ShionCollection extends Collection {
     public ShionCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
         collection.put(WitchsBracelet.key, new WitchsBracelet());
-        collection.put(PotionSatchel.key, new PotionSatchel());
+        collection.put('2', new PotionSatchel());
         collection.put(SecretBrew.key, new SecretBrew());
     }
 

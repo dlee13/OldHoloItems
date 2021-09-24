@@ -52,7 +52,7 @@ public class CookieJar  extends Item implements Placeable, Punchable {
         event.setCancelled(false);
         Block block = event.getBlock();
         TileState state = (TileState) block.getState();
-        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
         if(event.getPlayer().isSneaking())
             state.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, -1);
         state.update();

@@ -113,7 +113,7 @@ public class LunarLaser extends Enchant implements Interactable {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String id = container.get(Utility.key, PersistentDataType.STRING);
-        if(id!=null && id.equals(this.id) && container.get(Utility.pack, PersistentDataType.INTEGER)==null) {
+        if(id!=null && id.equals(name) && container.get(Utility.pack, PersistentDataType.INTEGER)==null) {
             List<String> lore = meta.getLore();
             String durability = lore.remove(lore.size()-1);
             lore.remove(lore.size()-1);

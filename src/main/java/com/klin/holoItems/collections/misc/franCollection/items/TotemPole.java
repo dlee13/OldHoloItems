@@ -36,13 +36,10 @@ public class TotemPole extends Pack implements Dispensable {
     private static final int size = 9;
     public static final String title = "Eggs";
     public static final boolean display = false;
-
     public static final int cost = -1;
-    public static final char key = '0';
 
     public TotemPole(){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost,
-                ""+FranCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
     }
 
     public void registerRecipes(){}
@@ -59,7 +56,7 @@ public class TotemPole extends Pack implements Dispensable {
                 continue;
             mobs += " "+type.substring(0, type.length()-10);
             ItemMeta meta = content.getItemMeta();
-            if(meta!=null && SteinsEgg.id.equals(meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
+            if(meta!=null && SteinsEgg.name.equals(meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
                 mobs += ":" + meta.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
             size++;
         }

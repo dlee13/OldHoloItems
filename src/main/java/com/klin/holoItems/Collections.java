@@ -91,6 +91,7 @@ public class Collections implements CommandExecutor, Listener {
     private static String registry;
     private static ItemStack back;
     public static Set<String> disabled = new HashSet<>();
+    public static Map<String, Item> temp = new LinkedHashMap<>();
 
     public Collections(){
         collections.put(IngredientCollection.key, new IngredientCollection());
@@ -163,7 +164,12 @@ public class Collections implements CommandExecutor, Listener {
 
         collections.put(FranCollection.key, new FranCollection());
         collections.put(KlinCollection.key, new KlinCollection());
-        collections.put(OpCollection.key, new OpCollection());
+        collections.put('Z', new OpCollection());
+
+        for(Collection collection : collections.values()){
+            for(Item item : collection.collection.values())
+                temp.put(item.name, item);
+        }
 
         registry = "§6HoloItems"+"\n";
         for(Collection collection : collections.values()){
@@ -174,7 +180,7 @@ public class Collections implements CommandExecutor, Listener {
                 continue;
             registry += "§7"+collection.name+"\n§f";
             for(Item item : items){
-                registry += ""+collection.key+item.key+" "+item.name+"\n";
+                registry += item.name+"\n";
             }
         }
         registry = registry.substring(0, registry.length()-1);
@@ -245,16 +251,9 @@ public class Collections implements CommandExecutor, Listener {
                 return true;
 
             case "acquire":
-                if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE)
-                    return true;
-                if(args.length<1)
+                if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE || args.length<1)
                     return false;
-                Collection collection = findCollection(args[0].charAt(0));
-                if(collection==null || collection.name==null && !player.isOp()){
-                    player.sendMessage("No such item");
-                    return true;
-                }
-                Item item = findItem(args[0]);
+                Item item = temp.get(args[0]);
                 if (item == null) {
                     player.sendMessage("No such item");
                     return true;

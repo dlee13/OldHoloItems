@@ -60,10 +60,14 @@ public class RiftWalker extends BatteryPack {
 
     public void effect(PlayerInteractEvent event){
         event.setCancelled(true);
-        ItemStack item = event.getItem();
+        Block clicked = event.getClickedBlock();
         Player player = event.getPlayer();
+        Location loc = player.getLocation();
+        if(clicked!=null && clicked.getLocation().distance(loc)<2)
+            return;
 
         if(player.getGameMode()!= GameMode.CREATIVE) {
+            ItemStack item = event.getItem();
             int charge = Utility.inspect(item);
             if (charge == -1)
                 return;
@@ -110,7 +114,6 @@ public class RiftWalker extends BatteryPack {
         }
 
         Block block = player.getTargetBlockExact(8);
-        Location loc = player.getLocation();
         double dist;
         if(block==null)
             dist = 8;

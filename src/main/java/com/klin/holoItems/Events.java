@@ -137,7 +137,7 @@ public class Events implements Listener {
             //formerly if(typeA==null || !typeA.equals(typeB))
             //new if(typeA!=null && !typeA.equals(typeB))
             else if(typeA==null || !typeA.equals(typeB)){
-                Item genericB = Collections.findItem(typeB);
+                Item genericB = Collections.temp.get(typeB);
                 if(genericB instanceof Enchant){
                     if(curr!=null && curr.getItemMeta()!=null &&
                             curr.getItemMeta().getPersistentDataContainer().
@@ -184,7 +184,7 @@ public class Events implements Listener {
 
                 if(itemB.getType()==Material.ENCHANTED_BOOK &&
                         itemB.getItemMeta() instanceof EnchantmentStorageMeta){
-                    Item item = Collections.findItem(typeA);
+                    Item item = Collections.temp.get(typeA);
                     if(item==null) {
                         event.setCancelled(true);
                         return;
@@ -265,7 +265,7 @@ public class Events implements Listener {
                 return;
             }
 
-            Item item = Collections.findItem(typeA);
+            Item item = Collections.temp.get(typeA);
             if(item==null){
                 event.setCancelled(true);
                 return;
@@ -340,7 +340,7 @@ public class Events implements Listener {
                 current = false;
                 continue;
             }
-            Item generic = Collections.findItem(id);
+            Item generic = Collections.temp.get(id);
             if (generic instanceof Clickable)
                 ((Clickable) generic).ability(event, current);
             current = false;
@@ -357,7 +357,7 @@ public class Events implements Listener {
                 String id = item.getItemMeta().
                         getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
                 if (id != null) {
-                    Item generic = Collections.findItem(id);
+                    Item generic = Collections.temp.get(id);
                     if (generic instanceof Pack && (((Pack) generic).display ||
                             item.equals(event.getCurrentItem()))) {
                         event.setCancelled(true);
@@ -373,7 +373,7 @@ public class Events implements Listener {
         if (id == null)
             return;
         if(invType==InventoryType.GRINDSTONE){
-            if(Collections.findItem(id).accepted==null)
+            if(Collections.temp.get(id).accepted==null)
                 event.setCancelled(true);
             else if(slot==2){
                 ItemStack combined = inv.getItem(2);
@@ -479,7 +479,7 @@ public class Events implements Listener {
         if(id==null)
             return;
 
-        Set<Enchantment> accepted = Collections.findItem(id).accepted;
+        Set<Enchantment> accepted = Collections.temp.get(id).accepted;
         if(accepted==null) {
             event.setCancelled(true);
             return;
@@ -590,7 +590,17 @@ public class Events implements Listener {
                 Utility.addDurability(item, -1, living);
             if (Collections.disabled.contains(id))
                 return;
-            Item generic = Collections.findItem(id);
+            Item generic = Collections.temp.get(id);
+            //temp
+            if(generic==null) {
+                generic = Collections.findItem(id);
+                if(generic==null)
+                    return;
+                ItemMeta meta = item.getItemMeta();
+                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+                item.setItemMeta(meta);
+            }
+            //
             if (generic instanceof Afflictable)
                 ((Afflictable) generic).ability(event, item);
         }
@@ -664,7 +674,17 @@ public class Events implements Listener {
             event.getPlayer().sendMessage("§cThis item has been disabled");
             return;
         }
-        Item generic = Collections.findItem(id);
+        Item generic = Collections.temp.get(id);
+        //temp
+        if(generic==null) {
+            generic = Collections.findItem(id);
+            if(generic==null)
+                return;
+            ItemMeta meta = item.getItemMeta();
+            meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+            item.setItemMeta(meta);
+        }
+        //
         if(generic instanceof Consumable)
             ((Consumable) generic).ability(event, item);
         else
@@ -687,7 +707,17 @@ public class Events implements Listener {
                 //f0: reading glasses easter egg
                 if(id.equals("f0") && item.containsEnchantment(Enchantment.BINDING_CURSE) || Collections.disabled.contains(id))
                     continue;
-                Item generic = Collections.findItem(id);
+                Item generic = Collections.temp.get(id);
+                //temp
+                if(generic==null) {
+                    generic = Collections.findItem(id);
+                    if(generic==null)
+                        return;
+                    ItemMeta meta = item.getItemMeta();
+                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+                    item.setItemMeta(meta);
+                }
+                //
                 if (generic instanceof Wearable)
                     ((Wearable) generic).ability(event, Utility.addDurability(item, -1, entity) == -1);
             }
@@ -818,7 +848,17 @@ public class Events implements Listener {
 
         if(Collections.disabled.contains(id))
             return;
-        Item generic = Collections.findItem(id);
+        Item generic = Collections.temp.get(id);
+        //temp
+        if(generic==null) {
+            generic = Collections.findItem(id);
+            if(generic==null)
+                return;
+            ItemMeta meta = item.getItemMeta();
+            meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+            item.setItemMeta(meta);
+        }
+        //
         if(generic instanceof Dispensable)
             ((Dispensable) generic).ability(event);
     }
@@ -866,7 +906,17 @@ public class Events implements Listener {
                 if(enchant==null)
                     continue;
                 for (String enchantment : enchant.split(" ")) {
-                    Item generic = Collections.findItem(enchantment);
+                    Item generic = Collections.temp.get(enchantment);
+                    //temp
+                    if(generic==null) {
+                        generic = Collections.findItem(id);
+                        if(generic==null)
+                            return;
+                        ItemMeta meta = item.getItemMeta();
+                        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+                        item.setItemMeta(meta);
+                    }
+                    //
                     if (generic instanceof Extractable)
                         ((Extractable) generic).ability(event);
                 }
@@ -998,7 +1048,17 @@ public class Events implements Listener {
             else if (Collections.disabled.contains(id))
                 player.sendMessage("§cThis item has been disabled");
             else {
-                Item generic = Collections.findItem(id);
+                Item generic = Collections.temp.get(id);
+                //temp
+                if(generic==null) {
+                    generic = Collections.findItem(id);
+                    if(generic==null)
+                        return;
+                    ItemMeta meta = item.getItemMeta();
+                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+                    item.setItemMeta(meta);
+                }
+                //
                 if (generic instanceof Interactable)
                     ((Interactable) generic).ability(event, action);
             }
@@ -1007,7 +1067,17 @@ public class Events implements Listener {
             for (String enchantment : enchant.split(" ")) {
                 if (Collections.disabled.contains(enchantment))
                     return;
-                Item generic = Collections.findItem(enchantment);
+                Item generic = Collections.temp.get(enchantment);
+                //temp
+                if(generic==null) {
+                    generic = Collections.findItem(id);
+                    if(generic==null)
+                        return;
+                    ItemMeta meta = item.getItemMeta();
+                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+                    item.setItemMeta(meta);
+                }
+                //
                 if (generic instanceof Interactable)
                     ((Interactable) generic).ability(event, action);
             }
@@ -1049,7 +1119,7 @@ public class Events implements Listener {
             return;
         event.setCancelled(true);
 
-        Item generic = Collections.findItem(id);
+        Item generic = Collections.temp.get(id);
         if(generic instanceof Manipulatable)
             ((Manipulatable) generic).ability(event);
     }
@@ -1173,7 +1243,7 @@ public class Events implements Listener {
         if (Collections.disabled.contains(id))
             event.getPlayer().sendMessage("§cThis item has been disabled");
         else {
-            Item generic = Collections.findItem(id);
+            Item generic = Collections.temp.get(id);
             if (generic instanceof Placeable)
                 ((Placeable) generic).ability(event);
         }
@@ -1242,7 +1312,17 @@ public class Events implements Listener {
             if (Collections.disabled.contains(id))
                 player.sendMessage("§cThis item has been disabled");
             else {
-                Item generic = Collections.findItem(id);
+                Item generic = Collections.temp.get(id);
+                //temp
+                if(generic==null) {
+                    generic = Collections.findItem(id);
+                    if(generic==null)
+                        return;
+                    ItemMeta meta = item.getItemMeta();
+                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+                    item.setItemMeta(meta);
+                }
+                //
                 if (generic instanceof Togglable)
                     ((Togglable) generic).ability(event, item);
             }
@@ -1252,7 +1332,17 @@ public class Events implements Listener {
                 if (Collections.disabled.contains(id))
                     player.sendMessage("§cThis item has been disabled");
                 else {
-                    Item generic = Collections.findItem(enchantment);
+                    Item generic = Collections.temp.get(enchantment);
+                    //temp
+                    if(generic==null) {
+                        generic = Collections.findItem(id);
+                        if(generic==null)
+                            return;
+                        ItemMeta meta = item.getItemMeta();
+                        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
+                        item.setItemMeta(meta);
+                    }
+                    //
                     if (generic instanceof Togglable)
                         ((Togglable) generic).ability(event, item);
                 }

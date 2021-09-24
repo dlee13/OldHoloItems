@@ -55,7 +55,7 @@ public abstract class Wiring extends Crate implements Clickable {
             }
 
             PersistentDataContainer container = dispenser.getPersistentDataContainer();
-            container.set(Utility.key, PersistentDataType.STRING, id);
+            container.set(Utility.key, PersistentDataType.STRING, name);
             additional(container, wiring);
             dispenser.update();
 

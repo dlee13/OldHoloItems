@@ -20,7 +20,7 @@ public class KanataCollection extends Collection {
 
     public KanataCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(Shuribow.key, new Shuribow());
+        collection.put('0', new Shuribow());
         collection.put(Zipline.key, new Zipline());
     }
 

@@ -23,8 +23,8 @@ public abstract class BatteryPack extends Pack {
     public final int cap;
 
     public BatteryPack(String name, Set<Enchantment> accepted, Material material, String lore, int durability, boolean shiny, int cost,
-                       Material content, double perCharge, int cap, String id, char key){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost, id, key);
+                       Material content, double perCharge, int cap){
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
         this.content = content;
         this.perCharge = perCharge;
         this.cap = cap;

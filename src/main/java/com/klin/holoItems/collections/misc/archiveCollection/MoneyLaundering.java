@@ -43,15 +43,12 @@ public class MoneyLaundering extends Item implements Hangable, Reactable {
     private static final int durability = 0;
     private static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = -1;
-    public static final char key = '2';
 
     private static final ItemStack buy = new ItemStack(Material.SUNFLOWER);
 
     public MoneyLaundering(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+ OpCollection.key + key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
         ItemMeta meta = buy.getItemMeta();
         meta.setDisplayName("§6Buy");
         buy.setItemMeta(meta);
@@ -65,7 +62,7 @@ public class MoneyLaundering extends Item implements Hangable, Reactable {
                 Location loc = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
                 ItemFrame itemFrame = (ItemFrame) (loc.getWorld().getNearbyEntities(
                         loc, 1, 1, 1, entity -> (entity instanceof ItemFrame))).iterator().next();
-                itemFrame.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+                itemFrame.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
             }
         }.runTask(HoloItems.getInstance());
     }
@@ -348,7 +345,7 @@ public class MoneyLaundering extends Item implements Hangable, Reactable {
                 itemFrame.setItem(claim);
 
                 meta.setLore(null);
-                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
                 item.setItemMeta(meta);
                 inv.addItem(item);
 

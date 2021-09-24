@@ -39,13 +39,10 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
     private static final int durability = 0;
     private static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = -1;
-    public static final char key = '2';
 
     public GalleryFrame(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost,
-                "" + OpCollection.key + key, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
         buy = new ItemStack(Material.SPRUCE_TRAPDOOR);
         ItemMeta meta = buy.getItemMeta();
         meta.setDisplayName("§6Buy");
@@ -58,7 +55,7 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
     public void ability(HangingPlaceEvent event){
         new BukkitRunnable() {
             public void run() {
-                event.getEntity().getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+                event.getEntity().getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
             }
         }.runTask(HoloItems.getInstance());
     }

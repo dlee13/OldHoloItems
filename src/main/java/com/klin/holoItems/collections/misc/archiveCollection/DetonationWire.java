@@ -76,7 +76,7 @@ public class DetonationWire extends Crate implements Powerable, Placeable, Punch
     public void ability(BlockPlaceEvent event){
         event.setCancelled(false);
         TileState state = ((TileState) event.getBlockPlaced().getState());
-        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
         state.update();
     }
 

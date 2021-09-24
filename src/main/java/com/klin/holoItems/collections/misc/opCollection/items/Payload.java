@@ -38,8 +38,7 @@ public class Payload extends SlidingPack {
     public static final char key = '3';
 
     public Payload(){
-        super(name, accepted, material, lore, durability, shiny, cost, content,
-                ""+ OpCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, cost, content);
     }
 
     public void registerRecipes(){}

@@ -14,15 +14,13 @@ public class OpCollection extends Collection {
     public static final String uuid = null;
     public static final String base64 = null;
 
-    public static final char key = 'Z';
-
     public OpCollection(){
-        super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(Sokoban.key, new Sokoban());
-        collection.put(WheatPortal.key, new WheatPortal());
-        collection.put(GalleryFrame.key, new GalleryFrame());
+        super(name, desc, theme, ign, uuid, 'Z', base64);
+        collection.put('0', new Sokoban());
+        collection.put('1', new WheatPortal());
+        collection.put('2', new GalleryFrame());
         collection.put(Payload.key, new Payload());
-        collection.put(Falchion.key, new Falchion());
+        collection.put('4', new Falchion());
     }
 
     public Map<String, Integer> getStat(Player player){

@@ -42,13 +42,10 @@ public class WheatPortal extends Item implements Dispensable, Placeable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '1';
 
     public WheatPortal(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+ OpCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

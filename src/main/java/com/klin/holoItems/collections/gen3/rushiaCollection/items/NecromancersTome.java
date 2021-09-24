@@ -48,15 +48,12 @@ public class NecromancersTome extends Pack implements Perishable, Defensible {
     private static final int size = 9;
     public static final String title = "Souls captured";
     public static final boolean display = true;
-
     public static final int cost = -1;
-    public static final char key = '0';
 
     private static Map<Player, LivingEntity> raised = new HashMap<>();
 
     public NecromancersTome(){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost,
-                ""+RushiaCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
 
         Pattern[] patterns = new Pattern[]{
                 new Pattern(DyeColor.BLACK, PatternType.BORDER),
@@ -151,7 +148,7 @@ public class NecromancersTome extends Pack implements Perishable, Defensible {
         }
         LivingEntity summon =
                 (LivingEntity) loc.getWorld().spawnEntity(loc.add(loc.getDirection().multiply(1.5)), type);
-        summon.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        summon.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
         summon.addPotionEffect(new PotionEffect(
                 PotionEffectType.GLOWING, 99999, 0, false, false));
         summon.addPotionEffect(new PotionEffect(

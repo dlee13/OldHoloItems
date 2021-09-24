@@ -34,15 +34,12 @@ public class Falchion extends Armor implements Afflictable {
             "Splash harming pot every 6 strikes";
     private static final int durability = -1;
     public static final boolean stackable = false;
+    public static final int cost = -1;
 
     private static final int armorPiece = 4;
 
-    public static final int cost = -1;
-    public static final char key = '4';
-
     public Falchion(){
-        super(name, accepted, material, lore, durability, stackable, cost, armorPiece,
-                ""+ OpCollection.key+key, key);
+        super(name, accepted, material, lore, durability, stackable, cost, armorPiece);
 
         ItemMeta meta = item.getItemMeta();
         meta.addEnchant(Enchantment.DAMAGE_ALL, 10, true);

@@ -18,8 +18,8 @@ public class FranCollection extends Collection {
 
     public FranCollection(){
         super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(TotemPole.key, new TotemPole());
-        collection.put(SteinsEgg.key, new SteinsEgg());
+        collection.put('0', new TotemPole());
+        collection.put('1', new SteinsEgg());
         collection.put(LifeCrystal.key, new LifeCrystal());
         collection.put(BreadCrumbs.key, new BreadCrumbs());
         collection.put(LaserPointer.key, new LaserPointer());

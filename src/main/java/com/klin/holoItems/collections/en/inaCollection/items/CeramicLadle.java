@@ -40,7 +40,7 @@ public class CeramicLadle  extends Wiring {
                 Utility.process("earthenSpoon", Material.WOODEN_SHOVEL, 1,
                         "Dispensers wired with this item will\n" +
                              "plant crops from its inventory\n" +
-                             "Break the dispenser to retrieve", 0, shiny, EarthenSpoon.id)
+                             "Break the dispenser to retrieve", 0, shiny)
         ), 1, 900);
         Bukkit.getServer().addRecipe(blastingRecipe);
     }

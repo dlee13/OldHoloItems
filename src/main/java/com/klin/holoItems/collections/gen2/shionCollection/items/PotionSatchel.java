@@ -39,13 +39,10 @@ public class PotionSatchel extends Pack {
     private static  final int size = 9;
     public static final String title = "Potting. . .";
     public static final boolean display = false;
-
     public static final int cost = 290;
-    public static final char key = '1';
 
     public PotionSatchel(){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost,
-                ""+ShionCollection.key+key, key);
+        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
     }
 
     public void registerRecipes(){

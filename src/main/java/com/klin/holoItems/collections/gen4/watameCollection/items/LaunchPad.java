@@ -63,7 +63,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
         event.setCancelled(false);
         Block block = event.getBlock();
         TileState state = (TileState) block.getState();
-        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
         state.update();
     }
 
@@ -127,7 +127,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
         while(launchPad.getType()==Material.BARREL && UberSheepPackage.id.equals(((TileState) launchPad.getState()).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
             launchPad = launchPad.getRelative(BlockFace.DOWN);
         state = launchPad.getState();
-        if(!(state instanceof Smoker) || !id.equals(((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
+        if(!(state instanceof Smoker) || !name.equals(((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
             player.sendMessage("No receiving launch pad identified");
             return;
         }
