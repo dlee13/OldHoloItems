@@ -24,10 +24,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,11 +38,11 @@ public class GroundPounder extends Pack {
             "Crush your foes";
     private static final int durability = 131;
     private static final boolean shiny = false;
+    public static final int cost = 0;
 
     private static  final int size = 18;
     public static final String title = "Rewinding. . .";
     public static final boolean display = false;
-    public static final int cost = 0;
 
     public GroundPounder(){
         super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
@@ -55,6 +52,9 @@ public class GroundPounder extends Pack {
     public void registerRecipes(){
         ItemMeta meta = item.getItemMeta();
         meta.addEnchant(Enchantment.DURABILITY, 1, false);
+        List<String> lore = meta.getLore();
+        lore.add(0, "");
+        meta.setLore(lore);
         item.setItemMeta(meta);
 
         ShapedRecipe recipe =

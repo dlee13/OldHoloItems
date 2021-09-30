@@ -7,9 +7,6 @@ import com.klin.holoItems.interfaces.Reactable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -29,7 +26,6 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
     public static final String name = "galleryFrame";
     private static final Map<Player, Hanging> reference = new HashMap<>();
     private final ItemStack buy;
-    private final ItemStack pay;
 
     private static final Material material = Material.GLOW_ITEM_FRAME;
     private static final int quantity = 1;
@@ -42,11 +38,10 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
 
     public GalleryFrame(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost);
-        buy = new ItemStack(Material.SPRUCE_TRAPDOOR);
+        buy = new ItemStack(Material.MAP);
         ItemMeta meta = buy.getItemMeta();
         meta.setDisplayName("§6Buy");
         buy.setItemMeta(meta);
-        pay = new ItemStack(Material.MAP);
     }
 
     public void registerRecipes() {}
@@ -62,7 +57,6 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
     public void ability(PlayerInteractEntityEvent event){
         if(!(event.getRightClicked() instanceof ItemFrame))
             return;
-
         ItemFrame itemFrame = (ItemFrame) event.getRightClicked();
         ItemStack framedItem = itemFrame.getItem();
         Player player = event.getPlayer();
@@ -78,47 +72,10 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
                     player.sendMessage("This gallery only accepts map art");
                 return;
             }
-
             item = item.clone();
             item.setAmount(1);
             playerInv.removeItem(item);
-
             ItemMeta meta = item.getItemMeta();
-            BlockFace[] surrounding = new BlockFace[]{BlockFace.UP, BlockFace.DOWN, null, null};
-            switch(itemFrame.getFacing()){
-                case NORTH:
-                case SOUTH:
-                    surrounding[2] = BlockFace.EAST;
-                    surrounding[3] = BlockFace.WEST;
-                    break;
-                case EAST:
-                case WEST:
-                    surrounding[2] = BlockFace.NORTH;
-                    surrounding[3] = BlockFace.SOUTH;
-                    break;
-                default:
-                    break;
-            }
-            if(surrounding[2]!=null){
-                Block frame = itemFrame.getLocation().getBlock();
-                for(BlockFace face : surrounding){
-                    Block block = frame.getRelative(face);
-                    if(!(block.getType().toString().contains("WALL_SIGN")))
-                        continue;
-
-                    Sign sign = (Sign) block.getState();
-                    if(!meta.getDisplayName().isEmpty()) {
-                        String line = "§6" + meta.getDisplayName();
-                        line = line.substring(0, Math.min(15, line.length()));
-                        sign.setLine(1, line);
-                    }
-                    else
-                        sign.setLine(1, "by");
-                    sign.setLine(2, player.getName());
-                    sign.update();
-                }
-            }
-
             if(!meta.getDisplayName().isEmpty()) {
                 meta.setDisplayName("");
                 item.setItemMeta(meta);
@@ -127,9 +84,7 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
         }
         else if(framedItem.getType()==Material.FILLED_MAP){
             Inventory inv = Bukkit.createInventory(null, 9, "Price");
-            inv.setItem(0, pay);
-            inv.setItem(inv.getSize()-1, buy);
-
+            inv.setItem(4, buy);
             new BukkitRunnable() {
                 public void run() {
                     player.openInventory(inv);
@@ -152,12 +107,11 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
             return;
         }
         ItemFrame itemFrame = (ItemFrame) reference.get(player);
-
         ItemStack curr = event.getCurrentItem();
         if(!buy.equals(curr))
             return;
-
         Inventory inv = player.getInventory();
+        ItemStack pay = new ItemStack(Material.MAP);
         if(!inv.containsAtLeast(pay, 1)) {
             reference.remove(player);
             new BukkitRunnable() {
@@ -165,15 +119,12 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
                     view.close();
                 }
             }.runTask(HoloItems.getInstance());
-
-            player.sendMessage("Please come back when you can afford this");
+            player.sendMessage("Please come back when you can afford to");
             return;
         }
         inv.removeItem(pay);
         inv.addItem(itemFrame.getItem());
-
         player.sendMessage("Thank you for your purchase");
-
         reference.remove(player);
         new BukkitRunnable(){
             public void run(){
@@ -186,8 +137,6 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
         Player player = (Player) event.getPlayer();
         if(!reference.containsKey(player))
             return;
-
-//        player.sendMessage("§7Please come again");
         reference.remove(player);
     }
 }

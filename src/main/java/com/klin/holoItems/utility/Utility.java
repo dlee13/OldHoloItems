@@ -228,10 +228,10 @@ public class Utility {
         else if(meta.hasEnchants())
             list.add(0, "");
         meta.setLore(list);
-        int modelData = 0;
-        for(char letter : name.toCharArray())
-            modelData = modelData * 10 + letter;
-        meta.setCustomModelData(modelData);
+        int hash = 5;
+        for (int i=0; i<name.length(); i++)
+            hash = hash*3 + name.charAt(i);
+        meta.setCustomModelData(hash);
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, name);
         item.setItemMeta(meta);
 

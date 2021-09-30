@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.en.guraCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.en.guraCollection.GuraCollection;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
 import com.klin.holoItems.dungeons.inaDungeon.Maintenance;
 import com.klin.holoItems.interfaces.Interactable;

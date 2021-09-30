@@ -72,9 +72,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
@@ -213,14 +211,16 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                     ItemMeta meta = model.getItemMeta();
                     String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
                     if(id!=null) {
-                        int data = id.charAt(0)*10 + Character.getNumericValue(id.charAt(1));
-                        if(!meta.hasCustomModelData() || meta.getCustomModelData()!=data) {
-                            meta.setCustomModelData(data);
+                        int hash = 5;
+                        for (int i=0; i<id.length(); i++)
+                            hash = hash*3 + id.charAt(i);
+                        if(!meta.hasCustomModelData() || meta.getCustomModelData()!=hash) {
+                            meta.setCustomModelData(hash);
                             model.setItemMeta(meta);
-                            player.sendMessage("Updated CustomModelData to "+data);
+                            player.sendMessage("Updated CustomModelData to "+hash);
                         }
                         else
-                            player.sendMessage("This item's CustomModelData is "+data);
+                            player.sendMessage("This item's CustomModelData is "+hash);
                     }
                 }
                 else
@@ -517,8 +517,20 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         for(Item item : collection.collection) {
             if(cost<item.cost)
                 inv.setItem(count, tilUnlocked(locked, item.name, item.cost-cost));
-            else
+            else {
                 inv.addItem(item.item);
+                //temp: auto-discover when npc unlock conditions met
+                for(Recipe recipe : Bukkit.getRecipesFor(item.item)){
+                    if(recipe instanceof ShapedRecipe)
+                        player.discoverRecipe(((ShapedRecipe) recipe).getKey());
+                    else if(recipe instanceof ShapelessRecipe)
+                        player.discoverRecipe(((ShapelessRecipe) recipe).getKey());
+                    else if(recipe instanceof FurnaceRecipe)
+                        player.discoverRecipe(((FurnaceRecipe) recipe).getKey());
+                    else if(recipe instanceof BlastingRecipe)
+                        player.discoverRecipe(((BlastingRecipe) recipe).getKey());
+                }
+            }
             count++;
         }
         inv.setItem(8, back);
