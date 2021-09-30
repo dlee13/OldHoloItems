@@ -30,13 +30,10 @@ public class BreadCrumbs extends Item implements Combinable, Spawnable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = -1;
-    public static final char key = '3';
 
     public BreadCrumbs(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+FranCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){}

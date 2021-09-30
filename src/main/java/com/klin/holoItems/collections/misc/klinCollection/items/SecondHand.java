@@ -27,12 +27,10 @@ public class SecondHand extends Wiring implements Interactable{
     private static final String lore =
             "Sync dispensers";
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '5';
 
     public SecondHand(){
-        super(name, material, lore, shiny, cost, ""+KlinCollection.key+key, key);
+        super(name, material, lore, shiny, cost);
     }
 
     public void registerRecipes(){}

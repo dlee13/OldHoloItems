@@ -1,8 +1,7 @@
 package com.klin.holoItems.collections.misc.archiveCollection;
 
-import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.gen3.flareCollection.FlareCollection;
+import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,13 +24,10 @@ public class MoltenCore extends Wiring {
             "Just a rock. Maybe something will\n"+
             "happen if you heat it up";
     private static final boolean shiny = false;
-
     public static final int cost = 400;
-    public static final char key = '0';
-    public static final String id = ""+FlareCollection.key+key;
 
     public MoltenCore(){
-        super(name, material, lore, shiny, cost, id, key);
+        super(name, material, lore, shiny, cost);
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().remove(Utility.key);
         meta.setDisplayName("§6Hardened Core");
@@ -39,7 +35,7 @@ public class MoltenCore extends Wiring {
 
         ItemStack activated = item.clone();
         ItemMeta activatedMeta = activated.getItemMeta();
-        activatedMeta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        activatedMeta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
         activatedMeta.setDisplayName("§6Molten Core");
         activatedMeta.setLore(Utility.processStr(
                 "Dispensers wired with this item can\n"+

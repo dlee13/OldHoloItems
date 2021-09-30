@@ -1,13 +1,15 @@
 package com.klin.holoItems.collections.misc.opCollection.items;
 
 import com.klin.holoItems.abstractClasses.Armor;
-import com.klin.holoItems.collections.misc.opCollection.OpCollection;
 import com.klin.holoItems.interfaces.Afflictable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;

@@ -30,13 +30,10 @@ public class SecretBrew  extends Item implements Brewable, Mixable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '2';
-    public static final String id = ""+ShionCollection.key+key;
 
     public SecretBrew(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {
@@ -66,7 +63,7 @@ public class SecretBrew  extends Item implements Brewable, Mixable {
                     meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
                     meta.setColor(Utility.getRandom(Utility.colors.keySet()).get().getColor());
                     meta.setDisplayName("§f"+Utility.processType(item.getType().toString()));
-                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
                     item.setItemMeta(meta);
                 }
             }
@@ -82,7 +79,7 @@ public class SecretBrew  extends Item implements Brewable, Mixable {
                 meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
                 meta.setColor(color);
                 meta.setDisplayName("§f"+Utility.processType(item.getType().toString()));
-                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
                 item.setItemMeta(meta);
             }
         }.runTask(HoloItems.getInstance());

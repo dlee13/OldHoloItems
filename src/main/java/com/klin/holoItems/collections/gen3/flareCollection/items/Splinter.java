@@ -32,13 +32,10 @@ public class Splinter extends Enchant implements Extractable {
             "adjacent to the one you broke";
     private static final int durability = 3136;
     private static final boolean shiny = false;
-
     public static final int cost = 4200;
-    public static final char key = '1';
 
     public Splinter(){
-        super(name, accepted, material, lore, durability, shiny, cost,
-                ""+FlareCollection.key+key, key, acceptedIds, acceptedTypes, expCost);
+        super(name, accepted, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
     }
 
     public void registerRecipes(){

@@ -10,20 +10,16 @@ public class KlinCollection extends Collection {
     public static final String name = null;
     public static final String desc = null;
     public static final String theme = null;
-    public static final String ign = null;
-    public static final String uuid = null;
     public static final String base64 = null;
 
-    public static final char key = 'Y';
-
     public KlinCollection(){
-        super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(Bore.key, new Bore());
-        collection.put('1', new Trowel());
-        collection.put('2', new Paver());
-        collection.put(Vacuum.key, new Vacuum());
-        collection.put(KFPGuide.key, new KFPGuide());
-        collection.put(SecondHand.key, new SecondHand());
+        super(name, desc, theme, base64);
+        collection.add(new Bore());
+        collection.add(new Trowel());
+        collection.add(new Paver());
+        collection.add(new Vacuum());
+        collection.add(new KFPGuide());
+        collection.add(new SecondHand());
     }
 
     public Map<String, Integer> getStat(Player player){

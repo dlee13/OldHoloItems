@@ -92,7 +92,7 @@ public class Utility {
     public static final Set<Material> hoes = Set.of(DIAMOND_HOE, GOLDEN_HOE, IRON_HOE, STONE_HOE, NETHERITE_HOE, WOODEN_HOE);
     public static final Set<Material> pickaxes = Set.of(DIAMOND_PICKAXE, GOLDEN_PICKAXE, IRON_PICKAXE, STONE_PICKAXE, NETHERITE_PICKAXE, WOODEN_PICKAXE);
     public static final Set<Material> shovels = Set.of(DIAMOND_SHOVEL, GOLDEN_SHOVEL, IRON_SHOVEL, STONE_SHOVEL, NETHERITE_SHOVEL, WOODEN_SHOVEL);
-    public static final Set<Material> swords = Set.of(DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, STONE_SWORD, NETHERITE_SWORD, WOODEN_SWORD);
+//    public static final Set<Material> swords = Set.of(DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, STONE_SWORD, NETHERITE_SWORD, WOODEN_SWORD);
     public static final Set<Material> fertile = Set.of(GRASS_BLOCK, DIRT, COARSE_DIRT, PODZOL, FARMLAND, MYCELIUM, ROOTED_DIRT);
     public static final Map<String, Set<Material>> dirt = new HashMap<>() {{
         put("SAPLING", fertile);
@@ -145,81 +145,42 @@ public class Utility {
     public static <T> T findItem(ItemStack item, Class<T> cls){
         if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
             return null;
-        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-
-        T t = findItem(id, cls);
-        if(t!=null && id.length()<=2) {
-            ItemMeta meta = item.getItemMeta();
-            meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
-            item.setItemMeta(meta);
-        }
-        return t;
+        return findItem(item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING), cls);
     }
 
     public static <T> T findItem(ItemStack item, Class<T> cls, Player player){
         if(item==null || item.getType()==Material.AIR || item.getItemMeta()==null)
             return null;
-        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-
-        T t = findItem(id, cls, player);
-        if(t!=null && id.length()<=2) {
-            ItemMeta meta = item.getItemMeta();
-            meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
-            item.setItemMeta(meta);
-        }
-        return t;
+        return findItem(item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING), cls, player);
     }
 
     public static <T> T findItem(Entity entity, Class<T> cls){
-        String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        return findItem(entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING), cls);
 
-        T t = findItem(id, cls);
-        if(t!=null && id.length()<=2)
-            entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
-        return t;
     }
 
     public static <T> T findItem(Entity entity, Class<T> cls, Player player){
-        String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-
-        T t = findItem(id, cls, player);
-        if(t!=null && id.length()<=2)
-            entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
-        return t;
+        return findItem(entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING), cls, player);
     }
 
     public static <T> T findItem(Block block, Class<T> cls){
         BlockState state = block.getState();
         if(!(state instanceof TileState))
             return null;
-        String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-
-        T t = findItem(id, cls);
-        if(t!=null && id.length()<=2) {
-            ((TileState) state).getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
-            state.update();
-        }
-        return t;
+        return findItem(((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING), cls);
     }
 
     public static <T> T findItem(Block block, Class<T> cls, Player player){
         BlockState state = block.getState();
         if(!(state instanceof TileState))
             return null;
-        String id = ((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-
-        T t = findItem(id, cls, player);
-        if(t!=null && id.length()<=2) {
-            ((TileState) state).getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, ((Item) t).name);
-            state.update();
-        }
-        return t;
+        return findItem(((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING), cls, player);
     }
 
     public static <T> T findItem(String id, Class<T> cls){
         if(id==null || Collections.disabled.contains(id))
             return null;
-        Item generic = Collections.temp.get(id);
+        Item generic = Collections.items.get(id);
         if(!cls.isInstance(generic))
             return null;
         return cls.cast(generic);
@@ -233,7 +194,7 @@ public class Utility {
                 player.sendMessage("§cThis item has been disabled");
             return null;
         }
-        Item generic = Collections.temp.get(id);
+        Item generic = Collections.items.get(id);
         if(!cls.isInstance(generic))
             return null;
         return cls.cast(generic);
@@ -612,9 +573,9 @@ public class Utility {
         if(modifiers!=null) {
             String active = "";
             for (String modifier : modifiers.split("-")) {
-                com.klin.holoItems.Item generic = Collections.findItem(modifier.substring(0, 2));
+                com.klin.holoItems.Item generic = Collections.items.get(modifier.substring(0, modifier.indexOf(":")));
                 if (generic instanceof Spawnable) {
-                    ((Spawnable) generic).ability(entity, modifier.length() > 2 ? modifier.substring(3) : null);
+                    ((Spawnable) generic).ability(entity, modifier.contains(":") ? modifier.substring(modifier.indexOf(":")) : null);
                     if(generic.getClass().getInterfaces().length>1 || generic.getClass().getSuperclass()!=Item.class)
                         active += "-"+modifier;
                 }

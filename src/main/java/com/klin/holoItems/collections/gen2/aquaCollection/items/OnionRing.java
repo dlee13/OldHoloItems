@@ -39,13 +39,10 @@ public class OnionRing extends Item implements Launchable, Holdable, Retainable 
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = true;
-
     public static final int cost = 1440;
-    public static final char key = '0';
 
     public OnionRing(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+AquaCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

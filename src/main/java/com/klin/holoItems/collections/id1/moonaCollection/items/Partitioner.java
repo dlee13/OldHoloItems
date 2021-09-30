@@ -33,13 +33,10 @@ public class Partitioner extends Item implements Dispensable {
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '0';
 
     public Partitioner(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+MoonaCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

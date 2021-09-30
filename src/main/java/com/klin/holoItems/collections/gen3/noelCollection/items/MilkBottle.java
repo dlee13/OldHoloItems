@@ -39,13 +39,10 @@ public class MilkBottle extends Item implements Consumable, Hitable, Mixable {
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '0';
-    public static final String id = ""+NoelCollection.key+key;
 
     public MilkBottle(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {

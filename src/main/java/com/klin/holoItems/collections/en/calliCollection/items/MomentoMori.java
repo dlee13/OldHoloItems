@@ -25,13 +25,10 @@ public class MomentoMori extends Item implements Retainable {
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 2700;
-    public static final char key = '0';
-    public static final String id = ""+CalliCollection.key+key;
 
     public MomentoMori(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

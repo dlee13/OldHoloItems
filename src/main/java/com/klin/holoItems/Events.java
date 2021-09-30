@@ -56,18 +56,15 @@ public class Events implements Listener {
     );
     private static final Set<Material> deactive = Set.of(Material.JUKEBOX, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
     private static final Set<String> ingredients = new HashSet<>() {{
-        add("!2");
-        add("!3");
-        char key = IngredientCollection.key;
-        for (char set : Collections.findCollection(key).collection.keySet())
-            add(""+key+set);
-        add(SecretBrew.id);
-        add(DoubleUp.id);
-        add(PekoNote.id);
-        add(MilkBottle.id);
-        add(Sentry.id);
-        add(ScopedRifle.id);
-        add(Starch.id);
+        for (Item item : Collections.collections.get(IngredientCollection.name).collection)
+            add(item.name);
+        add(SecretBrew.name);
+        add(DoubleUp.name);
+        add(PekoNote.name);
+        add(MilkBottle.name);
+        add(Sentry.name);
+        add(ScopedRifle.name);
+        add(Starch.name);
     }};
     //add permissible interfaces for each prohibitedInv
     private static final Set<InventoryType> prohibitedInv = Set.of(
@@ -137,7 +134,7 @@ public class Events implements Listener {
             //formerly if(typeA==null || !typeA.equals(typeB))
             //new if(typeA!=null && !typeA.equals(typeB))
             else if(typeA==null || !typeA.equals(typeB)){
-                Item genericB = Collections.temp.get(typeB);
+                Item genericB = Collections.items.get(typeB);
                 if(genericB instanceof Enchant){
                     if(curr!=null && curr.getItemMeta()!=null &&
                             curr.getItemMeta().getPersistentDataContainer().
@@ -184,7 +181,7 @@ public class Events implements Listener {
 
                 if(itemB.getType()==Material.ENCHANTED_BOOK &&
                         itemB.getItemMeta() instanceof EnchantmentStorageMeta){
-                    Item item = Collections.temp.get(typeA);
+                    Item item = Collections.items.get(typeA);
                     if(item==null) {
                         event.setCancelled(true);
                         return;
@@ -265,7 +262,7 @@ public class Events implements Listener {
                 return;
             }
 
-            Item item = Collections.temp.get(typeA);
+            Item item = Collections.items.get(typeA);
             if(item==null){
                 event.setCancelled(true);
                 return;
@@ -340,7 +337,7 @@ public class Events implements Listener {
                 current = false;
                 continue;
             }
-            Item generic = Collections.temp.get(id);
+            Item generic = Collections.items.get(id);
             if (generic instanceof Clickable)
                 ((Clickable) generic).ability(event, current);
             current = false;
@@ -357,7 +354,7 @@ public class Events implements Listener {
                 String id = item.getItemMeta().
                         getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
                 if (id != null) {
-                    Item generic = Collections.temp.get(id);
+                    Item generic = Collections.items.get(id);
                     if (generic instanceof Pack && (((Pack) generic).display ||
                             item.equals(event.getCurrentItem()))) {
                         event.setCancelled(true);
@@ -373,7 +370,7 @@ public class Events implements Listener {
         if (id == null)
             return;
         if(invType==InventoryType.GRINDSTONE){
-            if(Collections.temp.get(id).accepted==null)
+            if(Collections.items.get(id).accepted==null)
                 event.setCancelled(true);
             else if(slot==2){
                 ItemStack combined = inv.getItem(2);
@@ -425,15 +422,21 @@ public class Events implements Listener {
         String id = currMeta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if (id == null)
             return;
-        Collection collection = Collections.findCollection(id.charAt(0));
-        Item item = collection.collection.get(id.charAt(1));
+        Item item = Collections.items.get(id);
+        if(item==null)
+            return;
 
         if(player.getGameMode()!=GameMode.CREATIVE) {
-            int progress = Utility.add(collection.getStat(player));
+            int progress = -2;
+            for(Collection collection : Collections.collections.values()){
+                if(collection.collection.contains(item)){
+                    progress = Utility.add(collection.getStat(player));
+                    break;
+                }
+            }
             if (item.cost > progress) {
                 event.setCancelled(true);
-                player.sendMessage("Progress to unlocking " +
-                        Utility.formatName(item.name) + ": " + progress + "/" + item.cost);
+                player.sendMessage("Progress to unlocking " + Utility.formatName(item.name) + ": " + progress + "/" + item.cost);
             } else if (!item.stackable && item.item.getMaxStackSize() > 1) {
                 World world = player.getWorld();
                 Location loc = player.getLocation();
@@ -453,7 +456,6 @@ public class Events implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-
                 currMeta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
                 curr.setItemMeta(currMeta);
             }
@@ -479,7 +481,7 @@ public class Events implements Listener {
         if(id==null)
             return;
 
-        Set<Enchantment> accepted = Collections.temp.get(id).accepted;
+        Set<Enchantment> accepted = Collections.items.get(id).accepted;
         if(accepted==null) {
             event.setCancelled(true);
             return;
@@ -590,10 +592,10 @@ public class Events implements Listener {
                 Utility.addDurability(item, -1, living);
             if (Collections.disabled.contains(id))
                 return;
-            Item generic = Collections.temp.get(id);
+            Item generic = Collections.items.get(id);
             //temp
             if(generic==null) {
-                generic = Collections.findItem(id);
+                generic = Collections.items.get(id);
                 if(generic==null)
                     return;
                 ItemMeta meta = item.getItemMeta();
@@ -674,10 +676,10 @@ public class Events implements Listener {
             event.getPlayer().sendMessage("§cThis item has been disabled");
             return;
         }
-        Item generic = Collections.temp.get(id);
+        Item generic = Collections.items.get(id);
         //temp
         if(generic==null) {
-            generic = Collections.findItem(id);
+            generic = Collections.items.get(id);
             if(generic==null)
                 return;
             ItemMeta meta = item.getItemMeta();
@@ -707,10 +709,10 @@ public class Events implements Listener {
                 //f0: reading glasses easter egg
                 if(id.equals("f0") && item.containsEnchantment(Enchantment.BINDING_CURSE) || Collections.disabled.contains(id))
                     continue;
-                Item generic = Collections.temp.get(id);
+                Item generic = Collections.items.get(id);
                 //temp
                 if(generic==null) {
-                    generic = Collections.findItem(id);
+                    generic = Collections.items.get(id);
                     if(generic==null)
                         return;
                     ItemMeta meta = item.getItemMeta();
@@ -848,10 +850,10 @@ public class Events implements Listener {
 
         if(Collections.disabled.contains(id))
             return;
-        Item generic = Collections.temp.get(id);
+        Item generic = Collections.items.get(id);
         //temp
         if(generic==null) {
-            generic = Collections.findItem(id);
+            generic = Collections.items.get(id);
             if(generic==null)
                 return;
             ItemMeta meta = item.getItemMeta();
@@ -906,10 +908,10 @@ public class Events implements Listener {
                 if(enchant==null)
                     continue;
                 for (String enchantment : enchant.split(" ")) {
-                    Item generic = Collections.temp.get(enchantment);
+                    Item generic = Collections.items.get(enchantment);
                     //temp
                     if(generic==null) {
-                        generic = Collections.findItem(id);
+                        generic = Collections.items.get(id);
                         if(generic==null)
                             return;
                         ItemMeta meta = item.getItemMeta();
@@ -1048,10 +1050,10 @@ public class Events implements Listener {
             else if (Collections.disabled.contains(id))
                 player.sendMessage("§cThis item has been disabled");
             else {
-                Item generic = Collections.temp.get(id);
+                Item generic = Collections.items.get(id);
                 //temp
                 if(generic==null) {
-                    generic = Collections.findItem(id);
+                    generic = Collections.items.get(id);
                     if(generic==null)
                         return;
                     ItemMeta meta = item.getItemMeta();
@@ -1067,10 +1069,10 @@ public class Events implements Listener {
             for (String enchantment : enchant.split(" ")) {
                 if (Collections.disabled.contains(enchantment))
                     return;
-                Item generic = Collections.temp.get(enchantment);
+                Item generic = Collections.items.get(enchantment);
                 //temp
                 if(generic==null) {
-                    generic = Collections.findItem(id);
+                    generic = Collections.items.get(id);
                     if(generic==null)
                         return;
                     ItemMeta meta = item.getItemMeta();
@@ -1119,7 +1121,7 @@ public class Events implements Listener {
             return;
         event.setCancelled(true);
 
-        Item generic = Collections.temp.get(id);
+        Item generic = Collections.items.get(id);
         if(generic instanceof Manipulatable)
             ((Manipulatable) generic).ability(event);
     }
@@ -1164,7 +1166,7 @@ public class Events implements Listener {
         if(id!=null || modifiers!=null) {
             event.getDrops().clear();
             event.setDroppedExp(0);
-//            Perishable perishable = Utility.findItem(id, Perishable.class);
+//            Perishable perishable = Utility.get(id, Perishable.class);
 //            if(perishable!=null)
 //                perishable.effect(event, id);
             if(entity.getType()==EntityType.SLIME){
@@ -1243,7 +1245,7 @@ public class Events implements Listener {
         if (Collections.disabled.contains(id))
             event.getPlayer().sendMessage("§cThis item has been disabled");
         else {
-            Item generic = Collections.temp.get(id);
+            Item generic = Collections.items.get(id);
             if (generic instanceof Placeable)
                 ((Placeable) generic).ability(event);
         }
@@ -1312,10 +1314,10 @@ public class Events implements Listener {
             if (Collections.disabled.contains(id))
                 player.sendMessage("§cThis item has been disabled");
             else {
-                Item generic = Collections.temp.get(id);
+                Item generic = Collections.items.get(id);
                 //temp
                 if(generic==null) {
-                    generic = Collections.findItem(id);
+                    generic = Collections.items.get(id);
                     if(generic==null)
                         return;
                     ItemMeta meta = item.getItemMeta();
@@ -1332,10 +1334,10 @@ public class Events implements Listener {
                 if (Collections.disabled.contains(id))
                     player.sendMessage("§cThis item has been disabled");
                 else {
-                    Item generic = Collections.temp.get(enchantment);
+                    Item generic = Collections.items.get(enchantment);
                     //temp
                     if(generic==null) {
-                        generic = Collections.findItem(id);
+                        generic = Collections.items.get(id);
                         if(generic==null)
                             return;
                         ItemMeta meta = item.getItemMeta();

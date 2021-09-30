@@ -23,9 +23,8 @@ public abstract class Wiring extends Crate implements Clickable {
     private static final int durability = 0;
     private static final boolean stackable = true;
 
-    public Wiring(String name, Material material, String lore, boolean shiny, int cost,
-                  String id, char key) {
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+    public Wiring(String name, Material material, String lore, boolean shiny, int cost) {
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void ability(InventoryClickEvent event, boolean current){
@@ -45,7 +44,7 @@ public abstract class Wiring extends Crate implements Clickable {
                 return;
             String check = dispenser.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             if(check!=null) {
-                Item generic = Collections.findItem(check);
+                Item generic = Collections.items.get(check);
                 if(generic!=null)
                     event.getWhoClicked().sendMessage(
                             "This dispenser is already wired with " + Utility.formatName(generic.name));

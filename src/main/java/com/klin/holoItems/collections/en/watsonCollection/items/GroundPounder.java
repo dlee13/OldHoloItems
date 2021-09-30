@@ -3,7 +3,6 @@ package com.klin.holoItems.collections.en.watsonCollection.items;
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Pack;
-import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -191,7 +190,7 @@ public class GroundPounder extends Pack {
         for(ItemStack content : inv.getContents()) {
             if(content==null || content.getType()==Material.AIR)
                 continue;
-            if(content.getType()!=Material.SPLASH_POTION || !Hourglass.id.equals(content.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
+            if(content.getType()!=Material.SPLASH_POTION || !Hourglass.name.equals(content.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
                 world.dropItemNaturally(player.getLocation(), content);
             else
                 size++;
@@ -206,7 +205,7 @@ public class GroundPounder extends Pack {
     protected void repack(ItemStack item, Inventory inv) {
         Integer size = item.getItemMeta().getPersistentDataContainer().get(Utility.pack, PersistentDataType.INTEGER);
         if(size!=null){
-            ItemStack hourglass = Collections.findItem(Hourglass.id).item;
+            ItemStack hourglass = Collections.items.get(Hourglass.name).item;
             for(int i=0; i<size; i++)
                 inv.addItem(hourglass);
         }

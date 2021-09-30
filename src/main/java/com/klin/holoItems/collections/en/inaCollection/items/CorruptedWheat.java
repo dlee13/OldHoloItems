@@ -31,13 +31,10 @@ public class CorruptedWheat extends BatteryPack implements Placeable {
     public static final Material content = null;
     public static final double perCharge = 1;
     public static final int cap = 256;
-
     public static final int cost = 8860;
-    public static final char key = '0';
-    public static final String id = ""+InaCollection.key+key;
 
     public CorruptedWheat(){
-        super(name, material, lore, durability, shiny, cost, content, perCharge, cap, id, key);
+        super(name, material, lore, durability, shiny, cost, content, perCharge, cap);
     }
 
     public void registerRecipes(){

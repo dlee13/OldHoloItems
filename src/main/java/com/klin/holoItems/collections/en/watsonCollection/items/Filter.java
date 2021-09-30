@@ -32,13 +32,10 @@ public class Filter extends Wiring {
                 "filter clay from soil using water\n"+
                 "Break the dispenser to retrieve";
     private static final boolean shiny = true;
-
     public static final int cost = 8360;
-    public static final char key = '1';
-    public static final String id = ""+WatsonCollection.key+key;
 
     public Filter(){
-        super(name, material, lore, shiny, cost, id, key);
+        super(name, material, lore, shiny, cost);
         dirt = Utility.fertile;
         dyes = Set.of(Material.BLACK_DYE, Material.BLUE_DYE, Material.BROWN_DYE, Material.CYAN_DYE, Material.GRAY_DYE, Material.GREEN_DYE, Material.LIGHT_BLUE_DYE, Material.LIGHT_GRAY_DYE, Material.LIME_DYE, Material.MAGENTA_DYE, Material.ORANGE_DYE, Material.PINK_DYE, Material.PURPLE_DYE, Material.RED_DYE, Material.WHITE_DYE, Material.YELLOW_DYE);
     }

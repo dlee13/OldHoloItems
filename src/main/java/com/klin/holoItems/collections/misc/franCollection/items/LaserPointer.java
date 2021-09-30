@@ -29,18 +29,14 @@ public class LaserPointer extends Item implements Combinable, Targetable, Spawna
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = -1;
-    public static final char key = '4';
 
     public LaserPointer(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+FranCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
-    public LaserPointer(String name, Material material, String lore, String id, char key){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+FranCollection.key+key, key);
+    public LaserPointer(String name, Material material, String lore){
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){}

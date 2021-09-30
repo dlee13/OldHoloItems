@@ -31,13 +31,10 @@ public class Condensation extends Item implements Placeable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '1';
 
     public Condensation(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+LamyCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

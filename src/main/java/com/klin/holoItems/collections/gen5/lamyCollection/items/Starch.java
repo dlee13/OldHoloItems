@@ -32,13 +32,10 @@ public class Starch extends Item implements Brewable, Consumable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '0';
-    public static final String id = ""+LamyCollection.key+key;
 
     public Starch(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {

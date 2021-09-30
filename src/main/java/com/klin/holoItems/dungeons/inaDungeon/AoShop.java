@@ -85,10 +85,10 @@ public class AoShop implements Resetable {
                             id = id==null?"":id;
                             boolean accept = false;
                             switch(id){
-                                case AshWood.id:
-                                case BlackPowder.id:
-                                case TemperedBottle.id:
-                                    accept = mix(itemStack, Collections.findItem(MilkBottle.id).item);
+                                case AshWood.name:
+                                case BlackPowder.name:
+                                case TemperedBottle.name:
+                                    accept = mix(itemStack, Collections.items.get(MilkBottle.name).item);
                                     break;
                                 case "":
                                     double divisor;

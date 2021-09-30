@@ -39,13 +39,10 @@ public class FrostLayer extends BatteryPack implements Placeable {
     public static final Material content = Material.SNOW_BLOCK;
     public static final double perCharge = 1;
     public static final int cap = 576;
-
     public static final int cost = 0;
-    public static final char key = '2';
 
     public FrostLayer(){
-        super(name, material, lore, durability, shiny, cost, content, perCharge, cap,
-                ""+LamyCollection.key+key, key);
+        super(name, material, lore, durability, shiny, cost, content, perCharge, cap);
     }
 
     public void registerRecipes(){

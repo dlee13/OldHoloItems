@@ -3,16 +3,12 @@ package com.klin.holoItems.abstractClasses;
 import com.klin.holoItems.Item;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Set;
-
 public abstract class Crate extends Item {
-    public Crate(String name, Material material, int quantity, String lore, int durability, boolean stackable,
-                 boolean shiny, int cost, String id, char key) {
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+    public Crate(String name, Material material, int quantity, String lore, int durability, boolean stackable, boolean shiny, int cost) {
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void ability(BlockBreakEvent event) {

@@ -30,13 +30,10 @@ public class Radar extends Item implements Swappable {
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '0';
-    public static final String id = ""+KoroneCollection.key+key;
 
     public Radar(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

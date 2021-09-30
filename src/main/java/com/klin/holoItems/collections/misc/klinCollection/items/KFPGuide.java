@@ -33,13 +33,10 @@ public class KFPGuide extends Item implements Interactable {
     private static final int durability = -1;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '4';
 
     public KFPGuide(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+KlinCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){}

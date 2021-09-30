@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.misc.opCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.opCollection.OpCollection;
 import com.klin.holoItems.interfaces.Hangable;
 import com.klin.holoItems.interfaces.Reactable;
 import com.klin.holoItems.utility.Utility;

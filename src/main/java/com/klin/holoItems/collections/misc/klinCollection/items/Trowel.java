@@ -1,7 +1,6 @@
 package com.klin.holoItems.collections.misc.klinCollection.items;
 
 import com.klin.holoItems.abstractClasses.Pack;
-import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;

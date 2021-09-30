@@ -74,13 +74,10 @@ public class TetrisPiece extends Item implements Interactable {
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '4';
-    public static final String id = ""+SuiseiCollection.key+key;
 
     public TetrisPiece(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

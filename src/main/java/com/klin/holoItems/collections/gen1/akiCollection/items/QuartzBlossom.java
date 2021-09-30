@@ -3,7 +3,7 @@ package com.klin.holoItems.collections.gen1.akiCollection.items;
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.BatteryPack;
-import com.klin.holoItems.collections.gen1.akiCollection.AkiCollection;
+import com.klin.holoItems.collections.misc.ingredientCollection.items.EmeraldLeaf;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -33,17 +33,14 @@ public class QuartzBlossom extends BatteryPack implements Extractable, Dropable,
             "instead for 30 seconds";
     private static final int durability = 0;
     private static final boolean shiny = false;
+    public static final int cost = 0;
 
     public static final Material content = Material.NETHER_BRICK;
     public static final double perFuel = 1;
     public static final int cap = 576;
 
-    public static final int cost = 0;
-    public static final char key = '0';
-
     public QuartzBlossom(){
-        super(name, material, lore, durability, shiny, cost, content, perFuel, cap,
-                ""+AkiCollection.key+key, key);
+        super(name, material, lore, durability, shiny, cost, content, perFuel, cap);
     }
 
     public void registerRecipes(){
@@ -52,7 +49,7 @@ public class QuartzBlossom extends BatteryPack implements Extractable, Dropable,
         recipe.shape("*","#","&");
         recipe.setIngredient('*', Material.QUARTZ_BLOCK);
         recipe.setIngredient('#', Material.END_ROD);
-        recipe.setIngredient('&', new RecipeChoice.ExactChoice(Collections.findItem("00").item));
+        recipe.setIngredient('&', new RecipeChoice.ExactChoice(Collections.items.get(EmeraldLeaf.name).item));
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

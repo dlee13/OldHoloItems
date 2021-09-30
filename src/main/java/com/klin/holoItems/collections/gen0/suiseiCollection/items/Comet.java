@@ -48,13 +48,10 @@ public class Comet extends Item implements Interactable {
     private static final int durability = 32;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 2100;
-    public static final char key = '2';
-    public static final String id = ""+SuiseiCollection.key+key;
 
     public Comet(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

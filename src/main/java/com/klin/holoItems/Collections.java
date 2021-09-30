@@ -65,6 +65,7 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -84,106 +85,86 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class Collections implements CommandExecutor, Listener {
-    public static Map<Character, Collection> collections = new LinkedHashMap<>();
+public class Collections implements CommandExecutor, Listener, TabCompleter {
+    public static Map<String, Collection> collections = new LinkedHashMap<>();
     public static final Set<Integer> taskIds = new HashSet<>();
     private static final Map<String, ItemStack> heads = new HashMap<>();
-    private static String registry;
     private static ItemStack back;
     public static Set<String> disabled = new HashSet<>();
-    public static Map<String, Item> temp = new LinkedHashMap<>();
+    public static Map<String, Item> items = new LinkedHashMap<>();
 
     public Collections(){
-        collections.put(IngredientCollection.key, new IngredientCollection());
+        collections.put(IngredientCollection.name, new IngredientCollection());
 
-        collections.put(SuiseiCollection.key, new SuiseiCollection());
-        collections.put(SoraCollection.key, new SoraCollection());
-        collections.put(RobocosanCollection.key, new RobocosanCollection());
-        collections.put(MikoCollection.key, new MikoCollection());
-        collections.put(AzkiCollection.key, new AzkiCollection());
+        collections.put(SuiseiCollection.name, new SuiseiCollection());
+        collections.put(SoraCollection.name, new SoraCollection());
+        collections.put(RobocosanCollection.name, new RobocosanCollection());
+        collections.put(MikoCollection.name, new MikoCollection());
+        collections.put(AzkiCollection.name, new AzkiCollection());
 
-        collections.put(MelCollection.key, new MelCollection());
-        collections.put(FubukiCollection.key, new FubukiCollection());
-        collections.put(MatsuriCollection.key, new MatsuriCollection());
-        collections.put(AkiCollection.key, new AkiCollection());
-        collections.put(HaachamaCollection.key, new HaachamaCollection());
+        collections.put(MelCollection.name, new MelCollection());
+        collections.put(FubukiCollection.name, new FubukiCollection());
+        collections.put(MatsuriCollection.name, new MatsuriCollection());
+        collections.put(AkiCollection.name, new AkiCollection());
+        collections.put(HaachamaCollection.name, new HaachamaCollection());
 
-        collections.put(AquaCollection.key, new AquaCollection());
-        collections.put(ShionCollection.key, new ShionCollection());
-        collections.put(AyameCollection.key, new AyameCollection());
-        collections.put(ChocoCollection.key, new ChocoCollection());
-        collections.put(SubaruCollection.key, new SubaruCollection());
+        collections.put(AquaCollection.name, new AquaCollection());
+        collections.put(ShionCollection.name, new ShionCollection());
+        collections.put(AyameCollection.name, new AyameCollection());
+        collections.put(ChocoCollection.name, new ChocoCollection());
+        collections.put(SubaruCollection.name, new SubaruCollection());
 
-        collections.put(MioCollection.key, new MioCollection());
-        collections.put(OkayuCollection.key, new OkayuCollection());
-        collections.put(KoroneCollection.key, new KoroneCollection());
+        collections.put(MioCollection.name, new MioCollection());
+        collections.put(OkayuCollection.name, new OkayuCollection());
+        collections.put(KoroneCollection.name, new KoroneCollection());
 
-        collections.put(PekoraCollection.key, new PekoraCollection());
-        collections.put(RushiaCollection.key, new RushiaCollection());
-        collections.put(FlareCollection.key, new FlareCollection());
-        collections.put(NoelCollection.key, new NoelCollection());
-        collections.put(MarineCollection.key, new MarineCollection());
+        collections.put(PekoraCollection.name, new PekoraCollection());
+        collections.put(RushiaCollection.name, new RushiaCollection());
+        collections.put(FlareCollection.name, new FlareCollection());
+        collections.put(NoelCollection.name, new NoelCollection());
+        collections.put(MarineCollection.name, new MarineCollection());
 
-        collections.put(KanataCollection.key, new KanataCollection());
-        collections.put(CocoCollection.key, new CocoCollection());
-        collections.put(WatameCollection.key, new WatameCollection());
-        collections.put(TowaCollection.key, new TowaCollection());
-        collections.put(LunaCollection.key, new LunaCollection());
+        collections.put(KanataCollection.name, new KanataCollection());
+        collections.put(CocoCollection.name, new CocoCollection());
+        collections.put(WatameCollection.name, new WatameCollection());
+        collections.put(TowaCollection.name, new TowaCollection());
+        collections.put(LunaCollection.name, new LunaCollection());
 
-        collections.put(RisuCollection.key, new RisuCollection());
-        collections.put(MoonaCollection.key, new MoonaCollection());
-        collections.put(IofiCollection.key, new IofiCollection());
+        collections.put(RisuCollection.name, new RisuCollection());
+        collections.put(MoonaCollection.name, new MoonaCollection());
+        collections.put(IofiCollection.name, new IofiCollection());
 
-        collections.put(LamyCollection.key, new LamyCollection());
-        collections.put(NeneCollection.key, new NeneCollection());
-        collections.put(BotanCollection.key, new BotanCollection());
-        collections.put(PolkaCollection.key, new PolkaCollection());
+        collections.put(LamyCollection.name, new LamyCollection());
+        collections.put(NeneCollection.name, new NeneCollection());
+        collections.put(BotanCollection.name, new BotanCollection());
+        collections.put(PolkaCollection.name, new PolkaCollection());
 
-        collections.put(CalliCollection.key, new CalliCollection());
-        collections.put(KiaraCollection.key, new KiaraCollection());
-        collections.put(InaCollection.key, new InaCollection());
-        collections.put(GuraCollection.key, new GuraCollection());
-        collections.put(WatsonCollection.key, new WatsonCollection());
+        collections.put(CalliCollection.name, new CalliCollection());
+        collections.put(KiaraCollection.name, new KiaraCollection());
+        collections.put(InaCollection.name, new InaCollection());
+        collections.put(GuraCollection.name, new GuraCollection());
+        collections.put(WatsonCollection.name, new WatsonCollection());
 
-        collections.put(OllieCollection.key, new OllieCollection());
-        collections.put(AnyaCollection.key, new AnyaCollection());
-        collections.put(ReineCollection.key, new ReineCollection());
+        collections.put(OllieCollection.name, new OllieCollection());
+        collections.put(AnyaCollection.name, new AnyaCollection());
+        collections.put(ReineCollection.name, new ReineCollection());
 
-        collections.put(IrysCollection.key, new IrysCollection());
-        collections.put(AchanCollection.key, new AchanCollection());
+        collections.put(IrysCollection.name, new IrysCollection());
+        collections.put(AchanCollection.name, new AchanCollection());
 
-        collections.put(MiyabiCollection.key, new MiyabiCollection());
-        collections.put(IzuruCollection.key, new IzuruCollection());
-        collections.put(AruranCollection.key, new AruranCollection());
-        collections.put(RikkaCollection.key, new RikkaCollection());
-        collections.put(AstelCollection.key, new AstelCollection());
-        collections.put(TemmaCollection.key, new TemmaCollection());
-        collections.put(RoberuCollection.key, new RoberuCollection());
-        collections.put(ShienCollection.key, new ShienCollection());
-        collections.put(OgaCollection.key, new OgaCollection());
+        collections.put(MiyabiCollection.name, new MiyabiCollection());
+        collections.put(IzuruCollection.name, new IzuruCollection());
+        collections.put(AruranCollection.name, new AruranCollection());
+        collections.put(RikkaCollection.name, new RikkaCollection());
+        collections.put(AstelCollection.name, new AstelCollection());
+        collections.put(TemmaCollection.name, new TemmaCollection());
+        collections.put(RoberuCollection.name, new RoberuCollection());
+        collections.put(ShienCollection.name, new ShienCollection());
+        collections.put(OgaCollection.name, new OgaCollection());
 
-        collections.put(FranCollection.key, new FranCollection());
-        collections.put(KlinCollection.key, new KlinCollection());
-        collections.put('Z', new OpCollection());
-
-        for(Collection collection : collections.values()){
-            for(Item item : collection.collection.values())
-                temp.put(item.name, item);
-        }
-
-        registry = "§6HoloItems"+"\n";
-        for(Collection collection : collections.values()){
-            if(collection.key=='X')
-                break;
-            java.util.Collection<Item> items = collection.collection.values();
-            if(items.isEmpty())
-                continue;
-            registry += "§7"+collection.name+"\n§f";
-            for(Item item : items){
-                registry += item.name+"\n";
-            }
-        }
-        registry = registry.substring(0, registry.length()-1);
+        collections.put(FranCollection.name, new FranCollection());
+        collections.put(KlinCollection.name, new KlinCollection());
+        collections.put(OpCollection.name, new OpCollection());
 
         back = new ItemStack(Material.SPRUCE_TRAPDOOR);
         ItemMeta backMeta = back.getItemMeta();
@@ -205,7 +186,7 @@ public class Collections implements CommandExecutor, Listener {
                     return true;
                 Inventory inv = Bukkit.createInventory(null, 54, "Collections");
                 for (Collection collection : collections.values()) {
-                    if (collection.uuid == null)
+                    if (collection.base64 == null)
                         continue;
                     ItemStack item = heads.get(collection.name);
                     item = item.clone();
@@ -246,14 +227,20 @@ public class Collections implements CommandExecutor, Listener {
                     player.sendMessage("Invalid item");
                 return true;
 
-            case "registry":
-                player.sendMessage(registry);
-                return true;
-
             case "acquire":
-                if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE || args.length<1)
-                    return false;
-                Item item = temp.get(args[0]);
+                if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE || args.length<1) {
+                    String list = "";
+                    for(Collection collection : collections.values()){
+                        if(collection.collection.isEmpty() || collection.base64==null)
+                            continue;
+                        list += "\n§f" + collection.name + "\n§7";
+                        for(Item item : collection.collection)
+                            list += item.name + " ";
+                    }
+                    player.sendMessage(list.substring(3));
+                    return true;
+                }
+                Item item = items.get(args[0]);
                 if (item == null) {
                     player.sendMessage("No such item");
                     return true;
@@ -322,7 +309,7 @@ public class Collections implements CommandExecutor, Listener {
 
             case "disable":
                 if(args.length>=1) {
-                    Item item = findItem(args[0]);
+                    Item item = items.get(args[0]);
                     if(item==null){
                         player.sendMessage("No such item");
                         return true;
@@ -340,7 +327,7 @@ public class Collections implements CommandExecutor, Listener {
                         disabled.clear();
                         return true;
                     }
-                    Item item = findItem(args[0]);
+                    Item item = items.get(args[0]);
                     if(item==null){
                         player.sendMessage("No such item");
                         return true;
@@ -490,14 +477,11 @@ public class Collections implements CommandExecutor, Listener {
             }.runTask(HoloItems.getInstance());
             return;
         }
-        if(event.getRawSlot() >= view.getTopInventory().getSize())
-            return;
-        if(!view.getTitle().equals("Collections"))
+        if(event.getRawSlot()>=view.getTopInventory().getSize() || !view.getTitle().equals("Collections"))
             return;
 
         ItemMeta meta = curr.getItemMeta();
-        char id = meta.getDisplayName().charAt(meta.getDisplayName().length()-1);
-        Collection collection = findCollection(id);
+        Collection collection = collections.get(meta.getDisplayName().substring(2));
         Player player = (Player) event.getWhoClicked();
 
         List<String> lore = meta.getLore();
@@ -530,7 +514,7 @@ public class Collections implements CommandExecutor, Listener {
                 ((collection.collection.size()-1)/9+1)*9, "Collections: "+collection.name);
         ItemStack locked = new ItemStack(Material.FIREWORK_STAR);
         int count = 0;
-        for(Item item : collection.collection.values()) {
+        for(Item item : collection.collection) {
             if(cost<item.cost)
                 inv.setItem(count, tilUnlocked(locked, item.name, item.cost-cost));
             else
@@ -542,26 +526,23 @@ public class Collections implements CommandExecutor, Listener {
         Utility.reOpen(view, inv, player);
     }
 
-    public static Collection findCollection(char key){
-        return collections.get(key);
-    }
-
-    public static Item findItem(String id){
-        if(id==null || id.length()!=2)
-            return null;
-        Collection collection = findCollection(id.charAt(0));
-        if(collection==null)
-            return null;
-        return collection.collection.get(id.charAt(1));
+    @Override
+    public List<String> onTabComplete (CommandSender sender, Command cmd, String label, String[] args){
+        if(cmd.getName().equals("acquire") && sender instanceof Player && args.length==1) {
+            List<String> list = new ArrayList<>(items.keySet());
+            list.removeIf(name -> !name.startsWith(args[0]));
+            return list;
+        }
+        return new ArrayList<>();
     }
 
     private static void setupHeads(){
         for(Collection collection : collections.values()){
-            if(collection.ign==null)
+            if(collection.base64==null)
                 continue;
             ItemStack head = SkullCreator.itemFromBase64(collection.base64);
             ItemMeta headMeta = head.getItemMeta();
-            headMeta.setDisplayName("§6"+collection.name+"§0"+collection.key);
+            headMeta.setDisplayName("§6"+collection.name);
             if(!collection.desc.isEmpty()) {
                 List<String> desc = Utility.processStr(collection.desc);
                 desc.add("");
@@ -575,7 +556,7 @@ public class Collections implements CommandExecutor, Listener {
     private static ItemStack tilUnlocked(ItemStack item, String name, int cost){
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§f"+Utility.formatName(name));
-        meta.setLore(new ArrayList<>(Arrays.asList("§7"+cost+" til Unlocked")));
+        meta.setLore(new ArrayList<>(java.util.Collections.singletonList("§7" + cost + " til Unlocked")));
         item.setItemMeta(meta);
         return item;
     }

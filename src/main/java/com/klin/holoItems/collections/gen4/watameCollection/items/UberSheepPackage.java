@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.gen4.watameCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
-import com.klin.holoItems.collections.gen4.watameCollection.WatameCollection;
 import com.klin.holoItems.interfaces.Collectable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.utility.Utility;
@@ -34,13 +33,10 @@ public class UberSheepPackage extends Crate implements Placeable, Collectable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '0';
-    public static final String id = ""+WatameCollection.key+key;
 
     public UberSheepPackage(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){
@@ -62,7 +58,7 @@ public class UberSheepPackage extends Crate implements Placeable, Collectable {
     public void ability(BlockPlaceEvent event){
         event.setCancelled(false);
         TileState state = (TileState) event.getBlockPlaced().getState();
-        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
         state.update();
     }
 

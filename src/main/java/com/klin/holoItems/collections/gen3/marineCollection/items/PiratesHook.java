@@ -34,13 +34,10 @@ public class PiratesHook extends Item implements Fishable {
     private static final int durability = 6;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '1';
 
     public PiratesHook(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+MarineCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

@@ -1,25 +1,23 @@
 package com.klin.holoItems.collections.en.watsonCollection.items;
 
-import com.klin.holoItems.interfaces.Dispensable;
-import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
-import org.bukkit.*;
+import com.klin.holoItems.interfaces.Dispensable;
+import com.klin.holoItems.interfaces.Placeable;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Container;
 import org.bukkit.block.data.type.Dispenser;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.HashSet;
 
 public class SandPortal extends Item implements Dispensable, Placeable {
     public static final String name = "sandPortal";
@@ -39,13 +37,10 @@ public class SandPortal extends Item implements Dispensable, Placeable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;
-
     public static final int cost = 19200;
-    public static final char key = '0';
-    public static final String id = ""+WatsonCollection.key+key;
 
     public SandPortal(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

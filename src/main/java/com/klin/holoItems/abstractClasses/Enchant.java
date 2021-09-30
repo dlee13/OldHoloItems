@@ -14,10 +14,8 @@ public abstract class Enchant extends Item {
     public final Set<Material> acceptedTypes;
     public final int expCost;
 
-    public Enchant(String name, Set<Enchantment> accepted, Material material, String lore, int durability, boolean shiny,
-                   int cost, String id, char key, Set<String> acceptedIds, Set<Material> acceptedTypes, int expCost){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
-
+    public Enchant(String name, Set<Enchantment> accepted, Material material, String lore, int durability, boolean shiny, int cost, Set<String> acceptedIds, Set<Material> acceptedTypes, int expCost){
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
         this.acceptedIds = acceptedIds;
         this.acceptedTypes = acceptedTypes;
         this.expCost = expCost;

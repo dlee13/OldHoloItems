@@ -82,7 +82,7 @@ public class GettingWood implements Listener, Resetable {
             return;
         ItemStack item = event.getItemInHand();
         ItemMeta meta = item.getItemMeta();
-        if(meta==null || !BoneCrystal.id.equals(meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
+        if(meta==null || !BoneCrystal.name.equals(meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
             return;
         event.setCancelled(false);
         new Task(HoloItems.getInstance(), 10, 10){
@@ -160,7 +160,7 @@ public class GettingWood implements Listener, Resetable {
                                         y++;
                                         layer = layers.get(y);
                                         if(layer==null){
-                                            locations[0].getWorld().dropItemNaturally(locations[0], Collections.findItem(AshWood.id).item);
+                                            locations[0].getWorld().dropItemNaturally(locations[0], Collections.items.get(AshWood.name).item);
                                             cancel();
                                             return;
                                         }
@@ -215,7 +215,7 @@ public class GettingWood implements Listener, Resetable {
         event.setDropItems(false);
         World world = block.getWorld();
         if(spruce.contains(block.getType()))
-            world.dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), Collections.findItem(AshWood.id).item);
+            world.dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), Collections.items.get(AshWood.name).item);
         int blockY = y;
         while(!leaves.containsKey(blockY)){
             if(blockY>256)
@@ -258,7 +258,7 @@ public class GettingWood implements Listener, Resetable {
                 FallingBlock ash = world.spawnFallingBlock(loc.add(0, -1, 0), data);
                 ash.setDropItem(false);
                 ash.setHurtEntities(true);
-                ash.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, AshWood.id);
+                ash.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, AshWood.name);
                 new Task(HoloItems.getInstance(), 1, 1){
                     int increment = 0;
                     public void run(){
@@ -308,7 +308,7 @@ public class GettingWood implements Listener, Resetable {
     @EventHandler
     public void burn(EntityChangeBlockEvent event){
         Entity entity = event.getEntity();
-        if(!(entity instanceof FallingBlock) || !AshWood.id.equals(entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
+        if(!(entity instanceof FallingBlock) || !AshWood.name.equals(entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
             return;
         Block block = event.getBlock();
         new BukkitRunnable(){

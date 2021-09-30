@@ -28,13 +28,10 @@ public class Vacuum extends Item implements Interactable {
     private static final int durability = -1;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '3';
-    public static final String id = ""+KlinCollection.key+key;
 
     public Vacuum(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){}

@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.misc.opCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.SlidingPack;
-import com.klin.holoItems.collections.misc.opCollection.OpCollection;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -18,7 +17,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
 public class Payload extends SlidingPack {
     public static final String name = "payload";

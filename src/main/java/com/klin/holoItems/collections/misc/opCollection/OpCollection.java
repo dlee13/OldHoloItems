@@ -10,17 +10,15 @@ public class OpCollection extends Collection {
     public static final String name = null;
     public static final String desc = null;
     public static final String theme = null;
-    public static final String ign = null;
-    public static final String uuid = null;
     public static final String base64 = null;
 
     public OpCollection(){
-        super(name, desc, theme, ign, uuid, 'Z', base64);
-        collection.put('0', new Sokoban());
-        collection.put('1', new WheatPortal());
-        collection.put('2', new GalleryFrame());
-        collection.put(Payload.key, new Payload());
-        collection.put('4', new Falchion());
+        super(name, desc, theme, base64);
+        collection.add(new Sokoban());
+        collection.add(new WheatPortal());
+        collection.add(new GalleryFrame());
+        collection.add(new Payload());
+        collection.add(new Falchion());
     }
 
     public Map<String, Integer> getStat(Player player){

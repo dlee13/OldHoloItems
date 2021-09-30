@@ -31,13 +31,10 @@ public class Ingraining extends Enchant implements Extractable {
     public static final Set<String> acceptedIds = null;
     public static final Set<Material> acceptedTypes = Utility.hoes;
     public static final int expCost = 32;
-
     public static final int cost = 0;
-    public static final char key = '4';
-    public static final String id = ""+InaCollection.key+key;
 
     public Ingraining(){
-        super(name, accepted, material, lore, durability, shiny, cost, id, key, acceptedIds, acceptedTypes, expCost);
+        super(name, accepted, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
     }
 
     public void registerRecipes(){

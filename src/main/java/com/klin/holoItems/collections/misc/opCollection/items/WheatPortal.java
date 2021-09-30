@@ -1,10 +1,9 @@
 package com.klin.holoItems.collections.misc.opCollection.items;
 
-import com.klin.holoItems.interfaces.Dispensable;
-import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.opCollection.OpCollection;
+import com.klin.holoItems.interfaces.Dispensable;
+import com.klin.holoItems.interfaces.Placeable;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

@@ -14,13 +14,10 @@ public class AshWood extends Item{
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = 'a';
-    public static final String id = ""+InaDungeonCollection.key+key;
 
     public AshWood(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {}

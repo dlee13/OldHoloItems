@@ -37,13 +37,10 @@ public class ScopedRifle extends Item implements Interactable {
     private static final int durability = 9;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '3';
-    public static final String id = ""+BotanCollection.key+key;
 
     public ScopedRifle(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

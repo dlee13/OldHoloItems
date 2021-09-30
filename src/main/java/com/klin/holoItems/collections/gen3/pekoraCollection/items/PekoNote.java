@@ -3,7 +3,6 @@ package com.klin.holoItems.collections.gen3.pekoraCollection.items;
 import com.klin.holoItems.Events;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.gen3.pekoraCollection.PekoraCollection;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.interfaces.Craftable;
 import com.klin.holoItems.interfaces.Flauntable;
@@ -35,13 +34,10 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable,
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '4';
-    public static final String id = ""+PekoraCollection.key+key;
 
     public PekoNote(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){
@@ -135,7 +131,7 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable,
             if(book==null || book.getType()==Material.AIR)
                 continue;
             ItemMeta itemMeta = book.getItemMeta();
-            if(itemMeta==null || !id.equals(itemMeta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))){
+            if(itemMeta==null || !name.equals(itemMeta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))){
                 event.setCancelled(true);
                 return;
             }

@@ -3,7 +3,6 @@ package com.klin.holoItems.collections.gen4.towaCollection.items;
 import com.klin.holoItems.Events;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
-import com.klin.holoItems.collections.gen4.towaCollection.TowaCollection;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
@@ -39,7 +38,7 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
             CreatureSpawnEvent.SpawnReason.REINFORCEMENTS,
             CreatureSpawnEvent.SpawnReason.SPAWNER
     ).collect(Collectors.toCollection(HashSet::new));
-    private static Set<Location> locations = new HashSet<>();
+    private static final Set<Location> locations = new HashSet<>();
 
     private static final Material material = Material.SOUL_CAMPFIRE;
     private static final int quantity = 1;
@@ -49,13 +48,10 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '0';
-    public static final String id = ""+TowaCollection.key+key;
 
     public HolyFire(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){
@@ -111,7 +107,7 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
         event.setCancelled(false);
         Block block = event.getBlockPlaced();
         TileState state = (TileState) block.getState();
-        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
         state.update();
 
         unlit(block);

@@ -1,7 +1,6 @@
 package com.klin.holoItems.collections.misc.opCollection.items;
 
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.opCollection.OpCollection;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Material;

@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.gen2.shionCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.gen2.shionCollection.ShionCollection;
 import com.klin.holoItems.interfaces.Holdable;
 import com.klin.holoItems.interfaces.Launchable;
 import com.klin.holoItems.utility.Task;
@@ -33,13 +32,10 @@ public class WitchsBracelet extends Item implements Launchable, Holdable {
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = true;
-
     public static final int cost = 145;
-    public static final char key = '0';
 
     public WitchsBracelet(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+ShionCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

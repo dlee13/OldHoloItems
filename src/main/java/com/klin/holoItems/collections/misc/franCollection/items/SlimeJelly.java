@@ -23,10 +23,9 @@ public class SlimeJelly extends LaserPointer implements Retaliable {
     private static final Material material = Material.SCUTE;
     private static final String lore =
             "Find opportunities to rejuvenate";
-    public static final char key = '5';
 
     public SlimeJelly(){
-        super(name, material, lore, ""+FranCollection.key+key, key);
+        super(name, material, lore);
     }
 
     @Override

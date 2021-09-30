@@ -15,17 +15,15 @@ public class ShionCollection extends Collection {
     public static final String name = "Shion";
     public static final String desc = "NEEEEEEEEEEEEEEEEEEEEEEE";
     public static final String theme = "Ingredients mixed";
-    public static final String ign = "murasakishion";
-    public static final String uuid = "1ffbc76f-98ad-4c29-9fcd-8d7878b29248";
+//    public static final String ign = "murasakishion";
+//    public static final String uuid = "1ffbc76f-98ad-4c29-9fcd-8d7878b29248";
     public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDcwNDcyMiwKICAicHJvZmlsZUlkIiA6ICIxZmZiYzc2Zjk4YWQ0YzI5OWZjZDhkNzg3OGIyOTI0OCIsCiAgInByb2ZpbGVOYW1lIiA6ICJtdXJhc2FraXNoaW9uIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2I5MWQxNzUyYzI1Zjc1Y2EyM2ZhODJhZmE1MjcxMDAxM2IwYTIzZjU3ZjZiOWY2MjI2MmJlNmMyNWI3NzAyOGIiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ=";
 
-    public static final char key = 'l';
-
     public ShionCollection(){
-        super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(WitchsBracelet.key, new WitchsBracelet());
-        collection.put('2', new PotionSatchel());
-        collection.put(SecretBrew.key, new SecretBrew());
+        super(name, desc, theme, base64);
+        collection.add(new WitchsBracelet());
+        collection.add(new PotionSatchel());
+        collection.add(new SecretBrew());
     }
 
     public Map<String, Integer> getStat(Player player){
@@ -46,7 +44,6 @@ public class ShionCollection extends Collection {
         stat.put("Ghast Tear infused", player.getStatistic(Statistic.BREAK_ITEM, Material.GHAST_TEAR));
         stat.put("Turtle Shell infused", player.getStatistic(Statistic.BREAK_ITEM, Material.TURTLE_HELMET));
         stat.put("Phantom Membrane infused", player.getStatistic(Statistic.BREAK_ITEM, Material.PHANTOM_MEMBRANE));
-
         return stat;
     }
 }

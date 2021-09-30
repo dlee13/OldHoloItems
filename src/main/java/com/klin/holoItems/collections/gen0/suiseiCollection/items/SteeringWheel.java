@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SteeringWheel extends Item implements Interactable {
-    public static final String name = "SteeringWheel";
+    public static final String name = "steeringWheel";
     private final Map<Player, AbstractMap.SimpleEntry<Vector, Integer>> drivers;
 
     private static final Material material = Material.MUSIC_DISC_STAL;
@@ -26,13 +26,10 @@ public class SteeringWheel extends Item implements Interactable {
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '5';
-    public static final String id = ""+SuiseiCollection.key+key;
 
     public SteeringWheel(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
         drivers = new HashMap<>();
     }
 

@@ -25,13 +25,10 @@ public class SuperStar extends PowerUp {
 
     private static final int interval = 1;
     private static final int increments = 100;
-
     public static final int cost = -1;
-    public static final char key = '0';
-    public static final String id = ""+SuiseiCollection.key+key;
 
     public SuperStar(){
-        super(name, accepted, material, quantity, lore, shiny, cost, interval, increments, id, key);
+        super(name, accepted, material, quantity, lore, shiny, cost, interval, increments);
     }
 
     public void registerRecipes(){

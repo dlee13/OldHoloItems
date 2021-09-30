@@ -34,13 +34,10 @@ public class SSKSword extends Item implements Afflictable {
     private static final int durability = 251;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '0';
 
     public SSKSword(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+TemmaCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

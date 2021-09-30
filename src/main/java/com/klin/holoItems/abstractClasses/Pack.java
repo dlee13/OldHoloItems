@@ -21,18 +21,15 @@ public abstract class Pack extends Item implements Interactable, Sealable {
     public final String title;
     public final boolean display;
 
-    public Pack(String name, Set<Enchantment> accepted, Material material, String lore,
-                int durability, boolean shiny, int size, String title, boolean display, int cost){
+    public Pack(String name, Set<Enchantment> accepted, Material material, String lore, int durability, boolean shiny, int size, String title, boolean display, int cost){
         super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
         this.size = size;
         this.title = title;
         this.display = display;
     }
 
-    public Pack(String name, Material material, String lore,
-                int durability, boolean shiny, int size, String title, boolean display,
-                int cost, String id, char key){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+    public Pack(String name, Material material, String lore, int durability, boolean shiny, int size, String title, boolean display, int cost){
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
         this.size = size;
         this.title = title;
         this.display = display;

@@ -3,7 +3,6 @@ package com.klin.holoItems.collections.misc.franCollection.items;
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Pack;
-import com.klin.holoItems.collections.misc.franCollection.FranCollection;
 import com.klin.holoItems.interfaces.Dispensable;
 import com.klin.holoItems.interfaces.customMobs.Combinable;
 import com.klin.holoItems.utility.Utility;
@@ -69,7 +68,7 @@ public class SteinsEgg extends Pack implements Dispensable {
             String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             if(id==null)
                 continue;
-            Item generic = Collections.findItem(id);
+            Item generic = Collections.items.get(id);
             if(generic instanceof Combinable) {
                 modifiers += "-" + id + ((Combinable) generic).processInfo(content);
             }

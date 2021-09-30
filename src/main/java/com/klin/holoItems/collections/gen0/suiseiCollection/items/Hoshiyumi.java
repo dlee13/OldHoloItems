@@ -44,13 +44,10 @@ public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable
     private static final int durability = 92;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 1500;
-    public static final char key = '1';
-    public static final String id = ""+SuiseiCollection.key+key;
 
     public Hoshiyumi(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){
@@ -93,7 +90,7 @@ public class Hoshiyumi extends Item implements Interactable, Launchable, Hitable
     }
 
     public void ability(ProjectileLaunchEvent event, ItemStack item){
-        event.getEntity().getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        event.getEntity().getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
     }
 
     public void ability(ProjectileHitEvent event){

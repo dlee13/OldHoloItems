@@ -66,13 +66,10 @@ public class LunarLaser extends Enchant implements Interactable {
             "Cut through glass";
     private static final int durability = 250;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '1';
 
     public LunarLaser(){
-        super(name, accepted, material, lore, durability, shiny, cost,
-                ""+MoonaCollection.key+key, key, acceptedIds, acceptedTypes, expCost);
+        super(name, accepted, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
     }
 
     public void registerRecipes(){

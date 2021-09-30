@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.en.watsonCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.BatteryPack;
-import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
 import com.klin.holoItems.interfaces.Hitable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -29,13 +28,10 @@ public class Hourglass extends BatteryPack implements Hitable {
     public static final Material content = Material.SAND;
     public static final double perFuel = 1;
     public static final int cap = 15;
-
     public static final int cost = 0;
-    public static final char key = '3';
-    public static final String id = ""+WatsonCollection.key+key;
 
     public Hourglass(){
-        super(name, material, lore, durability, shiny, cost, content, perFuel, cap, id, key);
+        super(name, material, lore, durability, shiny, cost, content, perFuel, cap);
     }
 
     public void registerRecipes(){

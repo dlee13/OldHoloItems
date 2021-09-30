@@ -33,13 +33,10 @@ public class DepthCharge extends Item implements Placeable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = 'f';
-    public static final String id = ""+InaDungeonCollection.key+key;
 
     public DepthCharge(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {
@@ -47,8 +44,8 @@ public class DepthCharge extends Item implements Placeable {
             public void run(){
                 ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
                 recipe.shape("aba","bab", "aba");
-                recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.findItem(BlackPowder.id).item));
-                recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.findItem(CoarseSand.id).item));
+                recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.items.get(BlackPowder.name).item));
+                recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.items.get(CoarseSand.name).item));
                 recipe.setGroup(name);
                 Bukkit.getServer().addRecipe(recipe);
             }

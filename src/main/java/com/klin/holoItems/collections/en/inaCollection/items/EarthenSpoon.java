@@ -25,13 +25,10 @@ public class EarthenSpoon extends Wiring {
             "plant crops from its inventory\n" +
             "Break the dispenser to retrieve";
     private static final boolean shiny = true;
-
     public static final int cost = 16720;
-    public static final char key = '1';
-    public static final String id = ""+InaCollection.key+key;
 
     public EarthenSpoon(){
-        super(name, material, lore, shiny, cost, id, key);
+        super(name, material, lore, shiny, cost);
     }
 
     public void registerRecipes(){

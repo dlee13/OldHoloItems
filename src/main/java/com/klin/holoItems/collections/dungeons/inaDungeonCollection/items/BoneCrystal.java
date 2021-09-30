@@ -23,13 +23,10 @@ public class BoneCrystal extends Item {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = 'd';
-    public static final String id = ""+InaDungeonCollection.key+key;
 
     public BoneCrystal(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {
@@ -37,7 +34,7 @@ public class BoneCrystal extends Item {
             public void run(){
                 ShapedRecipe crystal = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
                 crystal.shape("aaa","aaa", "aaa");
-                crystal.setIngredient('a', new RecipeChoice.ExactChoice(Collections.findItem(BoneFragment.id).item));
+                crystal.setIngredient('a', new RecipeChoice.ExactChoice(Collections.items.get(BoneFragment.name).item));
                 crystal.setGroup(name);
                 Bukkit.getServer().addRecipe(crystal);
             }

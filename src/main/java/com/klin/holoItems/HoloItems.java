@@ -3,6 +3,8 @@ package com.klin.holoItems;
 import com.klin.holoItems.dungeons.Dungeons;
 import com.klin.holoItems.dungeons.inaDungeon.InaDungeon;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class HoloItems extends JavaPlugin {
@@ -20,8 +22,9 @@ public class HoloItems extends JavaPlugin {
         getCommand("collections").setExecutor(collections);
         getCommand("coordinates").setExecutor(collections);
         getCommand("custommodeldata").setExecutor(collections);
-        getCommand("registry").setExecutor(collections);
-        getCommand("acquire").setExecutor(collections);
+        PluginCommand acquire = getCommand("acquire");
+        acquire.setExecutor(collections);
+        acquire.setTabCompleter(collections);
 
         getCommand("accelerate").setExecutor(collections);
         getCommand("canceltasks").setExecutor(collections);

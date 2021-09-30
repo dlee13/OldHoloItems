@@ -21,10 +21,8 @@ public abstract class PowerUp extends Item implements Interactable {
     private final int interval;
     private final int increments;
 
-    public PowerUp(String name, Set<Enchantment> accepted, Material material, int quantity,
-                   String lore, boolean shiny, int cost, int interval, int increments,
-                   String id, char key){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+    public PowerUp(String name, Set<Enchantment> accepted, Material material, int quantity, String lore, boolean shiny, int cost, int interval, int increments){
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
         this.interval = interval;
         this.increments = increments;
     }

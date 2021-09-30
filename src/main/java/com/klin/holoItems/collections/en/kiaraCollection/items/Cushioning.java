@@ -27,11 +27,9 @@ public class Cushioning extends Item implements Holdable {
     private static final boolean shiny = false;
 
     public static final int cost = 0;
-    public static final char key = '0';
-    public static final String id = ""+KiaraCollection.key+key;
 
     public Cushioning(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

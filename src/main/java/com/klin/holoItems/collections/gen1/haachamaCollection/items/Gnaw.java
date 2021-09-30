@@ -46,13 +46,10 @@ public class Gnaw extends Item implements Consumable {
     private static final int durability = 13;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '1';
 
     public Gnaw() {
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+HaachamaCollection.key + key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {
@@ -60,7 +57,7 @@ public class Gnaw extends Item implements Consumable {
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("a a", "bab", " b ");
         recipe.setIngredient('a', Material.WITHER_SKELETON_SKULL);
-        recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.findItem(CoalPetal.id).item));
+        recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.items.get(CoalPetal.name).item));
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

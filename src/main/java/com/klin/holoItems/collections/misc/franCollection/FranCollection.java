@@ -10,22 +10,18 @@ public class FranCollection extends Collection {
     public static final String name = null;
     public static final String desc = null;
     public static final String theme = null;
-    public static final String ign = null;
-    public static final String uuid = null;
     public static final String base64 = null;
 
-    public static final char key = 'X';
-
     public FranCollection(){
-        super(name, desc, theme, ign, uuid, key, base64);
-        collection.put('0', new TotemPole());
-        collection.put('1', new SteinsEgg());
-        collection.put(LifeCrystal.key, new LifeCrystal());
-        collection.put(BreadCrumbs.key, new BreadCrumbs());
-        collection.put(LaserPointer.key, new LaserPointer());
-        collection.put(SlimeJelly.key, new SlimeJelly());
-        collection.put(DyeConcentrate.key, new DyeConcentrate());
-        collection.put(SharpenedFangs.key, new SharpenedFangs());
+        super(name, desc, theme, base64);
+        collection.add(new TotemPole());
+        collection.add(new SteinsEgg());
+        collection.add(new LifeCrystal());
+        collection.add(new BreadCrumbs());
+        collection.add(new LaserPointer());
+        collection.add(new SlimeJelly());
+        collection.add(new DyeConcentrate());
+        collection.add(new SharpenedFangs());
     }
 
     public Map<String, Integer> getStat(Player player){

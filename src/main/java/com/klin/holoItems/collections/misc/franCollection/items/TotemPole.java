@@ -1,7 +1,6 @@
 package com.klin.holoItems.collections.misc.franCollection.items;
 
 import com.klin.holoItems.abstractClasses.Pack;
-import com.klin.holoItems.collections.misc.franCollection.FranCollection;
 import com.klin.holoItems.interfaces.Dispensable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;

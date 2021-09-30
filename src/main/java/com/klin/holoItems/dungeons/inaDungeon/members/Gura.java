@@ -49,7 +49,7 @@ public class Gura extends Member {
 //        if(material==Material.CROSSBOW && !((CrossbowMeta) meta).hasChargedProjectiles())
 //            return;
         cooldown = true;
-        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Torrent.id);
+        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Torrent.name);
         item.setItemMeta(meta);
         player.setVelocity(new Vector(0, 0.45+0.15*Utility.checkPotionEffect(player, PotionEffectType.JUMP), 0));
         PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);

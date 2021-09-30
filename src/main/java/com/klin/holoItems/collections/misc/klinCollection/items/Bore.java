@@ -29,13 +29,10 @@ public class Bore extends Item implements Extractable {
     private static final int durability = -1;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '0';
 
     public Bore(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+KlinCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){}

@@ -16,21 +16,19 @@ public class SuiseiCollection extends Collection {
             "diamond in the rough, idol" +"/n"+
             "VTuber, Hoshimachi Suisei!";
     public static final String theme = "Demons slaughtered";
-    public static final String ign = "suisei_hosimati";
-    public static final String uuid = "a771cbb5-6533-4e27-ab2f-5fd519394487";
+//    public static final String ign = "suisei_hosimati";
+//    public static final String uuid = "a771cbb5-6533-4e27-ab2f-5fd519394487";
     public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDQ1MjY5NywKICAicHJvZmlsZUlkIiA6ICJhNzcxY2JiNTY1MzM0ZTI3YWIyZjVmZDUxOTM5NDQ4NyIsCiAgInByb2ZpbGVOYW1lIiA6ICJTVUlTRUlfSE9TSU1BVEkiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTRlZWNiM2MwYjRmYzYyNWY1OTQ5OWIwZjJjNDlkNGRiMmQ0MWU0NWFkYmYwZjc5Y2VkM2RiZGViMDc3NjJiMyIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9=";
 
-    public static final char key = 'a';
-
     public SuiseiCollection(){
-        super(name, desc, theme, ign, uuid, key, base64);
-        collection.put(SuperStar.key, new SuperStar());
-        collection.put(Hoshiyumi.key, new Hoshiyumi());
-        collection.put(Comet.key, new Comet());
-        collection.put(RolledNewspaper.key, new RolledNewspaper());
-        collection.put(TetrisPiece.key, new TetrisPiece());
-        collection.put(SteeringWheel.key, new SteeringWheel());
-        collection.put(Backstab.key, new Backstab());
+        super(name, desc, theme, base64);
+        collection.add(new SuperStar());
+        collection.add(new Hoshiyumi());
+        collection.add(new Comet());
+        collection.add(new RolledNewspaper());
+        collection.add(new TetrisPiece());
+        collection.add(new SteeringWheel());
+        collection.add(new Backstab());
     }
 
     public Map<String, Integer> getStat(Player player){
@@ -46,7 +44,6 @@ public class SuiseiCollection extends Collection {
         stat.put("Wither Skeletons slain", player.getStatistic(Statistic.KILL_ENTITY, EntityType.WITHER_SKELETON));
         stat.put("Zoglins slain", player.getStatistic(Statistic.KILL_ENTITY, EntityType.ZOGLIN));
         stat.put("Zombified Piglins slain", player.getStatistic(Statistic.KILL_ENTITY, EntityType.ZOMBIFIED_PIGLIN));
-
         return stat;
     }
 }

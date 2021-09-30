@@ -20,13 +20,10 @@ public class CoalPetal extends Item {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '1';
-    public static final String id = ""+IngredientCollection.key+key;
 
     public CoalPetal(){
-        super(name, material, quantity, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

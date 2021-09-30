@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.gen5.botanCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.gen5.botanCollection.BotanCollection;
 import com.klin.holoItems.interfaces.Hitable;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.interfaces.Manipulatable;
@@ -29,7 +28,7 @@ import java.util.*;
 public class Sentry extends Item implements Interactable, Manipulatable, Retaliable, Hitable {
     public static final String name = "sentry";
     public static final Set<Enchantment> accepted = null;
-    private static Map<Player, AbstractMap.SimpleEntry<Location, ArmorStand>> stands = new HashMap<>();
+    private static final Map<Player, AbstractMap.SimpleEntry<Location, ArmorStand>> stands = new HashMap<>();
 
     private static final Material material = Material.CROSSBOW;
     private static final int quantity = 1;
@@ -39,13 +38,10 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
     private static final int durability = 0;
     private static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 0 ;
-    public static final char key = '2';
-    public static final String id = ""+BotanCollection.key+key;
 
     public Sentry(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){
@@ -235,7 +231,7 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
 
                 Entity entity = loc.getWorld().spawnEntity(loc, type);
                 if(entity instanceof Projectile) {
-                    entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+                    entity.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
                     ((Projectile) entity).setShooter(player);
                 }
                 entity.setVelocity(velocity);

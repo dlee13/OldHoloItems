@@ -28,13 +28,10 @@ public class WateringCan extends BatteryPack {
     public static final Material content = Material.BONE_MEAL;
     public static final double perFuel = 1;
     public static final int cap = 576;
-
     public static final int cost = 4430;
-    public static final char key = '3';
-    public static final String id = ""+InaCollection.key+key;
 
     public WateringCan(){
-        super(name, material, lore, durability, shiny, cost, content, perFuel, cap, id, key);
+        super(name, material, lore, durability, shiny, cost, content, perFuel, cap);
     }
 
     public void registerRecipes(){

@@ -1,14 +1,16 @@
 package com.klin.holoItems.collections.gen3.pekoraCollection.items;
 
-import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.gen3.pekoraCollection.PekoraCollection;
+import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.TileState;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
@@ -20,19 +22,12 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DoubleUp extends Wiring {
     public static final String name = "doubleUp";
-
-    private static final Map<Integer, String> upgrades = new HashMap<>(){{
-        put(3, "tripleUp");
-        put(4, "quadrupleUp");
-        put(5, "quintupleUp");
-        put(6, "sextupleUp");
-        put(7, "septupleUp");
-        put(8, "octupleUp");
-    }};
+    private static Map<Integer, ItemStack> upgrades;
 
     private static final Material material = Material.DISPENSER;
     private static final String lore =
@@ -40,13 +35,10 @@ public class DoubleUp extends Wiring {
             "dispense multiple times when powered\n"+
             "Breaking the dispenser returns Double Up";
     private static final boolean shiny = true;
-
     public static final int cost = 500;
-    public static final char key = '0';
-    public static final String id = ""+PekoraCollection.key+key;
 
     public DoubleUp(){
-        super(name, material, lore, shiny, cost, id, key);
+        super(name, material, lore, shiny, cost);
     }
 
     public void registerRecipes(){
@@ -63,29 +55,33 @@ public class DoubleUp extends Wiring {
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
 
+        Map<Integer, String> sequence = new LinkedHashMap<>(){{
+            put(3,"tripleUp");
+            put(4,"quadrupleUp");
+            put(5,"quintupleUp");
+            put(6,"sextupleUp");
+            put(7,"septupleUp");
+            put(8,"octupleUp");
+        }};
         ItemStack prior = item;
-        for(Integer i : upgrades.keySet()){
+        upgrades = new HashMap<>();
+        for(Integer i : sequence.keySet()){
             ItemStack copy = item.clone();
             doubleMeta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, i);
-            doubleMeta.setDisplayName("§6"+Utility.formatName(upgrades.get(i)));
+            doubleMeta.setDisplayName("§6"+Utility.formatName(sequence.get(i)));
             copy.setItemMeta(doubleMeta);
+            upgrades.put(i, copy);
 
-            ShapelessRecipe shapelessRecipe =
-                    new ShapelessRecipe(new NamespacedKey(HoloItems.getInstance(), upgrades.get(i)), copy);
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(new NamespacedKey(HoloItems.getInstance(), sequence.get(i)), copy);
             shapelessRecipe.addIngredient(new RecipeChoice.ExactChoice(prior));
             shapelessRecipe.addIngredient(new RecipeChoice.ExactChoice(prior));
             shapelessRecipe.setGroup(name);
             Bukkit.getServer().addRecipe(shapelessRecipe);
-
             prior = copy;
         }
     }
 
     public void ability(BlockDispenseEvent event) {
-//        ItemStack item = event.getItem();
-//        if(item.getItemMeta()!=null && item.getItemMeta().getPersistentDataContainer().
-//                get(Utility.key, PersistentDataType.STRING)!=null)
-//            return;
         TileState state = (TileState) event.getBlock().getState();
         PersistentDataContainer container = state.getPersistentDataContainer();
         Integer integer = container.get(Utility.pack, PersistentDataType.INTEGER);
@@ -122,5 +118,19 @@ public class DoubleUp extends Wiring {
         if(integer==null)
             return;
         container.set(Utility.pack, PersistentDataType.INTEGER, integer);
+    }
+
+    @Override
+    public void ability(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        BlockState state = block.getState();
+        if(state instanceof TileState){
+            Integer upgrade = ((TileState) state).getPersistentDataContainer().get(Utility.pack, PersistentDataType.INTEGER);
+            if(upgrade!=null && upgrade>=3 && upgrade<=8){
+                block.getWorld().dropItemNaturally(block.getLocation(), upgrades.get(upgrade));
+                return;
+            }
+        }
+        block.getWorld().dropItemNaturally(block.getLocation(), item.clone());
     }
 }

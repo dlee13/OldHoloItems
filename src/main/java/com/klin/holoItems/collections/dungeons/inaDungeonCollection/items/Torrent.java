@@ -37,20 +37,17 @@ public class Torrent extends Item implements Launchable, Hitable, Dropable {
     private static final int durability = 0;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '1';
-    public static final String id = ""+ InaDungeonCollection.key+key;
 
     public Torrent(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
         overwrite = Set.of(Material.BLUE_WOOL, Material.RED_WOOL, Material.RED_CONCRETE, Material.QUARTZ_BLOCK, Material.QUARTZ_STAIRS, Material.WHITE_CONCRETE);
     }
 
     public void registerRecipes() {}
 
     public void ability(ProjectileLaunchEvent event, ItemStack item){
-        event.getEntity().getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, id);
+        event.getEntity().getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
     }
 
     public void ability(ProjectileHitEvent event) {

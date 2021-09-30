@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.gen4.watameCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
-import com.klin.holoItems.collections.gen4.watameCollection.WatameCollection;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
 import com.klin.holoItems.utility.Task;
@@ -37,12 +36,10 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;
-
     public static final int cost = 0;
-    public static final char key = '1';
 
     public LaunchPad(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, ""+WatameCollection.key+key, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
         tickets = new HashMap<>();
     }
 
@@ -84,7 +81,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
             return;
         }
         Barrel barrel = (Barrel) state;
-        if(!UberSheepPackage.id.equals(barrel.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
+        if(!UberSheepPackage.name.equals(barrel.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
             player.sendMessage("Unsupported container");
             return;
         }
@@ -124,7 +121,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
         } else
             chunk.addPluginChunkTicket(HoloItems.getInstance());
         Block launchPad = dest.getWorld().getHighestBlockAt(dest);
-        while(launchPad.getType()==Material.BARREL && UberSheepPackage.id.equals(((TileState) launchPad.getState()).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
+        while(launchPad.getType()==Material.BARREL && UberSheepPackage.name.equals(((TileState) launchPad.getState()).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING)))
             launchPad = launchPad.getRelative(BlockFace.DOWN);
         state = launchPad.getState();
         if(!(state instanceof Smoker) || !name.equals(((TileState) state).getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING))) {
@@ -166,7 +163,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                                 Block drop = world.getHighestBlockAt(dest);
                                 if (drop.getType() == Material.BARREL) {
                                     Barrel barrel = (Barrel) drop.getState();
-                                    barrel.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
+                                    barrel.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.name);
                                     barrel.setCustomName(block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
                                     barrel.update();
 
@@ -193,7 +190,7 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                                 return;
                             }
                             if(increment==0)
-                                drone.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.id);
+                                drone.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, UberSheepPackage.name);
 //                                container.set(Utility.pack, PersistentDataType.STRING, block.getX() + " " + block.getZ() + (interdimension?" "+name:""));
                             increment++;
                         }

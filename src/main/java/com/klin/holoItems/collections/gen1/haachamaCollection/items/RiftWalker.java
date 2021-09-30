@@ -34,17 +34,14 @@ public class RiftWalker extends BatteryPack {
             "in a row. 2 epearls per charge";
     private static final int durability = 0;
     private static final boolean shiny = true;
+    public static final int cost = 0;
 
     public static final Material content = Material.ENDER_PEARL;
     public static final double perFuel = 0.5;
     public static final int cap = 72;
 
-    public static final int cost = 0;
-    public static final char key = '0';
-    public static final String id = ""+HaachamaCollection.key+key;
-
     public RiftWalker(){
-        super(name, material, lore, durability, shiny, cost, content, perFuel, cap, id, key);
+        super(name, material, lore, durability, shiny, cost, content, perFuel, cap);
     }
 
     public void registerRecipes(){
@@ -53,7 +50,7 @@ public class RiftWalker extends BatteryPack {
         recipe0.shape(" * ","/%/");
         recipe0.setIngredient('*', new RecipeChoice.ExactChoice(new ItemStack(Material.COOKED_PORKCHOP, 64)));
         recipe0.setIngredient('%', Material.ELYTRA);
-        recipe0.setIngredient('/', new RecipeChoice.ExactChoice(Collections.findItem(EmeraldLeaf.id).item));
+        recipe0.setIngredient('/', new RecipeChoice.ExactChoice(Collections.items.get(EmeraldLeaf.name).item));
         recipe0.setGroup(name);
         Bukkit.getServer().addRecipe(recipe0);
     }

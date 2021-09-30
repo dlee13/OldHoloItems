@@ -4,7 +4,6 @@ import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Pack;
-import com.klin.holoItems.collections.gen2.shionCollection.ShionCollection;
 import com.klin.holoItems.interfaces.Mixable;
 import com.klin.holoItems.utility.Utility;
 import net.md_5.bungee.api.ChatMessageType;
@@ -72,7 +71,7 @@ public class PotionSatchel extends Pack {
             String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             PotionData potData = ((PotionMeta) meta).getBasePotionData();
             PotionType type = potData.getType();
-            boolean drop = id != null && !(Collections.findItem(id) instanceof Mixable) || type==PotionType.UNCRAFTABLE;
+            boolean drop = id != null && !(Collections.items.get(id) instanceof Mixable) || type==PotionType.UNCRAFTABLE;
             if(material!=Material.SPLASH_POTION && material!=Material.LINGERING_POTION || drop) {
                 world.dropItemNaturally(loc, content);
                 continue;

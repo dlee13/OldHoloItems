@@ -14,9 +14,6 @@ commands:
   custommodeldata:
     permission: holoItems.player
     usage: /<command>
-  registry:
-    permission: holoItems.player
-    usage: /<command>
   acquire:
     permission: holoItems.player
     usage: /<command> <id>

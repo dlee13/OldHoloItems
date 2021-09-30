@@ -14,13 +14,10 @@ public class PieceOfEight extends Item {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = -1;
-    public static final char key = 'g';
-    public static final String id = ""+InaDungeonCollection.key+key;
 
     public PieceOfEight(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {}

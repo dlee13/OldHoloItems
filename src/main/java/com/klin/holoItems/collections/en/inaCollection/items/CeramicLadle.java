@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.en.inaCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Wiring;
-import com.klin.holoItems.collections.en.inaCollection.InaCollection;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,13 +24,10 @@ public class CeramicLadle  extends Wiring {
             "plant saplings, flowers, and mushrooms\n" +
             "Break the dispenser to retrieve";
     private static final boolean shiny = true;
-
     public static final int cost = 16720;
-    public static final char key = '2';
-    public static final String id = ""+InaCollection.key+key;
 
     public CeramicLadle(){
-        super(name, material, lore, shiny, cost, id, key);
+        super(name, material, lore, shiny, cost);
     }
 
     public void registerRecipes(){

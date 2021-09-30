@@ -208,7 +208,7 @@ public class InaDungeon implements CommandExecutor{
                             while(block.getType()!=type && !block.isEmpty())
                                 block = block.getRelative(BlockFace.UP);
                             block.setType(Material.AIR);
-                            Utility.spawn(block.getLocation().add(0.5, 0, 0.5), world, EntityType.SHULKER, DyeConcentrate.id+":"+color);
+                            Utility.spawn(block.getLocation().add(0.5, 0, 0.5), world, EntityType.SHULKER, DyeConcentrate.name+":"+color);
                             cancel();
                         }
                         fallingBlock.setVelocity(fallingBlock.getVelocity().add(new Vector(0, -0.5, 0)));

@@ -38,12 +38,10 @@ public class CookieJar  extends Item implements Placeable, Punchable {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = false;
-
     public static final int cost = -1;
-    public static final char key = '2';
 
     public CookieJar(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, ""+InaDungeonCollection.key+key, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){}

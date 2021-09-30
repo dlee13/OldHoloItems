@@ -14,13 +14,10 @@ public class TemperedBottle extends Item {
     private static final int durability = 0;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = -1;
-    public static final char key = 'i';
-    public static final String id = ""+InaDungeonCollection.key+key;
 
     public TemperedBottle(){
-        super(name, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes() {}

@@ -93,7 +93,7 @@ public class Paver extends SlidingPack {
                         get(Utility.key, PersistentDataType.STRING);
                 if (id == null)
                     break;
-                Item generic = Collections.findItem(id);
+                Item generic = Collections.items.get(id);
                 if (!(generic instanceof Trowel))
                     break;
 

@@ -28,13 +28,10 @@ public class Compactor extends Wiring {
             "auto craft using its inventory as the grid\n"+
             "Break the dispenser to retrieve";
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '2';
-    public static final String id = ""+PekoraCollection.key+key;
 
     public Compactor(){
-        super(name, material, lore, shiny, cost, id, key);
+        super(name, material, lore, shiny, cost);
     }
 
     public void registerRecipes(){

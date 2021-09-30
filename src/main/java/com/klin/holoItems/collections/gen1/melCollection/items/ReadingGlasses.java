@@ -1,8 +1,7 @@
 package com.klin.holoItems.collections.gen1.melCollection.items;
 
-import com.klin.holoItems.abstractClasses.Armor;
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.gen1.melCollection.MelCollection;
+import com.klin.holoItems.abstractClasses.Armor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -33,11 +32,9 @@ public class ReadingGlasses extends Armor {
             "Wear to gain night vision";
     private static final int durability = 1;
     public static final boolean stackable = true;
+    public static final int cost = 0;
 
     private static final int armorPiece = 5;
-
-    public static final int cost = 0;
-    public static final char key = '0';
 
     public ReadingGlasses(){
         super(name, accepted, material, lore, durability, stackable, cost, armorPiece);

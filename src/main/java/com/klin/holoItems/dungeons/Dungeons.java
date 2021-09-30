@@ -19,7 +19,7 @@ public class Dungeons implements CommandExecutor {
                     System.out.println("Ina Dungeon already ON");
                     return true;
                 }
-                Collections.collections.put(InaDungeonCollection.key, new InaDungeonCollection());
+                Collections.collections.put(InaDungeonCollection.name, new InaDungeonCollection());
                 HoloItems holoItems = HoloItems.getInstance();
                 inaDungeon = new InaDungeon();
                 holoItems.getCommand("build").setExecutor(inaDungeon);

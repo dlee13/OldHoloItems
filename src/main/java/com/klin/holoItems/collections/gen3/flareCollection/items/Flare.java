@@ -29,13 +29,10 @@ public class Flare extends Item implements Interactable {
     private static final int durability = 32;
     public static final boolean stackable = true;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '2';
 
     public Flare(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+FlareCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

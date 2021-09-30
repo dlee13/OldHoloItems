@@ -29,13 +29,10 @@ public class Backdash extends Enchant implements Togglable {
     private static final int durability = 65;
     private static final boolean shiny = false;
     public static final boolean stackable = false;
-
     public static final int cost = 0;
-    public static final char key = '0';
 
     public Backdash(){
-        super(name, accepted, material, lore, durability, shiny, cost,
-                ""+BotanCollection.key+key, key, acceptedIds, acceptedTypes, expCost);
+        super(name, accepted, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
     }
 
     public void registerRecipes(){

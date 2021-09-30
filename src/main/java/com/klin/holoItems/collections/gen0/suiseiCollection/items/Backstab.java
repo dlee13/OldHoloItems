@@ -45,17 +45,14 @@ public class Backstab extends Item implements Interactable{
     private static final int durability = 32;
     public static final boolean stackable = false;
     private static final boolean shiny = false;
-
     public static final int cost = 2100;
-    public static final char key = '6';
-    public static final String id = ""+SuiseiCollection.key+key;
 
     public Backstab(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost, id, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("a","b","b");
         recipe.setIngredient('a', Material.END_ROD);
         recipe.setIngredient('b', Material.GILDED_BLACKSTONE);

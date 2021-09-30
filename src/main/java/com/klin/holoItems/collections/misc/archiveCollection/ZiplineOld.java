@@ -52,13 +52,10 @@ public class ZiplineOld extends Item implements Interactable {
     private static final int durability = 2;
     private static final boolean stackable = false;
     private static final boolean shiny = true;
-
     public static final int cost = 0;
-    public static final char key = '1';
 
     public ZiplineOld(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost,
-                ""+KanataCollection.key+key, key);
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

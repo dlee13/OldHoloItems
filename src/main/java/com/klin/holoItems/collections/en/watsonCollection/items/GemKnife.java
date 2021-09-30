@@ -48,13 +48,10 @@ public class GemKnife extends BatteryPack {
     public static final Material content = Material.EMERALD;
     public static final double perFuel = 2;
     public static final int cap = 1152;
-
     public static final int cost = 24000;
-    public static final char key = '2';
-    public static final String id = ""+WatsonCollection.key+key;
 
     public GemKnife(){
-        super(name, material, lore, durability, shiny, cost, content, perFuel, cap, id, key);
+        super(name, material, lore, durability, shiny, cost, content, perFuel, cap);
     }
 
     public void registerRecipes(){

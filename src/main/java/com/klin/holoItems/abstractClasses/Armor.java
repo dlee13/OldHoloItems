@@ -25,7 +25,6 @@ import java.util.Set;
 public abstract class Armor extends Item implements Wearable, Responsible {
     private static final int quantity = 1;
     private static final boolean shiny = false;
-
     //4: zombie/skeleton main hand
     //5: helmet, 6: chestplate, 7: leggings, 8: boots
     public final int armorPiece;
