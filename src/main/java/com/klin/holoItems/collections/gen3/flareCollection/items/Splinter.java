@@ -2,6 +2,7 @@ package com.klin.holoItems.collections.gen3.flareCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
+import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
 import com.klin.holoItems.collections.gen3.flareCollection.FlareCollection;
 import com.klin.holoItems.interfaces.Extractable;
 import com.klin.holoItems.utility.Task;
@@ -18,11 +19,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Splinter extends Enchant implements Extractable {
     public static final String name = "splinter";
     public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH);
-    public static final Set<String> acceptedIds = Set.of("a2");
+    public static final Set<String> acceptedIds = Stream.of(Comet.name).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Material> acceptedTypes = Utility.axes;
     public static final int expCost = 39;
 

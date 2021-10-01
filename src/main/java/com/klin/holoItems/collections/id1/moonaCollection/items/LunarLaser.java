@@ -2,6 +2,8 @@ package com.klin.holoItems.collections.id1.moonaCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
+import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
+import com.klin.holoItems.collections.gen3.flareCollection.items.Splinter;
 import com.klin.holoItems.collections.id1.moonaCollection.MoonaCollection;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Utility;
@@ -52,7 +54,7 @@ public class LunarLaser extends Enchant implements Interactable {
             Material.BROWN_STAINED_GLASS, Material.BROWN_STAINED_GLASS_PANE
             ).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Enchantment> accepted = Stream.of(Enchantment.SILK_TOUCH, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
-    public static final Set<String> acceptedIds = Stream.of("a2", "u1").collect(Collectors.toCollection(HashSet::new));
+    public static final Set<String> acceptedIds = Stream.of(Comet.name, Splinter.name).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Material> acceptedTypes = new HashSet<>(){{
         addAll(Utility.axes);
         addAll(Utility.shovels);

@@ -124,10 +124,8 @@ public class Events implements Listener {
             ItemStack itemB = inv.getItem(1);
             if(itemA==null || itemB==null)
                 return;
-            String typeA = itemA.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-            String typeB = itemB.getItemMeta().
-                    getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            String typeA = itemA.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            String typeB = itemB.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             ItemStack curr = inv.getItem(2);
             if(typeA==null && typeB==null)
                 return;
@@ -137,14 +135,11 @@ public class Events implements Listener {
                 Item genericB = Collections.items.get(typeB);
                 if(genericB instanceof Enchant){
                     if(curr!=null && curr.getItemMeta()!=null &&
-                            curr.getItemMeta().getPersistentDataContainer().
-                                    get(Utility.enchant, PersistentDataType.STRING)!=null)
+                            curr.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING)!=null)
                         return;
                     Enchant enchant = (Enchant) genericB;
-                    if((enchant.acceptedIds==null ||
-                            !enchant.acceptedIds.contains(typeA)) &&
-                            (enchant.acceptedTypes==null ||
-                            !enchant.acceptedTypes.contains(itemA.getType()))){
+                    if((enchant.acceptedIds==null || !enchant.acceptedIds.contains(typeA)) &&
+                            (enchant.acceptedTypes==null || !enchant.acceptedTypes.contains(itemA.getType()))){
                         ItemStack no = new ItemStack(Material.BARRIER);
                         ItemMeta noMeta = no.getItemMeta();
                         noMeta.setDisplayName(" ");
