@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.holostars.shienCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.holostars.shienCollection.items.Spur;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -15,6 +16,7 @@ public class ShienCollection extends Collection {
 
     public ShienCollection(){
         super(name, desc, theme, base64);
+        collection.add(new Spur());
     }
 
     public Map<String, Integer> getStat(Player player){

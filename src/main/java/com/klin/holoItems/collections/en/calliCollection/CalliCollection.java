@@ -1,7 +1,7 @@
 package com.klin.holoItems.collections.en.calliCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.en.calliCollection.items.MomentoMori;
+import com.klin.holoItems.collections.en.calliCollection.items.Momento;
 import org.bukkit.Statistic;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ public class CalliCollection extends Collection {
 
     public CalliCollection(){
         super(name, desc, theme, base64);
-        collection.add(new MomentoMori());
+        collection.add(new Momento());
     }
 
     public Map<String, Integer> getStat(Player player){

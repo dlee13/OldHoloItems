@@ -14,7 +14,7 @@ import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.HashSet;
 
-public class MomentoMori extends Item implements Retainable {
+public class Momento extends Item implements Retainable {
     public static final String name = "momento";
 
     private static final Material material = Material.ENDER_CHEST;
@@ -27,14 +27,14 @@ public class MomentoMori extends Item implements Retainable {
     private static final boolean shiny = false;
     public static final int cost = 2700;
 
-    public MomentoMori(){
+    public Momento(){
         super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aaa","aba","aaa");
-        recipe.setIngredient('a', Material.ENDER_CHEST);
+        recipe.setIngredient('a', Material.OBSIDIAN);
         recipe.setIngredient('b', Material.END_CRYSTAL);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);

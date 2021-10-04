@@ -12,8 +12,8 @@ import java.util.Map;
 public class SuiseiCollection extends Collection {
     public static final String name = "Suisei";
     public static final String desc =
-            "It's your shooting star, your" +"/n"+
-            "diamond in the rough, idol" +"/n"+
+            "It's your shooting star, your\n"+
+            "diamond in the rough, idol\n"+
             "VTuber, Hoshimachi Suisei!";
     public static final String theme = "Demons slaughtered";
 //    public static final String ign = "suisei_hosimati";

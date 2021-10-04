@@ -557,6 +557,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
             headMeta.setDisplayName("§6"+collection.name);
             if(!collection.desc.isEmpty()) {
                 List<String> desc = Utility.processStr(collection.desc);
+                desc.remove(0);
                 desc.add("");
                 headMeta.setLore(desc);
             }

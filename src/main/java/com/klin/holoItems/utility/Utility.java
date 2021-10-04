@@ -267,6 +267,13 @@ public class Utility {
     }
 
     public static ItemStack addEnchant(ItemStack itemStack, Enchant enchant){
+        Set<Enchantment> exclusive = enchant.exclusive;
+        if(exclusive!=null) {
+            for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
+                if (exclusive.contains(enchantment))
+                    itemStack.removeEnchantment(enchantment);
+            }
+        }
         ItemMeta meta = itemStack.getItemMeta();
         String enchantments = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
         if(enchantments==null)

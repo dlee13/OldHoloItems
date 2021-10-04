@@ -47,15 +47,15 @@ import java.util.*;
 import static org.bukkit.Material.*;
 
 public class Events implements Listener {
-    private static final Map<Material, Material> buckets = Map.of(
+    private final Map<Material, Material> buckets = Map.of(
             BUCKET, CAULDRON,
             WATER_BUCKET, WATER_CAULDRON,
             LAVA_BUCKET, LAVA_CAULDRON,
             POWDER_SNOW_BUCKET, POWDER_SNOW_CAULDRON,
             BOWL, BOWL
     );
-    private static final Set<Material> deactive = Set.of(Material.JUKEBOX, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
-    private static final Set<String> ingredients = new HashSet<>() {{
+    private final Set<Material> deactive = Set.of(Material.JUKEBOX, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
+    private final Set<String> ingredients = new HashSet<>() {{
         for (Item item : Collections.collections.get(IngredientCollection.name).collection)
             add(item.name);
         add(SecretBrew.name);
@@ -67,7 +67,7 @@ public class Events implements Listener {
         add(Starch.name);
     }};
     //add permissible interfaces for each prohibitedInv
-    private static final Set<InventoryType> prohibitedInv = Set.of(
+    private final Set<InventoryType> prohibitedInv = Set.of(
             InventoryType.BEACON,
             InventoryType.BREWING,
             InventoryType.CARTOGRAPHY,
@@ -77,7 +77,7 @@ public class Events implements Listener {
             InventoryType.SMOKER,
             InventoryType.STONECUTTER
     );
-    private static final Map<Integer, Enchantment[]> multiplier = new HashMap<>() {{
+    private final Map<Integer, Enchantment[]> multiplier = new HashMap<>() {{
         put(1, new Enchantment[]{
                 Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.DAMAGE_ALL,
                 Enchantment.DIG_SPEED, Enchantment.ARROW_DAMAGE,
@@ -104,11 +104,28 @@ public class Events implements Listener {
                 Enchantment.CHANNELING, Enchantment.SOUL_SPEED
         });
     }};
+    private final Set<Set<Enchantment>> with = Set.of(
+            Set.of(Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.DAMAGE_ARTHROPODS),
+            Set.of(Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_EXPLOSIONS),
+            Set.of(Enchantment.DEPTH_STRIDER, Enchantment.FROST_WALKER),
+            Set.of(Enchantment.LOOT_BONUS_BLOCKS, Enchantment.SILK_TOUCH),
+            Set.of(Enchantment.ARROW_INFINITE, Enchantment.MENDING),
+            Set.of(Enchantment.MULTISHOT, Enchantment.PIERCING)
+    );
+    private final Map<Enchantment, Set<Enchantment>> exclusive = new HashMap<>(){{
+        put(Enchantment.CHANNELING, Set.of(Enchantment.RIPTIDE));
+        put(Enchantment.LOYALTY, Set.of(Enchantment.RIPTIDE));
+        put(Enchantment.RIPTIDE, Set.of(Enchantment.CHANNELING, Enchantment.LOYALTY));
+        for(Set<Enchantment> incompatible : with){
+            for(Enchantment enchantment : incompatible)
+                put(enchantment, incompatible);
+        }
+    }};
 
     public static Set<Activatable> activatables = new HashSet<>();
 
     @EventHandler
-    public static void clickItem(InventoryClickEvent event){
+    public void clickItem(InventoryClickEvent event){
         if(event.isCancelled())
             return;
 
@@ -118,8 +135,7 @@ public class Events implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         int slot = event.getRawSlot();
-        if(slot==2 && invType==InventoryType.ANVIL &&
-                player.getGameMode()!=GameMode.CREATIVE){
+        if(slot==2 && invType==InventoryType.ANVIL){
             ItemStack itemA = inv.getItem(0);
             ItemStack itemB = inv.getItem(1);
             if(itemA==null || itemB==null)
@@ -129,13 +145,10 @@ public class Events implements Listener {
             ItemStack curr = inv.getItem(2);
             if(typeA==null && typeB==null)
                 return;
-            //formerly if(typeA==null || !typeA.equals(typeB))
-            //new if(typeA!=null && !typeA.equals(typeB))
             else if(typeA==null || !typeA.equals(typeB)){
                 Item genericB = Collections.items.get(typeB);
                 if(genericB instanceof Enchant){
-                    if(curr!=null && curr.getItemMeta()!=null &&
-                            curr.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING)!=null)
+                    if(curr!=null && curr.getItemMeta()!=null && curr.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING)!=null)
                         return;
                     Enchant enchant = (Enchant) genericB;
                     if((enchant.acceptedIds==null || !enchant.acceptedIds.contains(typeA)) &&
@@ -174,29 +187,32 @@ public class Events implements Listener {
                     return;
                 }
 
-                if(itemB.getType()==Material.ENCHANTED_BOOK &&
-                        itemB.getItemMeta() instanceof EnchantmentStorageMeta){
+                if(itemB.getType()==Material.ENCHANTED_BOOK && itemB.getItemMeta() instanceof EnchantmentStorageMeta){
                     Item item = Collections.items.get(typeA);
                     if(item==null) {
                         event.setCancelled(true);
                         return;
                     }
-                    Map<Enchantment, Integer> enchantments = ((EnchantmentStorageMeta)
-                            itemB.getItemMeta()).getStoredEnchants();
+                    Map<Enchantment, Integer> enchantments = ((EnchantmentStorageMeta) itemB.getItemMeta()).getStoredEnchants();
                     ItemStack combined = itemA.clone();
                     int levelCost = 0;
-                    for(Enchantment enchant : enchantments.keySet()) {
-                        if(item.accepted==null)
-                            break;
-                        if (item.accepted.contains(enchant)){
-                            int levelA = combined.getItemMeta().getEnchantLevel(enchant);
-                            int levelB = enchantments.get(enchant);
-                            if(levelA==levelB && levelB<enchant.getMaxLevel())
-                                levelB++;
-                            else if(levelA>levelB)
-                                levelB = 0;
-                            combined.addUnsafeEnchantment(enchant, Math.max(levelA, levelB));
-                            levelCost += levelB*((findMultiplier(enchant)+1)/2);
+                    if(item.accepted != null) {
+                        for (Enchantment enchant : enchantments.keySet()) {
+                            if (item.accepted.contains(enchant)) {
+                                Set<Enchantment> incompatible = exclusive.get(enchant);
+                                for(Enchantment enchantment : combined.getEnchantments().keySet()){
+                                    if(incompatible.contains(enchantment))
+                                        combined.removeEnchantment(enchant);
+                                }
+                                int levelA = combined.getItemMeta().getEnchantLevel(enchant);
+                                int levelB = enchantments.get(enchant);
+                                if (levelA == levelB && levelB < enchant.getMaxLevel())
+                                    levelB++;
+                                else if (levelA > levelB)
+                                    levelB = 0;
+                                combined.addUnsafeEnchantment(enchant, Math.max(levelA, levelB));
+                                levelCost += levelB * ((findMultiplier(enchant) + 1) / 2);
+                            }
                         }
                     }
                     if(levelCost>0) {
@@ -226,7 +242,6 @@ public class Events implements Listener {
                                 }
                             }.runTask(HoloItems.getInstance());
                         }
-                        return;
                     }
                     else{
                         ItemStack no = new ItemStack(Material.BARRIER);
@@ -235,7 +250,6 @@ public class Events implements Listener {
                         no.setItemMeta(noMeta);
                         inv.setItem(2, no);
                         event.setCancelled(true);
-                        return;
                     }
                 }
                 else{
@@ -245,10 +259,9 @@ public class Events implements Listener {
                     no.setItemMeta(noMeta);
                     inv.setItem(2, no);
                     event.setCancelled(true);
-                    return;
                 }
+                return;
             }
-
             //it will ALWAYS be null if it is itself, 2 Unbreakable items
             //unless it has been set prior
             if(curr!=null){
@@ -284,6 +297,11 @@ public class Events implements Listener {
             Map<Enchantment, Integer> enchantments = new HashMap<>(itemB.getEnchantments());
             for(Enchantment enchant : enchantments.keySet()) {
                 if (item.accepted.contains(enchant)){
+                    Set<Enchantment> incompatible = exclusive.get(enchant);
+                    for(Enchantment enchantment : combined.getEnchantments().keySet()){
+                        if(incompatible.contains(enchantment))
+                            combined.removeEnchantment(enchant);
+                    }
                     int levelA = combined.getItemMeta().getEnchantLevel(enchant);
                     int levelB = enchantments.get(enchant);
                     if(levelA==levelB && levelB<enchant.getMaxLevel())
@@ -386,7 +404,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void craftItem(CraftItemEvent event){
+    public void craftItem(CraftItemEvent event){
         if(event.isCancelled())
             return;
         CraftingInventory inv = event.getInventory();
@@ -465,7 +483,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void enchantItem(EnchantItemEvent event){
+    public void enchantItem(EnchantItemEvent event){
         if(event.isCancelled())
             return;
         ItemStack item = event.getItem();
@@ -522,7 +540,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void mendItem(PlayerExpChangeEvent event){
+    public void mendItem(PlayerExpChangeEvent event){
         //no isCancelled()
         Player player = event.getPlayer();
         PlayerInventory inv = player.getInventory();
@@ -543,7 +561,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void activateAbility(CreatureSpawnEvent event){
+    public void activateAbility(CreatureSpawnEvent event){
         if(event.isCancelled() || activatables.isEmpty())
             return;
         for(Activatable activatable : activatables) {
@@ -553,7 +571,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void afflictAbility(EntityDamageByEntityEvent event){
+    public void afflictAbility(EntityDamageByEntityEvent event){
         if(event.isCancelled())
             return;
         Entity entity = event.getDamager();
@@ -606,7 +624,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void brewAbility(BrewEvent event){
+    public void brewAbility(BrewEvent event){
         if(event.isCancelled())
             return;
         BrewerInventory inv = event.getContents();
@@ -658,7 +676,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void consumeAbility(PlayerItemConsumeEvent event){
+    public void consumeAbility(PlayerItemConsumeEvent event){
         if(event.isCancelled())
             return;
         ItemStack item = event.getItem();
@@ -689,7 +707,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void defendAbility(EntityDamageByEntityEvent event){
+    public void defendAbility(EntityDamageByEntityEvent event){
         if(event.isCancelled() || !(event.getEntity() instanceof LivingEntity))
             return;
         LivingEntity entity = (LivingEntity) event.getEntity();
@@ -736,7 +754,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void dispenseAbility(BlockDispenseEvent event){
+    public void dispenseAbility(BlockDispenseEvent event){
         if(event.isCancelled())
             return;
         Block block = event.getBlock();
@@ -861,7 +879,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void dropAbility(PlayerDropItemEvent event){
+    public void dropAbility(PlayerDropItemEvent event){
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
@@ -872,7 +890,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void extractAbility(BlockBreakEvent event){
+    public void extractAbility(BlockBreakEvent event){
         if(event.isCancelled())
             return;
 
@@ -922,7 +940,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void entityAbility(PlayerInteractEntityEvent event){
+    public void entityAbility(PlayerInteractEntityEvent event){
         //delayed isCancelled()
         Entity entity = event.getRightClicked();
         Player player = event.getPlayer();
@@ -960,7 +978,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void flauntAbility(AsyncPlayerChatEvent event){
+    public void flauntAbility(AsyncPlayerChatEvent event){
         if(event.isCancelled() || !event.isAsynchronous())
             return;
         Player player = event.getPlayer();
@@ -977,7 +995,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void hangingAbility(HangingPlaceEvent event){
+    public void hangingAbility(HangingPlaceEvent event){
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
@@ -990,7 +1008,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void hitAbility(ProjectileHitEvent event){
+    public void hitAbility(ProjectileHitEvent event){
         //no isCancelled()
         Projectile projectile = event.getEntity();
         if(projectile.doesBounce())
@@ -1017,7 +1035,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void interactAbility(PlayerInteractEvent event){
+    public void interactAbility(PlayerInteractEvent event){
         //no isCancelled()
         Action action = event.getAction();
         Player player = event.getPlayer();
@@ -1082,7 +1100,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void launchAbility(ProjectileLaunchEvent event){
+    public void launchAbility(ProjectileLaunchEvent event){
         if(event.isCancelled())
             return;
         ProjectileSource entity = event.getEntity().getShooter();
@@ -1107,7 +1125,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void manipulateAbility(PlayerArmorStandManipulateEvent event){
+    public void manipulateAbility(PlayerArmorStandManipulateEvent event){
         if(event.isCancelled())
             return;
         ArmorStand stand = event.getRightClicked();
@@ -1122,7 +1140,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void powerAbility(BlockRedstoneEvent event){
+    public void powerAbility(BlockRedstoneEvent event){
         //no isCancelled()
         Block block = event.getBlock();
         Powerable powerable = Utility.findItem(block, Powerable.class);
@@ -1131,7 +1149,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void packAbility(InventoryCloseEvent event){
+    public void packAbility(InventoryCloseEvent event){
         //no isCancelled()
         InventoryView view = event.getView();
         Inventory inv = view.getTopInventory();
@@ -1151,7 +1169,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void perishAbility(EntityDeathEvent event){
+    public void perishAbility(EntityDeathEvent event){
         //no isCancelled()
         LivingEntity entity = event.getEntity();
         if(entity instanceof ArmorStand)
@@ -1195,7 +1213,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void placeAbility(BlockPlaceEvent event){
+    public void placeAbility(BlockPlaceEvent event){
         if(event.isCancelled())
             return;
         ItemStack item = event.getItemInHand();
@@ -1247,7 +1265,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void retainAbility(PlayerDeathEvent event){
+    public void retainAbility(PlayerDeathEvent event){
         //no isCancelled()
         Player player = event.getEntity();
         for(ItemStack item : player.getInventory().getContents()) {
@@ -1258,7 +1276,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void swapAbility(PlayerSwapHandItemsEvent event){
+    public void swapAbility(PlayerSwapHandItemsEvent event){
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
@@ -1273,7 +1291,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void targetAbility(EntityTargetLivingEntityEvent event){
+    public void targetAbility(EntityTargetLivingEntityEvent event){
         if(event.isCancelled())
             return;
         String modifiers = event.getEntity().getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
@@ -1287,7 +1305,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void teleportAbility(EntityTeleportEvent event){
+    public void teleportAbility(EntityTeleportEvent event){
         if(event.isCancelled())
             return;
         Entity entity = event.getEntity();
@@ -1348,7 +1366,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void writeAbility(PlayerEditBookEvent event){
+    public void writeAbility(PlayerEditBookEvent event){
         Player player = event.getPlayer();
         BookMeta meta = event.getNewBookMeta();
         String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
@@ -1357,7 +1375,7 @@ public class Events implements Listener {
             writable.ability(event, meta);
     }
 
-    private static int findMultiplier(Enchantment enchant){
+    private int findMultiplier(Enchantment enchant){
         for(Integer i : multiplier.keySet()){
             for(Enchantment enchantment : multiplier.get(i)){
                 if(enchantment.equals(enchant))
@@ -1368,7 +1386,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void preventWither(EntityChangeBlockEvent event){
+    public void preventWither(EntityChangeBlockEvent event){
         if(event.isCancelled())
             return;
         if(event.getBlock().getType()==Material.PLAYER_HEAD)
@@ -1376,7 +1394,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public static void preventExplosion(EntityExplodeEvent event){
+    public void preventExplosion(EntityExplodeEvent event){
         if(event.isCancelled())
             return;
         for(Block block : event.blockList()){
