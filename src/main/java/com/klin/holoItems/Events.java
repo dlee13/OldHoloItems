@@ -148,9 +148,17 @@ public class Events implements Listener {
             else if(typeA==null || !typeA.equals(typeB)){
                 Item genericB = Collections.items.get(typeB);
                 if(genericB instanceof Enchant){
-                    if(curr!=null && curr.getItemMeta()!=null && curr.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING)!=null)
-                        return;
                     Enchant enchant = (Enchant) genericB;
+                    String enchants = itemA.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+                    if(enchants!=null && enchants.contains(enchant.name)){
+                        ItemStack no = new ItemStack(Material.BARRIER);
+                        ItemMeta noMeta = no.getItemMeta();
+                        noMeta.setDisplayName(" ");
+                        no.setItemMeta(noMeta);
+                        inv.setItem(2, no);
+                        event.setCancelled(true);
+                        return;
+                    }
                     if((enchant.acceptedIds==null || !enchant.acceptedIds.contains(typeA)) &&
                             (enchant.acceptedTypes==null || !enchant.acceptedTypes.contains(itemA.getType()))){
                         ItemStack no = new ItemStack(Material.BARRIER);
@@ -182,8 +190,10 @@ public class Events implements Listener {
                             combined.setItemMeta(meta);
                         }
                     }
-                    inv.setItem(2, combined);
-                    event.setCancelled(true);
+                    if(!combined.equals(curr)) {
+                        inv.setItem(2, combined);
+                        event.setCancelled(true);
+                    }
                     return;
                 }
 
@@ -196,13 +206,16 @@ public class Events implements Listener {
                     Map<Enchantment, Integer> enchantments = ((EnchantmentStorageMeta) itemB.getItemMeta()).getStoredEnchants();
                     ItemStack combined = itemA.clone();
                     int levelCost = 0;
+                    boolean survival = player.getGameMode()!=GameMode.CREATIVE;
                     if(item.accepted != null) {
                         for (Enchantment enchant : enchantments.keySet()) {
                             if (item.accepted.contains(enchant)) {
-                                Set<Enchantment> incompatible = exclusive.get(enchant);
-                                for(Enchantment enchantment : combined.getEnchantments().keySet()){
-                                    if(incompatible.contains(enchantment))
-                                        combined.removeEnchantment(enchant);
+                                if(survival) {
+                                    Set<Enchantment> incompatible = exclusive.get(enchant);
+                                    for (Enchantment enchantment : combined.getEnchantments().keySet()) {
+                                        if (incompatible.contains(enchantment))
+                                            combined.removeEnchantment(enchantment);
+                                    }
                                 }
                                 int levelA = combined.getItemMeta().getEnchantLevel(enchant);
                                 int levelB = enchantments.get(enchant);
@@ -231,11 +244,10 @@ public class Events implements Listener {
                         }
                         combined.setItemMeta(combinedMeta);
 
-                        if(!combined.equals(curr)) {
+                        if(survival && !combined.equals(curr) || curr==null) {
                             event.setCancelled(true);
                             ((AnvilInventory) inv).setRepairCost(levelCost+
-                                    Math.max(ReflectionUtils.getRepairCost(itemA),
-                                            ReflectionUtils.getRepairCost(itemB)));
+                                    Math.max(ReflectionUtils.getRepairCost(itemA), ReflectionUtils.getRepairCost(itemB)));
                             new BukkitRunnable(){
                                 public void run() {
                                     inv.setItem(2, combined);
@@ -262,8 +274,9 @@ public class Events implements Listener {
                 }
                 return;
             }
-            //it will ALWAYS be null if it is itself, 2 Unbreakable items
-            //unless it has been set prior
+
+            //if 2 of the same unbreakable item are combined, curr will ALWAYS be null, unless it has been set prior
+            //!=null means same unbreakable holoItem but somehow passed previous if-check
             if(curr!=null){
                 if(curr.getType()==Material.BARRIER)
                     event.setCancelled(true);
@@ -297,10 +310,12 @@ public class Events implements Listener {
             Map<Enchantment, Integer> enchantments = new HashMap<>(itemB.getEnchantments());
             for(Enchantment enchant : enchantments.keySet()) {
                 if (item.accepted.contains(enchant)){
-                    Set<Enchantment> incompatible = exclusive.get(enchant);
-                    for(Enchantment enchantment : combined.getEnchantments().keySet()){
-                        if(incompatible.contains(enchantment))
-                            combined.removeEnchantment(enchant);
+                    if(player.getGameMode()!=GameMode.CREATIVE) {
+                        Set<Enchantment> incompatible = exclusive.get(enchant);
+                        for (Enchantment enchantment : combined.getEnchantments().keySet()) {
+                            if (incompatible.contains(enchantment))
+                                combined.removeEnchantment(enchantment);
+                        }
                     }
                     int levelA = combined.getItemMeta().getEnchantLevel(enchant);
                     int levelB = enchantments.get(enchant);
@@ -524,10 +539,14 @@ public class Events implements Listener {
             int failsafe = 0;
             do{
                 randomEnchant = acceptedArray[(int) (Math.random()*size)];
+                Set<Enchantment> incompatible = exclusive.get(randomEnchant);
+                for (Enchantment enchantment : item.getEnchantments().keySet()) {
+                    if (incompatible.contains(enchantment))
+                        item.removeEnchantment(enchantment);
+                }
                 failsafe++;
             } while (item.containsEnchantment(randomEnchant) && failsafe<=5);
-            item.addUnsafeEnchantment(randomEnchant,
-                    Math.min(randomEnchant.getMaxLevel(), enchantments.get(next)));
+            item.addUnsafeEnchantment(randomEnchant, Math.min(randomEnchant.getMaxLevel(), enchantments.get(next)));
             if(!randomEnchant.equals(next))
                 toRemove.add(next);
         }

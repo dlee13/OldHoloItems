@@ -1,9 +1,8 @@
 package com.klin.holoItems.collections.gen0.suiseiCollection.items;
 
-import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.gen0.suiseiCollection.SuiseiCollection;
+import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -86,7 +85,13 @@ public class Comet extends Item implements Interactable {
         if(Utility.onCooldown(item))
             return;
         Utility.cooldown(item, 20);
-        double damage = 4+3*(Utility.checkPotionEffect(player, PotionEffectType.INCREASE_DAMAGE)-
+        //temp
+        if(item.getEnchantmentLevel(Enchantment.DAMAGE_ALL) > 0){
+            item.removeEnchantment(Enchantment.DAMAGE_UNDEAD);
+            item.removeEnchantment(Enchantment.DAMAGE_ARTHROPODS);
+        }
+        //
+        double damage = 7 + 3 * (Utility.checkPotionEffect(player, PotionEffectType.INCREASE_DAMAGE) -
                 Utility.checkPotionEffect(player, PotionEffectType.WEAKNESS));
 
         Location location = player.getEyeLocation();
