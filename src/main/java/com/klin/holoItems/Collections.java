@@ -1,11 +1,16 @@
 package com.klin.holoItems;
 
-import com.klin.holoItems.collections.en.calliCollection.CalliCollection;
-import com.klin.holoItems.collections.en.guraCollection.GuraCollection;
-import com.klin.holoItems.collections.en.inaCollection.InaCollection;
-import com.klin.holoItems.collections.en.irysCollection.IrysCollection;
-import com.klin.holoItems.collections.en.kiaraCollection.KiaraCollection;
-import com.klin.holoItems.collections.en.watsonCollection.WatsonCollection;
+import com.klin.holoItems.collections.holoCouncil.BaeCollection.BaeCollection;
+import com.klin.holoItems.collections.holoCouncil.FaunaCollection.FaunaCollection;
+import com.klin.holoItems.collections.holoCouncil.KroniiCollection.KroniiCollection;
+import com.klin.holoItems.collections.holoCouncil.MumeiCollection.MumeiCollection;
+import com.klin.holoItems.collections.holoCouncil.SanaCollection.SanaCollection;
+import com.klin.holoItems.collections.holoMyth.calliCollection.CalliCollection;
+import com.klin.holoItems.collections.holoMyth.guraCollection.GuraCollection;
+import com.klin.holoItems.collections.holoMyth.inaCollection.InaCollection;
+import com.klin.holoItems.collections.holoMyth.irysCollection.IrysCollection;
+import com.klin.holoItems.collections.holoMyth.kiaraCollection.KiaraCollection;
+import com.klin.holoItems.collections.holoMyth.watsonCollection.WatsonCollection;
 import com.klin.holoItems.collections.gamers.koroneCollection.KoroneCollection;
 import com.klin.holoItems.collections.gamers.mioCollection.MioCollection;
 import com.klin.holoItems.collections.gamers.okayuCollection.OkayuCollection;
@@ -38,15 +43,15 @@ import com.klin.holoItems.collections.gen5.botanCollection.BotanCollection;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
 import com.klin.holoItems.collections.gen5.neneCollection.NeneCollection;
 import com.klin.holoItems.collections.gen5.polkaCollection.PolkaCollection;
-import com.klin.holoItems.collections.holostars.aruranCollection.AruranCollection;
-import com.klin.holoItems.collections.holostars.astelCollection.AstelCollection;
-import com.klin.holoItems.collections.holostars.izuruCollection.IzuruCollection;
-import com.klin.holoItems.collections.holostars.miyabiCollection.MiyabiCollection;
-import com.klin.holoItems.collections.holostars.ogaCollection.OgaCollection;
-import com.klin.holoItems.collections.holostars.rikkaCollection.RikkaCollection;
-import com.klin.holoItems.collections.holostars.roberuCollection.RoberuCollection;
-import com.klin.holoItems.collections.holostars.shienCollection.ShienCollection;
-import com.klin.holoItems.collections.holostars.temmaCollection.TemmaCollection;
+import com.klin.holoItems.collections.stars1.aruranCollection.AruranCollection;
+import com.klin.holoItems.collections.stars2.astelCollection.AstelCollection;
+import com.klin.holoItems.collections.stars1.izuruCollection.IzuruCollection;
+import com.klin.holoItems.collections.stars1.miyabiCollection.MiyabiCollection;
+import com.klin.holoItems.collections.stars3.ogaCollection.OgaCollection;
+import com.klin.holoItems.collections.stars1.rikkaCollection.RikkaCollection;
+import com.klin.holoItems.collections.stars2.roberuCollection.RoberuCollection;
+import com.klin.holoItems.collections.stars3.shienCollection.ShienCollection;
+import com.klin.holoItems.collections.stars2.temmaCollection.TemmaCollection;
 import com.klin.holoItems.collections.id1.iofiCollection.IofiCollection;
 import com.klin.holoItems.collections.id1.moonaCollection.MoonaCollection;
 import com.klin.holoItems.collections.id1.risuCollection.RisuCollection;
@@ -88,6 +93,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
     public static final Set<Integer> taskIds = new HashSet<>();
     private static final Map<String, ItemStack> heads = new HashMap<>();
     private static ItemStack back;
+    private static ItemStack next;
     public static Set<String> disabled = new HashSet<>();
     public static Map<String, Item> items = new LinkedHashMap<>();
 
@@ -137,26 +143,34 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         collections.put(BotanCollection.name, new BotanCollection());
         collections.put(PolkaCollection.name, new PolkaCollection());
 
+        collections.put(AchanCollection.name, new AchanCollection());
+
         collections.put(CalliCollection.name, new CalliCollection());
         collections.put(KiaraCollection.name, new KiaraCollection());
         collections.put(InaCollection.name, new InaCollection());
         collections.put(GuraCollection.name, new GuraCollection());
         collections.put(WatsonCollection.name, new WatsonCollection());
+        collections.put(IrysCollection.name, new IrysCollection());
 
         collections.put(OllieCollection.name, new OllieCollection());
         collections.put(AnyaCollection.name, new AnyaCollection());
         collections.put(ReineCollection.name, new ReineCollection());
 
-        collections.put(IrysCollection.name, new IrysCollection());
-        collections.put(AchanCollection.name, new AchanCollection());
+        collections.put(SanaCollection.name, new SanaCollection());
+        collections.put(FaunaCollection.name, new FaunaCollection());
+        collections.put(KroniiCollection.name, new KroniiCollection());
+        collections.put(MumeiCollection.name, new MumeiCollection());
+        collections.put(BaeCollection.name, new BaeCollection());
 
         collections.put(MiyabiCollection.name, new MiyabiCollection());
         collections.put(IzuruCollection.name, new IzuruCollection());
         collections.put(AruranCollection.name, new AruranCollection());
         collections.put(RikkaCollection.name, new RikkaCollection());
+
         collections.put(AstelCollection.name, new AstelCollection());
         collections.put(TemmaCollection.name, new TemmaCollection());
         collections.put(RoberuCollection.name, new RoberuCollection());
+
         collections.put(ShienCollection.name, new ShienCollection());
         collections.put(OgaCollection.name, new OgaCollection());
 
@@ -169,6 +183,10 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         backMeta.setDisplayName("§fBack");
         back.setItemMeta(backMeta);
 
+        next = back.clone();
+        backMeta.setDisplayName("§fNext");
+        next.setItemMeta(backMeta);
+
         setupHeads();
     }
 
@@ -180,11 +198,16 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         String command = cmd.getName().toLowerCase();
         switch(command) {
             case "collections":
-                if (heads.isEmpty())
-                    return true;
+                boolean live = true;
+                boolean stars = args.length>0 && args[0].equals("1");
                 Inventory inv = Bukkit.createInventory(null, 54, "Collections");
                 for (Collection collection : collections.values()) {
                     if (collection.base64 == null)
+                        continue;
+                    if(MiyabiCollection.name.equals(collection.name)){
+                        if(stars) live = false;
+                        else break;
+                    } if(stars && live)
                         continue;
                     ItemStack item = heads.get(collection.name);
                     item = item.clone();
@@ -192,11 +215,12 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                     List<String> lore = meta.getLore();
                     if (lore == null)
                         lore = new ArrayList<>();
-                    lore.add("§7" + collection.theme + ": " + Utility.add(collection.getStat(player)));
+                    lore.add("§f" + collection.theme + ": §7" + Utility.add(collection.getStat(player)));
                     meta.setLore(lore);
                     item.setItemMeta(meta);
                     inv.addItem(item);
                 }
+                inv.setItem(53, stars ? back : next);
                 player.openInventory(inv);
                 return true;
 
@@ -248,11 +272,9 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                 player.getInventory().addItem(item.item);
                 player.sendMessage(Utility.formatName(item.name) + " acquired");
                 return true;
-        }
 
-        if(!player.isOp())
-            return true;
-        switch(command){
+            //holoItems.op
+
             case "accelerate":
                 if(args.length<3)
                     return false;
@@ -280,17 +302,17 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                 if(args.length<3)
                     return false;
                 try {
-                    Statistic stat = Statistic.valueOf(args[0]);
+                    Statistic stat = Statistic.valueOf(args[0].toUpperCase());
                     switch(stat.getType()){
                         case ITEM:
                         case BLOCK:
-                            Material type = Material.valueOf(args[1]);
+                            Material type = Material.valueOf(args[1].toUpperCase());
                             int i = Integer.parseInt(args[2]);
                             player.setStatistic(stat, type, i);
                             player.sendMessage(stat+":"+type+" set to "+i);
                             break;
                         case ENTITY:
-                            EntityType entity = EntityType.valueOf(args[1]);
+                            EntityType entity = EntityType.valueOf(args[1].toUpperCase());
                             int j = Integer.parseInt(args[2]);
                             player.setStatistic(stat, entity, j);
                             player.sendMessage(stat+":"+entity+" set to "+j);
@@ -309,7 +331,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
 
             case "disable":
                 if(args.length>=1) {
-                    Item item = items.get(args[0]);
+                    item = items.get(args[0]);
                     if(item==null){
                         player.sendMessage("No such item");
                         return true;
@@ -327,7 +349,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                         disabled.clear();
                         return true;
                     }
-                    Item item = items.get(args[0]);
+                    item = items.get(args[0]);
                     if(item==null){
                         player.sendMessage("No such item");
                         return true;
@@ -402,7 +424,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
             case "setcustommodeldata":
                 if(args.length<1)
                     return false;
-                ItemStack model = player.getInventory().getItemInMainHand();
+                model = player.getInventory().getItemInMainHand();
                 if(model.getType()!=Material.AIR && model.getItemMeta()!=null) {
                     ItemMeta meta = model.getItemMeta();
                     try {
@@ -439,11 +461,11 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
             case "settype":
                 if(args.length<1)
                     return false;
-                ItemStack item = player.getInventory().getItemInMainHand();
-                if(item.getType()!=Material.AIR) {
+                ItemStack itemStack = player.getInventory().getItemInMainHand();
+                if(itemStack.getType()!=Material.AIR) {
                     Material type = Material.getMaterial(args[0]);
                     if(type!=null)
-                        item.setType(type);
+                        itemStack.setType(type);
                 }
                 return true;
 
@@ -466,28 +488,35 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         ItemStack curr = event.getCurrentItem();
         if(curr==null)
             return;
+
         event.setCancelled(true);
         if(curr.equals(back)){
             new BukkitRunnable(){
-                @Override
                 public void run(){
                     view.close();
                     ((Player) event.getWhoClicked()).performCommand("collections");
                 }
             }.runTask(HoloItems.getInstance());
             return;
+        } else if(curr.equals(next)){
+            new BukkitRunnable(){
+                public void run(){
+                    view.close();
+                    ((Player) event.getWhoClicked()).performCommand("collections 1");
+                }
+            }.runTask(HoloItems.getInstance());
+            return;
         }
+
         if(event.getRawSlot()>=view.getTopInventory().getSize() || !view.getTitle().equals("Collections"))
             return;
-
         ItemMeta meta = curr.getItemMeta();
-        Collection collection = collections.get(meta.getDisplayName().substring(2));
-        Player player = (Player) event.getWhoClicked();
-
         List<String> lore = meta.getLore();
         if(lore==null)
             return;
+        Collection collection = collections.get(meta.getDisplayName().substring(2));
         boolean expand = lore.get(lore.size() - 1).contains(collection.theme);
+        Player player = (Player) event.getWhoClicked();
         Map<String, Integer> stat = collection.getStat(player);
         if(stat==null)
             return;
@@ -510,8 +539,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         }
 
         int cost = Utility.add(stat);
-        Inventory inv = Bukkit.createInventory(null,
-                ((collection.collection.size()-1)/9+1)*9, "Collections: "+collection.name);
+        Inventory inv = Bukkit.createInventory(null, ((collection.collection.size()-1)/9+1)*9, "Collections: "+collection.name);
         ItemStack locked = new ItemStack(Material.FIREWORK_STAR);
         int count = 0;
         for(Item item : collection.collection) {
@@ -533,8 +561,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
             }
             count++;
         }
-        inv.setItem(8, back);
-
+        inv.setItem(8, collection.getClass().getName().contains("stars") ? next : back);
         Utility.reOpen(view, inv, player);
     }
 

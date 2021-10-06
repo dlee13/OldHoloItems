@@ -40,7 +40,7 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
         super(name, material, quantity, lore, durability, stackable, shiny, cost);
         buy = new ItemStack(Material.MAP);
         ItemMeta meta = buy.getItemMeta();
-        meta.setDisplayName("§6Buy");
+        meta.setDisplayName("§fBuy");
         buy.setItemMeta(meta);
     }
 

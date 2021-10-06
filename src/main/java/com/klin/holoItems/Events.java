@@ -121,7 +121,6 @@ public class Events implements Listener {
                 put(enchantment, incompatible);
         }
     }};
-
     public static Set<Activatable> activatables = new HashSet<>();
 
     @EventHandler
@@ -158,8 +157,7 @@ public class Events implements Listener {
                         inv.setItem(2, no);
                         event.setCancelled(true);
                         return;
-                    }
-                    if((enchant.acceptedIds==null || !enchant.acceptedIds.contains(typeA)) &&
+                    } if((enchant.acceptedIds==null || !enchant.acceptedIds.contains(typeA)) &&
                             (enchant.acceptedTypes==null || !enchant.acceptedTypes.contains(itemA.getType()))){
                         ItemStack no = new ItemStack(Material.BARRIER);
                         ItemMeta noMeta = no.getItemMeta();
@@ -169,10 +167,15 @@ public class Events implements Listener {
                         event.setCancelled(true);
                         return;
                     }
-                    ((AnvilInventory) inv).setRepairCost(
-                            Math.min(39, enchant.expCost+ReflectionUtils.getRepairCost(itemA)));
+                    ((AnvilInventory) inv).setRepairCost(Math.min(39, enchant.expCost+ReflectionUtils.getRepairCost(itemA)));
                     ItemStack combined = Utility.addEnchant(itemA.clone(), enchant);
-                    if(typeA==null){
+                    if(player.getGameMode()!=GameMode.CREATIVE) {
+                        Set<Enchantment> incompatible = enchant.exclusive;
+                        for (Enchantment enchantment : combined.getEnchantments().keySet()) {
+                            if (incompatible.contains(enchantment))
+                                combined.removeEnchantment(enchantment);
+                        }
+                    } if(typeA==null){
                         ItemMeta meta = combined.getItemMeta();
                         if(meta instanceof Damageable) {
                             meta.setUnbreakable(true);
@@ -189,8 +192,7 @@ public class Events implements Listener {
                             meta.setLore(addDurability);
                             combined.setItemMeta(meta);
                         }
-                    }
-                    if(!combined.equals(curr)) {
+                    } if(!combined.equals(curr)) {
                         inv.setItem(2, combined);
                         event.setCancelled(true);
                     }
@@ -208,9 +210,20 @@ public class Events implements Listener {
                     int levelCost = 0;
                     boolean survival = player.getGameMode()!=GameMode.CREATIVE;
                     if(item.accepted != null) {
+                        String enchants = itemA.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+                        Set<Enchantment> excluded = new HashSet<>();
+                        if(enchants!=null){
+                            for(String id : enchants.split(" ")){
+                                Enchant enchant = Utility.findItem(id, Enchant.class);
+                                if(enchant!=null && enchant.exclusive!=null)
+                                    excluded.addAll(enchant.exclusive);
+                            }
+                        }
                         for (Enchantment enchant : enchantments.keySet()) {
                             if (item.accepted.contains(enchant)) {
                                 if(survival) {
+                                    if(excluded.contains(enchant))
+                                        continue;
                                     Set<Enchantment> incompatible = exclusive.get(enchant);
                                     for (Enchantment enchantment : combined.getEnchantments().keySet()) {
                                         if (incompatible.contains(enchantment))
@@ -227,8 +240,7 @@ public class Events implements Listener {
                                 levelCost += levelB * ((findMultiplier(enchant) + 1) / 2);
                             }
                         }
-                    }
-                    if(levelCost>0) {
+                    } if(levelCost>0) {
                         ItemMeta combinedMeta = combined.getItemMeta();
                         String renameText = ((AnvilInventory) inv).getRenameText();
                         String originalText = combinedMeta.getDisplayName().substring(2);
@@ -825,33 +837,6 @@ public class Events implements Listener {
                             inv.addItem(new ItemStack(bucket));
                         }
                     }.runTask(HoloItems.getInstance());
-                    //
-//                    event.setVelocity(new Vector(0, 1, 0));
-//                    new BukkitRunnable(){
-//                        public void run(){
-//                            ((Dispenser) state).getInventory().addItem(new ItemStack(bucket));
-//                            Set<Player> players = new HashSet<>();
-//                            boolean pickUp = true;
-//                            for(Entity entity : relative.getWorld().getNearbyEntities(relative.getLocation().add(0.5, 0.5, 0.5), 1, 1, 1)){
-//                                if(entity instanceof org.bukkit.entity.Item){
-//                                    org.bukkit.entity.Item item = (org.bukkit.entity.Item) entity;
-//                                    if(item.getItemStack().getType()==type) {
-//                                        item.remove();
-//                                        pickUp = false;
-//                                        break;
-//                                    }
-//                                }
-//                                else if(entity instanceof Player)
-//                                    players.add((Player) entity);
-//                            }
-//                            if(pickUp){
-//                                for(Player player : players) {
-//                                    if(player.getInventory().removeItem(item).isEmpty())
-//                                        break;
-//                                }
-//                            }
-//                        }
-//                    }.runTask(HoloItems.getInstance());
                     return;
                 }
 
@@ -963,17 +948,22 @@ public class Events implements Listener {
         //delayed isCancelled()
         Entity entity = event.getRightClicked();
         Player player = event.getPlayer();
-        Reactable reactable = Utility.findItem(entity, Reactable.class, player);
+        String id = entity.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+        Reactable reactable = Utility.findItem(id, Reactable.class, player);
         if(reactable!=null)
             reactable.ability(event);
 
-        if(event.isCancelled())
-            return;
         ItemStack item;
         if(event.getHand()==EquipmentSlot.HAND)
             item = player.getInventory().getItemInMainHand();
         else
             item = player.getInventory().getItemInOffHand();
+        Collection collection = Collections.collections.get(id);
+        if(collection!=null)
+            collection.inquire(player, item, event);
+
+        if(event.isCancelled())
+            return;
         Responsible responsible = Utility.findItem(item, Responsible.class, player);
         if(responsible!=null && responsible.ability(event, item))
             Utility.addDurability(item, -1, player);
@@ -1126,8 +1116,6 @@ public class Events implements Listener {
         if(!(entity instanceof LivingEntity))
             return;
         LivingEntity shooter = (LivingEntity) entity;
-//        if(event.isCancelled())
-//            return;
         EntityEquipment equipment = shooter.getEquipment();
         if(equipment==null)
             return;

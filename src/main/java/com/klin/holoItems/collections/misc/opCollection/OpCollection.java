@@ -19,6 +19,7 @@ public class OpCollection extends Collection {
         collection.add(new GalleryFrame());
         collection.add(new Payload());
         collection.add(new Falchion());
+        collection.add(new NameTag());
     }
 
     public Map<String, Integer> getStat(Player player){

@@ -1,6 +1,8 @@
 package com.klin.holoItems;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -21,4 +23,6 @@ public abstract class Collection {
     }
 
     public abstract Map<String, Integer> getStat(Player player);
+    public void request(){}
+    public void inquire(Player player, ItemStack itemStack, PlayerInteractEntityEvent event){}
 }
