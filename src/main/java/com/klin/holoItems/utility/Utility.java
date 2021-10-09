@@ -452,8 +452,7 @@ public class Utility {
                 item.setAmount(0);
                 return -1;
             }
-        }
-        else if(addend>0) {
+        } else if(addend>0) {
             if(total>durability[1]) {
                 durability[0] = durability[1];
                 total = (total - durability[1])/2;
@@ -462,8 +461,7 @@ public class Utility {
                 durability[0] = total;
                 total = 0;
             }
-        }
-        else
+        } else
             return (int) addend;
         String breaking = "§fDurability: "+durability[0]+"/"+durability[1];
         lore.set(lore.size()-1, breaking);

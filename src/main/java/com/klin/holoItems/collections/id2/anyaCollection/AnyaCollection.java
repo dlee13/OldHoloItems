@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.id2.anyaCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.id2.anyaCollection.items.UnlimitedKrisWorks;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -16,6 +17,7 @@ public class AnyaCollection extends Collection {
 
     public AnyaCollection(){
         super(name, desc, theme, base64);
+        collection.add(new UnlimitedKrisWorks());
     }
 
     public Map<String, Integer> getStat(Player player){

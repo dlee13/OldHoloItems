@@ -51,7 +51,8 @@ public class LunarLaser extends Enchant implements Interactable {
             Material.MAGENTA_STAINED_GLASS, Material.MAGENTA_STAINED_GLASS_PANE,
             Material.ORANGE_STAINED_GLASS, Material.ORANGE_STAINED_GLASS_PANE,
             Material.WHITE_STAINED_GLASS, Material.WHITE_STAINED_GLASS_PANE,
-            Material.BROWN_STAINED_GLASS, Material.BROWN_STAINED_GLASS_PANE
+            Material.BROWN_STAINED_GLASS, Material.BROWN_STAINED_GLASS_PANE,
+            Material.TINTED_GLASS
             ).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Enchantment> accepted = Stream.of(Enchantment.SILK_TOUCH, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
     public static final Set<String> acceptedIds = Stream.of(Comet.name, Splinter.name).collect(Collectors.toCollection(HashSet::new));
@@ -67,7 +68,7 @@ public class LunarLaser extends Enchant implements Interactable {
     private static final String lore =
             "Cut through glass";
     private static final int durability = 250;
-    private static final boolean shiny = true;
+    private static final boolean shiny = false;
     public static final int cost = 0;
 
     public LunarLaser(){

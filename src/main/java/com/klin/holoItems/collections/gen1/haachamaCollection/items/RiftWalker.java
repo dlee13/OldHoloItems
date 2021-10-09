@@ -91,7 +91,7 @@ public class RiftWalker extends BatteryPack {
                     }
                 };
             } else {
-                if (cooldown >= 8) {
+                if (cooldown>=8) {
                     if(((LivingEntity) player).isOnGround()){
                         container.remove(Utility.cooldown);
                         item.setItemMeta(meta);
@@ -123,8 +123,12 @@ public class RiftWalker extends BatteryPack {
         if(dir.getY()<0)
             block = loc.add(0, 1, 0).getBlock();
         dir.multiply(-1);
-        while (block!=null && (!block.isPassable() || !block.getRelative(BlockFace.UP).isPassable()))
+        int limit = 0;
+        while (block!=null && (!block.isPassable() || !block.getRelative(BlockFace.UP).isPassable())) {
             block = loc.add(dir).getBlock();
+            if(limit++>dist)
+                return;
+        }
         player.teleport(loc);
     }
 }

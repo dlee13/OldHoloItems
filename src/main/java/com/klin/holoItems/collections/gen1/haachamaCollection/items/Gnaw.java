@@ -3,10 +3,11 @@ package com.klin.holoItems.collections.gen1.haachamaCollection.items;
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.gen1.haachamaCollection.HaachamaCollection;
 import com.klin.holoItems.collections.misc.ingredientCollection.items.CoalPetal;
 import com.klin.holoItems.interfaces.Consumable;
 import com.klin.holoItems.utility.Utility;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,12 +18,15 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -90,6 +94,25 @@ public class Gnaw extends Item implements Consumable {
                 entity.setVelocity(loc.subtract(entity.getLocation()).toVector().normalize().setY(0).multiply(lure/3));
             else if(knockback!=0)
                 entity.setVelocity(food.getEyeLocation().subtract(loc).add(0, 1, 0).toVector().normalize().multiply(knockback));
+        }
+        int size = entities.size();
+        PlayerInventory inv = player.getInventory();
+        if(item.equals(inv.getItemInOffHand())){
+            if(Math.random()<(1f/(meta.getEnchantLevel(Enchantment.DURABILITY)+1))) {
+                List<String> lore = meta.getLore();
+                int[] durability = Utility.getDurability(lore);
+                durability[0] = durability[0] - size;
+                if (durability[0] <= 0)
+                    item.setAmount(0);
+                String breaking = "§fDurability: " + durability[0] + "/" + durability[1];
+                lore.set(lore.size() - 1, breaking);
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+                inv.setItemInOffHand(item);
+                Utility.addDurability(inv.getItemInMainHand(), (double) size / 2, player);
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(breaking));
+            } else
+                Utility.addDurability(inv.getItemInMainHand(), (double) size / 2, player);
         }
     }
 }

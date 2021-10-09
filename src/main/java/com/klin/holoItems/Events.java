@@ -4,6 +4,7 @@ import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
+import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
 import com.klin.holoItems.collections.gen2.shionCollection.items.SecretBrew;
 import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
@@ -637,16 +638,6 @@ public class Events implements Listener {
             if (Collections.disabled.contains(id))
                 return;
             Item generic = Collections.items.get(id);
-            //temp
-            if(generic==null) {
-                generic = Collections.items.get(id);
-                if(generic==null)
-                    return;
-                ItemMeta meta = item.getItemMeta();
-                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-                item.setItemMeta(meta);
-            }
-            //
             if (generic instanceof Afflictable)
                 ((Afflictable) generic).ability(event, item);
         }
@@ -721,16 +712,6 @@ public class Events implements Listener {
             return;
         }
         Item generic = Collections.items.get(id);
-        //temp
-        if(generic==null) {
-            generic = Collections.items.get(id);
-            if(generic==null)
-                return;
-            ItemMeta meta = item.getItemMeta();
-            meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-            item.setItemMeta(meta);
-        }
-        //
         if(generic instanceof Consumable)
             ((Consumable) generic).ability(event, item);
         else
@@ -751,19 +732,9 @@ public class Events implements Listener {
             String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             if (id!=null) {
                 //f0: reading glasses easter egg
-                if(id.equals("f0") && item.containsEnchantment(Enchantment.BINDING_CURSE) || Collections.disabled.contains(id))
+                if(id.equals(ReadingGlasses.name) && item.containsEnchantment(Enchantment.BINDING_CURSE) || Collections.disabled.contains(id))
                     continue;
                 Item generic = Collections.items.get(id);
-                //temp
-                if(generic==null) {
-                    generic = Collections.items.get(id);
-                    if(generic==null)
-                        return;
-                    ItemMeta meta = item.getItemMeta();
-                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-                    item.setItemMeta(meta);
-                }
-                //
                 if (generic instanceof Wearable)
                     ((Wearable) generic).ability(event, Utility.addDurability(item, -1, entity) == -1);
             }
@@ -868,16 +839,6 @@ public class Events implements Listener {
         if(Collections.disabled.contains(id))
             return;
         Item generic = Collections.items.get(id);
-        //temp
-        if(generic==null) {
-            generic = Collections.items.get(id);
-            if(generic==null)
-                return;
-            ItemMeta meta = item.getItemMeta();
-            meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-            item.setItemMeta(meta);
-        }
-        //
         if(generic instanceof Dispensable)
             ((Dispensable) generic).ability(event);
     }
@@ -926,16 +887,6 @@ public class Events implements Listener {
                     continue;
                 for (String enchantment : enchant.split(" ")) {
                     Item generic = Collections.items.get(enchantment);
-                    //temp
-                    if(generic==null) {
-                        generic = Collections.items.get(id);
-                        if(generic==null)
-                            return;
-                        ItemMeta meta = item.getItemMeta();
-                        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-                        item.setItemMeta(meta);
-                    }
-                    //
                     if (generic instanceof Extractable)
                         ((Extractable) generic).ability(event);
                 }
@@ -1073,16 +1024,6 @@ public class Events implements Listener {
                 player.sendMessage("§cThis item has been disabled");
             else {
                 Item generic = Collections.items.get(id);
-                //temp
-                if(generic==null) {
-                    generic = Collections.items.get(id);
-                    if(generic==null)
-                        return;
-                    ItemMeta meta = item.getItemMeta();
-                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-                    item.setItemMeta(meta);
-                }
-                //
                 if (generic instanceof Interactable)
                     ((Interactable) generic).ability(event, action);
             }
@@ -1092,16 +1033,6 @@ public class Events implements Listener {
                 if (Collections.disabled.contains(enchantment))
                     return;
                 Item generic = Collections.items.get(enchantment);
-                //temp
-                if(generic==null) {
-                    generic = Collections.items.get(id);
-                    if(generic==null)
-                        return;
-                    ItemMeta meta = item.getItemMeta();
-                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-                    item.setItemMeta(meta);
-                }
-                //
                 if (generic instanceof Interactable)
                     ((Interactable) generic).ability(event, action);
             }
@@ -1335,16 +1266,6 @@ public class Events implements Listener {
                 player.sendMessage("§cThis item has been disabled");
             else {
                 Item generic = Collections.items.get(id);
-                //temp
-                if(generic==null) {
-                    generic = Collections.items.get(id);
-                    if(generic==null)
-                        return;
-                    ItemMeta meta = item.getItemMeta();
-                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-                    item.setItemMeta(meta);
-                }
-                //
                 if (generic instanceof Togglable)
                     ((Togglable) generic).ability(event, item);
             }
@@ -1355,16 +1276,6 @@ public class Events implements Listener {
                     player.sendMessage("§cThis item has been disabled");
                 else {
                     Item generic = Collections.items.get(enchantment);
-                    //temp
-                    if(generic==null) {
-                        generic = Collections.items.get(id);
-                        if(generic==null)
-                            return;
-                        ItemMeta meta = item.getItemMeta();
-                        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, generic.name);
-                        item.setItemMeta(meta);
-                    }
-                    //
                     if (generic instanceof Togglable)
                         ((Togglable) generic).ability(event, item);
                 }

@@ -2,6 +2,7 @@ package com.klin.holoItems.collections.gen0.suiseiCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
+import com.klin.holoItems.collections.holoCouncil.SanaCollection.items.SpaceBreadSplash;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
@@ -142,7 +143,7 @@ public class Comet extends Item implements Interactable {
             Utility.addDurability(item, -1, player);
 
         String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-        boolean bread = enchant!=null && enchant.contains("spaceBreadSplash");
+        boolean bread = enchant!=null && enchant.contains(SpaceBreadSplash.name);
         double height = player.getLocation().getY();
         new Task(HoloItems.getInstance(), 1, 1){
             double increment = 0;

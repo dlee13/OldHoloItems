@@ -46,7 +46,6 @@ public class RolledNewspaper extends Item implements Responsible {
         Entity player = event.getRightClicked();
         if(!(player instanceof Player))
             return false;
-
         ((Player) player).damage(0.1);
         return true;
     }
