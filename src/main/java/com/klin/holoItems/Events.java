@@ -171,10 +171,11 @@ public class Events implements Listener {
                     ((AnvilInventory) inv).setRepairCost(Math.min(39, enchant.expCost+ReflectionUtils.getRepairCost(itemA)));
                     ItemStack combined = Utility.addEnchant(itemA.clone(), enchant);
                     if(player.getGameMode()!=GameMode.CREATIVE) {
-                        Set<Enchantment> incompatible = enchant.exclusive;
-                        for (Enchantment enchantment : combined.getEnchantments().keySet()) {
-                            if (incompatible.contains(enchantment))
-                                combined.removeEnchantment(enchantment);
+                        if(enchant.exclusive!=null) {
+                            for (Enchantment enchantment : combined.getEnchantments().keySet()) {
+                                if (enchant.exclusive.contains(enchantment))
+                                    combined.removeEnchantment(enchantment);
+                            }
                         }
                     } if(typeA==null){
                         ItemMeta meta = combined.getItemMeta();
@@ -226,9 +227,11 @@ public class Events implements Listener {
                                     if(excluded.contains(enchant))
                                         continue;
                                     Set<Enchantment> incompatible = exclusive.get(enchant);
-                                    for (Enchantment enchantment : combined.getEnchantments().keySet()) {
-                                        if (incompatible.contains(enchantment))
-                                            combined.removeEnchantment(enchantment);
+                                    if(incompatible!=null) {
+                                        for (Enchantment enchantment : combined.getEnchantments().keySet()) {
+                                            if (incompatible.contains(enchantment))
+                                                combined.removeEnchantment(enchantment);
+                                        }
                                     }
                                 }
                                 int levelA = combined.getItemMeta().getEnchantLevel(enchant);
