@@ -57,11 +57,9 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
     public void ability(PlayerInteractEntityEvent event){
         if(!(event.getRightClicked() instanceof ItemFrame))
             return;
-        Player player = event.getPlayer();
-        if(!player.hasPermission("holoItems.op"))
-            event.setCancelled(true);
         ItemFrame itemFrame = (ItemFrame) event.getRightClicked();
         ItemStack framedItem = itemFrame.getItem();
+        Player player = event.getPlayer();
         if(framedItem.getType()==Material.AIR) {
             ItemStack item;
             PlayerInventory playerInv = player.getInventory();
