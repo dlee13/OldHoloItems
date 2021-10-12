@@ -55,7 +55,7 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable,
 
         ItemStack written = item.clone();
         written.setType(Material.WRITTEN_BOOK);
-        for(int i=1; i<=9; i++){
+        for(int i=2; i<=9; i++){
             ShapelessRecipe combine = new ShapelessRecipe(new NamespacedKey(HoloItems.getInstance(), name+i), written);
             combine.addIngredient(i, Material.WRITTEN_BOOK);
             combine.setGroup(name);

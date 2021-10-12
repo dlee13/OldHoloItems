@@ -302,24 +302,32 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                 if(args.length<3)
                     return false;
                 try {
+                    Player temp;
+                    if(args.length>3) {
+                        temp = Bukkit.getPlayer(args[3]);
+                        if(temp==null) {
+                            player.sendMessage("Unknown player");
+                            return true;
+                        }
+                    } else temp = player;
                     Statistic stat = Statistic.valueOf(args[0].toUpperCase());
                     switch(stat.getType()){
                         case ITEM:
                         case BLOCK:
                             Material type = Material.valueOf(args[1].toUpperCase());
                             int i = Integer.parseInt(args[2]);
-                            player.setStatistic(stat, type, i);
+                            temp.setStatistic(stat, type, i);
                             player.sendMessage(stat+":"+type+" set to "+i);
                             break;
                         case ENTITY:
                             EntityType entity = EntityType.valueOf(args[1].toUpperCase());
                             int j = Integer.parseInt(args[2]);
-                            player.setStatistic(stat, entity, j);
+                            temp.setStatistic(stat, entity, j);
                             player.sendMessage(stat+":"+entity+" set to "+j);
                             break;
                         case UNTYPED:
                             int k = Integer.parseInt(args[1]);
-                            player.setStatistic(stat, k);
+                            temp.setStatistic(stat, k);
                             player.sendMessage(stat+" set to "+k);
                     }
                 }
