@@ -26,7 +26,7 @@ public class Starch extends Item implements Brewable, Consumable {
     public static final String name = "starch";
 
     private static final Material material = Material.SUGAR;
-    private static final int quantity = 1;
+    private static final int quantity = 2;
     private static final String lore =
             "Brew into sake";
     private static final int durability = 0;
@@ -41,7 +41,7 @@ public class Starch extends Item implements Brewable, Consumable {
     public void registerRecipes() {
         ShapelessRecipe recipe =
                 new ShapelessRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.addIngredient(Material.AZURE_BLUET);
+        recipe.addIngredient(2, Material.AZURE_BLUET);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

@@ -63,16 +63,16 @@ public class FrostLayer extends BatteryPack implements Placeable {
                 get(Utility.pack, PersistentDataType.INTEGER);
         if(currCharge==null || currCharge==0)
             return;
-        if(event.getPlayer().getGameMode()!=GameMode.CREATIVE) {
-            meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, 0);
-            item.setItemMeta(meta);
-        }
         Block start = event.getBlockAgainst();
         Material material = item.getType();
         if(material==Material.SNOW)
             material = Material.SNOW_BLOCK;
         if(start.getType()!=material)
             return;
+        if(event.getPlayer().getGameMode()!=GameMode.CREATIVE) {
+            meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, 0);
+            item.setItemMeta(meta);
+        }
 
         Queue<Block> platform = new LinkedList<>();
         Set<Block> checked = new HashSet<>();
