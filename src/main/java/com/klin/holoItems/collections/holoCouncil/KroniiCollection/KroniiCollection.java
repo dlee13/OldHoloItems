@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.holoCouncil.KroniiCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.holoCouncil.KroniiCollection.items.Timefall;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -15,6 +16,7 @@ public class KroniiCollection extends Collection {
 
     public KroniiCollection(){
         super(name, desc, theme, base64);
+        collection.add(new Timefall());
     }
 
     public Map<String, Integer> getStat(Player player){

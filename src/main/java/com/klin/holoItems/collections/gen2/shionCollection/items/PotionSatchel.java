@@ -68,9 +68,13 @@ public class PotionSatchel extends Pack {
                 continue;
             Material material = content.getType();
             ItemMeta meta = content.getItemMeta();
-            String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            if(!(meta instanceof PotionMeta)){
+                world.dropItemNaturally(loc, content);
+                continue;
+            }
             PotionData potData = ((PotionMeta) meta).getBasePotionData();
             PotionType type = potData.getType();
+            String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             boolean drop = id != null && !(Collections.items.get(id) instanceof Mixable) || type==PotionType.UNCRAFTABLE;
             if(material!=Material.SPLASH_POTION && material!=Material.LINGERING_POTION || drop) {
                 world.dropItemNaturally(loc, content);

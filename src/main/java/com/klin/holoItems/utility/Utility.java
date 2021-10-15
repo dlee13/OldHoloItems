@@ -49,22 +49,19 @@ public class Utility {
             BlockFace.NORTH, new Vector(0, 0, -1),
             BlockFace.SOUTH, new Vector(0, 0, 1),
             BlockFace.EAST, new Vector(1, 0, 0),
-            BlockFace.WEST, new Vector(-1, 0, 0)
-    );
+            BlockFace.WEST, new Vector(-1, 0, 0));
     public static final Map<BlockFace, BlockFace> left = Map.of(
             BlockFace.NORTH, BlockFace.WEST,
             BlockFace.SOUTH, BlockFace.EAST,
             BlockFace.EAST, BlockFace.NORTH,
-            BlockFace.WEST, BlockFace.SOUTH
-    );
+            BlockFace.WEST, BlockFace.SOUTH);
     public static final Map<BlockFace, BlockFace> opposites = Map.of(
             BlockFace.UP, BlockFace.DOWN,
             BlockFace.DOWN, BlockFace.UP,
             BlockFace.NORTH, BlockFace.SOUTH,
             BlockFace.SOUTH, BlockFace.NORTH,
             BlockFace.EAST, BlockFace.WEST,
-            BlockFace.WEST, BlockFace.EAST
-    );
+            BlockFace.WEST, BlockFace.EAST);
     public static final Set<Material> boots = Set.of(LEATHER_BOOTS, IRON_BOOTS, CHAINMAIL_BOOTS, GOLDEN_BOOTS, DIAMOND_BOOTS, NETHERITE_BOOTS);
     public static final Set<Enchantment> enchantedBoots = Set.of(Enchantment.PROTECTION_EXPLOSIONS, Enchantment.DEPTH_STRIDER, Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_FIRE, Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.SOUL_SPEED, Enchantment.THORNS, Enchantment.DURABILITY);
     public static final Set<Material> fences = Set.of(Material.ACACIA_FENCE, Material.BIRCH_FENCE, Material.OAK_FENCE, Material.DARK_OAK_FENCE, Material.CRIMSON_FENCE, Material.JUNGLE_FENCE, Material.NETHER_BRICK_FENCE, Material.SPRUCE_FENCE, Material.WARPED_FENCE, Material.CHAIN, Material.IRON_BARS, Material.GLASS_PANE, Material.BLACK_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE, Material.GREEN_STAINED_GLASS_PANE, Material.BLUE_STAINED_GLASS_PANE, Material.PURPLE_STAINED_GLASS_PANE, Material.CYAN_STAINED_GLASS_PANE, Material.LIGHT_GRAY_STAINED_GLASS_PANE, Material.GRAY_STAINED_GLASS_PANE, Material.PINK_STAINED_GLASS_PANE, Material.LIME_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.MAGENTA_STAINED_GLASS_PANE, Material.ORANGE_STAINED_GLASS_PANE, Material.WHITE_STAINED_GLASS_PANE, Material.BROWN_STAINED_GLASS_PANE, Material.COBBLESTONE_WALL, Material.MOSSY_COBBLESTONE_WALL,  Material.STONE_BRICK_WALL, Material.MOSSY_STONE_BRICK_WALL, Material.ANDESITE_WALL, Material.DIORITE_WALL, Material.GRANITE_WALL, Material.SANDSTONE_WALL, Material.RED_SANDSTONE_WALL, Material.BRICK_WALL, Material.PRISMARINE_WALL, Material.NETHER_BRICK_WALL, Material.RED_NETHER_BRICK_WALL, Material.END_STONE_BRICK_WALL, Material.BLACKSTONE_WALL, Material.POLISHED_BLACKSTONE_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL);
@@ -79,15 +76,13 @@ public class Utility {
         put(POTATO, POTATOES);
         put(NETHER_WART, NETHER_WART);
         put(CHORUS_FLOWER, CHORUS_FLOWER);
-        put(WHEAT_SEEDS, WHEAT);
-    }};
+        put(WHEAT_SEEDS, WHEAT); }};
     public static final Map<Material, Material> sowable = new LinkedHashMap<>() {{
         put(BEETROOTS, BEETROOT_SEEDS);
         put(CARROTS, CARROT);
         put(POTATOES, POTATO);
         put(NETHER_WART, NETHER_WART);
-        put(WHEAT, WHEAT_SEEDS);
-    }};
+        put(WHEAT, WHEAT_SEEDS); }};
     public static final Set<Material> axes = Set.of(DIAMOND_AXE, GOLDEN_AXE, IRON_AXE, STONE_AXE, NETHERITE_AXE, WOODEN_AXE);
     public static final Set<Material> hoes = Set.of(DIAMOND_HOE, GOLDEN_HOE, IRON_HOE, STONE_HOE, NETHERITE_HOE, WOODEN_HOE);
     public static final Set<Material> pickaxes = Set.of(DIAMOND_PICKAXE, GOLDEN_PICKAXE, IRON_PICKAXE, STONE_PICKAXE, NETHERITE_PICKAXE, WOODEN_PICKAXE);
@@ -101,8 +96,7 @@ public class Utility {
             add(CRIMSON_NYLIUM);
             add(WARPED_NYLIUM);
             add(SOUL_SOIL);
-        }});
-    }};
+        }}); }};
     public static final Map<PotionType, Integer> durations = new HashMap<>() {{
         put(PotionType.FIRE_RESISTANCE, 3600);
         put(PotionType.INSTANT_DAMAGE, 0);
@@ -119,8 +113,7 @@ public class Utility {
         put(PotionType.STRENGTH, 3600);
         put(PotionType.TURTLE_MASTER, 400);
         put(PotionType.WATER_BREATHING, 3600);
-        put(PotionType.WEAKNESS, 1800);
-    }};
+        put(PotionType.WEAKNESS, 1800); }};
     public static final HashMap<DyeColor, Set<Material>> colors = new HashMap<>(){{
         put(DyeColor.BLACK, Stream.of(/*BLACK_BED, BLACK_CARPET,*/ BLACK_CONCRETE/*, BLACK_CONCRETE_POWDER*/, BLACK_GLAZED_TERRACOTTA/*, BLACK_SHULKER_BOX*/, BLACK_STAINED_GLASS, BLACK_STAINED_GLASS_PANE, BLACK_TERRACOTTA, BLACK_WOOL, BLACKSTONE, BLACKSTONE_SLAB, BLACKSTONE_STAIRS, BLACKSTONE_WALL, COAL_BLOCK, CHISELED_POLISHED_BLACKSTONE, CRACKED_POLISHED_BLACKSTONE_BRICKS, GILDED_BLACKSTONE, OBSIDIAN, POLISHED_BLACKSTONE, POLISHED_BLACKSTONE_BRICK_SLAB, POLISHED_BLACKSTONE_BRICK_STAIRS, POLISHED_BLACKSTONE_BRICK_WALL, POLISHED_BLACKSTONE_BRICKS/*, POLISHED_BLACKSTONE_PRESSURE_PLATE*/, POLISHED_BLACKSTONE_SLAB, POLISHED_BLACKSTONE_STAIRS, POLISHED_BLACKSTONE_WALL).collect(Collectors.toSet()));
         put(DyeColor.GRAY, Stream.of(ANDESITE, BASALT, NETHERITE_BLOCK, COBBLESTONE, COBBLESTONE_SLAB, COBBLESTONE_STAIRS/*, GRAY_BED, GRAY_CARPET*/, GRAY_CONCRETE/*, GRAY_CONCRETE_POWDER*/, GRAY_GLAZED_TERRACOTTA/*, GRAY_SHULKER_BOX*/, GRAY_STAINED_GLASS, GRAY_STAINED_GLASS_PANE, GRAY_TERRACOTTA, GRAY_WOOL, POLISHED_ANDESITE, POLISHED_BASALT, TUFF).collect(Collectors.toSet()));
@@ -137,9 +130,7 @@ public class Utility {
         put(DyeColor.CYAN, Stream.of(/*CYAN_BED, CYAN_CARPET,*/ CYAN_CONCRETE/*, CYAN_CONCRETE_POWDER*/, CYAN_GLAZED_TERRACOTTA/*, CYAN_SHULKER_BOX*/, CYAN_STAINED_GLASS, CYAN_STAINED_GLASS_PANE, CYAN_TERRACOTTA, CYAN_WOOL, DARK_PRISMARINE, DARK_PRISMARINE_SLAB, DARK_PRISMARINE_STAIRS, PRISMARINE, PRISMARINE_BRICK_SLAB, PRISMARINE_BRICK_STAIRS, PRISMARINE_BRICKS, PRISMARINE_STAIRS, PRISMARINE_WALL, STRIPPED_WARPED_HYPHAE, STRIPPED_WARPED_STEM, WARPED_PLANKS/*, WARPED_PRESSURE_PLATE*/, WARPED_SLAB, WARPED_STAIRS, WARPED_STEM, WARPED_WART_BLOCK).collect(Collectors.toSet()));
         put(DyeColor.GREEN, Stream.of(EMERALD_BLOCK/*, GREEN_BED, GREEN_CARPET*/, GREEN_CONCRETE/*, GREEN_CONCRETE_POWDER*/, GREEN_GLAZED_TERRACOTTA/*, GREEN_SHULKER_BOX*/, GREEN_STAINED_GLASS, GREEN_STAINED_GLASS_PANE, GREEN_TERRACOTTA, GREEN_WOOL, MOSS_BLOCK/*, MOSS_CARPET*/).collect(Collectors.toSet()));
         put(DyeColor.LIME, Stream.of(/*LIME_BED, LIME_CARPET,*/ LIME_CONCRETE/*, LIME_CONCRETE_POWDER*/, LIME_GLAZED_TERRACOTTA/*, LIME_SHULKER_BOX*/, LIME_STAINED_GLASS, LIME_STAINED_GLASS_PANE, LIME_TERRACOTTA, LIME_WOOL, SLIME_BLOCK).collect(Collectors.toSet()));
-        put(DyeColor.BROWN, Stream.of(ANCIENT_DEBRIS/*, BROWN_BED, BROWN_CARPET*/, BROWN_CONCRETE/*, BROWN_CONCRETE_POWDER*/, BROWN_GLAZED_TERRACOTTA, BROWN_MUSHROOM_BLOCK/*, BROWN_SHULKER_BOX*/, BROWN_STAINED_GLASS, BROWN_STAINED_GLASS_PANE, BROWN_TERRACOTTA, BROWN_WOOL, COARSE_DIRT, DIRT, PODZOL, ROOTED_DIRT).collect(Collectors.toSet()));
-    }};
-
+        put(DyeColor.BROWN, Stream.of(ANCIENT_DEBRIS/*, BROWN_BED, BROWN_CARPET*/, BROWN_CONCRETE/*, BROWN_CONCRETE_POWDER*/, BROWN_GLAZED_TERRACOTTA, BROWN_MUSHROOM_BLOCK/*, BROWN_SHULKER_BOX*/, BROWN_STAINED_GLASS, BROWN_STAINED_GLASS_PANE, BROWN_TERRACOTTA, BROWN_WOOL, COARSE_DIRT, DIRT, PODZOL, ROOTED_DIRT).collect(Collectors.toSet())); }};
     public static boolean test = false;
 
     public static <T> T findItem(ItemStack item, Class<T> cls){

@@ -246,13 +246,6 @@ public class Events implements Listener {
                         }
                     } if(levelCost>0) {
                         ItemMeta combinedMeta = combined.getItemMeta();
-                        String renameText = ((AnvilInventory) inv).getRenameText();
-                        String originalText = combinedMeta.getDisplayName().substring(2);
-                        if (renameText != null && !renameText.trim().isEmpty() &&
-                                !renameText.equals(originalText)) {
-                            combinedMeta.setDisplayName("§6" + renameText);
-                            levelCost++;
-                        }
                         List<String> lore = combinedMeta.getLore();
                         if(lore!=null && !lore.isEmpty() && lore.get(0).startsWith("§b")){
                             lore.add(0, "");
