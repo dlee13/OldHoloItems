@@ -1031,11 +1031,18 @@ public class Events implements Listener {
         //no isCancelled()
         InventoryView view = event.getView();
         Inventory inv = view.getTopInventory();
-        if(inv.getHolder()!=null)
+        if(inv.getHolder()!=null) {
+            Player player = (Player) event.getPlayer();
+            Closeable closeable = Utility.findItem(player.getInventory().getItemInOffHand(), Closeable.class, player);
+            if(closeable instanceof Holdable)
+                closeable.ability(event);
             return;
+        }
 
         if(view.getTitle().equals("Price")){
-            (new GalleryFrame()).ability(event);
+            Item item = Collections.items.get(GalleryFrame.name);
+            if(item instanceof GalleryFrame)
+                ((GalleryFrame) item).ability(event);
             return;
         }
 
@@ -1094,51 +1101,17 @@ public class Events implements Listener {
     public void placeAbility(BlockPlaceEvent event){
         if(event.isCancelled())
             return;
+        Player player = event.getPlayer();
         ItemStack item = event.getItemInHand();
-        if(item.getItemMeta()==null)
-            return;
-        ItemMeta meta = item.getItemMeta();
-        String id = meta.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if(id==null) {
-            Block block = event.getBlock();
-            Material type = block.getType();
-            if(!meta.hasDisplayName() || !Utility.fences.contains(block.getType()) && type!=IRON_TRAPDOOR)
-                return;
-            String data = block.getBlockData().getAsString();
-            for(String modifier : meta.getDisplayName().split(" ")){
-                int set = modifier.indexOf("=");
-                if(0>set){
-                    event.getPlayer().sendMessage("§7Invalid arguments: §f"+data.substring(
-                            data.indexOf("[")+1, data.length()-1).replaceAll(",", " "));
-                    return;
-                }
-                int index = data.indexOf(modifier.substring(0, set));
-                if(index>-1){
-                    String half = data.substring(index);
-                    int space = half.indexOf(",");
-                    data = data.substring(0, index)+modifier+(space>-1?half.substring(space):"]");
-                }
-                else{
-                    event.getPlayer().sendMessage("§7Invalid arguments: §f"+data.substring(
-                            data.indexOf("[")+1, data.length()-1).replaceAll(",", " "));
-                    return;
-                }
-            }
-            try {
-                block.setBlockData(Bukkit.createBlockData(data));
-            } catch (IllegalArgumentException ignore) {
-                event.getPlayer().sendMessage("§7Invalid arguments: §f"+data.substring(
-                        data.indexOf("[")+1, data.length()-1).replaceAll(",", " "));
-            }
-            return;
-        }
-        event.setCancelled(true);
-        if (Collections.disabled.contains(id))
-            event.getPlayer().sendMessage("§cThis item has been disabled");
-        else {
-            Item generic = Collections.items.get(id);
-            if (generic instanceof Placeable)
-                ((Placeable) generic).ability(event);
+        Placeable placeable = Utility.findItem(item, Placeable.class, player);
+        if(placeable!=null) {
+            event.setCancelled(true);
+            if(!(placeable instanceof Holdable))
+                placeable.ability(event);
+        } if(item.getType()!=AIR) {
+            placeable = Utility.findItem(player.getInventory().getItemInOffHand(), Placeable.class, player);
+            if (placeable instanceof Holdable)
+                placeable.ability(event);
         }
     }
 

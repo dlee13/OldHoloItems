@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.misc.achanCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.misc.achanCollection.items.ShoulderBagStrap;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -16,6 +17,7 @@ public class AchanCollection extends Collection {
 
     public AchanCollection(){
         super(name, desc, theme, base64);
+        collection.add(new ShoulderBagStrap());
     }
 
     public Map<String, Integer> getStat(Player player){
