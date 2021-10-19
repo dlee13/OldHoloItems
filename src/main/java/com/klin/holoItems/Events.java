@@ -1103,13 +1103,13 @@ public class Events implements Listener {
             return;
         Player player = event.getPlayer();
         ItemStack item = event.getItemInHand();
-        Placeable placeable = Utility.findItem(item, Placeable.class, player);
-        if(placeable!=null) {
+        Item generic = Utility.findItem(item, Item.class, player);
+        if(generic!=null) {
             event.setCancelled(true);
-            if(!(placeable instanceof Holdable))
-                placeable.ability(event);
+            if(generic instanceof Placeable && !(generic instanceof Holdable))
+                ((Placeable) generic).ability(event);
         } if(item.getType()!=AIR) {
-            placeable = Utility.findItem(player.getInventory().getItemInOffHand(), Placeable.class, player);
+            Placeable placeable = Utility.findItem(player.getInventory().getItemInOffHand(), Placeable.class, player);
             if (placeable instanceof Holdable)
                 placeable.ability(event);
         }

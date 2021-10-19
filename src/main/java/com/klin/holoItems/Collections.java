@@ -87,6 +87,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class Collections implements CommandExecutor, Listener, TabCompleter {
     public static Map<String, Collection> collections = new LinkedHashMap<>();
@@ -252,7 +253,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                 return true;
 
             case "acquire":
-                if(!player.isOp() && player.getGameMode()!=GameMode.CREATIVE || args.length<1) {
+                if(!player.hasPermission("holoItems.op") && player.getGameMode()!=GameMode.CREATIVE || args.length<1) {
                     String list = "";
                     for(Collection collection : collections.values()){
                         if(collection.collection.isEmpty() || collection.base64==null)
@@ -577,7 +578,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
     public List<String> onTabComplete (CommandSender sender, Command cmd, String label, String[] args){
         if(cmd.getName().equals("acquire") && sender instanceof Player && args.length==1) {
             List<String> list = new ArrayList<>(items.keySet());
-            list.removeIf(name -> !name.startsWith(args[0]));
+            list.removeIf(name -> !Pattern.compile(Pattern.quote(args[0]), Pattern.CASE_INSENSITIVE).matcher(name).find());
             return list;
         }
         return new ArrayList<>();
