@@ -22,6 +22,7 @@ public class FranCollection extends Collection {
         collection.add(new SlimeJelly());
         collection.add(new DyeConcentrate());
         collection.add(new SharpenedFangs());
+        collection.add(new NinjaCloak());
     }
 
     public Map<String, Integer> getStat(Player player){

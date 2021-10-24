@@ -28,7 +28,7 @@ public class TimeLapse extends Item implements Interactable {
             "container to their raw forms";
     private static final int durability = 0;
     public static final boolean stackable = false;
-    private static final boolean shiny = false;
+    private static final boolean shiny = true;
     public static final int cost = 0;
 
     public TimeLapse(){
@@ -36,10 +36,15 @@ public class TimeLapse extends Item implements Interactable {
     }
 
     public void registerRecipes(){
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§6Time Lapse§mronii");
+        item.setItemMeta(meta);
+
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape(" a ","aba"," a ");
-        recipe.setIngredient('a', Material.GOLD_INGOT);
-        recipe.setIngredient('b', Material.BLAST_FURNACE);
+        recipe.shape("aba","bcb","aba");
+        recipe.setIngredient('a', Material.CLOCK);
+        recipe.setIngredient('b', Material.COPPER_BLOCK);
+        recipe.setIngredient('c', Material.BLAST_FURNACE);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }
@@ -54,11 +59,8 @@ public class TimeLapse extends Item implements Interactable {
         Container container = (Container) state;
         Map<ItemStack, Material> metals = Map.of(
                 new ItemStack(Material.IRON_INGOT), Material.RAW_IRON,
-                new ItemStack(Material.IRON_BLOCK), Material.RAW_IRON_BLOCK,
                 new ItemStack(Material.GOLD_INGOT), Material.RAW_GOLD,
-                new ItemStack(Material.GOLD_BLOCK), Material.RAW_GOLD_BLOCK,
                 new ItemStack(Material.COPPER_INGOT), Material.RAW_COPPER,
-                new ItemStack(Material.COPPER_BLOCK), Material.RAW_COPPER_BLOCK,
                 new ItemStack(Material.NETHERITE_SCRAP), Material.ANCIENT_DEBRIS
         );
         boolean consume = false;
