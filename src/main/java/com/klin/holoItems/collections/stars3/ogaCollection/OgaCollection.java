@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.stars3.ogaCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.stars3.ogaCollection.items.DemonAura;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -15,6 +16,7 @@ public class OgaCollection extends Collection {
 
     public OgaCollection(){
         super(name, desc, theme, base64);
+        collection.add(new DemonAura());
     }
 
     public Map<String, Integer> getStat(Player player){

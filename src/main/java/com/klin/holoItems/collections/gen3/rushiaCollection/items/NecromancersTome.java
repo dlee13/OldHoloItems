@@ -1,10 +1,9 @@
 package com.klin.holoItems.collections.gen3.rushiaCollection.items;
 
+import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.interfaces.Defensible;
 import com.klin.holoItems.interfaces.Perishable;
-import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.gen3.rushiaCollection.RushiaCollection;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -15,6 +14,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -28,15 +28,14 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class NecromancersTome extends Pack implements Perishable, Defensible {
     public static final String name = "necromancersTome";
-    public static final Set<Enchantment> accepted = new HashSet<Enchantment>(){{
-        add(Enchantment.MENDING);
-    }};
+    private final Set<EntityType> prohibited;
+    private final Map<Player, LivingEntity> raised;
+    public static final Set<Enchantment> accepted = Set.of(Enchantment.MENDING);
 
     private static final Material material = Material.SHIELD;
     private static final String lore =
@@ -50,10 +49,18 @@ public class NecromancersTome extends Pack implements Perishable, Defensible {
     public static final boolean display = true;
     public static final int cost = -1;
 
-    private static Map<Player, LivingEntity> raised = new HashMap<>();
-
     public NecromancersTome(){
         super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
+        prohibited = Set.of(
+            EntityType.GHAST,
+            EntityType.GIANT,
+            EntityType.SNOWMAN,
+            EntityType.IRON_GOLEM,
+            EntityType.ELDER_GUARDIAN,
+            EntityType.WITHER,
+            EntityType.ENDER_DRAGON,
+            EntityType.RAVAGER);
+        raised = new HashMap<>();
 
         Pattern[] patterns = new Pattern[]{
                 new Pattern(DyeColor.BLACK, PatternType.BORDER),
@@ -211,6 +218,30 @@ public class NecromancersTome extends Pack implements Perishable, Defensible {
         }
         else
             Utility.cooldown(shield, 40);
+    }
+
+    public void ability(EntityDeathEvent event, ItemStack item, int slot, Player player){
+        EntityType type = event.getEntity().getType();
+        if(prohibited.contains(type))
+            return;
+        ItemMeta meta = item.getItemMeta();
+        String souls = meta.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
+        if(souls==null)
+            souls = "";
+        else {
+            String[] captured = souls.split(" ");
+            //magic number: capacity = 5
+            if(captured.length>=5) {
+                souls = "";
+                for(int i=0; i<4; i++)
+                    souls += " " + captured[i];
+            }
+            else
+                souls = " " + souls;
+        }
+        souls = type + souls;
+        meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, souls);
+        item.setItemMeta(meta);
     }
 
     public void ability(EntityDamageByEntityEvent event){

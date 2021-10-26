@@ -62,7 +62,16 @@ public class Utility {
             BlockFace.SOUTH, BlockFace.NORTH,
             BlockFace.EAST, BlockFace.WEST,
             BlockFace.WEST, BlockFace.EAST);
+    public static final Set<Material> helmets = Set.of(LEATHER_HELMET, IRON_HELMET, CHAINMAIL_HELMET, GOLDEN_HELMET, DIAMOND_HELMET, NETHERITE_HELMET);
+    public static final Set<Material> chestplates = Set.of(LEATHER_CHESTPLATE, IRON_CHESTPLATE, CHAINMAIL_CHESTPLATE, GOLDEN_CHESTPLATE, DIAMOND_CHESTPLATE, NETHERITE_CHESTPLATE);
+    public static final Set<Material> leggings = Set.of(LEATHER_LEGGINGS, IRON_LEGGINGS, CHAINMAIL_LEGGINGS, GOLDEN_LEGGINGS, DIAMOND_LEGGINGS, NETHERITE_LEGGINGS);
     public static final Set<Material> boots = Set.of(LEATHER_BOOTS, IRON_BOOTS, CHAINMAIL_BOOTS, GOLDEN_BOOTS, DIAMOND_BOOTS, NETHERITE_BOOTS);
+    public static final Set<Material> armor = new HashSet<>(){{
+        addAll(Utility.helmets);
+        addAll(Utility.chestplates);
+        addAll(Utility.leggings);
+        addAll(Utility.boots);
+    }};
     public static final Set<Enchantment> enchantedBoots = Set.of(Enchantment.PROTECTION_EXPLOSIONS, Enchantment.DEPTH_STRIDER, Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_FIRE, Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.SOUL_SPEED, Enchantment.THORNS, Enchantment.DURABILITY);
     public static final Set<Material> fences = Set.of(Material.ACACIA_FENCE, Material.BIRCH_FENCE, Material.OAK_FENCE, Material.DARK_OAK_FENCE, Material.CRIMSON_FENCE, Material.JUNGLE_FENCE, Material.NETHER_BRICK_FENCE, Material.SPRUCE_FENCE, Material.WARPED_FENCE, Material.CHAIN, Material.IRON_BARS, Material.GLASS_PANE, Material.BLACK_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE, Material.GREEN_STAINED_GLASS_PANE, Material.BLUE_STAINED_GLASS_PANE, Material.PURPLE_STAINED_GLASS_PANE, Material.CYAN_STAINED_GLASS_PANE, Material.LIGHT_GRAY_STAINED_GLASS_PANE, Material.GRAY_STAINED_GLASS_PANE, Material.PINK_STAINED_GLASS_PANE, Material.LIME_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.MAGENTA_STAINED_GLASS_PANE, Material.ORANGE_STAINED_GLASS_PANE, Material.WHITE_STAINED_GLASS_PANE, Material.BROWN_STAINED_GLASS_PANE, Material.COBBLESTONE_WALL, Material.MOSSY_COBBLESTONE_WALL,  Material.STONE_BRICK_WALL, Material.MOSSY_STONE_BRICK_WALL, Material.ANDESITE_WALL, Material.DIORITE_WALL, Material.GRANITE_WALL, Material.SANDSTONE_WALL, Material.RED_SANDSTONE_WALL, Material.BRICK_WALL, Material.PRISMARINE_WALL, Material.NETHER_BRICK_WALL, Material.RED_NETHER_BRICK_WALL, Material.END_STONE_BRICK_WALL, Material.BLACKSTONE_WALL, Material.POLISHED_BLACKSTONE_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL);
     public static final Set<Material> flowers = Set.of(RED_MUSHROOM, BROWN_MUSHROOM, DANDELION, POPPY, BLUE_ORCHID, ALLIUM, AZURE_BLUET, RED_TULIP, ORANGE_TULIP, WHITE_TULIP, PINK_TULIP, OXEYE_DAISY, CORNFLOWER, LILY_OF_THE_VALLEY, WITHER_ROSE);

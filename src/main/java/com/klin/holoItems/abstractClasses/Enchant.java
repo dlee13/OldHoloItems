@@ -30,4 +30,12 @@ public abstract class Enchant extends Item {
         this.exclusive = exclusive;
         this.expCost = expCost;
     }
+
+    public Enchant(String name, Material material, String lore, int durability, boolean shiny, int cost, Set<String> acceptedIds, Set<Material> acceptedTypes, int expCost){
+        super(name, null, material, quantity, lore, durability, stackable, shiny, cost);
+        this.acceptedIds = acceptedIds;
+        this.acceptedTypes = acceptedTypes;
+        this.exclusive = null;
+        this.expCost = expCost;
+    }
 }

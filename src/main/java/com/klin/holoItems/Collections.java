@@ -43,6 +43,7 @@ import com.klin.holoItems.collections.gen5.botanCollection.BotanCollection;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
 import com.klin.holoItems.collections.gen5.neneCollection.NeneCollection;
 import com.klin.holoItems.collections.gen5.polkaCollection.PolkaCollection;
+import com.klin.holoItems.collections.misc.utilityCollection.UtilityCollection;
 import com.klin.holoItems.collections.stars1.aruranCollection.AruranCollection;
 import com.klin.holoItems.collections.stars2.astelCollection.AstelCollection;
 import com.klin.holoItems.collections.stars1.izuruCollection.IzuruCollection;
@@ -178,6 +179,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         collections.put(FranCollection.name, new FranCollection());
         collections.put(KlinCollection.name, new KlinCollection());
         collections.put(OpCollection.name, new OpCollection());
+        collections.put(UtilityCollection.name, new UtilityCollection());
 
         back = new ItemStack(Material.SPRUCE_TRAPDOOR);
         ItemMeta backMeta = back.getItemMeta();

@@ -227,7 +227,7 @@ public class Events implements Listener {
                 event.setResult(null);
                 return;
             }
-            if ((enchant.acceptedIds == null || item != null && !enchant.acceptedIds.contains(item.name)) &&
+            if ((enchant.acceptedIds == null || item == null || !enchant.acceptedIds.contains(item.name)) &&
                     (enchant.acceptedTypes == null || !enchant.acceptedTypes.contains(reactant.getType()))) {
                 event.setResult(null);
                 return;
@@ -516,14 +516,22 @@ public class Events implements Listener {
         //no isCancelled()
         Player player = event.getPlayer();
         PlayerInventory inv = player.getInventory();
-        ItemStack[] items = new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand(), inv.getBoots()};
-        for(ItemStack item : items) {
-            if (item == null || item.getType() == Material.AIR || item.getItemMeta() == null || !item.getItemMeta().hasEnchant(Enchantment.MENDING))
+        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand(), inv.getHelmet(), inv.getChestplate(), inv.getLeggings(), inv.getBoots()}) {
+            if (item == null || item.getType() == Material.AIR || item.getItemMeta() == null)
                 continue;
             PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            String id = container.get(Utility.key, PersistentDataType.STRING);
-            String enchant = container.get(Utility.enchant, PersistentDataType.STRING);
-            if (id==null && enchant==null)
+            Item generic = Utility.findItem(container.get(Utility.key, PersistentDataType.STRING), Item.class, player);
+            if(generic instanceof Chargeable)
+                ((Chargeable) generic).ability(event);
+            String enchants = container.get(Utility.enchant, PersistentDataType.STRING);
+            if(enchants!=null){
+                for(String enchant : enchants.split(" ")){
+                    Chargeable chargeable = Utility.findItem(enchant, Chargeable.class, player);
+                    if(chargeable!=null)
+                        chargeable.ability(event);
+                }
+            }
+            if (generic==null && enchants==null || !item.getItemMeta().hasEnchant(Enchantment.MENDING))
                 continue;
             int amount = Utility.addDurability(item, event.getAmount(), player);
             event.setAmount(amount);
@@ -669,15 +677,18 @@ public class Events implements Listener {
         for(ItemStack item : equipment.getArmorContents()) {
             if (item == null || item.getItemMeta() == null)
                 continue;
-            String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
+            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+            String id = container.get(Utility.key, PersistentDataType.STRING);
             if (id!=null) {
-                //f0: reading glasses easter egg
+                //reading glasses easter egg
                 if(id.equals(ReadingGlasses.name) && item.containsEnchantment(Enchantment.BINDING_CURSE) || Collections.disabled.contains(id))
                     continue;
+                boolean broken = Utility.addDurability(item, -1, entity) == -1;
                 Item generic = Collections.items.get(id);
                 if (generic instanceof Wearable)
-                    ((Wearable) generic).ability(event, Utility.addDurability(item, -1, entity) == -1);
-            }
+                    ((Wearable) generic).ability(event, broken);
+            } else if(container.get(Utility.enchant, PersistentDataType.STRING)!=null)
+                Utility.addDurability(item, -1, entity);
         }
 
         if(!(entity instanceof Player))
@@ -1064,9 +1075,6 @@ public class Events implements Listener {
         if(id!=null || modifiers!=null) {
             event.getDrops().clear();
             event.setDroppedExp(0);
-//            Perishable perishable = Utility.get(id, Perishable.class);
-//            if(perishable!=null)
-//                perishable.effect(event, id);
             if(entity.getType()==EntityType.SLIME){
                 Slime slime = (Slime) entity;
                 int size = slime.getSize();
@@ -1083,18 +1091,35 @@ public class Events implements Listener {
                     }
                 }.runTaskLater(HoloItems.getInstance(), 30);
             }
-            return;
         }
 
-        Player player = entity.getKiller();
-        if(player==null)
-            return;
-        PlayerInventory inv = player.getInventory();
-        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
-            Perishable perishable = Utility.findItem(item, Perishable.class, player);
-            if(perishable!=null)
-                perishable.cause(event, item);
-        }
+//        Player player = entity.getKiller();
+//        if(player==null)
+//            return;
+//        PlayerInventory inv = player.getInventory();
+//        int slot = 0;
+//        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
+//            Perishable perishable = Utility.findItem(item, Perishable.class, player);
+//            if(perishable!=null)
+//                perishable.ability(event, item, slot, player);
+//            slot++;
+//        }
+//        for(ItemStack item : new ItemStack[]{inv.getHelmet(), inv.getChestplate(), inv.getLeggings(), inv.getBoots()}) {
+//            slot++;
+//            if(item==null)
+//                continue;
+//            ItemMeta meta = item.getItemMeta();
+//            if(meta==null)
+//                continue;
+//            String enchants = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+//            if(enchants==null)
+//                continue;
+//            for(String enchant : enchants.split(" ")) {
+//                Perishable perishable = Utility.findItem(enchant, Perishable.class, player);
+//                if (perishable != null)
+//                    perishable.ability(event, item, slot-1, player);
+//            }
+//        }
     }
 
     @EventHandler
