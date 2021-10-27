@@ -18,7 +18,6 @@ public class KlinCollection extends Collection {
         collection.add(new Trowel());
         collection.add(new Paver());
         collection.add(new Vacuum());
-        collection.add(new KFPGuide());
         collection.add(new SecondHand());
     }
 

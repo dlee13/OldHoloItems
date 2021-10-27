@@ -1,7 +1,6 @@
 package com.klin.holoItems.collections.misc.franCollection.items;
 
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.franCollection.FranCollection;
 import com.klin.holoItems.interfaces.customMobs.Combinable;
 import com.klin.holoItems.interfaces.customMobs.Spawnable;
 import org.bukkit.Material;

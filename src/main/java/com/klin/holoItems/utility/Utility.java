@@ -577,16 +577,16 @@ public class Utility {
         LivingEntity entity = (LivingEntity) world.spawnEntity(loc, type);
         if(modifiers!=null) {
             String active = "";
-            for (String modifier : modifiers.split("-")) {
+            for (String modifier : modifiers.split("~")) {
                 int index = modifier.indexOf(":");
                 com.klin.holoItems.Item generic = Collections.items.get(index<0 ? modifier : modifier.substring(0, index));
                 if (generic instanceof Spawnable) {
-                    ((Spawnable) generic).ability(entity, index<0 ? null : modifier.substring(index));
+                    ((Spawnable) generic).ability(entity, index<0 ? null : modifier.substring(index+1));
                     if(generic.getClass().getInterfaces().length>1 || generic.getClass().getSuperclass()!=Item.class)
-                        active += "-"+modifier;
+                        active += "~"+modifier;
                 }
                 else
-                    active += "-"+modifier;
+                    active += "~"+modifier;
             }
             if(!active.isEmpty())
                 entity.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, active.substring(1));

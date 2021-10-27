@@ -70,7 +70,7 @@ public class SteinsEgg extends Pack implements Dispensable {
                 continue;
             Item generic = Collections.items.get(id);
             if(generic instanceof Combinable) {
-                modifiers += "-" + id + ((Combinable) generic).processInfo(content);
+                modifiers += "~" + id + ((Combinable) generic).processInfo(content);
             }
         }
         if(base!=null){
@@ -85,7 +85,7 @@ public class SteinsEgg extends Pack implements Dispensable {
             modifiers = modifiers.substring(1);
         container.set(Utility.pack, PersistentDataType.STRING, modifiers);
         item.setItemMeta(itemMeta);
-        player.sendMessage("Modifiers added: "+modifiers.replace("-", " "));
+        player.sendMessage("Modifiers added: "+modifiers.replace("~", " "));
         return -1;
     }
 

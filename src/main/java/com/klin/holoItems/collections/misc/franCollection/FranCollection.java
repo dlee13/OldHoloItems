@@ -23,6 +23,7 @@ public class FranCollection extends Collection {
         collection.add(new DyeConcentrate());
         collection.add(new SharpenedFangs());
         collection.add(new NinjaCloak());
+        collection.add(new KFPGuide());
     }
 
     public Map<String, Integer> getStat(Player player){
