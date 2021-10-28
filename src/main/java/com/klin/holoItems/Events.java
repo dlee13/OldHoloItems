@@ -19,7 +19,10 @@ import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
 import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.*;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
@@ -34,8 +37,10 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.*;
-import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -249,23 +254,23 @@ public class Events implements Listener {
                         result.removeEnchantment(enchantment);
                 }
             }
-            if (item == null) {
-                if (meta instanceof Damageable) {
-                    meta.setUnbreakable(true);
-                    meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-                    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                }
-                List<String> addDurability = meta.getLore();
-                if (addDurability == null)
-                    addDurability = new ArrayList<>();
-                if (!addDurability.get(addDurability.size() - 1).startsWith("§fDurability: ")) {
-                    int maxDurability = reactant.getType().getMaxDurability();
-                    int currDurability = maxDurability - ((Damageable) meta).getDamage();
-                    addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
-                    meta.setLore(addDurability);
-                    result.setItemMeta(meta);
-                }
-            }
+//            if (item == null) {
+//                if (meta instanceof Damageable) {
+//                    meta.setUnbreakable(true);
+//                    meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+//                    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+//                }
+//                List<String> addDurability = meta.getLore();
+//                if (addDurability == null)
+//                    addDurability = new ArrayList<>();
+//                if (!addDurability.get(addDurability.size() - 1).startsWith("§fDurability: ")) {
+//                    int maxDurability = reactant.getType().getMaxDurability();
+//                    int currDurability = maxDurability - ((Damageable) meta).getDamage();
+//                    addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
+//                    meta.setLore(addDurability);
+//                    result.setItemMeta(meta);
+//                }
+//            }
             if (!result.equals(event.getResult()))
                 event.setResult(result);
             return;
@@ -531,7 +536,7 @@ public class Events implements Listener {
                         chargeable.ability(event);
                 }
             }
-            if (generic==null && enchants==null || !item.getItemMeta().hasEnchant(Enchantment.MENDING))
+            if (generic==null /*&& enchants==null*/ || !item.getItemMeta().hasEnchant(Enchantment.MENDING))
                 continue;
             int amount = Utility.addDurability(item, event.getAmount(), player);
             event.setAmount(amount);
@@ -539,6 +544,34 @@ public class Events implements Listener {
                 return;
         }
     }
+
+//    @EventHandler
+//    public void smithItem(PrepareSmithingEvent event){
+//        ItemStack result = event.getResult();
+//        if(result==null)
+//            return;
+//        ItemMeta meta = result.getItemMeta();
+//        if(meta==null)
+//            return;
+//        PersistentDataContainer container = meta.getPersistentDataContainer();
+//        if(container.get(Utility.key, PersistentDataType.STRING)!=null || container.get(Utility.enchant, PersistentDataType.STRING)==null)
+//            return;
+//        List<String> addDurability = meta.getLore();
+//        if (addDurability == null)
+//            return;
+//        int index = addDurability.size() - 1;
+//        if (addDurability.get(index).startsWith("§fDurability: ")) {
+//            int maxDurability = result.getType().getMaxDurability();
+//            int[] durability = Utility.getDurability(addDurability);
+//            int currDurability = maxDurability;
+//            if(durability!=null)
+//                currDurability -= durability[1] - durability[0];
+//            addDurability.set(index, "§fDurability: " + currDurability + "/" + maxDurability);
+//            meta.setLore(addDurability);
+//            result.setItemMeta(meta);
+//            event.setResult(result);
+//        }
+//    }
 
     @EventHandler
     public void activateAbility(CreatureSpawnEvent event){
@@ -579,7 +612,7 @@ public class Events implements Listener {
         if(item.getType()==Material.AIR || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+//        String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
         if(id!=null) {
             if(event.getDamage()>0)
                 Utility.addDurability(item, -1, living);
@@ -589,8 +622,8 @@ public class Events implements Listener {
             if (generic instanceof Afflictable)
                 ((Afflictable) generic).ability(event, item);
         }
-        else if(enchant!=null)
-            Utility.addDurability(item, -1, living);
+//        else if(enchant!=null)
+//            Utility.addDurability(item, -1, living);
     }
 
     @EventHandler
@@ -687,8 +720,9 @@ public class Events implements Listener {
                 Item generic = Collections.items.get(id);
                 if (generic instanceof Wearable)
                     ((Wearable) generic).ability(event, broken);
-            } else if(container.get(Utility.enchant, PersistentDataType.STRING)!=null)
-                Utility.addDurability(item, -1, entity);
+            }
+//            else if(container.get(Utility.enchant, PersistentDataType.STRING)!=null)
+//                Utility.addDurability(item, -1, entity);
         }
 
         if(!(entity instanceof Player))
@@ -825,10 +859,9 @@ public class Events implements Listener {
             String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
             String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
             if(id!=null || enchant!=null) {
-                if(i==0)
+                if(i==0 && id!=null)
                     Utility.addDurability(item, -1, event.getPlayer());
-            }
-            else
+            } else
                 continue;
             Extractable extractable = Utility.findItem(id, Extractable.class, player);
             if(extractable !=null && i!=0 == extractable instanceof Holdable)

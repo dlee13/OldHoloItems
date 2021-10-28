@@ -3,7 +3,6 @@ package com.klin.holoItems.collections.gen3.flareCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
-import com.klin.holoItems.collections.gen3.flareCollection.FlareCollection;
 import com.klin.holoItems.interfaces.Extractable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
@@ -66,13 +65,13 @@ public class Splinter extends Enchant implements Extractable {
         Material wood = block.getType();
         if(!Utility.logs.contains(wood))
             return;
-
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         if(Utility.onCooldown(item))
             return;
         Utility.cooldown(item);
-        Utility.addDurability(item, 0.5, player);
+        if(item.getItemMeta().isUnbreakable())
+            Utility.addDurability(item, 0.5, player);
 
         Queue<Block> log = new LinkedList<>();
         Set<Block> checked = new HashSet<>();

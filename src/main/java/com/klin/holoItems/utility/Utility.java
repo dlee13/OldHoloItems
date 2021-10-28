@@ -282,9 +282,12 @@ public class Utility {
             enchantments += " ";
         meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments+enchant.name);
         List<String> lore = meta.getLore();
-        if(lore==null)
-            lore = new ArrayList<>(List.of(""));
-        else if(lore.get(0).startsWith("§b"))
+        if(lore==null) {
+            if(meta.isUnbreakable())
+                lore = new ArrayList<>(List.of(""));
+            else
+                lore = new ArrayList<>();
+        } else if(lore.get(0).startsWith("§b"))
             lore.add(0, "");
         lore.add(0, "§7"+formatName(enchant.name));
         meta.setLore(lore);
@@ -438,6 +441,28 @@ public class Utility {
         ItemMeta meta = item.getItemMeta();
         if(meta==null)
             return 0;
+        if(!meta.isUnbreakable() && meta instanceof Damageable){
+            Damageable damageable = (Damageable) meta;
+            int total = damageable.getDamage();
+            int excess = 0;
+            if(addend<0) {
+                //adding (-= negative) damage
+                total -= addend;
+                if(total>=item.getType().getMaxDurability()){
+                    item.setAmount(0);
+                    return -1;
+                }
+            } else {
+                total -= addend * 2;
+                if (total < 0) {
+                    excess = -total;
+                    total = 0;
+                }
+            }
+            damageable.setDamage(total);
+            item.setItemMeta(meta);
+            return excess;
+        }
         List<String> lore = meta.getLore();
         int[] durability = getDurability(lore);
         if(durability==null)
