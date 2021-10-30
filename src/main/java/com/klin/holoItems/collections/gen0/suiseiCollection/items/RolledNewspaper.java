@@ -1,10 +1,11 @@
 package com.klin.holoItems.collections.gen0.suiseiCollection.items;
 
-import com.klin.holoItems.interfaces.Responsible;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.gen0.suiseiCollection.SuiseiCollection;
-import org.bukkit.*;
+import com.klin.holoItems.interfaces.Responsible;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

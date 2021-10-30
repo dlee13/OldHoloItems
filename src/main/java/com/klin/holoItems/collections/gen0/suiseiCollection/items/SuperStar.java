@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.gen0.suiseiCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.PowerUp;
-import com.klin.holoItems.collections.gen0.suiseiCollection.SuiseiCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -32,8 +31,7 @@ public class SuperStar extends PowerUp {
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape(" * ","*%*"," * ");
         recipe.setIngredient('*', Material.GOLD_NUGGET);
         recipe.setIngredient('%', Material.GOLD_INGOT);
