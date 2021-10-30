@@ -20,6 +20,7 @@ public class OpCollection extends Collection {
         collection.add(new Payload());
         collection.add(new Falchion());
         collection.add(new NameTag());
+        collection.add(new QuartzGranule());
     }
 
     public Map<String, Integer> getStat(Player player){

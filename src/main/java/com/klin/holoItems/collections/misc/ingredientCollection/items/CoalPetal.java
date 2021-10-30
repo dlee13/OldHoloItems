@@ -2,15 +2,11 @@ package com.klin.holoItems.collections.misc.ingredientCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
-
-import java.util.Set;
 
 public class CoalPetal extends Item {
     public static final String name = "coalPetal";

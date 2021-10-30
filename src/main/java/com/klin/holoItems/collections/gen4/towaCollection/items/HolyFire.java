@@ -1,8 +1,10 @@
 package com.klin.holoItems.collections.gen4.towaCollection.items;
 
+import com.klin.holoItems.Collections;
 import com.klin.holoItems.Events;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
+import com.klin.holoItems.collections.misc.ingredientCollection.items.SaintQuartz;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
@@ -18,6 +20,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -59,7 +62,7 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape(" a ","aba","ccc");
         recipe.setIngredient('a', Material.END_ROD);
-        recipe.setIngredient('b', Material.DRAGON_EGG);
+        recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.items.get(SaintQuartz.name).item));
         recipe.setIngredient('c', Material.RAW_GOLD_BLOCK);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);

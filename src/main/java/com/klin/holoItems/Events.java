@@ -1,6 +1,5 @@
 package com.klin.holoItems;
 
-import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
@@ -14,6 +13,7 @@ import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
 import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
 import com.klin.holoItems.collections.misc.opCollection.items.GalleryFrame;
+import com.klin.holoItems.collections.misc.opCollection.items.QuartzGranule;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
@@ -595,9 +595,10 @@ public class Events implements Listener {
             String modifiers = entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
             if (modifiers != null) {
                 for (String modifier : modifiers.split("-")) {
-                    Retaliable modified = Utility.findItem(modifier.substring(0, 2), Retaliable.class);
+                    int index = modifier.indexOf(":");
+                    Retaliable modified = Utility.findItem(index>-1?modifier.substring(0, index):modifier, Retaliable.class);
                     if (modified != null)
-                        modified.ability(event, entity, modifier.length() > 2 ? modifier.substring(3) : null);
+                        modified.ability(event, entity, index>-1?modifier.substring(index+1) : null);
                 }
             }
         }
@@ -701,10 +702,17 @@ public class Events implements Listener {
 
     @EventHandler
     public void defendAbility(EntityDamageByEntityEvent event){
-        if(event.isCancelled() || !(event.getEntity() instanceof LivingEntity))
+        if(event.isCancelled())
             return;
-        LivingEntity entity = (LivingEntity) event.getEntity();
-        EntityEquipment equipment = entity.getEquipment();
+        Entity entity = event.getEntity();
+        Harmable harmable = Utility.findItem(entity, Harmable.class);
+        if(harmable!=null)
+            harmable.ability(event);
+
+        if(!(event.getEntity() instanceof LivingEntity))
+            return;
+        LivingEntity livingEntity = (LivingEntity) entity;
+        EntityEquipment equipment = livingEntity.getEquipment();
         if(equipment==null)
             return;
         for(ItemStack item : equipment.getArmorContents()) {
@@ -716,7 +724,7 @@ public class Events implements Listener {
                 //reading glasses easter egg
                 if(id.equals(ReadingGlasses.name) && item.containsEnchantment(Enchantment.BINDING_CURSE) || Collections.disabled.contains(id))
                     continue;
-                boolean broken = Utility.addDurability(item, -1, entity) == -1;
+                boolean broken = Utility.addDurability(item, -1, livingEntity) == -1;
                 Item generic = Collections.items.get(id);
                 if (generic instanceof Wearable)
                     ((Wearable) generic).ability(event, broken);
@@ -730,8 +738,7 @@ public class Events implements Listener {
         Player player = (Player) entity;
         if(!player.isBlocking())
             return;
-        PlayerInventory inv = player.getInventory();
-        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()}) {
+        for(ItemStack item : new ItemStack[]{equipment.getItemInMainHand(), equipment.getItemInOffHand()}) {
             Defensible defensible = Utility.findItem(item, Defensible.class, player);
             if(defensible!=null) {
                 defensible.ability(event);
@@ -828,6 +835,11 @@ public class Events implements Listener {
             ((Dispensable) generic).ability(event);
     }
 
+//    @EventHandler
+//    public void diveAbility(EntityToggleSwimEvent event){
+//
+//    }
+
     @EventHandler
     public void dropAbility(PlayerDropItemEvent event){
         if(event.isCancelled())
@@ -846,9 +858,9 @@ public class Events implements Listener {
 
         Block block = event.getBlock();
         Player player = event.getPlayer();
-        Crate crate = Utility.findItem(block, Crate.class, player);
-        if(crate!=null)
-            crate.ability(event);
+        Breakable breakable = Utility.findItem(block, Breakable.class, player);
+        if(breakable!=null)
+            breakable.ability(event);
 
         PlayerInventory inv = player.getInventory();
         ItemStack[] items = new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand()};
@@ -1124,6 +1136,11 @@ public class Events implements Listener {
                     }
                 }.runTaskLater(HoloItems.getInstance(), 30);
             }
+        } else if(entity instanceof EnderDragon) {
+            Location loc = entity.getLocation();
+            Block block = loc.getWorld().getHighestBlockAt(loc).getRelative(BlockFace.UP);
+            block.setType(PLAYER_HEAD);
+            QuartzGranule.setUp((Skull) block.getState());
         }
 
 //        Player player = entity.getKiller();
@@ -1276,9 +1293,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void preventWither(EntityChangeBlockEvent event){
-        if(event.isCancelled())
-            return;
-        if(event.getBlock().getType()==Material.PLAYER_HEAD)
+        if(!event.isCancelled() && event.getBlock().getType()==Material.PLAYER_HEAD)
             event.setCancelled(true);
     }
 

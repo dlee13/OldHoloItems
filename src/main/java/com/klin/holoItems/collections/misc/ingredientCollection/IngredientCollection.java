@@ -3,6 +3,8 @@ package com.klin.holoItems.collections.misc.ingredientCollection;
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.misc.ingredientCollection.items.CoalPetal;
 import com.klin.holoItems.collections.misc.ingredientCollection.items.EmeraldLeaf;
+import com.klin.holoItems.collections.misc.ingredientCollection.items.QuartzFragment;
+import com.klin.holoItems.collections.misc.ingredientCollection.items.SaintQuartz;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -17,6 +19,8 @@ public class IngredientCollection extends Collection {
         super(name, desc, theme, base64);
         collection.add(new EmeraldLeaf());
         collection.add(new CoalPetal());
+        collection.add(new QuartzFragment());
+        collection.add(new SaintQuartz());
     }
 
     public Map<String, Integer> getStat(Player player){

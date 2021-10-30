@@ -122,7 +122,7 @@ public class KFPGuide extends Item implements Interactable, Combinable, Spawnabl
                 Block current = queue.poll();
                 for (BlockFace face : Utility.cardinal.keySet()) {
                     Block check = current.getRelative(face);
-                    if (!blocks.containsKey(check) && check.isEmpty()) {
+                    if (!blocks.containsKey(check) && check.isPassable()) {
                         queue.add(check);
                         blocks.put(check, current);
                         if (check.getRelative(BlockFace.DOWN).isEmpty()) {
@@ -140,7 +140,7 @@ public class KFPGuide extends Item implements Interactable, Combinable, Spawnabl
                 Block current = queue.poll();
                 for (BlockFace face : Utility.cardinal.keySet()) {
                     Block check = current.getRelative(face);
-                    if (!blocks.containsKey(check) && check.isEmpty()) {
+                    if (!blocks.containsKey(check) && check.isPassable()) {
                         queue.add(check);
                         blocks.put(check, current);
                         if (check.equals(finish)) {
