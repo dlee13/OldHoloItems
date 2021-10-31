@@ -30,6 +30,12 @@ commands:
   collect:
     permission: holoItems.op
     usage: /<command> <stat> <type> <id>
+  revert:
+    permission: holoItems.op
+    usage: /<command>
+  convert:
+    permission: holoItems.op
+    usage: /<command> <id>
   disable:
     permission: holoItems.op
     usage: /<command> <id>

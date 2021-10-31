@@ -2,6 +2,7 @@ package com.klin.holoItems.collections.misc.opCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
+import com.klin.holoItems.collections.gen1.fubukiCollection.items.VerificationSeal;
 import com.klin.holoItems.interfaces.Hangable;
 import com.klin.holoItems.interfaces.Reactable;
 import com.klin.holoItems.utility.Utility;
@@ -83,8 +84,11 @@ public class GalleryFrame extends Item implements Hangable, Reactable {
                 item.setItemMeta(meta);
             }
             itemFrame.setItem(item);
-        }
-        else if(framedItem.getType()==Material.FILLED_MAP){
+        } else if(framedItem.getType()==Material.FILLED_MAP){
+            if(Utility.findItem(framedItem, VerificationSeal.class)!=null){
+                player.sendMessage("Not for sale");
+                return;
+            }
             Inventory inv = Bukkit.createInventory(null, 9, "Price");
             inv.setItem(4, buy);
             new BukkitRunnable() {

@@ -30,6 +30,8 @@ public class HoloItems extends JavaPlugin {
         getCommand("canceltasks").setExecutor(collections);
         getCommand("clearactivatables").setExecutor(collections);
         getCommand("collect").setExecutor(collections);
+        getCommand("revert").setExecutor(collections);
+        getCommand("convert").setExecutor(collections);
         getCommand("disable").setExecutor(collections);
         getCommand("enable").setExecutor(collections);
         getCommand("getactivatables").setExecutor(collections);

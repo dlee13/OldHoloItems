@@ -340,6 +340,32 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                 }
                 return true;
 
+            case "revert":
+                args = new String[0];
+            case "convert":
+                ItemStack itemStack = player.getInventory().getItemInMainHand();
+                item = Utility.findItem(itemStack, Item.class);
+                if(item!=null && args.length<1){
+                    ItemMeta meta = itemStack.getItemMeta();
+                    meta.getPersistentDataContainer().remove(Utility.key);
+                    itemStack.setItemMeta(meta);
+                    player.sendMessage(item.name + " reverted");
+                    return true;
+                } if(itemStack.getType()==Material.AIR)
+                    return true;
+                ItemMeta meta = itemStack.getItemMeta();
+                if(meta==null)
+                    return true;
+                item = items.get(args[0]);
+                if(item==null){
+                    player.sendMessage("No such item");
+                    return true;
+                }
+                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, args[0]);
+                itemStack.setItemMeta(meta);
+                player.sendMessage("Converted to " + args[0]);
+                return true;
+
             case "disable":
                 if(args.length>=1) {
                     item = items.get(args[0]);
@@ -437,7 +463,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                     return false;
                 model = player.getInventory().getItemInMainHand();
                 if(model.getType()!=Material.AIR && model.getItemMeta()!=null) {
-                    ItemMeta meta = model.getItemMeta();
+                    meta = model.getItemMeta();
                     try {
                         int data = Integer.parseInt(args[0]);
                         player.sendMessage("Set CustomModelData from "+meta.getCustomModelData()+" to "+args[0]);
@@ -462,7 +488,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                     for (String arg : args)
                         enchantments += arg + " ";
                     enchantments = enchantments.substring(0, enchantments.length()-1);
-                    ItemMeta meta = stack.getItemMeta();
+                    meta = stack.getItemMeta();
                     meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments);
                     stack.setItemMeta(meta);
                     player.sendMessage("Enchantments set to: "+enchantments);
@@ -472,7 +498,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
             case "settype":
                 if(args.length<1)
                     return false;
-                ItemStack itemStack = player.getInventory().getItemInMainHand();
+                itemStack = player.getInventory().getItemInMainHand();
                 if(itemStack.getType()!=Material.AIR) {
                     Material type = Material.getMaterial(args[0]);
                     if(type!=null)
