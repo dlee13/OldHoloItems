@@ -65,10 +65,9 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable,
 
     public void ability(AsyncPlayerChatEvent event) {
         String message = event.getMessage();
-        while(message.contains("okay")){
-            int index = message.indexOf("okay");
+        int index;
+        while((index = message.indexOf("okay"))>=0)
             message = message.substring(0, index)+"ogey"+message.substring(index+4);
-        }
         if(!message.endsWith("rrat"))
             message += " peko";
         event.setMessage(message);
@@ -123,6 +122,9 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable,
     }
 
     public void ability(CraftItemEvent event) {
+        ItemStack result = event.getInventory().getResult();
+        if(item.equals(result))
+            return;
         Inventory inv = event.getInventory();
         List<String> names = new ArrayList<>();
         BookMeta meta = null;
@@ -165,6 +167,6 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable,
             else
                 meta.addPage(list);
         }
-        event.getInventory().getResult().setItemMeta(meta);
+        result.setItemMeta(meta);
     }
 }

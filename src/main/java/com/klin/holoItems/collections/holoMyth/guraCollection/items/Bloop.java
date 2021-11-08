@@ -23,6 +23,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class Bloop extends BatteryPack implements Extractable, Holdable {
     public static final String name = "quartzBlossom";
+    private static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYzNTk2MDgwMTEzNiwKICAicHJvZmlsZUlkIiA6ICJkMWY2OTc0YzE2ZmI0ZjdhYjI1NjU4NzExNjM3M2U2NSIsCiAgInByb2ZpbGVOYW1lIiA6ICJGaW9saWVzdGEiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWFhNWU5ODY0ZTNjYjNkZmEwZTVhYjM5ZDZjYzM3ZTllMjc2NTJkZWQ1ZmM5MDc4MzAyYjcxNmZjMjFhZmUzNyIKICAgIH0KICB9Cn0=";
 
     private static final Material material = Material.LILY_OF_THE_VALLEY;
     private static final String lore =

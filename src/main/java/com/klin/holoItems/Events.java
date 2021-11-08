@@ -450,8 +450,7 @@ public class Events implements Listener {
         if(Collections.disabled.contains(id)) {
             player.sendMessage("§cThis item has been disabled");
             return;
-        }
-        if(item instanceof Craftable)
+        } if(item instanceof Craftable)
             ((Craftable) item).ability(event);
     }
 
@@ -1138,7 +1137,17 @@ public class Events implements Listener {
             }
         } else if(entity instanceof EnderDragon) {
             Location loc = entity.getLocation();
-            Block block = loc.getWorld().getHighestBlockAt(loc).getRelative(BlockFace.UP);
+            World world = loc.getWorld();
+            Block block = world.getHighestBlockAt(loc);
+            int i = 0;
+            while(block.getType()==BEDROCK){
+                if(i>7)
+                    return;
+                block = block.getRelative(BlockFace.NORTH);
+                block = world.getHighestBlockAt(block.getLocation());
+                i++;
+            }
+            block = block.getRelative(BlockFace.UP);
             block.setType(PLAYER_HEAD);
             QuartzGranule.setUp((Skull) block.getState());
         }
