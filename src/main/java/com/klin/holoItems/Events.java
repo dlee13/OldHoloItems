@@ -233,7 +233,7 @@ public class Events implements Listener {
                 return;
             }
             if ((enchant.acceptedIds == null || item == null || !enchant.acceptedIds.contains(item.name)) &&
-                    (enchant.acceptedTypes == null || !enchant.acceptedTypes.contains(reactant.getType()))) {
+                    (enchant.acceptedTypes == null || !(item==null && enchant.acceptedTypes.contains(reactant.getType())))) {
                 event.setResult(null);
                 return;
             }
@@ -1022,8 +1022,12 @@ public class Events implements Listener {
                 if (generic instanceof Interactable)
                     ((Interactable) generic).ability(event, action);
             }
-        }
-        if(enchant!=null) {
+        } if(event.getHand()!=EquipmentSlot.OFF_HAND){
+            ItemStack offhand = player.getInventory().getItemInOffHand();
+            Interactable interactable = Utility.findItem(offhand, Interactable.class, player);
+            if(interactable instanceof Holdable)
+                interactable.ability(event, offhand);
+        } if(enchant!=null) {
             for (String enchantment : enchant.split(" ")) {
                 if (Collections.disabled.contains(enchantment))
                     return;

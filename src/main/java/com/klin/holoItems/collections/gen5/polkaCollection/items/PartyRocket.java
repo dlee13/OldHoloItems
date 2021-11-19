@@ -23,7 +23,6 @@ import java.util.Set;
 
 public class PartyRocket extends Item implements Interactable, Craftable {
     public static final String name = "partyRocket";
-    public static final Set<Enchantment> accepted = null;
 
     private static final Material material = Material.FIREWORK_ROCKET;
     private static final int quantity = 1;
@@ -36,7 +35,7 @@ public class PartyRocket extends Item implements Interactable, Craftable {
     public static final int cost = 0;
 
     public PartyRocket(){
-        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     public void registerRecipes(){

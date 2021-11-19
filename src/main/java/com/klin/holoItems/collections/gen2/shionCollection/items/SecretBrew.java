@@ -20,7 +20,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class SecretBrew  extends Item implements Brewable, Mixable {
+public class SecretBrew extends Item implements Brewable, Mixable {
     public static final String name = "secretBrew";
 
     private static final Material material = Material.NETHER_WART;

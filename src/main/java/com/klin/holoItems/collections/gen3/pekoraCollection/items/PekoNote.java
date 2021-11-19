@@ -160,8 +160,7 @@ public class PekoNote extends Item implements Activatable, Flauntable, Writable,
             else
                 list += name + "\n";
             increment++;
-        }
-        if(!list.isEmpty()) {
+        } if(!list.isEmpty()) {
             if(page==1)
                 meta.setPage(page, list);
             else

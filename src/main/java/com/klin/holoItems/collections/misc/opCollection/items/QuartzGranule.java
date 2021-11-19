@@ -12,6 +12,7 @@ import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -157,17 +158,24 @@ public class QuartzGranule extends Item implements Placeable, Breakable, Harmabl
                         stand.remove();
                     } else
                         stand.teleport(loc.add(0, 0.1 - 0.0025 * increment, 0).setDirection(dir.rotateAroundY(Math.PI / (0.5 * increment))));
-                } else if(increment==50) {
-                    crystal = world.spawn(loc, EnderCrystal.class);
-                    crystal.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, QuartzGranule.name);
-                    crystal.setShowingBottom(false);
-                    bear = world.spawn(loc.add(0, -1.4, 0), PolarBear.class);
-                    bear.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, QuartzGranule.name);
-                    bear.setAI(false);
-                    bear.setInvisible(true);
-                    bear.setSilent(true);
-                    bear.setNoDamageTicks(650);
-                    center = loc.add(0, 0.4, 0).getBlock();
+                } else if(increment>=50) {
+                    if(increment==50) {
+                        crystal = world.spawn(loc, EnderCrystal.class);
+                        crystal.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, QuartzGranule.name);
+                        crystal.setShowingBottom(false);
+                        bear = world.spawn(loc.add(0, -1.4, 0), PolarBear.class);
+                        bear.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, QuartzGranule.name);
+                        bear.setAI(false);
+                        bear.setInvisible(true);
+                        bear.setSilent(true);
+                        bear.setNoDamageTicks(650);
+                        center = loc.add(0, 0.4, 0).getBlock();
+                    }
+                    for(BlockFace face : Utility.cardinal.keySet()){
+                        Block relative = center.getRelative(face);
+                        if(!relative.isEmpty())
+                            center.getRelative(face).breakNaturally();
+                    }
                 }
                 increment++;
             }

@@ -26,7 +26,6 @@ import java.util.Set;
 
 public class PotionSatchel extends Pack {
     public static final String name = "potionSatchel";
-    private static final Set<Enchantment> accepted = null;
 
     private static final Material material = Material.LEAD;
     private static final String lore =
@@ -35,13 +34,13 @@ public class PotionSatchel extends Pack {
     private static final int durability = 0;
     private static final boolean shiny = true;
 
-    private static  final int size = 9;
+    private static final int size = 9;
     public static final String title = "Potting. . .";
     public static final boolean display = false;
     public static final int cost = 290;
 
     public PotionSatchel(){
-        super(name, accepted, material, lore, durability, shiny, size, title, display, cost);
+        super(name, material, lore, durability, shiny, size, title, display, cost);
     }
 
     public void registerRecipes(){
