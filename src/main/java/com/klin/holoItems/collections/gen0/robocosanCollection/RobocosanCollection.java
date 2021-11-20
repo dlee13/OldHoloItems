@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen0.robocosanCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen0.robocosanCollection.items.Magnet;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
@@ -16,6 +17,7 @@ public class RobocosanCollection extends Collection {
 
     public RobocosanCollection(){
         super(name, desc, theme, base64);
+        collection.add(new Magnet());
     }
 
     public Map<String, Integer> getStat(Player player){

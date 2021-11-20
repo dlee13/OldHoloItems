@@ -18,10 +18,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -718,6 +715,30 @@ public class Utility {
             }
         }
         return source;
+    }
+
+    public static void mirror(ShapedRecipe recipe, String name, ItemStack item){
+        String[] shape = recipe.getShape();
+        Map<Character, ItemStack> ingredientMap = recipe.getIngredientMap();
+        recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"_"), item);
+        for(int i=0; i<shape.length; i++)
+            shape[i] = new StringBuilder(shape[i]).reverse().toString();
+        switch(shape.length){
+            case 1:
+                recipe.shape(shape[0]);
+                break;
+            case 2:
+                recipe.shape(shape[0], shape[1]);
+                break;
+            case 3:
+                recipe.shape(shape[0], shape[1], shape[2]);
+                break;
+            default: return;
+        }
+        for(Character character : ingredientMap.keySet())
+            recipe.setIngredient(character, ingredientMap.get(character).getType());
+        recipe.setGroup(name);
+        Bukkit.getServer().addRecipe(recipe);
     }
 }
 

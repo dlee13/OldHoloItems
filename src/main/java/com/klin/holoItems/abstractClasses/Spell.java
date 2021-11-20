@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -19,7 +18,7 @@ public abstract class Spell extends Item implements Interactable {
     private static final Material material = Material.PAPER;
     private static final int quantity = 1;
     private static final int durability = 0;
-    public static final boolean stackable = false;
+    public static final boolean stackable = true;
     private static final boolean shiny = true;
 
     private final Class<? extends Event> condition;
@@ -35,7 +34,12 @@ public abstract class Spell extends Item implements Interactable {
         SorceressTome sorceressTome = Utility.findItem(item, SorceressTome.class, player);
         if(sorceressTome==null)
             return;
-        event.getItem().setAmount(0);
+        ItemStack spell = event.getItem();
+        if(Utility.onCooldown(spell))
+            return;
+        Utility.cooldown(spell, 2);
+        spell.setAmount(spell.getAmount()-1);
+
         BookMeta meta = (BookMeta) item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String spells = container.get(Utility.pack, PersistentDataType.STRING);

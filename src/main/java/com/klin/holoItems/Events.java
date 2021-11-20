@@ -4,6 +4,7 @@ import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
+import com.klin.holoItems.collections.gen2.shionCollection.items.Fireball;
 import com.klin.holoItems.collections.gen2.shionCollection.items.SecretBrew;
 import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
@@ -1154,6 +1155,9 @@ public class Events implements Listener {
             block = block.getRelative(BlockFace.UP);
             block.setType(PLAYER_HEAD);
             QuartzGranule.setUp((Skull) block.getState());
+            //temp
+            world.dropItemNaturally(block.getLocation(), Collections.items.get(Fireball.name).item);
+            //
         }
 
 //        Player player = entity.getKiller();

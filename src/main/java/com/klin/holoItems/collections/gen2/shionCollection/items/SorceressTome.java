@@ -27,7 +27,7 @@ public class SorceressTome extends Item implements Interactable, Holdable{
     private static final String lore =
             "Mix and match powerful spells";
     private static final int durability = 0;
-    private static final boolean stackable = true;
+    private static final boolean stackable = false;
     private static final boolean shiny = true;
     public static final int cost = 0;
 
@@ -76,7 +76,7 @@ public class SorceressTome extends Item implements Interactable, Holdable{
             item.setItemMeta(meta);
             Player player = event.getPlayer();
             player.getWorld().dropItemNaturally(player.getEyeLocation(), spell.item);
-            player.sendMessage("Ripped out : §6"+Utility.formatName(spells[0]));
+            player.sendMessage("Ripped out: §6"+Utility.formatName(spells[0]));
         }
     }
 
@@ -92,7 +92,7 @@ public class SorceressTome extends Item implements Interactable, Holdable{
             stored = "";
             for (int i = 1; i < spells.length; i++)
                 stored += " " + spells[i];
-            stored += spells[0];
+            stored += " " + spells[0];
             meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, stored.substring(1));
             item.setItemMeta(meta);
             event.getPlayer().sendMessage("Next spell: §6"+Utility.formatName(spells[1]));
