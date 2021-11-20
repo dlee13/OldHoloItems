@@ -735,8 +735,11 @@ public class Utility {
                 break;
             default: return;
         }
-        for(Character character : ingredientMap.keySet())
-            recipe.setIngredient(character, ingredientMap.get(character).getType());
+        for(Character character : ingredientMap.keySet()) {
+            ItemStack ingredient = ingredientMap.get(character);
+            if(ingredient!=null)
+                recipe.setIngredient(character, ingredient.getType());
+        }
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }

@@ -5,10 +5,7 @@ import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.interfaces.Extractable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Container;
-import org.bukkit.block.DoubleChest;
+import org.bukkit.block.*;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -43,46 +40,38 @@ public class Magnet extends Enchant implements Extractable {
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe0 = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
-        recipe0.shape("abc","dac","aef");
-        recipe0.setIngredient('a', Material.IRON_BLOCK);
-        recipe0.setIngredient('b', Material.COMPARATOR);
-        recipe0.setIngredient('c', Material.HOPPER);
-        recipe0.setIngredient('d', Material.REDSTONE);
-        recipe0.setIngredient('e', Material.REDSTONE_TORCH);
-        recipe0.setIngredient('f', Material.BARREL);
-        recipe0.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe0);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        recipe.shape("aab","cde","fgd");
+        recipe.setIngredient('a', Material.POWERED_RAIL);
+        recipe.setIngredient('b', Material.IRON_PICKAXE);
+        recipe.setIngredient('c', Material.HOPPER);
+        recipe.setIngredient('d', Material.IRON_BLOCK);
+        recipe.setIngredient('e', Material.REDSTONE);
+        recipe.setIngredient('f', Material.DROPPER);
+        recipe.setIngredient('g', Material.COMPARATOR);
+        recipe.setGroup(name);
+        Bukkit.getServer().addRecipe(recipe);
 
-        ShapedRecipe recipe1 = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
-        recipe1.shape("cba","cad","fea");
-        recipe1.setIngredient('a', Material.IRON_BLOCK);
-        recipe1.setIngredient('b', Material.COMPARATOR);
-        recipe1.setIngredient('c', Material.HOPPER);
-        recipe1.setIngredient('d', Material.REDSTONE);
-        recipe1.setIngredient('e', Material.REDSTONE_TORCH);
-        recipe1.setIngredient('f', Material.BARREL);
-        recipe1.setGroup(name);
-        Bukkit.getServer().addRecipe(recipe1);
+        Utility.mirror(recipe, name, item);
     }
 
     public void ability(BlockBreakEvent event){
         event.setDropItems(false);
         Player player = event.getPlayer();
         PlayerInventory inv = player.getInventory();
-        World world = null;
+        World world = player.getWorld();
         Block block = event.getBlock();
         Location loc = block.getLocation();
         Material type = block.getType();
         if(exception.contains(type)){
             ItemStack item = new ItemStack(type);
             if(!inv.addItem(item).isEmpty())
-                loc.getWorld().dropItemNaturally(loc, item);
+                world.dropItemNaturally(loc, item);
             return;
         }
         List<ItemStack> items = new ArrayList<>(block.getDrops(inv.getItemInMainHand(), player));
         BlockState state = block.getState();
-        if(state instanceof Container) {
+        if(state instanceof Container && !(state instanceof ShulkerBox)) {
             Inventory container = ((Container) state).getInventory();
             if(container.getHolder() instanceof DoubleChest){
                 Chest chest = (Chest) block.getBlockData();
@@ -95,12 +84,8 @@ public class Magnet extends Enchant implements Extractable {
             items.removeIf(Objects::isNull);
         }
         for(ItemStack item : items){
-            if(world!=null)
+            if(!inv.addItem(item).isEmpty())
                 world.dropItemNaturally(loc, item);
-            else if(!inv.addItem(item).isEmpty()){
-                world = loc.getWorld();
-                world.dropItemNaturally(loc, item);
-            }
         }
     }
 }

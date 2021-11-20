@@ -1,10 +1,7 @@
 package com.klin.holoItems.collections.gen3.pekoraCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.gen3.pekoraCollection.items.CarrotCannon;
-import com.klin.holoItems.collections.gen3.pekoraCollection.items.Compactor;
-import com.klin.holoItems.collections.gen3.pekoraCollection.items.DoubleUp;
-import com.klin.holoItems.collections.gen3.pekoraCollection.items.PekoNote;
+import com.klin.holoItems.collections.gen3.pekoraCollection.items.*;
 import org.bukkit.Statistic;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -26,6 +23,7 @@ public class PekoraCollection extends Collection {
         collection.add(new CarrotCannon());
         collection.add(new Compactor());
         collection.add(new PekoNote());
+        collection.add(new Detonator());
     }
 
     public Map<String, Integer> getStat(Player player){
