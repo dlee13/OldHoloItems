@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LargeFireball;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -40,6 +41,7 @@ public class Fireball extends Spell {
             return false;
 
         Block block = event.getClickedBlock().getRelative(BlockFace.UP);
+        Player player = event.getPlayer();
         new BukkitRunnable(){
             public void run(){
                 Material type = block.getType();
@@ -50,6 +52,7 @@ public class Fireball extends Spell {
                 else if(type==Material.SOUL_FIRE)
                     fireball = loc.getWorld().spawn(loc, org.bukkit.entity.Fireball.class);
                 else return;
+                fireball.setShooter(player);
                 block.setType(Material.AIR);
                 new Task(HoloItems.getInstance(), 0, 1){
                     int increment = 0;

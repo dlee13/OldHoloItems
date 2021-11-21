@@ -1,4 +1,4 @@
-package com.klin.holoItems.collections.gen0.robocosanCollection.items;
+package com.klin.holoItems.collections.gen0.robocoCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;

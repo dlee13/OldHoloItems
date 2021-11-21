@@ -16,7 +16,7 @@ import com.klin.holoItems.collections.gamers.mioCollection.MioCollection;
 import com.klin.holoItems.collections.gamers.okayuCollection.OkayuCollection;
 import com.klin.holoItems.collections.gen0.azkiCollection.AzkiCollection;
 import com.klin.holoItems.collections.gen0.mikoCollection.MikoCollection;
-import com.klin.holoItems.collections.gen0.robocosanCollection.RobocosanCollection;
+import com.klin.holoItems.collections.gen0.robocoCollection.RobocoCollection;
 import com.klin.holoItems.collections.gen0.soraCollection.SoraCollection;
 import com.klin.holoItems.collections.gen0.suiseiCollection.SuiseiCollection;
 import com.klin.holoItems.collections.gen1.akiCollection.AkiCollection;
@@ -104,7 +104,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
 
         collections.put(SuiseiCollection.name, new SuiseiCollection());
         collections.put(SoraCollection.name, new SoraCollection());
-        collections.put(RobocosanCollection.name, new RobocosanCollection());
+        collections.put(RobocoCollection.name, new RobocoCollection());
         collections.put(MikoCollection.name, new MikoCollection());
         collections.put(AzkiCollection.name, new AzkiCollection());
 

@@ -6,7 +6,6 @@ import com.klin.holoItems.interfaces.Closeable;
 import com.klin.holoItems.interfaces.Holdable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.utility.Utility;
-import jdk.jshell.execution.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -57,12 +56,12 @@ public class ShoulderBagStrap extends Item implements Placeable, Holdable, Close
         InventoryHolder holder = event.getInventory().getHolder();
         if(holder instanceof ShulkerBox) {
             Block block = ((ShulkerBox) holder).getBlock();
-            block.setType(Material.AIR);
             Location loc = block.getLocation();
             for(ItemStack item : block.getDrops()) {
                 if (!event.getPlayer().getInventory().addItem(item).isEmpty())
                     loc.getWorld().dropItemNaturally(loc, item);
             }
+            block.setType(Material.AIR);
         }
     }
 }
