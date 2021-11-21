@@ -44,6 +44,7 @@ public class Detonator extends Item implements Placeable {
         Set<Location> temp = new HashSet<>();
         World world = loc.getWorld();
         TNTPrimed primed = world.spawn(loc, TNTPrimed.class);
+        primed.setSource(event.getPlayer());
         primed.setFuseTicks(0);
         temp.add(loc);
         new Task(HoloItems.getInstance(), 2, 1){
