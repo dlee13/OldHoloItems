@@ -40,6 +40,7 @@ public class HoloItems extends JavaPlugin {
         getCommand("removechunktickets").setExecutor(collections);
         getCommand("setcustommodeldata").setExecutor(collections);
         getCommand("setenchantments").setExecutor(collections);
+        getCommand("setid").setExecutor(collections);
         getCommand("settype").setExecutor(collections);
         getCommand("test").setExecutor(collections);
 

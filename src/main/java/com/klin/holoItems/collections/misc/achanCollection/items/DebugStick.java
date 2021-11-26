@@ -54,8 +54,7 @@ public class DebugStick extends Enchant implements Interactable {
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("a","b","c");
         recipe.setIngredient('a', Material.LEVER);
         recipe.setIngredient('b', Material.TURTLE_HELMET);

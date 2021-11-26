@@ -8,6 +8,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.HashSet;
@@ -40,6 +41,8 @@ public class Detonator extends Item implements Placeable {
     }
 
     public void ability(BlockPlaceEvent event) {
+        ItemStack item = event.getItemInHand();
+        item.setAmount(item.getAmount()-1);
         Location loc = event.getBlockPlaced().getLocation();
         Set<Location> temp = new HashSet<>();
         World world = loc.getWorld();

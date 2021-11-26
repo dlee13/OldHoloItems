@@ -1,6 +1,7 @@
 package com.klin.holoItems.utility;
 
 import com.klin.holoItems.Collections;
+import com.klin.holoItems.Events;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Enchant;
@@ -37,10 +38,10 @@ import static org.bukkit.Material.*;
 
 public class Utility {
     public static final NamespacedKey key = new NamespacedKey(HoloItems.getInstance(), "holoItems");
-    public static final NamespacedKey pack = new NamespacedKey(HoloItems.getInstance(), "pack");
     public static final NamespacedKey stack = new NamespacedKey(HoloItems.getInstance(), "stack");
     public static final NamespacedKey cooldown = new NamespacedKey(HoloItems.getInstance(), "cooldown");
     public static final NamespacedKey enchant = new NamespacedKey(HoloItems.getInstance(), "enchant");
+    public static final NamespacedKey pack = new NamespacedKey(HoloItems.getInstance(), "pack");
     public static final NamespacedKey data = new NamespacedKey(HoloItems.getInstance(), "data");
     public static final Map<BlockFace, Vector> cardinal = Map.of(
             BlockFace.NORTH, new Vector(0, 0, -1),
@@ -246,6 +247,16 @@ public class Utility {
         return str;
     }
 
+    public static String formatType(Material type){
+        String str = "";
+        for(String s : type.toString().split("_")){
+            if(s.length()<1)
+                return "";
+            str += " " + s.charAt(0) + s.substring(1).toLowerCase();
+        }
+        return str.substring(1);
+    }
+
     public static List<String> processStr(String str){
         if(str==null)
             return new ArrayList<>(List.of("§7Crafting ingredient"));
@@ -447,6 +458,8 @@ public class Utility {
                 total -= addend;
                 if(total>=item.getType().getMaxDurability()){
                     item.setAmount(0);
+                    if(player instanceof Player)
+                        Events.manageDurability((Player) player);
                     return -1;
                 }
             } else {
@@ -472,6 +485,8 @@ public class Utility {
             durability[0] = durability[0]+(int) addend;
             if(durability[0]<=0){
                 item.setAmount(0);
+                if(player instanceof Player)
+                    Events.manageDurability((Player) player);
                 return -1;
             }
         } else if(addend>0) {
@@ -490,9 +505,21 @@ public class Utility {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        if(player instanceof Player)
-            ((Player) player).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(breaking));
+        if(player instanceof Player) {
+            Player p = (Player) player;
+            if(Events.manageDurability(p))
+                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(breaking));
+        }
         return total;
+    }
+
+    public static int[] getDurability(ItemStack item){
+        if(item==null)
+            return null;
+        ItemMeta meta = item.getItemMeta();
+        if(meta==null)
+            return null;
+        return getDurability(meta.getLore());
     }
 
     public static int[] getDurability(List<String> lore){
@@ -742,6 +769,21 @@ public class Utility {
         }
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
+    }
+
+    private static Map<Player, String> messageBuffer = new HashMap<>();
+
+    public static void actionMessage(Player player, String str){
+        String message = messageBuffer.get(player);
+        if(message!=null){
+            messageBuffer.replace(player, message + str);
+            return;
+        } else messageBuffer.put(player, str);
+        new BukkitRunnable(){
+            public void run(){
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(messageBuffer.get(player)));
+            }
+        }.runTask(HoloItems.getInstance());
     }
 }
 

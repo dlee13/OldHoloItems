@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
@@ -139,12 +138,12 @@ public class Comet extends Item implements Interactable {
             stand.getEquipment().setItemInOffHand(item);
         }
 
-        if (player.getGameMode()!=GameMode.CREATIVE)
-            Utility.addDurability(item, -1, player);
-
         String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
         boolean bread = enchant!=null && enchant.contains(SpaceBreadSplash.name);
         double height = player.getLocation().getY();
+
+        if (player.getGameMode()!=GameMode.CREATIVE)
+            Utility.addDurability(item, -1, player);
         new Task(HoloItems.getInstance(), 1, 1){
             double increment = 0;
             final boolean crit = player.getLocation().getY()<height;
@@ -155,13 +154,13 @@ public class Comet extends Item implements Interactable {
                     if(!targets.isEmpty()) {
                         if (player.getGameMode()!=GameMode.CREATIVE)
                             Utility.addDurability(item, 0.5, player);
+                        ItemStack clone = item.clone();
+                        if(bread) {
+                            clone.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 5);
+                            clone.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, 5);
+                            clone.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
+                        }
                         for (LivingEntity target : targets) {
-                            ItemStack clone = item.clone();
-                            if(bread) {
-                                clone.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 5);
-                                clone.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, 5);
-                                clone.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-                            }
                             if (target.isValid() && (!(target instanceof Player) || !((Player) target).isBlocking()))
                                 Utility.damage(clone, damage, crit, player, target, false, true, false);
                         }

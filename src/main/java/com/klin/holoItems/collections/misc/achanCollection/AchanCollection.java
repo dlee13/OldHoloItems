@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.misc.achanCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.misc.achanCollection.items.Clipboard;
 import com.klin.holoItems.collections.misc.achanCollection.items.DebugStick;
 import com.klin.holoItems.collections.misc.achanCollection.items.ShoulderBagStrap;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ public class AchanCollection extends Collection {
         super(name, desc, theme, base64);
         collection.add(new ShoulderBagStrap());
         collection.add(new DebugStick());
+        collection.add(new Clipboard());
     }
 
     public Map<String, Integer> getStat(Player player){

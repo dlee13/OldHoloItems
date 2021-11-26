@@ -20,10 +20,7 @@ import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
 import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
@@ -48,6 +45,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
 
@@ -855,7 +856,6 @@ public class Events implements Listener {
     public void extractAbility(BlockBreakEvent event){
         if(event.isCancelled())
             return;
-
         Block block = event.getBlock();
         Player player = event.getPlayer();
         Breakable breakable = Utility.findItem(block, Breakable.class, player);
@@ -882,9 +882,9 @@ public class Events implements Listener {
                 if(enchant==null)
                     continue;
                 for (String enchantment : enchant.split(" ")) {
-                    Item generic = Collections.items.get(enchantment);
-                    if (generic instanceof Extractable)
-                        ((Extractable) generic).ability(event);
+                    Extractable enchanted = Utility.findItem(enchantment, Extractable.class);
+                    if (enchanted!=null)
+                        enchanted.ability(event);
                 }
             }
         }
@@ -1231,6 +1231,8 @@ public class Events implements Listener {
         swappable = Utility.findItem(item, Swappable.class, player);
         if(swappable!=null)
             swappable.ability(event, player, item, false);
+
+        manageDurability(player);
     }
 
     @EventHandler
@@ -1306,6 +1308,101 @@ public class Events implements Listener {
             }
         }
         return -1;
+    }
+
+    @EventHandler
+    public void manageDurability(PlayerItemHeldEvent event){
+        manageDurability(event.getPlayer());
+    }
+
+    public static Set<Player> managers = new HashSet<>();
+
+    public static boolean manageDurability(Player player){
+        if(!managers.contains(player))
+            return true;
+        PlayerInventory inv = player.getInventory();
+        Scoreboard scoreboard = player.getScoreboard();
+        Objective obj = scoreboard.getObjective("durability");
+        if(obj!=null)
+            obj.unregister();
+        new BukkitRunnable(){
+            public void run(){
+                Objective obj = scoreboard.getObjective("durability");
+                if(obj!=null)
+                    return;
+                ItemStack[] items = new ItemStack[2];
+                items[0] = inv.getItemInMainHand();
+                items[1] = inv.getItemInOffHand();
+                int size = 0;
+                int[][] durability = new int[2][2];
+                durability[0] = Utility.getDurability(items[0]);
+                durability[1] = Utility.getDurability(items[1]);
+                if(durability[0]==null)
+                    items[0] = null;
+                else
+                    size++;
+                if(durability[1]==null)
+                    items[1] = null;
+                else
+                    size++;
+                if(size==0)
+                    return;
+                size *= 2;
+                Objective objective = scoreboard.registerNewObjective("durability", "manage", "Durability");
+                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                for(int i=0; i<2; i++){
+                    ItemStack item = items[i];
+                    if(item==null)
+                        continue;
+                    String name = item.getItemMeta().getDisplayName();
+                    if(name.isEmpty())
+                        name = Utility.formatType(item.getType());
+                    else
+                        name = ChatColor.stripColor(name);
+                    Score score = objective.getScore((i==0?"§6":"§b") + name);
+                    score.setScore(size);
+                    String bar = "████";
+                    int index = -1;
+                    char code;
+                    switch((int) ((((double) durability[i][0])/durability[i][1])*10)){
+                        case 10:
+                            if(durability[i][0]==durability[i][1])
+                                index = 4;
+                        case 9:
+                        case 8:
+                        case 7:
+                        case 6:
+                            code = 'a';
+                            if(index==-1)
+                                index = 3;
+                            break;
+                        case 5:
+                        case 4:
+                        case 3:
+                            code = 'e';
+                            index = 2;
+                            break;
+                        case 2:
+                        case 1:
+                        case 0:
+                            code = 'c';
+                            if(durability[i][0]==1)
+                                index = 4;
+                            else
+                                index = 1;
+                            break;
+                        default:
+                            code = '7';
+                            index = 4;
+                    }
+                    score = objective.getScore("§" + code + bar.substring(0, index) + "§7" + bar.substring(index) + " §f" + durability[i][0] + (i==1?" ":""));
+                    size--;
+                    score.setScore(size);
+                    size--;
+                }
+            }
+        }.runTask(HoloItems.getInstance());
+        return false;
     }
 
     @EventHandler

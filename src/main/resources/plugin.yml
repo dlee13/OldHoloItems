@@ -60,6 +60,9 @@ commands:
   setenchantments:
     permission: holoItems.op
     usage: /<command> <enchantments>
+  setid:
+    permission: holoItems.op
+    usage: /<command> <id>
   settype:
     permission: holoItems.op
     usage: /<command> <type>

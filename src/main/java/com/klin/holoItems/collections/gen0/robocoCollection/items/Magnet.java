@@ -56,13 +56,17 @@ public class Magnet extends Enchant implements Extractable {
     }
 
     public void ability(BlockBreakEvent event){
+        if(!event.isDropItems())
+            return;
+        Block block = event.getBlock();
+        Material type = block.getType();
+        if(block.getType()==Material.PLAYER_HEAD)
+            return;
         event.setDropItems(false);
         Player player = event.getPlayer();
         PlayerInventory inv = player.getInventory();
         World world = player.getWorld();
-        Block block = event.getBlock();
         Location loc = block.getLocation();
-        Material type = block.getType();
         if(exception.contains(type)){
             ItemStack item = new ItemStack(type);
             if(!inv.addItem(item).isEmpty())

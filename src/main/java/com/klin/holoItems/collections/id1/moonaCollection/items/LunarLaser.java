@@ -4,7 +4,6 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
 import com.klin.holoItems.collections.gen3.flareCollection.items.Splinter;
-import com.klin.holoItems.collections.id1.moonaCollection.MoonaCollection;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -23,7 +22,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.HashSet;
@@ -96,8 +94,14 @@ public class LunarLaser extends Enchant implements Interactable {
             if(glass.contains(block.getType())) {
                 BlockBreakEvent breakEvent = new BlockBreakEvent(block, player);
                 Bukkit.getServer().getPluginManager().callEvent(breakEvent);
-                if(!breakEvent.isCancelled())
-                    event.getClickedBlock().breakNaturally(item);
+                if(!breakEvent.isCancelled()) {
+                    if(breakEvent.isDropItems())
+                        block.breakNaturally(item);
+                    else {
+                        block.setType(Material.AIR);
+                        Utility.addDurability(item, -1, event.getPlayer());
+                    }
+                }
             }
             return;
         }

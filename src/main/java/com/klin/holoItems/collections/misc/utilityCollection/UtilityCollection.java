@@ -2,6 +2,7 @@ package com.klin.holoItems.collections.misc.utilityCollection;
 
 import com.klin.holoItems.Collection;
 import com.klin.holoItems.collections.misc.opCollection.items.*;
+import com.klin.holoItems.collections.misc.utilityCollection.items.Enchanted;
 import com.klin.holoItems.collections.misc.utilityCollection.items.Modified;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,7 @@ public class UtilityCollection extends Collection {
     public UtilityCollection(){
         super(name, desc, theme, base64);
         collection.add(new Modified());
+        collection.add(new Enchanted());
     }
 
     public Map<String, Integer> getStat(Player player){
