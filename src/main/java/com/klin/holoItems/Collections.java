@@ -1,16 +1,16 @@
 package com.klin.holoItems;
 
-import com.klin.holoItems.collections.holoCouncil.BaeCollection.BaeCollection;
-import com.klin.holoItems.collections.holoCouncil.FaunaCollection.FaunaCollection;
-import com.klin.holoItems.collections.holoCouncil.KroniiCollection.KroniiCollection;
-import com.klin.holoItems.collections.holoCouncil.MumeiCollection.MumeiCollection;
-import com.klin.holoItems.collections.holoCouncil.SanaCollection.SanaCollection;
-import com.klin.holoItems.collections.holoMyth.calliCollection.CalliCollection;
-import com.klin.holoItems.collections.holoMyth.guraCollection.GuraCollection;
-import com.klin.holoItems.collections.holoMyth.inaCollection.InaCollection;
-import com.klin.holoItems.collections.holoMyth.irysCollection.IrysCollection;
-import com.klin.holoItems.collections.holoMyth.kiaraCollection.KiaraCollection;
-import com.klin.holoItems.collections.holoMyth.watsonCollection.WatsonCollection;
+import com.klin.holoItems.collections.en2.BaeCollection.BaeCollection;
+import com.klin.holoItems.collections.en2.FaunaCollection.FaunaCollection;
+import com.klin.holoItems.collections.en2.KroniiCollection.KroniiCollection;
+import com.klin.holoItems.collections.en2.MumeiCollection.MumeiCollection;
+import com.klin.holoItems.collections.en2.SanaCollection.SanaCollection;
+import com.klin.holoItems.collections.en1.calliCollection.CalliCollection;
+import com.klin.holoItems.collections.en1.guraCollection.GuraCollection;
+import com.klin.holoItems.collections.en1.inaCollection.InaCollection;
+import com.klin.holoItems.collections.en1.irysCollection.IrysCollection;
+import com.klin.holoItems.collections.en1.kiaraCollection.KiaraCollection;
+import com.klin.holoItems.collections.en1.watsonCollection.WatsonCollection;
 import com.klin.holoItems.collections.gamers.koroneCollection.KoroneCollection;
 import com.klin.holoItems.collections.gamers.mioCollection.MioCollection;
 import com.klin.holoItems.collections.gamers.okayuCollection.OkayuCollection;
@@ -43,7 +43,7 @@ import com.klin.holoItems.collections.gen5.botanCollection.BotanCollection;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
 import com.klin.holoItems.collections.gen5.neneCollection.NeneCollection;
 import com.klin.holoItems.collections.gen5.polkaCollection.PolkaCollection;
-import com.klin.holoItems.collections.misc.utilityCollection.UtilityCollection;
+import com.klin.holoItems.collections.hidden.utilityCollection.UtilityCollection;
 import com.klin.holoItems.collections.stars1.aruranCollection.AruranCollection;
 import com.klin.holoItems.collections.stars2.astelCollection.AstelCollection;
 import com.klin.holoItems.collections.stars1.izuruCollection.IzuruCollection;
@@ -60,10 +60,10 @@ import com.klin.holoItems.collections.id2.anyaCollection.AnyaCollection;
 import com.klin.holoItems.collections.id2.ollieCollection.OllieCollection;
 import com.klin.holoItems.collections.id2.reineCollection.ReineCollection;
 import com.klin.holoItems.collections.misc.achanCollection.AchanCollection;
-import com.klin.holoItems.collections.misc.franCollection.FranCollection;
-import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
-import com.klin.holoItems.collections.misc.klinCollection.KlinCollection;
-import com.klin.holoItems.collections.misc.opCollection.OpCollection;
+import com.klin.holoItems.collections.hidden.franCollection.FranCollection;
+import com.klin.holoItems.collections.misc.ingredientsCollection.IngredientsCollection;
+import com.klin.holoItems.collections.hidden.klinCollection.KlinCollection;
+import com.klin.holoItems.collections.hidden.opCollection.OpCollection;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Utility;
@@ -91,104 +91,170 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class Collections implements CommandExecutor, Listener, TabCompleter {
-    public static Map<String, Collection> collections = new LinkedHashMap<>();
-    public static final Set<Integer> taskIds = new HashSet<>();
+    public static Map<String, Collection> collections = new HashMap<>();
+    private static final Map<Integer, Set<Collection>> gens = new HashMap<>();
+    private static final Map<Integer, ItemStack> front = new HashMap<>();
+    private static final Map<ItemStack, Integer> back = new HashMap<>();
     private static final Map<String, ItemStack> heads = new HashMap<>();
-    private static ItemStack back;
-    private static ItemStack next;
     public static Set<String> disabled = new HashSet<>();
     public static Map<String, Item> items = new LinkedHashMap<>();
+    public static final Set<Integer> taskIds = new HashSet<>();
 
     public Collections(){
-        collections.put(IngredientCollection.name, new IngredientCollection());
+        int[] index = {0};
 
-        collections.put(SuiseiCollection.name, new SuiseiCollection());
-        collections.put(SoraCollection.name, new SoraCollection());
-        collections.put(RobocoCollection.name, new RobocoCollection());
-        collections.put(MikoCollection.name, new MikoCollection());
-        collections.put(AzkiCollection.name, new AzkiCollection());
+        Set<Collection> misc = new LinkedHashSet<>();
+        misc.add(new IngredientsCollection());
+        misc.add(new AchanCollection());
+        gens.put(index[0], misc);
+        item(Material.PAPER, "Misc.", index);
 
-        collections.put(MelCollection.name, new MelCollection());
-        collections.put(FubukiCollection.name, new FubukiCollection());
-        collections.put(MatsuriCollection.name, new MatsuriCollection());
-        collections.put(AkiCollection.name, new AkiCollection());
-        collections.put(HaachamaCollection.name, new HaachamaCollection());
+        Set<Collection> gen0 = new LinkedHashSet<>();
+        gen0.add(new SuiseiCollection());
+        gen0.add(new SoraCollection());
+        gen0.add(new RobocoCollection());
+        gen0.add(new MikoCollection());
+        gen0.add(new AzkiCollection());
+        gens.put(index[0], gen0);
+        item(Material.PAPER, "Gen 0", index);
 
-        collections.put(AquaCollection.name, new AquaCollection());
-        collections.put(ShionCollection.name, new ShionCollection());
-        collections.put(AyameCollection.name, new AyameCollection());
-        collections.put(ChocoCollection.name, new ChocoCollection());
-        collections.put(SubaruCollection.name, new SubaruCollection());
+        Set<Collection> gen1 = new LinkedHashSet<>();
+        gen1.add(new MelCollection());
+        gen1.add(new FubukiCollection());
+        gen1.add(new MatsuriCollection());
+        gen1.add(new AkiCollection());
+        gen1.add(new HaachamaCollection());
+        gens.put(index[0], gen1);
+        item(Material.PAPER, "Gen 1", index);
 
-        collections.put(MioCollection.name, new MioCollection());
-        collections.put(OkayuCollection.name, new OkayuCollection());
-        collections.put(KoroneCollection.name, new KoroneCollection());
+        Set<Collection> gen2 = new LinkedHashSet<>();
+        gen2.add(new AquaCollection());
+        gen2.add(new ShionCollection());
+        gen2.add(new AyameCollection());
+        gen2.add(new ChocoCollection());
+        gen2.add(new SubaruCollection());
+        gens.put(index[0], gen2);
+        item(Material.PAPER, "Gen 2", index);
 
-        collections.put(PekoraCollection.name, new PekoraCollection());
-        collections.put(RushiaCollection.name, new RushiaCollection());
-        collections.put(FlareCollection.name, new FlareCollection());
-        collections.put(NoelCollection.name, new NoelCollection());
-        collections.put(MarineCollection.name, new MarineCollection());
+        Set<Collection> gamers = new LinkedHashSet<>();
+        gamers.add(new MioCollection());
+        gamers.add(new OkayuCollection());
+        gamers.add(new KoroneCollection());
+        gens.put(index[0], gamers);
+        item(Material.PAPER, "Gamers", index);
 
-        collections.put(KanataCollection.name, new KanataCollection());
-        collections.put(CocoCollection.name, new CocoCollection());
-        collections.put(WatameCollection.name, new WatameCollection());
-        collections.put(TowaCollection.name, new TowaCollection());
-        collections.put(LunaCollection.name, new LunaCollection());
+        Set<Collection> gen3 = new LinkedHashSet<>();
+        gen3.add(new PekoraCollection());
+        gen3.add(new RushiaCollection());
+        gen3.add(new FlareCollection());
+        gen3.add(new NoelCollection());
+        gen3.add(new MarineCollection());
+        gens.put(index[0], gen3);
+        item(Material.PAPER, "Gen 3", index);
 
-        collections.put(RisuCollection.name, new RisuCollection());
-        collections.put(MoonaCollection.name, new MoonaCollection());
-        collections.put(IofiCollection.name, new IofiCollection());
+        Set<Collection> gen4 = new LinkedHashSet<>();
+        gen4.add(new KanataCollection());
+        gen4.add(new CocoCollection());
+        gen4.add(new WatameCollection());
+        gen4.add(new TowaCollection());
+        gen4.add(new LunaCollection());
+        gens.put(index[0], gen4);
+        item(Material.PAPER, "Gen 4", index);
 
-        collections.put(LamyCollection.name, new LamyCollection());
-        collections.put(NeneCollection.name, new NeneCollection());
-        collections.put(BotanCollection.name, new BotanCollection());
-        collections.put(PolkaCollection.name, new PolkaCollection());
+        Set<Collection> id1 = new LinkedHashSet<>();
+        id1.add(new RisuCollection());
+        id1.add(new MoonaCollection());
+        id1.add(new IofiCollection());
+        gens.put(index[0], id1);
+        item(Material.PAPER, "Id 1", index);
 
-        collections.put(AchanCollection.name, new AchanCollection());
+        Set<Collection> gen5 = new LinkedHashSet<>();
+        gen5.add(new LamyCollection());
+        gen5.add(new NeneCollection());
+        gen5.add(new BotanCollection());
+        gen5.add(new PolkaCollection());
+        gens.put(index[0], gen5);
+        item(Material.PAPER, "Gen 5", index);
 
-        collections.put(CalliCollection.name, new CalliCollection());
-        collections.put(KiaraCollection.name, new KiaraCollection());
-        collections.put(InaCollection.name, new InaCollection());
-        collections.put(GuraCollection.name, new GuraCollection());
-        collections.put(WatsonCollection.name, new WatsonCollection());
-        collections.put(IrysCollection.name, new IrysCollection());
+        Set<Collection> en1 = new LinkedHashSet<>();
+        en1.add(new CalliCollection());
+        en1.add(new KiaraCollection());
+        en1.add(new InaCollection());
+        en1.add(new GuraCollection());
+        en1.add(new WatsonCollection());
+        en1.add(new IrysCollection());
+        gens.put(index[0], en1);
+        item(Material.PAPER, "Myth", index);
 
-        collections.put(OllieCollection.name, new OllieCollection());
-        collections.put(AnyaCollection.name, new AnyaCollection());
-        collections.put(ReineCollection.name, new ReineCollection());
+        Set<Collection> id2 = new LinkedHashSet<>();
+        id2.add(new OllieCollection());
+        id2.add(new AnyaCollection());
+        id2.add(new ReineCollection());
+        gens.put(index[0], id2);
+        item(Material.PAPER, "Id 2", index);
 
-        collections.put(SanaCollection.name, new SanaCollection());
-        collections.put(FaunaCollection.name, new FaunaCollection());
-        collections.put(KroniiCollection.name, new KroniiCollection());
-        collections.put(MumeiCollection.name, new MumeiCollection());
-        collections.put(BaeCollection.name, new BaeCollection());
+        Set<Collection> en2 = new LinkedHashSet<>();
+        en2.add(new SanaCollection());
+        en2.add(new FaunaCollection());
+        en2.add(new KroniiCollection());
+        en2.add(new MumeiCollection());
+        en2.add(new BaeCollection());
+        gens.put(index[0], en2);
+        item(Material.PAPER, "Council", index);
 
-        collections.put(MiyabiCollection.name, new MiyabiCollection());
-        collections.put(IzuruCollection.name, new IzuruCollection());
-        collections.put(AruranCollection.name, new AruranCollection());
-        collections.put(RikkaCollection.name, new RikkaCollection());
+        Set<Collection> stars1 = new LinkedHashSet<>();
+        stars1.add(new MiyabiCollection());
+        stars1.add(new IzuruCollection());
+        stars1.add(new AruranCollection());
+        stars1.add(new RikkaCollection());
+        gens.put(index[0], stars1);
+        item(Material.PAPER, "Stars 1", index);
 
-        collections.put(AstelCollection.name, new AstelCollection());
-        collections.put(TemmaCollection.name, new TemmaCollection());
-        collections.put(RoberuCollection.name, new RoberuCollection());
+        Set<Collection> stars2 = new LinkedHashSet<>();
+        stars2.add(new AstelCollection());
+        stars2.add(new TemmaCollection());
+        stars2.add(new RoberuCollection());
+        gens.put(index[0], stars2);
+        item(Material.PAPER, "Stars 2", index);
 
-        collections.put(ShienCollection.name, new ShienCollection());
-        collections.put(OgaCollection.name, new OgaCollection());
+        Set<Collection> stars3 = new LinkedHashSet<>();
+        stars3.add(new ShienCollection());
+        stars3.add(new OgaCollection());
+        gens.put(index[0], stars3);
+        item(Material.PAPER, "Stars 3", index);
 
-        collections.put(FranCollection.name, new FranCollection());
-        collections.put(KlinCollection.name, new KlinCollection());
-        collections.put(OpCollection.name, new OpCollection());
-        collections.put(UtilityCollection.name, new UtilityCollection());
+        Set<Collection> hidden = new LinkedHashSet<>();
+        hidden.add(new FranCollection());
+        hidden.add(new KlinCollection());
+        hidden.add(new OpCollection());
+        hidden.add(new UtilityCollection());
+        gens.put(index[0], hidden);
 
-        back = new ItemStack(Material.SPRUCE_TRAPDOOR);
-        ItemMeta backMeta = back.getItemMeta();
-        backMeta.setDisplayName("§fBack");
-        back.setItemMeta(backMeta);
+        for(Set<Collection> set : gens.values()){
+            for(Collection collection : set)
+                collections.put(collection.name, collection);
+        }
 
-        next = back.clone();
-        backMeta.setDisplayName("§fNext");
-        next.setItemMeta(backMeta);
+        ItemStack up = new ItemStack(Material.LANTERN);
+        ItemMeta upMeta = up.getItemMeta();
+        upMeta.setDisplayName("§fUp");
+        up.setItemMeta(upMeta);
+        front.put(-1, up);
+
+        ItemStack down = new ItemStack(Material.SOUL_LANTERN);
+        ItemMeta downMeta = down.getItemMeta();
+        downMeta.setDisplayName("§fDown");
+        down.setItemMeta(downMeta);
+        front.put(-2, down);
+
+        ItemStack top = new ItemStack(Material.REDSTONE_LAMP);
+        ItemMeta topMeta = top.getItemMeta();
+        topMeta.setDisplayName("§fBack to Top");
+        top.setItemMeta(topMeta);
+        front.put(-3, top);
+
+        for(Integer key : front.keySet())
+            back.put(front.get(key), key);
 
         setupHeads();
     }
@@ -201,30 +267,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         String command = cmd.getName().toLowerCase();
         switch(command) {
             case "collections":
-                boolean live = true;
-                boolean stars = args.length>0 && args[0].equals("1");
-                Inventory inv = Bukkit.createInventory(null, 54, "Collections");
-                for (Collection collection : collections.values()) {
-                    if (collection.base64 == null)
-                        continue;
-                    if(MiyabiCollection.name.equals(collection.name)){
-                        if(stars) live = false;
-                        else break;
-                    } if(stars && live)
-                        continue;
-                    ItemStack item = heads.get(collection.name);
-                    item = item.clone();
-                    ItemMeta meta = item.getItemMeta();
-                    List<String> lore = meta.getLore();
-                    if (lore == null)
-                        lore = new ArrayList<>();
-                    lore.add("§f" + collection.theme + ": §7" + Utility.add(collection.getStat(player)));
-                    meta.setLore(lore);
-                    item.setItemMeta(meta);
-                    inv.addItem(item);
-                }
-                inv.setItem(53, stars ? back : next);
-                player.openInventory(inv);
+                player.openInventory(createInv(0, player));
                 return true;
 
             case "coordinates":
@@ -532,62 +575,74 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
     @EventHandler
     public static void viewCollection(InventoryClickEvent event){
         InventoryView view = event.getView();
-        if(view.getTopInventory().getHolder()!=null || !view.getTitle().contains("Collections"))
+        Inventory top = view.getTopInventory();
+        if(top.getHolder()!=null || !view.getTitle().contains("Collections"))
             return;
         ItemStack curr = event.getCurrentItem();
         if(curr==null)
             return;
 
         event.setCancelled(true);
-        if(curr.equals(back)){
-            new BukkitRunnable(){
-                public void run(){
-                    view.close();
-                    ((Player) event.getWhoClicked()).performCommand("collections");
-                }
-            }.runTask(HoloItems.getInstance());
-            return;
-        } else if(curr.equals(next)){
-            new BukkitRunnable(){
-                public void run(){
-                    view.close();
-                    ((Player) event.getWhoClicked()).performCommand("collections 1");
-                }
-            }.runTask(HoloItems.getInstance());
+        Player player = (Player) event.getWhoClicked();
+        Integer index = back.get(curr);
+        if(index!=null){
+            switch (index){
+                case -3:
+                    index = 0;
+                    break;
+                case -2:
+                    index = back.get(top.getItem(0)) + 1;
+                    break;
+                case -1:
+                    index = back.get(top.getItem(0)) - 1;
+                    break;
+                default:
+                    if(event.getRawSlot()%9==0)
+                        updateInv(index, player, top);
+                    else {
+                        int i = index;
+                        new BukkitRunnable() {
+                            public void run() {
+                                view.close();
+                                player.openInventory(createInv(i, player));
+                            }
+                        }.runTask(HoloItems.getInstance());
+                    }
+                    return;
+            }
+            updateInv(index, player, top);
             return;
         }
 
-        if(event.getRawSlot()>=view.getTopInventory().getSize() || !view.getTitle().equals("Collections"))
+        if(event.getRawSlot()>=top.getSize() || !view.getTitle().equals("Collections"))
             return;
         ItemMeta meta = curr.getItemMeta();
         List<String> lore = meta.getLore();
         if(lore==null)
             return;
         Collection collection = collections.get(meta.getDisplayName().substring(2));
-        boolean expand = lore.get(lore.size() - 1).contains(collection.theme);
-        Player player = (Player) event.getWhoClicked();
         Map<String, Integer> stat = collection.getStat(player);
-        if(stat==null)
-            return;
 
         if(event.getClick()==ClickType.RIGHT) {
-            if(!expand){
-                for(int i=0; i<stat.size(); i++)
-                    lore.remove(lore.size()-1);
-                lore.add("§7"+collection.theme+": "+Utility.add(collection.getStat(player)));
+            if(stat==null)
+                return;
+            if(lore.get(lore.size() - 1).contains(collection.theme)){
+                lore.remove(lore.size()-1);
+                for(String key : stat.keySet())
+                    lore.add("§f"+key+": §7"+stat.get(key));
                 meta.setLore(lore);
                 curr.setItemMeta(meta);
                 return;
             }
-            lore.remove(lore.size()-1);
-            for(String key : stat.keySet())
-                lore.add("§7"+key+": "+stat.get(key));
+            for(int i=0; i<stat.size(); i++)
+                lore.remove(lore.size()-1);
+            lore.add("§f"+collection.theme+": §7"+Utility.add(stat));
             meta.setLore(lore);
             curr.setItemMeta(meta);
             return;
         }
 
-        int cost = Utility.add(stat);
+        int cost = stat==null?0:Utility.add(stat);
         Inventory inv = Bukkit.createInventory(null, ((collection.collection.size()-1)/9+1)*9, "Collections: "+collection.name);
         ItemStack locked = new ItemStack(Material.FIREWORK_STAR);
         int count = 0;
@@ -612,7 +667,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
             }
             count++;
         }
-        inv.setItem(8, collection.getClass().getName().contains("stars") ? next : back);
+        inv.setItem(8, top.getItem(event.getRawSlot()/9*9));
         Utility.reOpen(view, inv, player);
     }
 
@@ -634,7 +689,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                 continue;
             ItemStack head = SkullCreator.itemFromBase64(collection.base64);
             ItemMeta headMeta = head.getItemMeta();
-            headMeta.setDisplayName("§6"+collection.name);
+            headMeta.setDisplayName("§b"+collection.name);
             if(!collection.desc.isEmpty()) {
                 List<String> desc = Utility.processStr(collection.desc);
                 desc.remove(0);
@@ -646,11 +701,56 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         }
     }
 
+    private static Inventory createInv(Integer index, Player player){
+        return updateInv(index, player, Bukkit.createInventory(null, 54, "Collections"));
+    }
+
+    private static Inventory updateInv(Integer index, Player player, Inventory inv){
+        inv.clear();
+        if(index <= 0)
+            index = 0;
+        else
+            inv.setItem(8, front.get(-1));
+        if(index >= gens.size()-7) {
+            index = gens.size() - 7;
+            inv.setItem(53, front.get(-3));
+        } else
+            inv.setItem(53, front.get(-2));
+        for(int i=0; i<6; i++){
+            int slot = i*9;
+            inv.setItem(slot, front.get(index+i));
+            int j = 2;
+            for(Collection collection : gens.get(index+i)){
+                ItemStack item = heads.get(collection.name);
+                item = item.clone();
+                ItemMeta meta = item.getItemMeta();
+                List<String> lore = meta.getLore();
+                if (lore == null)
+                    lore = new ArrayList<>();
+                lore.add("§f" + collection.theme + ": §7" + Utility.add(collection.getStat(player)));
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+                inv.setItem(slot+j, item);
+                j++;
+            }
+        }
+        return inv;
+    }
+
     private static ItemStack tilUnlocked(ItemStack item, String name, int cost){
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§f"+Utility.formatName(name));
         meta.setLore(new ArrayList<>(java.util.Collections.singletonList("§7" + cost + " til Unlocked")));
         item.setItemMeta(meta);
         return item;
+    }
+
+    private static void item(Material material, String name, int[] index){
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§6"+name);
+        item.setItemMeta(meta);
+        front.put(index[0], item);
+        index[0] = index[0] + 1;
     }
 }

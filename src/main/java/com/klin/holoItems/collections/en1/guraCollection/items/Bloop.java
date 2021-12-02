@@ -1,4 +1,4 @@
-package com.klin.holoItems.collections.gen1.akiCollection.items;
+package com.klin.holoItems.collections.en1.guraCollection.items;
 
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
@@ -21,8 +21,9 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public class QuartzBlossom extends BatteryPack implements Extractable, Holdable {
+public class Bloop extends BatteryPack implements Extractable, Holdable {
     public static final String name = "quartzBlossom";
+    private static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYzNTk2MDgwMTEzNiwKICAicHJvZmlsZUlkIiA6ICJkMWY2OTc0YzE2ZmI0ZjdhYjI1NjU4NzExNjM3M2U2NSIsCiAgInByb2ZpbGVOYW1lIiA6ICJGaW9saWVzdGEiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWFhNWU5ODY0ZTNjYjNkZmEwZTVhYjM5ZDZjYzM3ZTllMjc2NTJkZWQ1ZmM5MDc4MzAyYjcxNmZjMjFhZmUzNyIKICAgIH0KICB9Cn0=";
 
     private static final Material material = Material.LILY_OF_THE_VALLEY;
     private static final String lore =
@@ -37,7 +38,7 @@ public class QuartzBlossom extends BatteryPack implements Extractable, Holdable 
     public static final double perFuel = 1;
     public static final int cap = 576;
 
-    public QuartzBlossom(){
+    public Bloop(){
         super(name, material, lore, durability, shiny, cost, content, perFuel, cap);
     }
 
@@ -52,12 +53,14 @@ public class QuartzBlossom extends BatteryPack implements Extractable, Holdable 
         Bukkit.getServer().addRecipe(recipe);
     }
 
+    //exits bucket when swimming, interact event only fires when bloop is out of the bucket (item==bucket)
+    //tailing builds counter, deal bonus dm, right click to tail automatically. missing attack creates a roar instead
     public void effect(PlayerInteractEvent event){
         ItemStack item = event.getItem();
         if(item.getType()==Material.OXEYE_DAISY)
             return;
         ItemMeta meta = item.getItemMeta();
-        Integer currCharge = meta.getPersistentDataContainer().get(com.klin.holoItems.utility.Utility.pack, PersistentDataType.INTEGER);
+        Integer currCharge = meta.getPersistentDataContainer().get(Utility.pack, PersistentDataType.INTEGER);
         if(currCharge==null || currCharge!=576)
             return;
 

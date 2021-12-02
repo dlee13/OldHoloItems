@@ -1,7 +1,7 @@
 package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.collections.misc.franCollection.items.SharpenedFangs;
+import com.klin.holoItems.collections.hidden.franCollection.items.SharpenedFangs;
 import com.klin.holoItems.dungeons.Resetable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;

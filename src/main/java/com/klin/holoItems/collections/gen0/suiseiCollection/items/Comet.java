@@ -2,7 +2,7 @@ package com.klin.holoItems.collections.gen0.suiseiCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.holoCouncil.SanaCollection.items.SpaceBreadSplash;
+import com.klin.holoItems.collections.en2.SanaCollection.items.SpaceBreadSplash;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;

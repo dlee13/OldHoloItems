@@ -4,7 +4,7 @@ import com.klin.holoItems.Collections;
 import com.klin.holoItems.Events;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
-import com.klin.holoItems.collections.misc.ingredientCollection.items.SaintQuartz;
+import com.klin.holoItems.collections.misc.ingredientsCollection.items.SaintQuartz;
 import com.klin.holoItems.interfaces.Activatable;
 import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;

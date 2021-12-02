@@ -12,9 +12,9 @@ import com.klin.holoItems.collections.gen3.pekoraCollection.items.PekoNote;
 import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
-import com.klin.holoItems.collections.misc.ingredientCollection.IngredientCollection;
-import com.klin.holoItems.collections.misc.opCollection.items.GalleryFrame;
-import com.klin.holoItems.collections.misc.opCollection.items.QuartzGranule;
+import com.klin.holoItems.collections.misc.ingredientsCollection.IngredientsCollection;
+import com.klin.holoItems.collections.hidden.opCollection.items.GalleryFrame;
+import com.klin.holoItems.collections.hidden.opCollection.items.QuartzGranule;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
@@ -64,7 +64,7 @@ public class Events implements Listener {
     );
     private final Set<Material> deactive = Set.of(Material.JUKEBOX, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
     private final Set<String> ingredients = new HashSet<>() {{
-        for (Item item : Collections.collections.get(IngredientCollection.name).collection)
+        for (Item item : Collections.collections.get(IngredientsCollection.name).collection)
             add(item.name);
         add(SecretBrew.name);
         add(DoubleUp.name);

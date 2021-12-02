@@ -4,7 +4,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
 import com.klin.holoItems.collections.gen3.flareCollection.items.Splinter;
-import com.klin.holoItems.collections.misc.utilityCollection.items.Modified;
+import com.klin.holoItems.collections.hidden.utilityCollection.items.Modified;
 import com.klin.holoItems.interfaces.Interactable;
 import com.klin.holoItems.utility.Utility;
 import net.md_5.bungee.api.ChatMessageType;

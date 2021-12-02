@@ -3,7 +3,7 @@ package com.klin.holoItems.collections.gen1.haachamaCollection.items;
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.misc.ingredientCollection.items.CoalPetal;
+import com.klin.holoItems.collections.misc.ingredientsCollection.items.CoalPetal;
 import com.klin.holoItems.interfaces.Consumable;
 import com.klin.holoItems.utility.Utility;
 import net.md_5.bungee.api.ChatMessageType;
@@ -22,7 +22,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 import java.util.HashSet;
