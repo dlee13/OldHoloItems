@@ -935,6 +935,10 @@ public class Events implements Listener {
 
     @EventHandler
     public void flauntAbility(AsyncPlayerChatEvent event){
+        //temp
+        if(Utility.test)
+            System.out.println(event.getMessage());
+        //
         if(event.isCancelled() || !event.isAsynchronous())
             return;
         Player player = event.getPlayer();
@@ -1321,10 +1325,16 @@ public class Events implements Listener {
         if(!managers.contains(player))
             return true;
         PlayerInventory inv = player.getInventory();
-        Scoreboard scoreboard = player.getScoreboard();
-        Objective obj = scoreboard.getObjective("durability");
-        if(obj!=null)
+        Scoreboard board = player.getScoreboard();
+        Objective obj = board.getObjective("durability");
+        //temp
+        if(obj==null) {
+            board = Bukkit.getScoreboardManager().getNewScoreboard();
+            player.setScoreboard(board);
+        } else
             obj.unregister();
+        Scoreboard scoreboard = board;
+        //
         new BukkitRunnable(){
             public void run(){
                 Objective obj = scoreboard.getObjective("durability");

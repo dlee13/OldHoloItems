@@ -57,8 +57,7 @@ public class GroundPounder extends Pack {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        ShapedRecipe recipe =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aaa"," b "," b ");
         recipe.setIngredient('a', Material.AMETHYST_CLUSTER);
         recipe.setIngredient('b', Material.POINTED_DRIPSTONE);

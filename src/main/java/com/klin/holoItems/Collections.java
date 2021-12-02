@@ -268,7 +268,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                     return true;
                 }
                 Item item = items.get(args[0]);
-                if (item == null) {
+                if (item == null || item.cost==-1 && !player.hasPermission("holoItems.op")) {
                     player.sendMessage("No such item");
                     return true;
                 }
@@ -592,6 +592,8 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         ItemStack locked = new ItemStack(Material.FIREWORK_STAR);
         int count = 0;
         for(Item item : collection.collection) {
+            if(item.cost==-1)
+                continue;
             if(cost<item.cost)
                 inv.setItem(count, tilUnlocked(locked, item.name, item.cost-cost));
             else {
@@ -619,6 +621,8 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         if(cmd.getName().equals("acquire") && sender instanceof Player && args.length==1) {
             List<String> list = new ArrayList<>(items.keySet());
             list.removeIf(name -> !Pattern.compile(Pattern.quote(args[0]), Pattern.CASE_INSENSITIVE).matcher(name).find());
+            if(!sender.hasPermission("holoItems.op"))
+                list.removeIf(name -> items.get(name).cost==-1);
             return list;
         }
         return new ArrayList<>();

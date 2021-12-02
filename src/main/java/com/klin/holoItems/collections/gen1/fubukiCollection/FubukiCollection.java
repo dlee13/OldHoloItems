@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen1.fubukiCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gen1.fubukiCollection.items.Plow;
 import com.klin.holoItems.collections.gen1.fubukiCollection.items.VerificationSeal;
 import org.bukkit.entity.Player;
 
@@ -18,6 +19,7 @@ public class FubukiCollection extends Collection {
     public FubukiCollection(){
         super(name, desc, theme, base64);
         collection.add(new VerificationSeal());
+        collection.add(new Plow());
     }
 
     public Map<String, Integer> getStat(Player player){

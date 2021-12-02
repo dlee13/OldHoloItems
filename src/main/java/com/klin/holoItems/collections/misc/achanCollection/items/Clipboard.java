@@ -7,6 +7,7 @@ import com.klin.holoItems.interfaces.Interactable;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -49,9 +50,13 @@ public class Clipboard extends Item implements Interactable {
             Objective obj = scoreboard.getObjective("durability");
             if(obj!=null)
                 obj.unregister();
+            //temp
+            player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+            //
         } else {
             Events.managers.add(player);
             Events.manageDurability(player);
         }
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
     }
 }
