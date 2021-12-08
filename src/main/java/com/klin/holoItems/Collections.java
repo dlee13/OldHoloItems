@@ -539,14 +539,17 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                 return true;
 
             case "setid":
-                if(args.length<1)
-                    return false;
                 stack = player.getInventory().getItemInMainHand();
                 if(stack.getType()!=Material.AIR && stack.getItemMeta()!=null) {
                     meta = stack.getItemMeta();
-                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, args[0]);
+                    if(args.length<1) {
+                        meta.getPersistentDataContainer().remove(Utility.key);
+                        player.sendMessage("Id removed");
+                    } else {
+                        meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, args[0]);
+                        player.sendMessage("Id set to: "+args[0]);
+                    }
                     stack.setItemMeta(meta);
-                    player.sendMessage("Id set to: "+args[0]);
                 }
                 return true;
 

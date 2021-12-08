@@ -1,9 +1,11 @@
 package com.klin.holoItems.collections.hidden.utilityCollection.items;
 
 import com.klin.holoItems.Item;
+import com.klin.holoItems.interfaces.Placeable;
 import org.bukkit.Material;
+import org.bukkit.event.block.BlockPlaceEvent;
 
-public class Enchanted extends Item {
+public class Enchanted extends Item implements Placeable {
     public static final String name = "enchanted";
 
     private static final Material material = Material.STICK;
@@ -20,4 +22,8 @@ public class Enchanted extends Item {
     }
 
     public void registerRecipes(){}
+
+    public void ability(BlockPlaceEvent event) {
+        event.setCancelled(false);
+    }
 }

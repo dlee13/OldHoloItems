@@ -12,9 +12,10 @@ import com.klin.holoItems.collections.gen3.pekoraCollection.items.PekoNote;
 import com.klin.holoItems.collections.gen5.botanCollection.items.ScopedRifle;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
-import com.klin.holoItems.collections.misc.ingredientsCollection.IngredientsCollection;
 import com.klin.holoItems.collections.hidden.opCollection.items.GalleryFrame;
 import com.klin.holoItems.collections.hidden.opCollection.items.QuartzGranule;
+import com.klin.holoItems.collections.hidden.utilityCollection.items.Enchanted;
+import com.klin.holoItems.collections.misc.ingredientsCollection.IngredientsCollection;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
@@ -35,10 +36,8 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -192,27 +191,40 @@ public class Events implements Listener {
         ItemStack item = event.getCurrentItem();
         if (item==null || item.getItemMeta()==null)
             return;
-        String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-        if (id == null)
+        Item generic = Utility.findItem(item, Item.class);
+        if (generic == null)
             return;
         if(invType==InventoryType.GRINDSTONE){
-            if(Collections.items.get(id).accepted==null)
-                event.setCancelled(true);
-            else if(slot==2){
-                ItemStack combined = inv.getItem(2);
-                ItemMeta meta = combined.getItemMeta();
-                List<String> lore = meta.getLore();
-                if (lore != null && !lore.isEmpty() && lore.get(0).isEmpty()) {
-                    event.setCancelled(true);
-                    lore.remove(0);
-                    meta.setLore(lore);
-                    combined.setItemMeta(meta);
-                    inv.setItem(2, combined);
-                }
+            if(slot!=2) {
+//                inv.setItem(0, item);
+//                item.setAmount(0);
+                return;
             }
+            ItemStack combined = inv.getItem(2);
+            ItemMeta meta = combined.getItemMeta();
+            List<String> lore = meta.getLore();
+            if (lore!=null && !lore.isEmpty()) {
+                event.setCancelled(true);
+                if(generic.name.equals(Enchanted.name)) {
+                    meta.getPersistentDataContainer().remove(Utility.key);
+                    lore.clear();
+                } else{
+                    String enchants = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+                    if(enchants==null)
+                        return;
+                    for(String ignored : enchants.split(" "))
+                        lore.remove(0);
+                    lore.remove(0);
+                }
+                meta.getPersistentDataContainer().remove(Utility.enchant);
+                meta.setLore(lore);
+                combined.setItemMeta(meta);
+                inv.setItem(2, combined);
+            }
+            return;
         }
         //rewrite to account for new smeltable items
-        if(slot>=inv.getSize() && prohibitedInv.contains(invType) && !ingredients.contains(id))
+        if(slot>=inv.getSize() && prohibitedInv.contains(invType) && !ingredients.contains(generic.name))
             event.setCancelled(true);
     }
 
@@ -225,7 +237,7 @@ public class Events implements Listener {
             return;
         Item item = Utility.findItem(reactant, Item.class);
         Item enchantItem = Utility.findItem(reagent, Item.class);
-        if(item==null && enchantItem==null)
+        if((item==null || item.name.equals(Enchanted.name)) && enchantItem==null)
             return;
         else if(enchantItem instanceof Enchant && !enchantItem.equals(item)) {
             Enchant enchant = (Enchant) enchantItem;
@@ -235,7 +247,7 @@ public class Events implements Listener {
                 return;
             }
             if ((enchant.acceptedIds == null || item == null || !enchant.acceptedIds.contains(item.name)) &&
-                    (enchant.acceptedTypes == null || !(item==null && enchant.acceptedTypes.contains(reactant.getType())))) {
+                    (enchant.acceptedTypes == null || !((item==null || item.name.equals(Enchanted.name)) && enchant.acceptedTypes.contains(reactant.getType())))) {
                 event.setResult(null);
                 return;
             }
@@ -256,24 +268,25 @@ public class Events implements Listener {
                         result.removeEnchantment(enchantment);
                 }
             }
-//            if (item == null) {
-//                if (meta instanceof Damageable) {
-//                    meta.setUnbreakable(true);
-//                    meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-//                    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-//                }
-//                List<String> addDurability = meta.getLore();
-//                if (addDurability == null)
-//                    addDurability = new ArrayList<>();
-//                if (!addDurability.get(addDurability.size() - 1).startsWith("§fDurability: ")) {
-//                    int maxDurability = reactant.getType().getMaxDurability();
-//                    int currDurability = maxDurability - ((Damageable) meta).getDamage();
-//                    addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
-//                    meta.setLore(addDurability);
-//                    result.setItemMeta(meta);
-//                }
-//            }
-            if (!result.equals(event.getResult()))
+            if (item == null) {
+                if (meta instanceof Damageable) {
+                    meta.setUnbreakable(true);
+                    meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+                    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                }
+                List<String> addDurability = meta.getLore();
+                if (addDurability == null)
+                    addDurability = new ArrayList<>();
+                if (!addDurability.get(addDurability.size() - 1).startsWith("§fDurability: ")) {
+                    int maxDurability = reactant.getType().getMaxDurability();
+                    int currDurability = maxDurability - ((Damageable) meta).getDamage();
+                    addDurability.add("");
+                    addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
+                    meta.setLore(addDurability);
+                }
+                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Enchanted.name);
+                result.setItemMeta(meta);
+            } if (!result.equals(event.getResult()))
                 event.setResult(result);
             return;
         } else if(enchantItem==null){
@@ -413,8 +426,10 @@ public class Events implements Listener {
         Item item = Collections.items.get(id);
         if(item==null)
             return;
-
-        if(player.getGameMode()!=GameMode.CREATIVE) {
+        if(Collections.disabled.contains(id)) {
+            player.sendMessage("§cThis item has been disabled");
+            return;
+        } if(player.getGameMode()!=GameMode.CREATIVE) {
             int progress = -2;
             for(Collection collection : Collections.collections.values()){
                 if(collection.collection.contains(item)){
@@ -430,28 +445,19 @@ public class Events implements Listener {
                 Location loc = player.getLocation();
                 boolean excess = false;
                 for (ItemStack ingredient : inv.getMatrix()) {
-                    if (ingredient == null)
-                        continue;
-                    if (ingredient.getAmount() > 1) {
+                    if (ingredient != null && ingredient.getAmount() > 1) {
+                        ingredient.setAmount(ingredient.getAmount()-1);
                         excess = true;
-                        ItemStack refund = ingredient.clone();
-                        refund.setAmount(ingredient.getAmount() - 1);
-                        ingredient.setAmount(1);
-                        world.dropItemNaturally(loc, refund);
                     }
-                }
-                if (excess) {
-                    event.setCancelled(true);
-                    return;
                 }
                 currMeta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
                 curr.setItemMeta(currMeta);
+                if (excess) {
+                    event.setCancelled(true);
+                    world.dropItemNaturally(loc, curr);
+                    return;
+                }
             }
-        }
-
-        if(Collections.disabled.contains(id)) {
-            player.sendMessage("§cThis item has been disabled");
-            return;
         } if(item instanceof Craftable)
             ((Craftable) item).ability(event);
     }
@@ -537,7 +543,7 @@ public class Events implements Listener {
                         chargeable.ability(event);
                 }
             }
-            if (generic==null /*&& enchants==null*/ || !item.getItemMeta().hasEnchant(Enchantment.MENDING))
+            if (generic==null|| !item.getItemMeta().hasEnchant(Enchantment.MENDING))
                 continue;
             int amount = Utility.addDurability(item, event.getAmount(), player);
             event.setAmount(amount);
@@ -614,7 +620,6 @@ public class Events implements Listener {
         if(item.getType()==Material.AIR || item.getItemMeta()==null)
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
-//        String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
         if(id!=null) {
             if(event.getDamage()>0)
                 Utility.addDurability(item, -1, living);
@@ -624,8 +629,6 @@ public class Events implements Listener {
             if (generic instanceof Afflictable)
                 ((Afflictable) generic).ability(event, item);
         }
-//        else if(enchant!=null)
-//            Utility.addDurability(item, -1, living);
     }
 
     @EventHandler
@@ -730,8 +733,6 @@ public class Events implements Listener {
                 if (generic instanceof Wearable)
                     ((Wearable) generic).ability(event, broken);
             }
-//            else if(container.get(Utility.enchant, PersistentDataType.STRING)!=null)
-//                Utility.addDurability(item, -1, entity);
         }
 
         if(!(entity instanceof Player))
@@ -873,6 +874,28 @@ public class Events implements Listener {
             if(id!=null || enchant!=null) {
                 if(i==0 && id!=null)
                     Utility.addDurability(item, -1, event.getPlayer());
+                //temp
+                if(id==null){
+                    ItemMeta meta = item.getItemMeta();
+                    if (meta instanceof Damageable) {
+                        meta.setUnbreakable(true);
+                        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+                        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                    }
+                    List<String> addDurability = meta.getLore();
+                    if (addDurability == null)
+                        addDurability = new ArrayList<>();
+                    if (!addDurability.get(addDurability.size() - 1).startsWith("§fDurability: ")) {
+                        int maxDurability = item.getType().getMaxDurability();
+                        int currDurability = maxDurability - ((Damageable) meta).getDamage();
+                        addDurability.add("");
+                        addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
+                        meta.setLore(addDurability);
+                    }
+                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Enchanted.name);
+                    item.setItemMeta(meta);
+                }
+                //
             } else
                 continue;
             Extractable extractable = Utility.findItem(id, Extractable.class, player);
@@ -1033,6 +1056,28 @@ public class Events implements Listener {
             if(interactable instanceof Holdable)
                 interactable.ability(event, offhand);
         } if(enchant!=null) {
+            //temp
+            if(id==null){
+                ItemMeta meta = item.getItemMeta();
+                if (meta instanceof Damageable) {
+                    meta.setUnbreakable(true);
+                    meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+                    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                }
+                List<String> addDurability = meta.getLore();
+                if (addDurability == null)
+                    addDurability = new ArrayList<>();
+                if (!addDurability.get(addDurability.size() - 1).startsWith("§fDurability: ")) {
+                    int maxDurability = item.getType().getMaxDurability();
+                    int currDurability = maxDurability - ((Damageable) meta).getDamage();
+                    addDurability.add("");
+                    addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
+                    meta.setLore(addDurability);
+                }
+                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Enchanted.name);
+                item.setItemMeta(meta);
+            }
+            //
             for (String enchantment : enchant.split(" ")) {
                 if (Collections.disabled.contains(enchantment))
                     return;
