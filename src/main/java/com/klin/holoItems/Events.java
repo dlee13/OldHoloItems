@@ -14,7 +14,6 @@ import com.klin.holoItems.collections.gen5.botanCollection.items.Sentry;
 import com.klin.holoItems.collections.gen5.lamyCollection.items.Starch;
 import com.klin.holoItems.collections.hidden.opCollection.items.GalleryFrame;
 import com.klin.holoItems.collections.hidden.opCollection.items.QuartzGranule;
-import com.klin.holoItems.collections.hidden.utilityCollection.items.Enchanted;
 import com.klin.holoItems.collections.misc.ingredientsCollection.IngredientsCollection;
 import com.klin.holoItems.interfaces.*;
 import com.klin.holoItems.interfaces.customMobs.Retaliable;
@@ -204,20 +203,15 @@ public class Events implements Listener {
             ItemMeta meta = combined.getItemMeta();
             List<String> lore = meta.getLore();
             if (lore!=null && !lore.isEmpty()) {
+                String enchants = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+                if(enchants==null)
+                    return;
                 event.setCancelled(true);
-                if(generic.name.equals(Enchanted.name)) {
-                    meta.getPersistentDataContainer().remove(Utility.key);
-                    lore.clear();
-                } else{
-                    String enchants = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-                    if(enchants==null)
-                        return;
-                    for(String ignored : enchants.split(" "))
-                        lore.remove(0);
+                for(String ignored : enchants.split(" "))
                     lore.remove(0);
-                }
-                meta.getPersistentDataContainer().remove(Utility.enchant);
+                lore.remove(0);
                 meta.setLore(lore);
+                meta.getPersistentDataContainer().remove(Utility.enchant);
                 combined.setItemMeta(meta);
                 inv.setItem(2, combined);
             }
@@ -260,7 +254,7 @@ public class Events implements Listener {
                 return;
             }
             if ((enchant.acceptedIds == null || item == null || !enchant.acceptedIds.contains(item.name)) &&
-                    (enchant.acceptedTypes == null || !((item==null || item.name.equals(Enchanted.name)) && enchant.acceptedTypes.contains(reactant.getType())))) {
+                    (enchant.acceptedTypes == null || !(item==null && enchant.acceptedTypes.contains(reactant.getType())))) {
                 event.setResult(null);
                 return;
             }
@@ -299,7 +293,6 @@ public class Events implements Listener {
                     addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
                     meta.setLore(addDurability);
                 }
-                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Enchanted.name);
                 result.setItemMeta(meta);
             } if (!result.equals(event.getResult())) {
                 event.setResult(result);
@@ -344,24 +337,28 @@ public class Events implements Listener {
                         }
                     }
                 } if(levelCost>0) {
+                    ItemMeta meta = result.getItemMeta();
                     if(anvil) {
-                        ItemMeta meta = result.getItemMeta();
                         String renameText = ((AnvilInventory) inv).getRenameText();
                         String originalText = meta.getDisplayName().substring(2);
                         if (renameText != null && !renameText.trim().isEmpty() && !renameText.equals(originalText)) {
                             meta.setDisplayName("§6" + renameText);
                             levelCost++;
                         }
-                        List<String> lore = meta.getLore();
-                        if (lore != null && !lore.isEmpty() && lore.get(0).startsWith("§b")) {
-                            lore.add(0, "");
-                            meta.setLore(lore);
-                        }
-                        result.setItemMeta(meta);
-                        if (!result.equals(event.getResult())) {
-                            ((AnvilInventory) inv).setRepairCost(levelCost + Math.max(ReflectionUtils.getRepairCost(reactant), ReflectionUtils.getRepairCost(reagent)));
-                            event.setResult(result);
-                        }
+                    }
+                    List<String> lore = meta.getLore();
+                    if (lore != null && !lore.isEmpty() && lore.get(0).startsWith("§b")) {
+                        lore.add(0, "");
+                        meta.setLore(lore);
+                    }
+                    result.setItemMeta(meta);
+                    if (!result.equals(event.getResult())) {
+                        event.setResult(result);
+                        int cost = levelCost + Math.max(ReflectionUtils.getRepairCost(reactant), ReflectionUtils.getRepairCost(reagent));
+                        if(anvil)
+                            ((AnvilInventory) inv).setRepairCost(cost);
+                        else
+                            combine(inv, result, (Player) inv.getHolder(), cost);
                     }
                 } else event.setResult(null);
             } else event.setResult(null);
@@ -408,11 +405,12 @@ public class Events implements Listener {
                 levelCost++;
             }
         }
-        int cost = levelCost+ Math.max(ReflectionUtils.getRepairCost(reactant), ReflectionUtils.getRepairCost(reagent));
-        ((AnvilInventory) inv).setRepairCost(cost);
         result.setItemMeta(meta);
         event.setResult(result);
-        if(!anvil)
+        int cost = levelCost+ Math.max(ReflectionUtils.getRepairCost(reactant), ReflectionUtils.getRepairCost(reagent));
+        if(anvil)
+            ((AnvilInventory) inv).setRepairCost(cost);
+        else
             combine(inv, result, (Player) inv.getHolder(), cost);
     }
 
@@ -923,7 +921,6 @@ public class Events implements Listener {
                         addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
                         meta.setLore(addDurability);
                     }
-                    meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Enchanted.name);
                     item.setItemMeta(meta);
                 }
                 //
@@ -1107,7 +1104,6 @@ public class Events implements Listener {
                     addDurability.add("§fDurability: " + currDurability + "/" + maxDurability);
                     meta.setLore(addDurability);
                 }
-                meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Enchanted.name);
                 item.setItemMeta(meta);
             }
             //
