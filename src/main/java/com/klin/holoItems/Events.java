@@ -222,14 +222,16 @@ public class Events implements Listener {
             event.setCancelled(true);
     }
 
-    private void combine(Inventory inv, ItemStack result, Player player, int cost){
+    private void combine(InventoryHolder holder, ItemStack result, int cost){
+        Player player = (Player) holder;
         int level = player.getLevel();
         if(level<cost)
-            player.sendMessage("§a[§5Shion§a]§f: You think §oI'm§r covering the "+cost+" level exp cost?");
+            player.sendMessage("§a[§5Shion§a]§f: Guess who's covering the "+cost+" level exp cost");
         else {
             player.setLevel(level - cost);
-            inv.setItem(1, result);
-            inv.setItem(2, null);
+            PlayerInventory inv = player.getInventory();
+            inv.setItemInMainHand(result);
+            inv.setItemInOffHand(null);
             player.sendMessage("§a[§5Shion§a]§f: You're welcome");
         }
     }
@@ -238,9 +240,20 @@ public class Events implements Listener {
     public void combineItems(PrepareAnvilEvent event){
         Inventory inv = event.getView().getTopInventory();
         boolean anvil = inv instanceof AnvilInventory;
-        ItemStack reactant = inv.getItem(anvil?0:1);
-        ItemStack reagent = inv.getItem(anvil?1:2);
-        if(reactant==null || reagent==null)
+        ItemStack reactant;
+        ItemStack reagent;
+        if(anvil){
+            reactant = inv.getItem(0);
+            reagent = inv.getItem(1);
+        } else{
+            InventoryHolder holder = inv.getHolder();
+            if(holder instanceof Player)
+                inv = ((Player) inv.getHolder()).getInventory();
+            else
+                return;
+            reactant = ((PlayerInventory) inv).getItemInMainHand();
+            reagent = ((PlayerInventory) inv).getItemInOffHand();
+        } if(reactant==null || reagent==null)
             return;
         Item item = Utility.findItem(reactant, Item.class);
         Item enchantItem = Utility.findItem(reagent, Item.class);
@@ -297,7 +310,7 @@ public class Events implements Listener {
             } if (!result.equals(event.getResult())) {
                 event.setResult(result);
                 if(!anvil)
-                    combine(inv, result, (Player) inv.getHolder(), cost);
+                    combine(inv.getHolder(), result, cost);
             }
             return;
         } else if(enchantItem==null){
@@ -358,7 +371,7 @@ public class Events implements Listener {
                         if(anvil)
                             ((AnvilInventory) inv).setRepairCost(cost);
                         else
-                            combine(inv, result, (Player) inv.getHolder(), cost);
+                            combine(inv.getHolder(), result, cost);
                     }
                 } else event.setResult(null);
             } else event.setResult(null);
@@ -411,7 +424,7 @@ public class Events implements Listener {
         if(anvil)
             ((AnvilInventory) inv).setRepairCost(cost);
         else
-            combine(inv, result, (Player) inv.getHolder(), cost);
+            combine(inv.getHolder(), result, cost);
     }
 
     @EventHandler

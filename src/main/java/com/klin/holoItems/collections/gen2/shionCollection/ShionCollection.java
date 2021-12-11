@@ -65,15 +65,15 @@ public class ShionCollection extends Collection {
                     return;
                 } switch(increment) {
                     case 0:
-                        player.sendMessage("§a[§5Shion§a]§7: Place the two items in the top slots of your inventory's");
+                        player.sendMessage("§a[§5Shion§a]§7: Place the two items in your main and offhand");
                         break;
                     case 1:
-                        player.sendMessage("§a[§5Shion§a]§7: crafting menu. Close it when you're ready");
+                        player.sendMessage("§a[§5Shion§a]§7: Close your inventory when ready");
                         break;
                     case 30:
                         player.sendMessage("§a[§5Shion§a]§7: I'm waiting");
                         break;
-                    case 45:
+                    case 60:
                         player.sendMessage("§a[§5Shion§a]§f: Maybe next time");
                         Events.bedrock.remove(player);
                         cancel();
