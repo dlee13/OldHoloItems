@@ -6,13 +6,10 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.collections.misc.ingredientsCollection.items.SaintQuartz;
 import com.klin.holoItems.interfaces.Activatable;
-import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
 import com.klin.holoItems.interfaces.Spawnable;
-import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.Action;
@@ -22,7 +19,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
@@ -30,7 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HolyFire extends Crate implements Activatable, Punchable, Placeable, Spawnable {
+public class HolyFire extends Crate implements Activatable, Punchable, Spawnable {
     public static final String name = "holyFire";
     public static final HashSet<Enchantment> accepted = null;
     private static final Set<CreatureSpawnEvent.SpawnReason> reasons = Stream.of(
@@ -58,8 +54,7 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
     }
 
     public void registerRecipes(){
-        ShapedRecipe recipe =
-                new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape(" a ","aba","ccc");
         recipe.setIngredient('a', Material.END_ROD);
         recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.items.get(SaintQuartz.name).item));
@@ -84,7 +79,7 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
     }
 
     public void ability(PlayerInteractEvent event, Action action){
-        if(action!= Action.RIGHT_CLICK_BLOCK)
+        if(action!=Action.RIGHT_CLICK_BLOCK)
             return;
         event.setCancelled(true);
         Block block = event.getClickedBlock();
@@ -107,17 +102,11 @@ public class HolyFire extends Crate implements Activatable, Punchable, Placeable
     }
 
     public void ability(BlockPlaceEvent event){
-        event.setCancelled(false);
-        Block block = event.getBlockPlaced();
-        TileState state = (TileState) block.getState();
-        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
-        state.update();
-
-        unlit(block);
+        super.ability(event);
+        unlit(event.getBlockPlaced());
     }
 
     public void ability(BlockBreakEvent event) {
-        event.setDropItems(false);
         super.ability(event);
         remove(event.getBlock().getLocation());
     }

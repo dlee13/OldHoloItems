@@ -1,6 +1,7 @@
 package com.klin.holoItems.collections.gen0.robocoCollection.items;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.interfaces.Extractable;
 import com.klin.holoItems.utility.Utility;
@@ -73,7 +74,16 @@ public class Magnet extends Enchant implements Extractable {
                 world.dropItemNaturally(loc, item);
             return;
         }
-        List<ItemStack> items = new ArrayList<>(block.getDrops(inv.getItemInMainHand(), player));
+        List<ItemStack> items;
+        Crate crate = Utility.findItem(block, Crate.class);
+        if(crate==null)
+            items = new ArrayList<>(block.getDrops(inv.getItemInMainHand(), player));
+        else {
+            ItemStack drop = crate.item.clone();
+            drop.setAmount(1);
+            items = new ArrayList<>();
+            items.add(drop);
+        }
         BlockState state = block.getState();
         if(state instanceof Container && !(state instanceof ShulkerBox)) {
             Inventory container = ((Container) state).getInventory();

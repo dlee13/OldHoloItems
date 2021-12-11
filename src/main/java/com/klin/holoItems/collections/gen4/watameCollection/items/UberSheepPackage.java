@@ -2,27 +2,24 @@ package com.klin.holoItems.collections.gen4.watameCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
+import com.klin.holoItems.collections.gen0.robocoCollection.items.Magnet;
 import com.klin.holoItems.interfaces.Collectable;
-import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashSet;
 
-public class UberSheepPackage extends Crate implements Placeable, Collectable {
+public class UberSheepPackage extends Crate implements Collectable {
     public static final String name = "uberSheepPackage";
     public static final HashSet<Enchantment> accepted = null;
 
@@ -55,19 +52,16 @@ public class UberSheepPackage extends Crate implements Placeable, Collectable {
         Bukkit.getServer().addRecipe(recipe);
     }
 
-    public void ability(BlockPlaceEvent event){
-        event.setCancelled(false);
-        TileState state = (TileState) event.getBlockPlaced().getState();
-        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
-        state.update();
-    }
-
     public void ability(BlockBreakEvent event) {
+        if(Utility.findItem(event.getPlayer().getInventory().getItemInMainHand(), Magnet.class)!=null)
+            return;
         event.setDropItems(false);
-        super.ability(event);
         Block block = event.getBlock();
         Location loc = block.getLocation();
         World world = loc.getWorld();
+        ItemStack drop = item.clone();
+        drop.setAmount(1);
+        world.dropItemNaturally(loc, drop);
         for(ItemStack content : ((Barrel) block.getState()).getInventory().getContents()) {
             if(content!=null && content.getType()!=Material.AIR)
                 world.dropItemNaturally(loc, content);

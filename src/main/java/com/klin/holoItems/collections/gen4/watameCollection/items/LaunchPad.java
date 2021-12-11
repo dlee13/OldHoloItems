@@ -2,7 +2,6 @@ package com.klin.holoItems.collections.gen4.watameCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
-import com.klin.holoItems.interfaces.Placeable;
 import com.klin.holoItems.interfaces.Punchable;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
@@ -12,8 +11,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +22,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LaunchPad extends Crate implements Placeable, Punchable {
+public class LaunchPad extends Crate implements Punchable {
     public static final String name = "launchPad";
     private final Map<Chunk, Integer> tickets;
 
@@ -54,14 +51,6 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
         recipe.setIngredient('e', Material.CAMPFIRE);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
-    }
-
-    public void ability(BlockPlaceEvent event){
-        event.setCancelled(false);
-        Block block = event.getBlock();
-        TileState state = (TileState) block.getState();
-        state.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
-        state.update();
     }
 
     public void ability(PlayerInteractEvent event, Action action){
@@ -202,10 +191,5 @@ public class LaunchPad extends Crate implements Placeable, Punchable {
                 increment++;
             }
         };
-    }
-
-    public void ability(BlockBreakEvent event) {
-        event.setDropItems(false);
-        super.ability(event);
     }
 }

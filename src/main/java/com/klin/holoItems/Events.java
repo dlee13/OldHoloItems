@@ -21,23 +21,89 @@ import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
 import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.*;
-import org.bukkit.block.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Container;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Hopper;
+import org.bukkit.block.Skull;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.ThrowableProjectile;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityDropItemEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.entity.EntityTeleportEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.*;
-import org.bukkit.inventory.*;
+import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerEditBookEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.*;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -49,7 +115,14 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.bukkit.Material.*;
 
@@ -61,7 +134,6 @@ public class Events implements Listener {
             POWDER_SNOW_BUCKET, POWDER_SNOW_CAULDRON,
             BOWL, BOWL
     );
-    private final Set<Material> deactive = Set.of(Material.JUKEBOX, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
     private final Set<String> ingredients = new HashSet<>() {{
         for (Item item : Collections.collections.get(IngredientsCollection.name).collection)
             add(item.name);
@@ -237,7 +309,7 @@ public class Events implements Listener {
             return;
         Item item = Utility.findItem(reactant, Item.class);
         Item enchantItem = Utility.findItem(reagent, Item.class);
-        if((item==null || item.name.equals(Enchanted.name)) && enchantItem==null)
+        if(item==null && enchantItem==null)
             return;
         else if(enchantItem instanceof Enchant && !enchantItem.equals(item)) {
             Enchant enchant = (Enchant) enchantItem;
@@ -346,7 +418,7 @@ public class Events implements Listener {
                 } else event.setResult(null);
             } else event.setResult(null);
             return;
-        } if(event.getResult()!=null)
+        } if(event.getResult()!=null || !enchantItem.equals(item))
             return;
         if(item.durability==0){
             event.setResult(null);
@@ -444,10 +516,14 @@ public class Events implements Listener {
                 World world = player.getWorld();
                 Location loc = player.getLocation();
                 boolean excess = false;
+                boolean reset = false;
                 for (ItemStack ingredient : inv.getMatrix()) {
-                    if (ingredient != null && ingredient.getAmount() > 1) {
-                        ingredient.setAmount(ingredient.getAmount()-1);
+                    if (ingredient!=null) {
+                        int amount = ingredient.getAmount();
+                        ingredient.setAmount(amount-1);
                         excess = true;
+                        if(amount==1)
+                            reset = true;
                     }
                 }
                 currMeta.getPersistentDataContainer().set(Utility.stack, PersistentDataType.DOUBLE, Math.random());
@@ -455,6 +531,8 @@ public class Events implements Listener {
                 if (excess) {
                     event.setCancelled(true);
                     world.dropItemNaturally(loc, curr);
+                    if(reset)
+                        curr.setAmount(0);
                     return;
                 }
             }
@@ -934,8 +1012,10 @@ public class Events implements Listener {
 
         if(event.isCancelled())
             return;
-        Responsible responsible = Utility.findItem(item, Responsible.class, player);
-        if(responsible!=null && responsible.ability(event, item))
+        Item responsible = Utility.findItem(item, Item.class, player);
+        if(responsible!=null)
+            event.setCancelled(true);
+        if(responsible instanceof Responsible && ((Responsible) responsible).ability(event, item))
             Utility.addDurability(item, -1, player);
     }
 
@@ -1041,7 +1121,7 @@ public class Events implements Listener {
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
         if(id!=null) {
-            if (block != null && deactive.contains(block.getType()))
+            if (block!=null && block.getType()==JUKEBOX)
                 event.setUseItemInHand(Event.Result.DENY);
             else if (Collections.disabled.contains(id))
                 player.sendMessage("§cThis item has been disabled");
