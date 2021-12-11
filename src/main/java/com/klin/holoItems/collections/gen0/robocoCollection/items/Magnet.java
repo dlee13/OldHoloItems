@@ -3,6 +3,7 @@ package com.klin.holoItems.collections.gen0.robocoCollection.items;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.abstractClasses.Enchant;
+import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
 import com.klin.holoItems.interfaces.Extractable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -14,13 +15,15 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Magnet extends Enchant implements Extractable {
     public static final String name = "magnet";
     private static final Set<Material> exception = Set.of(Material.WHITE_BED, Material.ORANGE_BED, Material.MAGENTA_BED, Material.LIGHT_BLUE_BED, Material.YELLOW_BED, Material.LIME_BED, Material.PINK_BED, Material.GRAY_BED, Material.LIGHT_GRAY_BED, Material.CYAN_BED, Material.PURPLE_BED, Material.BLUE_BED, Material.BROWN_BED, Material.GREEN_BED, Material.RED_BED, Material.BLACK_BED, Material.ACACIA_DOOR, Material.BIRCH_DOOR, Material.IRON_DOOR, Material.DARK_OAK_DOOR, Material.CRIMSON_DOOR, Material.JUNGLE_DOOR, Material.OAK_DOOR, Material.SPRUCE_DOOR, Material.WARPED_DOOR);
 
     public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH);
-    public static final Set<String> acceptedIds = null;
+    public static final Set<String> acceptedIds = Stream.of(Comet.name).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Material> acceptedTypes = new HashSet<>();
     public static final int expCost = 39;
 

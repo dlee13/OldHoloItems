@@ -21,89 +21,23 @@ import com.klin.holoItems.interfaces.customMobs.Retaliable;
 import com.klin.holoItems.interfaces.customMobs.Targetable;
 import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Container;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.Hopper;
-import org.bukkit.block.Skull;
+import org.bukkit.*;
+import org.bukkit.block.*;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.MushroomCow;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.ThrowableProjectile;
-import org.bukkit.entity.ThrownPotion;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityDropItemEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.entity.EntityTeleportEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.inventory.BrewEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerEditBookEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.inventory.AnvilInventory;
-import org.bukkit.inventory.BrewerInventory;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -115,14 +49,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.bukkit.Material.*;
 
@@ -201,6 +128,7 @@ public class Events implements Listener {
         }
     }};
     public static Set<Activatable> activatables = new HashSet<>();
+    public static Set<Player> bedrock = new HashSet<>();
 
     @EventHandler
     public void clickItem(InventoryClickEvent event){
@@ -300,11 +228,24 @@ public class Events implements Listener {
             event.setCancelled(true);
     }
 
+    private void combine(Inventory inv, ItemStack result, Player player, int cost){
+        int level = player.getLevel();
+        if(level<cost)
+            player.sendMessage("§a[§5Shion§a]§f: You think §oI'm§r covering the "+cost+" level exp cost?");
+        else {
+            player.setLevel(level - cost);
+            inv.setItem(1, result);
+            inv.setItem(2, null);
+            player.sendMessage("§a[§5Shion§a]§f: You're welcome");
+        }
+    }
+
     @EventHandler
     public void combineItems(PrepareAnvilEvent event){
-        AnvilInventory inv = event.getInventory();
-        ItemStack reactant = inv.getItem(0);
-        ItemStack reagent = inv.getItem(1);
+        Inventory inv = event.getView().getTopInventory();
+        boolean anvil = inv instanceof AnvilInventory;
+        ItemStack reactant = inv.getItem(anvil?0:1);
+        ItemStack reagent = inv.getItem(anvil?1:2);
         if(reactant==null || reagent==null)
             return;
         Item item = Utility.findItem(reactant, Item.class);
@@ -324,20 +265,22 @@ public class Events implements Listener {
                 return;
             }
             ItemStack result = Utility.addEnchant(reactant.clone(), enchant);
+            int cost = Math.min(39, enchant.expCost + ReflectionUtils.getRepairCost(reactant));
             ItemMeta meta = result.getItemMeta();
-            String renameText = inv.getRenameText();
-            String originalText = meta.hasDisplayName()?meta.getDisplayName().substring(2):"";
-            boolean rename;
-            if (renameText != null && !renameText.trim().isEmpty() && !renameText.equals(originalText)) {
-                meta.setDisplayName("§6" + renameText);
-                result.setItemMeta(meta);
-                rename = true;
-            } else rename = false;
-            inv.setRepairCost(Math.min(39, enchant.expCost + ReflectionUtils.getRepairCost(reactant) + (rename?1:0)));
-            if (enchant.exclusive != null) {
-                for (Enchantment enchantment : result.getEnchantments().keySet()) {
-                    if (enchant.exclusive.contains(enchantment))
-                        result.removeEnchantment(enchantment);
+            if(anvil) {
+                String renameText = ((AnvilInventory) inv).getRenameText();
+                String originalText = meta.hasDisplayName() ? meta.getDisplayName().substring(2) : "";
+                if (renameText != null && !renameText.trim().isEmpty() && !renameText.equals(originalText)) {
+                    meta.setDisplayName("§6" + renameText);
+                    result.setItemMeta(meta);
+                    cost++;
+                }
+                ((AnvilInventory) inv).setRepairCost(cost);
+                if (enchant.exclusive != null) {
+                    for (Enchantment enchantment : result.getEnchantments().keySet()) {
+                        if (enchant.exclusive.contains(enchantment))
+                            result.removeEnchantment(enchantment);
+                    }
                 }
             }
             if (item == null) {
@@ -358,8 +301,11 @@ public class Events implements Listener {
                 }
                 meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Enchanted.name);
                 result.setItemMeta(meta);
-            } if (!result.equals(event.getResult()))
+            } if (!result.equals(event.getResult())) {
                 event.setResult(result);
+                if(!anvil)
+                    combine(inv, result, (Player) inv.getHolder(), cost);
+            }
             return;
         } else if(enchantItem==null){
             if(reagent.getType()==Material.ENCHANTED_BOOK && reagent.getItemMeta() instanceof EnchantmentStorageMeta){
@@ -398,22 +344,24 @@ public class Events implements Listener {
                         }
                     }
                 } if(levelCost>0) {
-                    ItemMeta meta = result.getItemMeta();
-                    String renameText = inv.getRenameText();
-                    String originalText = meta.getDisplayName().substring(2);
-                    if (renameText != null && !renameText.trim().isEmpty() && !renameText.equals(originalText)) {
-                        meta.setDisplayName("§6" + renameText);
-                        levelCost++;
-                    }
-                    List<String> lore = meta.getLore();
-                    if(lore!=null && !lore.isEmpty() && lore.get(0).startsWith("§b")){
-                        lore.add(0, "");
-                        meta.setLore(lore);
-                    }
-                    result.setItemMeta(meta);
-                    if(!result.equals(event.getResult())) {
-                        inv.setRepairCost(levelCost+Math.max(ReflectionUtils.getRepairCost(reactant), ReflectionUtils.getRepairCost(reagent)));
-                        event.setResult(result);
+                    if(anvil) {
+                        ItemMeta meta = result.getItemMeta();
+                        String renameText = ((AnvilInventory) inv).getRenameText();
+                        String originalText = meta.getDisplayName().substring(2);
+                        if (renameText != null && !renameText.trim().isEmpty() && !renameText.equals(originalText)) {
+                            meta.setDisplayName("§6" + renameText);
+                            levelCost++;
+                        }
+                        List<String> lore = meta.getLore();
+                        if (lore != null && !lore.isEmpty() && lore.get(0).startsWith("§b")) {
+                            lore.add(0, "");
+                            meta.setLore(lore);
+                        }
+                        result.setItemMeta(meta);
+                        if (!result.equals(event.getResult())) {
+                            ((AnvilInventory) inv).setRepairCost(levelCost + Math.max(ReflectionUtils.getRepairCost(reactant), ReflectionUtils.getRepairCost(reagent)));
+                            event.setResult(result);
+                        }
                     }
                 } else event.setResult(null);
             } else event.setResult(null);
@@ -452,15 +400,20 @@ public class Events implements Listener {
             }
         }
         ItemMeta meta = result.getItemMeta();
-        String renameText = inv.getRenameText();
-        String originalText = meta.getDisplayName().substring(2);
-        if(renameText!=null && !renameText.trim().isEmpty() && !renameText.equals(originalText)){
-            meta.setDisplayName("§6"+renameText);
-            levelCost++;
+        if(anvil) {
+            String renameText = ((AnvilInventory) inv).getRenameText();
+            String originalText = meta.getDisplayName().substring(2);
+            if (renameText != null && !renameText.trim().isEmpty() && !renameText.equals(originalText)) {
+                meta.setDisplayName("§6" + renameText);
+                levelCost++;
+            }
         }
-        inv.setRepairCost(levelCost+ Math.max(ReflectionUtils.getRepairCost(reactant), ReflectionUtils.getRepairCost(reagent)));
+        int cost = levelCost+ Math.max(ReflectionUtils.getRepairCost(reactant), ReflectionUtils.getRepairCost(reagent));
+        ((AnvilInventory) inv).setRepairCost(cost);
         result.setItemMeta(meta);
         event.setResult(result);
+        if(!anvil)
+            combine(inv, result, (Player) inv.getHolder(), cost);
     }
 
     @EventHandler
@@ -1220,8 +1173,17 @@ public class Events implements Listener {
         //no isCancelled()
         InventoryView view = event.getView();
         Inventory inv = view.getTopInventory();
-        if(inv.getHolder()!=null) {
+        InventoryHolder holder = inv.getHolder();
+        if(holder!=null) {
             Player player = (Player) event.getPlayer();
+            if(holder.equals(player) && bedrock.contains(player)){
+                PrepareAnvilEvent anvilEvent = new PrepareAnvilEvent(view, null);
+                Bukkit.getServer().getPluginManager().callEvent(anvilEvent);
+                if(anvilEvent.getResult()==null)
+                    player.sendMessage("§a[§5Shion§a]§f: That.. doesn't work");
+                bedrock.remove(player);
+                return;
+            }
             Closeable closeable = Utility.findItem(player.getInventory().getItemInOffHand(), Closeable.class, player);
             if(closeable instanceof Holdable)
                 closeable.ability(event);
@@ -1234,7 +1196,6 @@ public class Events implements Listener {
                 ((GalleryFrame) item).ability(event);
             return;
         }
-
         Player player = (Player) event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         Pack pack = Utility.findItem(item, Pack.class, player);
