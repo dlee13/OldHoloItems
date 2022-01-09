@@ -25,7 +25,7 @@ public class HoloItems extends JavaPlugin {
         PluginCommand acquire = getCommand("acquire");
         acquire.setExecutor(collections);
         acquire.setTabCompleter(collections);
-
+        getCommand("giveholo").setExecutor(collections);
         getCommand("accelerate").setExecutor(collections);
         getCommand("canceltasks").setExecutor(collections);
         getCommand("clearactivatables").setExecutor(collections);

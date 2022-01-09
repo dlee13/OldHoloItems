@@ -88,6 +88,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class Collections implements CommandExecutor, Listener, TabCompleter {
@@ -261,10 +262,34 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player))
-            return true;
-        Player player = (Player) sender;
         String command = cmd.getName().toLowerCase();
+        if (!(sender instanceof Player)){
+            /*
+            Command for giving players holoitems. This is only useful for gacha, so on console can use this command.
+            For players, just use /acquire, and then give it to them manually.
+             */
+            if(command.equals("giveholo")){
+                if(args.length >= 2){
+                    Logger logger = Bukkit.getLogger();
+                    Player player = Bukkit.getPlayer(args[0]);
+                    if(player == null){
+                        logger.info("Player " + args[0] + " was not found! Config issue.");
+                        return false;
+                    }
+                    if(!items.containsKey(args[1])){
+                        logger.info("Item " + args[1] + " was not found! Config issue.");
+                        return false;
+                    }
+                    Item item = items.get(args[1]);
+                    player.getInventory().addItem(item.item);
+                    logger.info("Gave " + args[0] + " item " + args[1]);
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        }
+        Player player = (Player) sender;
         switch(command) {
             case "collections":
                 player.openInventory(createInv(0, player));
