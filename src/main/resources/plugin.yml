@@ -17,7 +17,9 @@ commands:
   acquire:
     permission: holoItems.player
     usage: /<command> <id>
-
+  giveholo:
+    permission: holoItems.op
+    usage: /<command> <player> <id>
   accelerate:
     permission: holoItems.op
     usage: /<command> <x> <y> <z>
