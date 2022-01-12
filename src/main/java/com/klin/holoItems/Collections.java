@@ -272,6 +272,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                 if(args.length >= 2){
                     Logger logger = Bukkit.getLogger();
                     Player player = Bukkit.getPlayer(args[0]);
+                    int amount;
                     if(player == null){
                         logger.info("Player " + args[0] + " was not found! Config issue.");
                         return false;
@@ -281,9 +282,22 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
                         return false;
                     }
                     Item item = items.get(args[1]);
+                    if(args.length < 3){
+                        amount = 1;
+                    } else {
+                        try{
+                            amount = Integer.parseInt(args[2]);
+                        } catch (NumberFormatException e) {
+                            logger.info("Number " + args[2] + " cannot be parsed!");
+                            return false;
+                        }
+                    }
+                    item.item.setAmount(amount);
                     player.getInventory().addItem(item.item);
-                    logger.info("Gave " + args[0] + " item " + args[1]);
+                    logger.info("Gave " + args[0] + " " + amount + " " + " item " + args[1]);
                     return true;
+                } else {
+                    return false;
                 }
             } else {
                 return false;
