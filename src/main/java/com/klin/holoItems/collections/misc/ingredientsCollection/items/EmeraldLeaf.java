@@ -30,7 +30,7 @@ public class EmeraldLeaf extends Item {
         Bukkit.getServer().addRecipe(recipe);
 
         BlastingRecipe blastingRecipe =
-                new BlastingRecipe(new NamespacedKey(HoloItems.getInstance(), name), item,
+                new BlastingRecipe(new NamespacedKey(HoloItems.getInstance(), name + "Blast"), item,
                         Material.EMERALD_ORE, 1, 800);
         blastingRecipe.setGroup(name);
         Bukkit.getServer().addRecipe(blastingRecipe);
