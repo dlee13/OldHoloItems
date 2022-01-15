@@ -173,10 +173,8 @@ public class Conduit implements Listener, Resetable {
         };
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void plant(BlockFadeEvent event){
-        if(event.isCancelled())
-            return;
         if(Set.of(Material.DEAD_FIRE_CORAL, Material.DEAD_TUBE_CORAL).contains(event.getNewState().getType()))
             event.setCancelled(true);
     }

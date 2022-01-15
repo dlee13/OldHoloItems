@@ -71,10 +71,8 @@ public class Maintenance implements Listener, Resetable {
         PlayerDropItemEvent.getHandlerList().unregister(this);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void cage(PlayerMoveEvent event){
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         Location location = player.getLocation();
 
@@ -187,31 +185,25 @@ public class Maintenance implements Listener, Resetable {
         }.runTaskLater(HoloItems.getInstance(), 8);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void track(BlockPlaceEvent event){
-        if(!event.isCancelled()) {
-            Block block = event.getBlockPlaced();
-            decay(block, block.getType()==Material.WATER?10:80);
-        }
+        Block block = event.getBlockPlaced();
+        decay(block, block.getType()==Material.WATER?10:80);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void prevent(BlockBreakEvent event){
-        if(!event.isCancelled()) {
-            Integer taskId = decay.remove(event.getBlock());
-            if(taskId!=null) {
-                event.setDropItems(false);
-                Bukkit.getScheduler().cancelTask(taskId);
-            }
-            else
-                event.setCancelled(true);
+        Integer taskId = decay.remove(event.getBlock());
+        if(taskId!=null) {
+            event.setDropItems(false);
+            Bukkit.getScheduler().cancelTask(taskId);
         }
+        else
+            event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void regen(EntityExplodeEvent event){
-        if(event.isCancelled())
-            return;
         Set<Block> remove = new HashSet<>();
         List<Block> blocks = event.blockList();
         for(Block block : blocks) {
@@ -262,10 +254,8 @@ public class Maintenance implements Listener, Resetable {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void input(PlayerTeleportEvent event){
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         Member member = members.get(player);
         if(member instanceof Watson) {
@@ -294,13 +284,11 @@ public class Maintenance implements Listener, Resetable {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void pickUp(PlayerDropItemEvent event){
-        if(!event.isCancelled()) {
-            Item item = event.getItemDrop();
-            if (item.getPickupDelay()>10)
-                item.setPickupDelay(10);
-        }
+        Item item = event.getItemDrop();
+        if (item.getPickupDelay()>10)
+            item.setPickupDelay(10);
     }
 
     public void reset(){

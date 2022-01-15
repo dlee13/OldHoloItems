@@ -260,15 +260,15 @@ public class Select implements Listener, Resetable {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void melt(BlockFadeEvent event){
-        if(!event.isCancelled() && event.getNewState().getType()==Material.WATER)
+        if(event.getNewState().getType()==Material.WATER)
             event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void shatter(EntityChangeBlockEvent event){
-        if(!event.isCancelled() && event.getEntity() instanceof FallingBlock)
+        if(event.getEntity() instanceof FallingBlock)
             event.setCancelled(true);
     }
 

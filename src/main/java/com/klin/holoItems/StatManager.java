@@ -7,6 +7,7 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -32,10 +33,8 @@ public class StatManager implements Listener {
         put(Material.NETHER_WART, Material.NETHER_WART);
     }};
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public static void increment(BlockBreakEvent event){
-        if(event.isCancelled())
-            return;
         Material type = event.getBlock().getType();
         if(!ageable.containsKey(type))
             return;
@@ -49,7 +48,7 @@ public class StatManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public static void incrementBerries(PlayerInteractEvent event){
         if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) ||
                 event.useInteractedBlock().equals(Event.Result.DENY))
@@ -70,10 +69,8 @@ public class StatManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public static void creditPotion(BrewEvent event){
-        if(event.isCancelled())
-            return;
         BrewerInventory inv = event.getContents();
         ItemStack ingredient = inv.getIngredient();
         if (ingredient == null || ingredient.getType().equals(Material.NETHER_WART))
@@ -96,10 +93,8 @@ public class StatManager implements Listener {
         }.runTaskLater(HoloItems.getInstance(), 1);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public static void incrementIngredients(InventoryClickEvent event){
-        if(event.isCancelled())
-            return;
         ItemStack potion = event.getCurrentItem();
         if(potion==null || !potion.getType().toString().contains("POTION"))
             return;

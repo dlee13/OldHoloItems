@@ -129,11 +129,8 @@ public class Events implements Listener {
     public static Set<Activatable> activatables = new HashSet<>();
     public static Set<Player> bedrock = new HashSet<>();
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void clickItem(InventoryClickEvent event){
-        if(event.isCancelled())
-            return;
-
         InventoryView invView = event.getView();
         Inventory inv = invView.getTopInventory();
         InventoryType invType = inv.getType();
@@ -427,10 +424,8 @@ public class Events implements Listener {
             combine(inv.getHolder(), result, cost);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void craftItem(CraftItemEvent event){
-        if(event.isCancelled())
-            return;
         CraftingInventory inv = event.getInventory();
         for(ItemStack item : event.getInventory().getMatrix()){
             if(item!=null && item.getItemMeta()!=null){
@@ -504,10 +499,8 @@ public class Events implements Listener {
             ((Craftable) item).ability(event);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void enchantItem(EnchantItemEvent event){
-        if(event.isCancelled())
-            return;
         ItemStack item = event.getItem();
         if(item.getItemMeta()==null)
             return;
@@ -622,20 +615,16 @@ public class Events implements Listener {
 //        }
 //    }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void activateAbility(CreatureSpawnEvent event){
-        if(event.isCancelled() || activatables.isEmpty())
-            return;
         for(Activatable activatable : activatables) {
             if(activatable instanceof Spawnable)
                 ((Spawnable) activatable).ability(event);
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void afflictAbility(EntityDamageByEntityEvent event){
-        if(event.isCancelled())
-            return;
         Entity entity = event.getDamager();
         com.klin.holoItems.interfaces.Retaliable retaliable = Utility.findItem(entity, com.klin.holoItems.interfaces.Retaliable.class);
         if(retaliable!=null)
@@ -673,10 +662,8 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void brewAbility(BrewEvent event){
-        if(event.isCancelled())
-            return;
         BrewerInventory inv = event.getContents();
         ItemStack ingredient = inv.getIngredient();
         Brewable brewable = Utility.findItem(ingredient, Brewable.class);
@@ -715,20 +702,16 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void collectAbility(EntityDropItemEvent event){
-        if(event.isCancelled())
-            return;
         Entity entity = event.getEntity();
         Collectable collectable = Utility.findItem(entity, Collectable.class);
         if(collectable!=null)
             collectable.ability(event, entity);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void consumeAbility(PlayerItemConsumeEvent event){
-        if(event.isCancelled())
-            return;
         ItemStack item = event.getItem();
         if (item.getType()==Material.AIR || item.getItemMeta()==null)
             return;
@@ -746,10 +729,8 @@ public class Events implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void defendAbility(EntityDamageByEntityEvent event){
-        if(event.isCancelled())
-            return;
         Entity entity = event.getEntity();
         Harmable harmable = Utility.findItem(entity, Harmable.class);
         if(harmable!=null)
@@ -791,10 +772,8 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void dispenseAbility(BlockDispenseEvent event){
-        if(event.isCancelled())
-            return;
         Block block = event.getBlock();
         BlockState state = block.getState();
         if(!(state instanceof Dispenser))
@@ -884,10 +863,8 @@ public class Events implements Listener {
 //
 //    }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void dropAbility(PlayerDropItemEvent event){
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         org.bukkit.entity.Item item = event.getItemDrop();
         Dropable dropable = Utility.findItem(item, Dropable.class, player);
@@ -895,10 +872,8 @@ public class Events implements Listener {
             dropable.ability(event);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void extractAbility(BlockBreakEvent event){
-        if(event.isCancelled())
-            return;
         Block block = event.getBlock();
         Player player = event.getPlayer();
         Breakable breakable = Utility.findItem(block, Breakable.class, player);
@@ -982,10 +957,8 @@ public class Events implements Listener {
             Utility.addDurability(item, -1, player);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void fishAbility(PlayerFishEvent event){
-        if(event.isCancelled())
-            return;
         PlayerInventory inv = event.getPlayer().getInventory();
         ItemStack item = inv.getItemInMainHand();
         Fishable fishable = Utility.findItem(item, Fishable.class);
@@ -999,13 +972,13 @@ public class Events implements Listener {
             fishable.ability(event, item);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void flauntAbility(AsyncPlayerChatEvent event){
         //temp
         if(Utility.test)
             System.out.println(event.getMessage());
         //
-        if(event.isCancelled() || !event.isAsynchronous())
+        if(!event.isAsynchronous())
             return;
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getHelmet();
@@ -1020,10 +993,8 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void hangingAbility(HangingPlaceEvent event){
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         if(player==null)
             return;
@@ -1050,10 +1021,8 @@ public class Events implements Listener {
             hitable.ability(event);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void igniteAbility(BlockIgniteEvent event){
-        if(event.isCancelled())
-            return;
         Block block = event.getBlock();
         Ignitable ignitable = Utility.findItem(block, Ignitable.class);
         if(ignitable !=null)
@@ -1130,10 +1099,8 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void launchAbility(ProjectileLaunchEvent event){
-        if(event.isCancelled())
-            return;
         ProjectileSource entity = event.getEntity().getShooter();
         if(!(entity instanceof LivingEntity))
             return;
@@ -1153,10 +1120,8 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void manipulateAbility(PlayerArmorStandManipulateEvent event){
-        if(event.isCancelled())
-            return;
         ArmorStand stand = event.getRightClicked();
         String id = stand.getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id==null || Collections.disabled.contains(id))
@@ -1288,10 +1253,8 @@ public class Events implements Listener {
 //        }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void placeAbility(BlockPlaceEvent event){
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         ItemStack item = event.getItemInHand();
         Item generic = Utility.findItem(item, Item.class, player);
@@ -1317,10 +1280,8 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void swapAbility(PlayerSwapHandItemsEvent event){
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         ItemStack item = event.getMainHandItem();
         Swappable swappable = Utility.findItem(item, Swappable.class, player);
@@ -1334,10 +1295,8 @@ public class Events implements Listener {
         manageDurability(player);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void targetAbility(EntityTargetLivingEntityEvent event){
-        if(event.isCancelled())
-            return;
         String modifiers = event.getEntity().getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING);
         if(modifiers==null)
             return;
@@ -1348,19 +1307,15 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void teleportAbility(EntityTeleportEvent event){
-        if(event.isCancelled())
-            return;
         Entity entity = event.getEntity();
         if(!(entity instanceof Player) && entity.getPersistentDataContainer().get(Utility.pack, PersistentDataType.STRING)!=null)
             event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void toggleAbility(PlayerToggleSneakEvent event){
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getBoots();
         if(item==null || item.getItemMeta()==null)
@@ -1510,18 +1465,16 @@ public class Events implements Listener {
         return false;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void preventWither(EntityChangeBlockEvent event){
-        if(!event.isCancelled() && event.getBlock().getType()==Material.PLAYER_HEAD)
+        if(event.getBlock().getType()==Material.PLAYER_HEAD)
             event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void preventExplosion(EntityExplodeEvent event){
-        if(event.isCancelled())
-            return;
         for(Block block : event.blockList()){
-            if(block!=null && block.getType()==Material.PLAYER_HEAD){
+            if(block.getType()==Material.PLAYER_HEAD){
                 event.setCancelled(true);
                 return;
             }
