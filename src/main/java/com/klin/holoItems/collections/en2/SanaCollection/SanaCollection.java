@@ -25,7 +25,7 @@ public class SanaCollection extends Collection {
     public static final String desc = "";
     public static final String theme = "";
 //    public static final String ign = "bigsana";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYzMDEzNDE2MzYxMSwKICAicHJvZmlsZUlkIiA6ICJhNzdkNmQ2YmFjOWE0NzY3YTFhNzU1NjYxOTllYmY5MiIsCiAgInByb2ZpbGVOYW1lIiA6ICIwOEJFRDUiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2QxYWY4NTMxMzk4OTI2NGQ5NTFiZWJmMjM3YWQzNjcyM2U5MjYwZjE1MmQwMjVhOGFiNWE3NjQ4MDc4MDZjOCIKICAgIH0KICB9Cn0=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2QxYWY4NTMxMzk4OTI2NGQ5NTFiZWJmMjM3YWQzNjcyM2U5MjYwZjE1MmQwMjVhOGFiNWE3NjQ4MDc4MDZjOCJ9fX0=";
 
     public SanaCollection(){
         super(name, desc, theme, base64);

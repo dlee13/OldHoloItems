@@ -15,7 +15,7 @@ public class RushiaCollection extends Collection {
     public static final String theme = "Magic dealt";
 //    public static final String ign = "uruharushia";
 //    public static final String uuid = "a8d49696-9a90-4a3f-8f16-7f93c16ec6ec";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDg5OTg5NCwKICAicHJvZmlsZUlkIiA6ICJhOGQ0OTY5NjlhOTA0YTNmOGYxNjdmOTNjMTZlYzZlYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJ1cnVoYXJ1c2hpYSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8yMmY3NmI4MWY3ZWFmZGJkNzgyNTJlZjVkYWIyYjRhYTFjYWZkNGFjZjZlMDEzN2EyYTE0Nzk3NWU3YThhZTljIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjJmNzZiODFmN2VhZmRiZDc4MjUyZWY1ZGFiMmI0YWExY2FmZDRhY2Y2ZTAxMzdhMmExNDc5NzVlN2E4YWU5YyJ9fX0=";
 
     public RushiaCollection(){
         super(name, desc, theme, base64);

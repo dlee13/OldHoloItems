@@ -12,7 +12,7 @@ public class AyameCollection extends Collection {
     public static final String theme = "";
 //    public static final String ign = "nakiriayame";
 //    public static final String uuid = "26c349f8-d2ac-45d9-be08-02d00be7ffd4";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDY1NTAxMywKICAicHJvZmlsZUlkIiA6ICIyNmMzNDlmOGQyYWM0NWQ5YmUwODAyZDAwYmU3ZmZkNCIsCiAgInByb2ZpbGVOYW1lIiA6ICJuYWtpcmlheWFtZSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8yYTdjYmIzYWFjZDZlM2QwODI2NDc4YmUzYjZmNDI1OTA5ZDdlMDIzYjMwY2Y3MzMyZjNjYTFmOTk1ZWZhODY4IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmE3Y2JiM2FhY2Q2ZTNkMDgyNjQ3OGJlM2I2ZjQyNTkwOWQ3ZTAyM2IzMGNmNzMzMmYzY2ExZjk5NWVmYTg2OCJ9fX0=";
 
     public AyameCollection(){
         super(name, desc, theme, base64);

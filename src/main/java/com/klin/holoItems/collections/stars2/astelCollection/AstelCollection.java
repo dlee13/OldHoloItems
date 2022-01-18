@@ -11,7 +11,7 @@ public class AstelCollection extends Collection {
     public static final String desc = "";
     public static final String theme = "";
 //    public static final String ign = "astelleda";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYxMTU3Njc1MTU1NSwKICAicHJvZmlsZUlkIiA6ICJkZGVkNTZlMWVmOGI0MGZlOGFkMTYyOTIwZjdhZWNkYSIsCiAgInByb2ZpbGVOYW1lIiA6ICJEaXNjb3JkQXBwIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzNjMjc0YmQ3ZjI3ZTA3ODcxNDYwMTMyNzE0NjM2YTcxNmRkNjE5ODJhMjc1MTk3NzIxNmE5Y2JmY2RkOWFiYjQiCiAgICB9CiAgfQp9";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2MyNzRiZDdmMjdlMDc4NzE0NjAxMzI3MTQ2MzZhNzE2ZGQ2MTk4MmEyNzUxOTc3MjE2YTljYmZjZGQ5YWJiNCJ9fX0=";
 
     public AstelCollection(){
         super(name, desc, theme, base64);

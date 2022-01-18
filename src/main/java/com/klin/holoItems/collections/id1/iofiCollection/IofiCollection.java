@@ -12,7 +12,7 @@ public class IofiCollection extends Collection {
     public static final String theme = "";
 //    public static final String ign = "iofi15";
 //    public static final String uuid = "08046169-6f77-45f7-8375-1e11f40488f5";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NTU4MjMyNCwKICAicHJvZmlsZUlkIiA6ICIwODA0NjE2OTZmNzc0NWY3ODM3NTFlMTFmNDA0ODhmNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJJT0ZJMTUiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDNiOWQyNzJkNmFmYmUyOGYwNGI3ODljMjc1YzJlY2YwMzMyOTljYTY3MGM1MjI1MTU1YzIwODViMGNlMTUyZSIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDNiOWQyNzJkNmFmYmUyOGYwNGI3ODljMjc1YzJlY2YwMzMyOTljYTY3MGM1MjI1MTU1YzIwODViMGNlMTUyZSJ9fX0=";
 
     public IofiCollection(){
         super(name, desc, theme, base64);

@@ -15,7 +15,7 @@ public class FlareCollection extends Collection {
     public static final String theme = "Forestry achieved";
 //    public static final String ign = "shiranuiflare";
 //    public static final String uuid = "5073760c-28cc-49e4-8bfe-2561a3f7e8ef";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDc5MzI4NCwKICAicHJvZmlsZUlkIiA6ICI1MDczNzYwYzI4Y2M0OWU0OGJmZTI1NjFhM2Y3ZThlZiIsCiAgInByb2ZpbGVOYW1lIiA6ICJzaGlyYW51aWZsYXJlIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2NkYTdiYTNmMWYxMDc2ZGE0NzkwNDFlNDA3YzU5YzQzZjQ3MjhiMWVmNGEzMGM3NTVjMjBiY2ZlNmFkZDc3MzQiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2RhN2JhM2YxZjEwNzZkYTQ3OTA0MWU0MDdjNTljNDNmNDcyOGIxZWY0YTMwYzc1NWMyMGJjZmU2YWRkNzczNCJ9fX0=";
 
     public FlareCollection(){
         super(name, desc, theme, base64);

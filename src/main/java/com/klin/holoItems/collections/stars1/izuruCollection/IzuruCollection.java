@@ -11,7 +11,7 @@ public class IzuruCollection extends Collection {
     public static final String desc = "";
     public static final String theme = "";
 //    public static final String ign = "kanadeizuru";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyNDg3MzY1NDMxNCwKICAicHJvZmlsZUlkIiA6ICJlNzVkNjkzY2ZjMDM0ODNmOWRhNWEwMmU4Mzg4OWZkNCIsCiAgInByb2ZpbGVOYW1lIiA6ICJrYW5hZGVpenVydSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9mMmFjYTM4MGE4M2RhOWNjZmEyNjIxZjNkZWRkYjE5YzRhMWI0MDk1ZjUyMzc1NmFmMTM0YzIzMTY3ZDA1NWJlIgogICAgfQogIH0KfQ==";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjJhY2EzODBhODNkYTljY2ZhMjYyMWYzZGVkZGIxOWM0YTFiNDA5NWY1MjM3NTZhZjEzNGMyMzE2N2QwNTViZSJ9fX0=";
 
     public IzuruCollection(){
         super(name, desc, theme, base64);

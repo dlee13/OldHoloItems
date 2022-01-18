@@ -15,7 +15,7 @@ public class CalliCollection extends Collection {
     public static final String theme = "Returned to grave";
 //    public static final String ign = "moricalliopeen";
 //    public static final String uuid = "14abe999-ac61-432a-ba3f-216bbe9454b3";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDA1NjUwMywKICAicHJvZmlsZUlkIiA6ICIxNGFiZTk5OWFjNjE0MzJhYmEzZjIxNmJiZTk0NTRiMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJtb3JpY2FsbGlvcGVFTiIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9jNGI3NTk2ZWI5OWUzOGI5MTdkOWI2YjZjOGUyMDEwMDQwOGNlOGE2NmYwMGRkNWNjYTQ4N2ViMmE5MDkwODhjIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzRiNzU5NmViOTllMzhiOTE3ZDliNmI2YzhlMjAxMDA0MDhjZThhNjZmMDBkZDVjY2E0ODdlYjJhOTA5MDg4YyJ9fX0=";
 
     public CalliCollection(){
         super(name, desc, theme, base64);

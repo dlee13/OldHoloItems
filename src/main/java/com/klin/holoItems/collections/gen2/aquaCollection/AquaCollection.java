@@ -14,7 +14,7 @@ public class AquaCollection extends Collection {
     public static final String theme = "Performed as a Maid";
 //    public static final String ign = "minatoaqua";
 //    public static final String uuid = "cbd93537-21e9-4852-99fc-ff459cc4ce41";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDYzMjY5NCwKICAicHJvZmlsZUlkIiA6ICJjYmQ5MzUzNzIxZTk0ODUyOTlmY2ZmNDU5Y2M0Y2U0MSIsCiAgInByb2ZpbGVOYW1lIiA6ICJtaW5hdG9hcXVhIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzg1NTNmNTRlZTRhODg2NGI3ZDUyMmQ1Y2E5MjUxNmNlOWU5ZjlhNGFlOGJmM2ZkZDJkMzliZmI3NDM2NGQ4MjgiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODU1M2Y1NGVlNGE4ODY0YjdkNTIyZDVjYTkyNTE2Y2U5ZTlmOWE0YWU4YmYzZmRkMmQzOWJmYjc0MzY0ZDgyOCJ9fX0=";
 
     public AquaCollection(){
         super(name, desc, theme, base64);

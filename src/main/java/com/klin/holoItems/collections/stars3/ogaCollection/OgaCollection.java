@@ -12,7 +12,7 @@ public class OgaCollection extends Collection {
     public static final String desc = "";
     public static final String theme = "";
 //    public static final String ign = "aragamioga";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYzMjk3MzM3MTMzMiwKICAicHJvZmlsZUlkIiA6ICJhYTJhMWE0ZTExZjE0YWViYmE5YmRlZDdiNjIzNjc5MCIsCiAgInByb2ZpbGVOYW1lIiA6ICJhcmFnYW1pb2dhIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2ZkMzgwNGMxOTUwNDEwMGNiMGViNTIzMWRmYzllY2NmYjFiMDU0ZTY0YTVlNTlkNzE0OTZlNGYyYWMwYjYyMyIKICAgIH0KICB9Cn0=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmQzODA0YzE5NTA0MTAwY2IwZWI1MjMxZGZjOWVjY2ZiMWIwNTRlNjRhNWU1OWQ3MTQ5NmU0ZjJhYzBiNjIzIn19fQ==";
 
     public OgaCollection(){
         super(name, desc, theme, base64);

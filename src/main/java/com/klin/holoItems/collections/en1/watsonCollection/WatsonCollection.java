@@ -15,7 +15,7 @@ public class WatsonCollection extends Collection {
     public static final String theme = "Ground excavated";
 //    public static final String ign = "amwatson";
 //    public static final String uuid = "6b6c5fbd-0789-4489-b5bf-91954a28e821";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDE4ODQ4NywKICAicHJvZmlsZUlkIiA6ICI2YjZjNWZiZDA3ODk0NDg5YjViZjkxOTU0YTI4ZTgyMSIsCiAgInByb2ZpbGVOYW1lIiA6ICJhbXdhdHNvbiIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS81NDU0NjE5ZmU3MTk4NTZhMzQ0MDZkMWZlY2NjYTQ4MDg1YTVlMDRiMzcxMTI3ZTIwNWI4OTRkZDE5MDk2NGM5IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTQ1NDYxOWZlNzE5ODU2YTM0NDA2ZDFmZWNjY2E0ODA4NWE1ZTA0YjM3MTEyN2UyMDViODk0ZGQxOTA5NjRjOSJ9fX0=";
 
     public WatsonCollection(){
         super(name, desc, theme, base64);

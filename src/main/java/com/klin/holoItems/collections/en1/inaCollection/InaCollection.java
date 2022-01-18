@@ -15,7 +15,7 @@ public class InaCollection extends Collection {
     public static final String theme = "Mats farmed";
 //    public static final String ign = "ninoina";
 //    public static final String uuid = "8237e9c4-1c11-4c19-b29a-67c51f2045b8";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDEwOTA5MCwKICAicHJvZmlsZUlkIiA6ICI4MjM3ZTljNDFjMTE0YzE5YjI5YTY3YzUxZjIwNDViOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJOaW5vSW5hIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzNiMzA2OGJmN2M0NDEyODBkYTU1ZjBkOTY2ODZlMzk0MDhjNDYzNWVjMTBiZmFmNTk0ZTk4ZTc0MzMxOWU5NiIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2IzMDY4YmY3YzQ0MTI4MGRhNTVmMGQ5NjY4NmUzOTQwOGM0NjM1ZWMxMGJmYWY1OTRlOThlNzQzMzE5ZTk2In19fQ==";
 
     public InaCollection(){
         super(name, desc, theme, base64);

@@ -15,7 +15,7 @@ public class PekoraCollection extends Collection {
     public static final String theme = "War crimes committed";
 //    public static final String ign = "usadapekora";
 //    public static final String uuid = "3e255051-4ea8-465a-af46-28f019ec7ebb";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NDg3NDMyMCwKICAicHJvZmlsZUlkIiA6ICIzZTI1NTA1MTRlYTg0NjVhYWY0NjI4ZjAxOWVjN2ViYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJVc2FkYXBla29yYSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9jOGJiZGIwMDE5NWJmNTY5YWE1ZmRiMGY2MWU1MGJkOTEyMzVlYmIyZjM2YmFhNGFkNjZiNjJmNzRlNTZkZmE1IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzhiYmRiMDAxOTViZjU2OWFhNWZkYjBmNjFlNTBiZDkxMjM1ZWJiMmYzNmJhYTRhZDY2YjYyZjc0ZTU2ZGZhNSJ9fX0=";
 
     public PekoraCollection(){
         super(name, desc, theme, base64);

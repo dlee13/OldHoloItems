@@ -15,7 +15,7 @@ public class LamyCollection extends Collection {
     public static final String theme = "";
 //    public static final String ign = "lamy_yukihana";
 //    public static final String uuid = "23c163a1-e2c4-4790-a9ee-799e79a3cb56";
-    public static final String base64 = "ewogICJ0aW1lc3RhbXAiIDogMTYyMDE4NTUyMzc1OCwKICAicHJvZmlsZUlkIiA6ICIyM2MxNjNhMWUyYzQ0NzkwYTllZTc5OWU3OWEzY2I1NiIsCiAgInByb2ZpbGVOYW1lIiA6ICJMYW15X1l1a2loYW5hIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzZhMTU5ZjMyMTJlYmUyNjllMGZkN2MwODY2YTI3OTE0YzkxYjVmZDNmNjc2NzJhZmYxNTBmYjAwMzU0MGExMjgiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==";
+    public static final String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmExNTlmMzIxMmViZTI2OWUwZmQ3YzA4NjZhMjc5MTRjOTFiNWZkM2Y2NzY3MmFmZjE1MGZiMDAzNTQwYTEyOCJ9fX0=";
 
     public LamyCollection(){
         super(name, desc, theme, base64);
