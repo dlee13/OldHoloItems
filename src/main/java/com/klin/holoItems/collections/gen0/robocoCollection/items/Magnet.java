@@ -60,49 +60,53 @@ public class Magnet extends Enchant implements Extractable {
     }
 
     public void ability(BlockBreakEvent event){
-        if(!event.isDropItems())
-            return;
-        Block block = event.getBlock();
-        Material type = block.getType();
-        if(block.getType()==Material.PLAYER_HEAD)
-            return;
-        event.setDropItems(false);
-        Player player = event.getPlayer();
-        PlayerInventory inv = player.getInventory();
-        World world = player.getWorld();
-        Location loc = block.getLocation();
-        if(exception.contains(type)){
-            ItemStack item = new ItemStack(type);
-            if(!inv.addItem(item).isEmpty())
-                world.dropItemNaturally(loc, item);
-            return;
-        }
-        List<ItemStack> items;
-        Crate crate = Utility.findItem(block, Crate.class);
-        if(crate==null)
-            items = new ArrayList<>(block.getDrops(inv.getItemInMainHand(), player));
-        else {
-            ItemStack drop = crate.item.clone();
-            drop.setAmount(1);
-            items = new ArrayList<>();
-            items.add(drop);
-        }
-        BlockState state = block.getState();
-        if(state instanceof Container && !(state instanceof ShulkerBox)) {
-            Inventory container = ((Container) state).getInventory();
-            if(container.getHolder() instanceof DoubleChest){
-                Chest chest = (Chest) block.getBlockData();
-                if(chest.getType()==Chest.Type.LEFT)
-                    items.addAll(Arrays.asList(((DoubleChestInventory) container).getRightSide().getStorageContents()));
-                else
-                    items.addAll(Arrays.asList(((DoubleChestInventory) container).getLeftSide().getStorageContents()));
-            } else
-                items.addAll(Arrays.asList(container.getStorageContents()));
-            items.removeIf(Objects::isNull);
-        }
-        for(ItemStack item : items){
-            if(!inv.addItem(item).isEmpty())
-                world.dropItemNaturally(loc, item);
-        }
+        // hard disable until bug fixed
+        event.setCancelled(true);
+        return;
+
+        // if(!event.isDropItems())
+        //     return;
+        // Block block = event.getBlock();
+        // Material type = block.getType();
+        // if(block.getType()==Material.PLAYER_HEAD)
+        //     return;
+        // event.setDropItems(false);
+        // Player player = event.getPlayer();
+        // PlayerInventory inv = player.getInventory();
+        // World world = player.getWorld();
+        // Location loc = block.getLocation();
+        // if(exception.contains(type)){
+        //     ItemStack item = new ItemStack(type);
+        //     if(!inv.addItem(item).isEmpty())
+        //         world.dropItemNaturally(loc, item);
+        //     return;
+        // }
+        // List<ItemStack> items;
+        // Crate crate = Utility.findItem(block, Crate.class);
+        // if(crate==null)
+        //     items = new ArrayList<>(block.getDrops(inv.getItemInMainHand(), player));
+        // else {
+        //     ItemStack drop = crate.item.clone();
+        //     drop.setAmount(1);
+        //     items = new ArrayList<>();
+        //     items.add(drop);
+        // }
+        // BlockState state = block.getState();
+        // if(state instanceof Container && !(state instanceof ShulkerBox)) {
+        //     Inventory container = ((Container) state).getInventory();
+        //     if(container.getHolder() instanceof DoubleChest){
+        //         Chest chest = (Chest) block.getBlockData();
+        //         if(chest.getType()==Chest.Type.LEFT)
+        //             items.addAll(Arrays.asList(((DoubleChestInventory) container).getRightSide().getStorageContents()));
+        //         else
+        //             items.addAll(Arrays.asList(((DoubleChestInventory) container).getLeftSide().getStorageContents()));
+        //     } else
+        //         items.addAll(Arrays.asList(container.getStorageContents()));
+        //     items.removeIf(Objects::isNull);
+        // }
+        // for(ItemStack item : items){
+        //     if(!inv.addItem(item).isEmpty())
+        //         world.dropItemNaturally(loc, item);
+        // }
     }
 }
