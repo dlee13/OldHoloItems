@@ -1,18 +1,18 @@
 package com.klin.holoItems.collections.gen0.robocoCollection.items;
 
 import com.klin.holoItems.HoloItems;
-import com.klin.holoItems.abstractClasses.Crate;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
 import com.klin.holoItems.interfaces.Extractable;
 import com.klin.holoItems.utility.Utility;
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.block.data.type.Chest;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Item;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.*;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 public class Magnet extends Enchant implements Extractable {
     public static final String name = "magnet";
-    private static final Set<Material> exception = Set.of(Material.WHITE_BED, Material.ORANGE_BED, Material.MAGENTA_BED, Material.LIGHT_BLUE_BED, Material.YELLOW_BED, Material.LIME_BED, Material.PINK_BED, Material.GRAY_BED, Material.LIGHT_GRAY_BED, Material.CYAN_BED, Material.PURPLE_BED, Material.BLUE_BED, Material.BROWN_BED, Material.GREEN_BED, Material.RED_BED, Material.BLACK_BED, Material.ACACIA_DOOR, Material.BIRCH_DOOR, Material.IRON_DOOR, Material.DARK_OAK_DOOR, Material.CRIMSON_DOOR, Material.JUNGLE_DOOR, Material.OAK_DOOR, Material.SPRUCE_DOOR, Material.WARPED_DOOR);
 
     public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH);
     public static final Set<String> acceptedIds = Stream.of(Comet.name).collect(Collectors.toCollection(HashSet::new));
@@ -35,7 +34,7 @@ public class Magnet extends Enchant implements Extractable {
     private static final boolean shiny = false;
     public static final int cost = 0;
 
-    public Magnet(){
+    public Magnet() {
         super(name, accepted, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
         acceptedTypes.addAll(Utility.pickaxes);
         acceptedTypes.addAll(Utility.axes);
@@ -43,7 +42,7 @@ public class Magnet extends Enchant implements Extractable {
         acceptedTypes.addAll(Utility.hoes);
     }
 
-    public void registerRecipes(){
+    public void registerRecipes() {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aab","cde","fgd");
         recipe.setIngredient('a', Material.POWERED_RAIL);
@@ -59,52 +58,18 @@ public class Magnet extends Enchant implements Extractable {
         Utility.mirror(recipe, name, item);
     }
 
-    public void ability(BlockBreakEvent event){
-         if(!event.isDropItems())
-             return;
-         Block block = event.getBlock();
-         Material type = block.getType();
-         // Head dupe bug is still technically here. This is just a botched way to stop magnets from interacting
-         // with player heads
-         if(block.getType()==Material.PLAYER_HEAD || block.getType() == Material.PLAYER_WALL_HEAD)
-             return;
-         event.setDropItems(false);
-         Player player = event.getPlayer();
-         PlayerInventory inv = player.getInventory();
-         World world = player.getWorld();
-         Location loc = block.getLocation();
-         if(exception.contains(type)){
-             ItemStack item = new ItemStack(type);
-             if(!inv.addItem(item).isEmpty())
-                 world.dropItemNaturally(loc, item);
-             return;
-         }
-         List<ItemStack> items;
-         Crate crate = Utility.findItem(block, Crate.class);
-         if(crate==null)
-             items = new ArrayList<>(block.getDrops(inv.getItemInMainHand(), player));
-         else {
-             ItemStack drop = crate.item.clone();
-             drop.setAmount(1);
-             items = new ArrayList<>();
-             items.add(drop);
-         }
-         BlockState state = block.getState();
-         if(state instanceof Container && !(state instanceof ShulkerBox)) {
-             Inventory container = ((Container) state).getInventory();
-             if(container.getHolder() instanceof DoubleChest){
-                 Chest chest = (Chest) block.getBlockData();
-                 if(chest.getType()==Chest.Type.LEFT)
-                     items.addAll(Arrays.asList(((DoubleChestInventory) container).getRightSide().getStorageContents()));
-                 else
-                     items.addAll(Arrays.asList(((DoubleChestInventory) container).getLeftSide().getStorageContents()));
-             } else
-                 items.addAll(Arrays.asList(container.getStorageContents()));
-             items.removeIf(Objects::isNull);
-         }
-         for(ItemStack item : items){
-             if(!inv.addItem(item).isEmpty())
-                 world.dropItemNaturally(loc, item);
-         }
+    public void ability(BlockBreakEvent event) {
+        final var location = event.getBlock().getLocation().toCenterLocation();
+        final var player = event.getPlayer();
+
+        new BukkitRunnable() {
+            public void run() {
+                final var items = location.getNearbyEntitiesByType(Item.class, 1.5, item -> item.canPlayerPickup());
+                final var itemStacks = items.stream().map(item -> item.getItemStack()).toArray(ItemStack[]::new);
+                final var excess = player.getInventory().addItem(itemStacks);
+                excess.values().forEach(itemStack -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
+                items.forEach(item -> item.remove());
+            }
+        }.runTask(HoloItems.getInstance());
     }
 }
