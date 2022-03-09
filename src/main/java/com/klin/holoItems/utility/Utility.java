@@ -31,6 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -784,6 +785,17 @@ public class Utility {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(messageBuffer.get(player)));
             }
         }.runTask(HoloItems.getInstance());
+    }
+
+    private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
+
+    @SuppressWarnings("deprecation")
+    public static int nextEntityId() {
+        return Bukkit.getUnsafe().nextEntityId();
+    }
+
+    public static UUID randomUUID() {
+        return new UUID(RANDOM.nextLong(), RANDOM.nextLong());
     }
 }
 

@@ -4,11 +4,15 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
 import com.klin.holoItems.interfaces.Extractable;
+import com.klin.holoItems.packet.EntityDestroyPacket;
+import com.klin.holoItems.packet.EntityMetadataPacket;
+import com.klin.holoItems.packet.SpawnEntityLivingPacket;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.*;
@@ -54,22 +58,38 @@ public class Magnet extends Enchant implements Extractable {
         recipe.setIngredient('g', Material.COMPARATOR);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
-
-        Utility.mirror(recipe, name, item);
     }
 
     public void ability(BlockBreakEvent event) {
+        final var plugin = HoloItems.getInstance();
         final var location = event.getBlock().getLocation().toCenterLocation();
         final var player = event.getPlayer();
 
+        if (player.getLocation().distanceSquared(location) > 1.0) {
+            final var entityId = Utility.nextEntityId();
+            final var uniqueId = Utility.randomUUID();
+            new SpawnEntityLivingPacket(entityId, uniqueId, EntityType.GUARDIAN, location).sendPacket(player);
+
+            final var metadata = new EntityMetadataPacket.Metadata();
+            metadata.setByte(0, (byte)0x20);                // invisible
+            metadata.setByte(15, (byte)0x04);               // aggressive
+            metadata.setVarInt(17, player.getEntityId());   // target player
+            new EntityMetadataPacket(entityId, metadata).sendPacket(player);
+
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+                () -> new EntityDestroyPacket(entityId).sendPacket(player), 4);
+        }
+
         new BukkitRunnable() {
+            @Override
             public void run() {
-                final var items = location.getNearbyEntitiesByType(Item.class, 1.5, item -> item.canPlayerPickup());
-                final var itemStacks = items.stream().map(item -> item.getItemStack()).toArray(ItemStack[]::new);
+                final var items = location.getNearbyEntitiesByType(Item.class, 1.5, Item::canPlayerPickup);
+                final var itemStacks = items.stream().map(Item::getItemStack).toArray(ItemStack[]::new);
                 final var excess = player.getInventory().addItem(itemStacks);
+                items.forEach(player::playPickupItemAnimation);
+                items.forEach(Item::remove);
                 excess.values().forEach(itemStack -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
-                items.forEach(item -> item.remove());
             }
-        }.runTask(HoloItems.getInstance());
+        }.runTask(plugin);
     }
 }
