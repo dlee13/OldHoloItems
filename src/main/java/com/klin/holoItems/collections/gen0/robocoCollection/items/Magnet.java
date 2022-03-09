@@ -65,21 +65,6 @@ public class Magnet extends Enchant implements Extractable {
         final var location = event.getBlock().getLocation().toCenterLocation();
         final var player = event.getPlayer();
 
-        if (player.getLocation().distanceSquared(location) > 1.0) {
-            final var entityId = Utility.nextEntityId();
-            final var uniqueId = Utility.randomUUID();
-            new SpawnEntityLivingPacket(entityId, uniqueId, EntityType.GUARDIAN, location).sendPacket(player);
-
-            final var metadata = new EntityMetadataPacket.Metadata();
-            metadata.setByte(0, (byte)0x20);                // invisible
-            metadata.setByte(15, (byte)0x04);               // aggressive
-            metadata.setVarInt(17, player.getEntityId());   // target player
-            new EntityMetadataPacket(entityId, metadata).sendPacket(player);
-
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
-                () -> new EntityDestroyPacket(entityId).sendPacket(player), 4);
-        }
-
         new BukkitRunnable() {
             @Override
             public void run() {
