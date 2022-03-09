@@ -3,6 +3,7 @@ version: 1.3
 author: klin
 main: com.klin.holoItems.HoloItems
 api-version: 1.14
+depend: [ProtocolLib]
 
 commands:
   collections:
