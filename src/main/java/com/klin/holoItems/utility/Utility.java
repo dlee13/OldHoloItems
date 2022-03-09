@@ -1,5 +1,7 @@
 package com.klin.holoItems.utility;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.klin.holoItems.Collections;
 import com.klin.holoItems.Events;
 import com.klin.holoItems.HoloItems;
@@ -22,6 +24,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
@@ -796,6 +799,22 @@ public class Utility {
 
     public static UUID randomUUID() {
         return new UUID(RANDOM.nextLong(), RANDOM.nextLong());
+    }
+
+    private static final UUID SKULL_OWNER = new UUID(0, 0);
+
+    public static ItemStack playerHeadFromBase64(String base64) {
+        final var item = new ItemStack(Material.PLAYER_HEAD);
+        final var meta = (SkullMeta) item.getItemMeta();
+        meta.setPlayerProfile(profileWithPrefilledBase64Texture(base64));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static PlayerProfile profileWithPrefilledBase64Texture(String base64) {
+        final var profile = Bukkit.createProfile(SKULL_OWNER);
+        profile.setProperty(new ProfileProperty("textures", base64));
+        return profile;
     }
 }
 

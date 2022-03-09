@@ -2,8 +2,9 @@ package com.klin.holoItems.dungeons.inaDungeon;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.dungeons.Resetable;
-import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Task;
+import com.klin.holoItems.utility.Utility;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public class Cookie implements Listener, Resetable {
         };
         heads = new ItemStack[7];
         for(int i=0; i<base64.length; i++)
-            heads[i] = SkullCreator.itemFromBase64(base64[i]);
+            heads[i] = Utility.playerHeadFromBase64(base64[i]);
 
         buffs = new HashMap<>();
         for(Player player : getOnlinePlayers())

@@ -1217,8 +1217,7 @@ public class Events implements Listener {
                 i++;
             }
             block = block.getRelative(BlockFace.UP);
-            block.setType(PLAYER_HEAD);
-            QuartzGranule.setUp((Skull) block.getState());
+            QuartzGranule.setUpSkull(block);
             //temp
             world.dropItemNaturally(block.getLocation(), Collections.items.get(Fireball.name).item);
             //

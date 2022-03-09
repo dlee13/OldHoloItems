@@ -7,7 +7,6 @@ import com.klin.holoItems.collections.misc.ingredientsCollection.items.QuartzFra
 import com.klin.holoItems.interfaces.Breakable;
 import com.klin.holoItems.interfaces.Harmable;
 import com.klin.holoItems.interfaces.Placeable;
-import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -31,7 +30,7 @@ import java.util.Set;
 
 public class QuartzGranule extends Item implements Placeable, Breakable, Harmable {
     public static final String name = "quartzGranule";
-    private static final String endstone = "vxrb";
+    private static final String endstoneBase64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2NkOWMzNzg0N2IxNDRiYzI2ZTM2ZmJhNWIzYzdjOGFjYzI1NTNhMDRkODQ0YjI1ZjhmMzNmNDlmMjEwMzFiZSJ9fX0=";
     private final Map<Material, Material> keys;
     private final Map<Material, Set<Material>> values;
     int increment;
@@ -78,7 +77,7 @@ public class QuartzGranule extends Item implements Placeable, Breakable, Harmabl
 
     public void ability(BlockPlaceEvent event){
         event.setCancelled(false);
-        setUp((Skull) event.getBlockPlaced().getState());
+        setUpSkull(event.getBlockPlaced());
     }
 
     public void ability(BlockBreakEvent event) {
@@ -101,7 +100,7 @@ public class QuartzGranule extends Item implements Placeable, Breakable, Harmabl
         stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING);
         stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
         stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
-        stand.getEquipment().setHelmet(SkullCreator.itemFromName(endstone));
+        stand.getEquipment().setHelmet(Utility.playerHeadFromBase64(endstoneBase64));
 
         new Task(HoloItems.getInstance(), 1, 1){
             final Location loc = stand.getLocation();
@@ -182,9 +181,11 @@ public class QuartzGranule extends Item implements Placeable, Breakable, Harmabl
         };
     }
 
-    public static void setUp(Skull skull){
+    public static void setUpSkull(Block block){
+        block.setType(Material.PLAYER_HEAD);
+        final var skull = (Skull) block.getState();
         skull.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, QuartzGranule.name);
-        skull.setOwningPlayer(Bukkit.getOfflinePlayer(endstone));
+        skull.setPlayerProfile(Utility.profileWithPrefilledBase64Texture(endstoneBase64));
         skull.update();
     }
 

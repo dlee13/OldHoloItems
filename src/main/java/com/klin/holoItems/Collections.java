@@ -65,7 +65,6 @@ import com.klin.holoItems.collections.misc.ingredientsCollection.IngredientsColl
 import com.klin.holoItems.collections.hidden.klinCollection.KlinCollection;
 import com.klin.holoItems.collections.hidden.opCollection.OpCollection;
 import com.klin.holoItems.interfaces.Activatable;
-import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -729,7 +728,7 @@ public class Collections implements CommandExecutor, Listener, TabCompleter {
         for(Collection collection : collections.values()){
             if(collection.base64==null)
                 continue;
-            ItemStack head = SkullCreator.itemFromBase64(collection.base64);
+            ItemStack head = Utility.playerHeadFromBase64(collection.base64);
             ItemMeta headMeta = head.getItemMeta();
             headMeta.setDisplayName("§b"+collection.name);
             if(!collection.desc.isEmpty()) {

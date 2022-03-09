@@ -1,7 +1,6 @@
 package com.klin.holoItems.abstractClasses;
 
 import com.klin.holoItems.Item;
-import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -36,7 +35,7 @@ public abstract class Pet extends Item {
         stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING);
         stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
         stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
-        stand.getEquipment().setHelmet(SkullCreator.itemFromBase64(base64));
+        stand.getEquipment().setHelmet(Utility.playerHeadFromBase64(base64));
     }
 
     protected void unsummon(){

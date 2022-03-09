@@ -7,7 +7,6 @@ import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.BlackP
 import com.klin.holoItems.collections.dungeons.inaDungeonCollection.items.TemperedBottle;
 import com.klin.holoItems.collections.gen3.noelCollection.items.MilkBottle;
 import com.klin.holoItems.dungeons.Resetable;
-import com.klin.holoItems.utility.SkullCreator;
 import com.klin.holoItems.utility.Task;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
@@ -55,7 +54,7 @@ public class AoShop implements Resetable {
         stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING);
         stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
         stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
-        stand.getEquipment().setHelmet(SkullCreator.itemFromBase64("ewogICJ0aW1lc3RhbXAiIDogMTYzMDI5NDI1MTU3NCwKICAicHJvZmlsZUlkIiA6ICI5MWYwNGZlOTBmMzY0M2I1OGYyMGUzMzc1Zjg2ZDM5ZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJTdG9ybVN0b3JteSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zNWE2MjljYmU5MWNlNzdkMjM1N2UzZmQ5OWJkMDFiOWY1NTQ4MDcyYmJjNjkxYmVlMTdmZDM5NDc2NDQ2MWJjIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0="));
+        stand.getEquipment().setHelmet(Utility.playerHeadFromBase64("ewogICJ0aW1lc3RhbXAiIDogMTYzMDI5NDI1MTU3NCwKICAicHJvZmlsZUlkIiA6ICI5MWYwNGZlOTBmMzY0M2I1OGYyMGUzMzc1Zjg2ZDM5ZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJTdG9ybVN0b3JteSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zNWE2MjljYmU5MWNlNzdkMjM1N2UzZmQ5OWJkMDFiOWY1NTQ4MDcyYmJjNjkxYmVlMTdmZDM5NDc2NDQ2MWJjIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0="));
         focus = null;
         mixing = false;
         money = new HashMap<>();
