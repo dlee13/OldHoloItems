@@ -1,22 +1,24 @@
 package com.klin.holoItems.collections.en1.inaCollection.items;
 
+import com.destroystokyo.paper.MaterialSetTag;
+import com.destroystokyo.paper.MaterialTags;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Wiring;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
+import org.bukkit.Tag;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.type.Dispenser;
+import org.bukkit.block.data.Directional;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.*;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Set;
-
-public class CeramicLadle  extends Wiring {
+public class CeramicLadle extends Wiring {
     public static final String name = "ceramicLadle";
+
+    private static final NamespacedKey KEY = new NamespacedKey(HoloItems.getInstance(), name);
+    private static final MaterialSetTag COMPATIBLE_MATERIALS = new MaterialSetTag(KEY, CeramicLadle::isCompatibleMaterial);
 
     private static final Material material = Material.STONE_SHOVEL;
     private static final String lore =
@@ -31,7 +33,7 @@ public class CeramicLadle  extends Wiring {
     }
 
     public void registerRecipes(){
-        BlastingRecipe blastingRecipe = new BlastingRecipe(new NamespacedKey(HoloItems.getInstance(), "ceramicLadle"),
+        BlastingRecipe blastingRecipe = new BlastingRecipe(KEY,
                 item, new RecipeChoice.ExactChoice(
                 Utility.process("earthenSpoon", Material.WOODEN_SHOVEL, 1,
                         "Dispensers wired with this item will\n" +
@@ -41,40 +43,33 @@ public class CeramicLadle  extends Wiring {
         Bukkit.getServer().addRecipe(blastingRecipe);
     }
 
-    public void ability(BlockDispenseEvent event){
-        ItemStack item = event.getItem();
-        Material sapling = item.getType();
-        String type = sapling.toString();
-        if(Utility.flowers.contains(sapling) || type.contains("SAPLING"))
-            type = "SAPLING";
-        else if(type.contains("FUNGUS"))
-            type = "FUNGUS";
-        else
+    // in the rewrite, BlockPreDispenseEvent should be used instead
+    public void ability(BlockDispenseEvent event) {
+        final var itemStack = event.getItem();
+        final var material = itemStack.getType();
+
+        if (!COMPATIBLE_MATERIALS.isTagged(material)) {
             return;
+        }
 
         event.setCancelled(true);
-        Block block = event.getBlock();
-        BlockFace face = ((Dispenser) block.getBlockData()).getFacing();
-        Block place = block.getRelative(face);
-        Set<Material> dirt = Utility.dirt.get(type);
-        if(face==BlockFace.UP &&
-                !place.isEmpty() && dirt.contains(place.getType())){
-            Block air = place.getRelative(BlockFace.UP);
-            if(!air.isEmpty())
-                return;
-            air.setType(sapling);
-        }
-        else {
-            if (!place.isEmpty() || !dirt.contains(place.getRelative(BlockFace.DOWN).getType()))
-                return;
-            place.setType(sapling);
+
+        final var block = event.getBlock();
+        final var face = ((Directional) block.getBlockData()).getFacing();
+        final var placedBlock = block.getRelative(face, face.equals(BlockFace.UP) ? 2 : 1);
+
+        if (!placedBlock.isEmpty() || !placedBlock.canPlace(material.createBlockData())) {
+            return;
         }
 
-        Inventory inv = ((InventoryHolder) block.getState()).getInventory();
-        new BukkitRunnable(){
-            public void run(){
-                inv.removeItem(item);
-            }
-        }.runTask(HoloItems.getInstance());
+        placedBlock.setType(material);
+
+        final var inventory = ((InventoryHolder) block.getState()).getInventory();
+        Bukkit.getScheduler().runTask(HoloItems.getInstance(), () -> inventory.removeItem(itemStack));
+    }
+
+    private static boolean isCompatibleMaterial(Material material) {
+        return Tag.FLOWERS.isTagged(material) || Tag.SAPLINGS.isTagged(material)
+            || MaterialTags.MUSHROOMS.isTagged(material) || material.toString().endsWith("FUNGUS");
     }
 }
