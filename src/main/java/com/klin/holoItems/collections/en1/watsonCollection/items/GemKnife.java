@@ -6,39 +6,37 @@ import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.AbstractMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GemKnife extends BatteryPack {
     public static final String name = "gemKnife";
-    private static final Map<Material, Material> ores = Stream.of(new Material[][] {
-        {Material.COAL_ORE, Material.COAL},
-        {Material.DEEPSLATE_COAL_ORE, Material.COAL},
-        {Material.IRON_ORE, Material.IRON_NUGGET},
-        {Material.DEEPSLATE_IRON_ORE, Material.IRON_NUGGET},
-        {Material.GOLD_ORE, Material.GOLD_NUGGET},
-        {Material.DEEPSLATE_GOLD_ORE, Material.GOLD_NUGGET},
-        {Material.NETHER_GOLD_ORE, Material.GOLD_NUGGET},
-        {Material.GILDED_BLACKSTONE, Material.GOLD_NUGGET},
-        {Material.REDSTONE_ORE, Material.REDSTONE},
-        {Material.DEEPSLATE_REDSTONE_ORE, Material.REDSTONE},
-        {Material.LAPIS_ORE, Material.LAPIS_LAZULI},
-        {Material.DEEPSLATE_LAPIS_ORE, Material.LAPIS_LAZULI},
-        {Material.NETHER_QUARTZ_ORE, Material.QUARTZ}
-    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+    private static final Map<Material, Material> COMPATIBLE_MATERIALS = Map.ofEntries(
+        new AbstractMap.SimpleEntry<Material, Material>(Material.COAL_ORE, Material.COAL),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_COAL_ORE, Material.COAL),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.IRON_ORE, Material.IRON_NUGGET),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_IRON_ORE, Material.IRON_NUGGET),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.GOLD_ORE, Material.GOLD_NUGGET),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_GOLD_ORE, Material.GOLD_NUGGET),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.NETHER_GOLD_ORE, Material.GOLD_NUGGET),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.GILDED_BLACKSTONE, Material.GOLD_NUGGET),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.REDSTONE_ORE, Material.REDSTONE),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_REDSTONE_ORE, Material.REDSTONE),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.LAPIS_ORE, Material.LAPIS_LAZULI),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_LAPIS_ORE, Material.LAPIS_LAZULI),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.NETHER_QUARTZ_ORE, Material.QUARTZ),
+        new AbstractMap.SimpleEntry<Material, Material>(Material.GLOWSTONE, Material.GLOWSTONE_DUST)
+    );
 
     private static final Material material = Material.EMERALD;
-    private static final String lore =
-            "Right click to consume a charge an\n"+
-            "break a piece off any ore softer than\n"+
+    private static final String lore = "Right click to consume a charge an\n" +
+            "break a piece off any ore softer than\n" +
             "an emerald";
     private static final int durability = 0;
     private static final boolean shiny = true;
@@ -48,39 +46,50 @@ public class GemKnife extends BatteryPack {
     public static final int cap = 1152;
     public static final int cost = 24000;
 
-    public GemKnife(){
+    public GemKnife() {
         super(name, material, lore, durability, shiny, cost, content, perFuel, cap);
     }
 
-    public void registerRecipes(){
+    public void registerRecipes() {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("a","b");
+        recipe.shape("a", "b");
         recipe.setIngredient('a', Material.EMERALD_BLOCK);
         recipe.setIngredient('b', Material.STICK);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
     }
 
-    public void effect(PlayerInteractEvent event){
+    // weird implementation for setting the charge, but i don't feel like fixing it until we reimplement it in the rewrite
+    // it would be better to set perFuel to 1 and base the charge cost on what material is being farmed
+    // and getting 2 charges per 1 emeralds is kind of unbalanced
+    public void effect(PlayerInteractEvent event) {
         event.setCancelled(true);
-        if(event.getClickedBlock()==null)
-            return;
-        Block ore = event.getClickedBlock();
-        Material type = ores.get(ore.getType());
-        if(type==null)
-            return;
-        ItemStack item = event.getItem();
-        int charge = Utility.deplete(item, event.getPlayer(), cap);
-        if(charge==-1)
-            return;
-        if(charge>=63){
-            ItemMeta meta = item.getItemMeta();
-            meta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, charge-63);
-            item.setItemMeta(meta);
-            ore.getWorld().dropItemNaturally(ore.getLocation(), new ItemStack(type, 64));
+        if (event.getClickedBlock() == null) {
             return;
         }
-        ore.getWorld().dropItemNaturally(ore.getLocation(), new ItemStack(type));
+
+        final var block = event.getClickedBlock();
+        final var material = COMPATIBLE_MATERIALS.get(block.getType());
+        if (material == null) {
+            return;
+        }
+
+        final var gemKnifeItemStack = event.getItem();
+        int charge = Utility.deplete(gemKnifeItemStack, event.getPlayer(), cap);
+        if (charge == -1) {
+            return;
+        }
+
+        int amount;
+        if (charge >= 63) {
+            final var gemKnifeItemMeta = gemKnifeItemStack.getItemMeta();
+            gemKnifeItemMeta.getPersistentDataContainer().set(Utility.pack, PersistentDataType.INTEGER, charge - 63);
+            gemKnifeItemStack.setItemMeta(gemKnifeItemMeta);
+            amount = material.getMaxStackSize();
+        } else {
+            amount = 1;
+        }
+
+        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(material, amount));
     }
 }
-
