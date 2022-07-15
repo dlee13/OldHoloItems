@@ -11,13 +11,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SteeringWheel extends Item implements Interactable {
     public static final String name = "steeringWheel";
-    private final Map<Player, AbstractMap.SimpleEntry<Vector, Integer>> drivers;
+    private final Map<Player, Map.Entry<Vector, Integer>> drivers;
 
     private static final Material material = Material.MUSIC_DISC_STAL;
     private static final int quantity = 1;
@@ -39,18 +38,18 @@ public class SteeringWheel extends Item implements Interactable {
 
     public void ability(PlayerInteractEvent event, Action action){
         Player player = event.getPlayer();
-        AbstractMap.SimpleEntry<Vector, Integer> driver = drivers.get(player);
+        Map.Entry<Vector, Integer> driver = drivers.get(player);
         if(driver!=null) {
-            drivers.replace(player, new AbstractMap.SimpleEntry<>(driver.getKey(), driver.getValue()+1));
+            drivers.replace(player, Map.entry(driver.getKey(), driver.getValue()+1));
             return;
         } else
-            drivers.put(player, new AbstractMap.SimpleEntry<>(player.getLocation().getDirection().setY(0).normalize(), 0));
+            drivers.put(player, Map.entry(player.getLocation().getDirection().setY(0).normalize(), 0));
         new Task(HoloItems.getInstance(), 1, 1){
             int increment = 0;
             int offset = 0;
             Vector drift = null;
             public void run(){
-                AbstractMap.SimpleEntry<Vector, Integer> driver = drivers.get(player);
+                Map.Entry<Vector, Integer> driver = drivers.get(player);
                 Integer ticks = driver.getValue();
                 if(increment>1200 || offset>ticks){
                     drivers.remove(player);

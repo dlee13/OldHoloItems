@@ -33,7 +33,7 @@ public class Maintenance implements Listener, Resetable {
     private final Map<Block, Integer> decay;
     public final Set<Player> knockBack;
     public Map<Player, Member> members;
-    public final Map<Player, AbstractMap.SimpleEntry<Vector, Double>> inputs;
+    public final Map<Player, Map.Entry<Vector, Double>> inputs;
 
     public Maintenance(int x1, int z1, int x2, int z2){
         seal = new Material[][]{
@@ -76,10 +76,10 @@ public class Maintenance implements Listener, Resetable {
         Player player = event.getPlayer();
         Location location = player.getLocation();
 
-        AbstractMap.SimpleEntry<Vector, Double> input = inputs.get(player);
+        Map.Entry<Vector, Double> input = inputs.get(player);
         Vector dir = location.getDirection().setY(0).normalize();
         if(input==null)
-            inputs.put(player, new AbstractMap.SimpleEntry<>(dir, 0.0));
+            inputs.put(player, Map.entry(dir, 0.0));
         else {
             double angle = input.getKey().crossProduct(dir).getY();
             double total = input.getValue();
@@ -95,7 +95,7 @@ public class Maintenance implements Listener, Resetable {
                 angle = 0;
             else
                 angle += total;
-            inputs.replace(player, new AbstractMap.SimpleEntry<>(dir, angle));
+            inputs.replace(player, Map.entry(dir, angle));
         }
 
         Cookie cookie = (Cookie) InaDungeon.presets.get("cookie");

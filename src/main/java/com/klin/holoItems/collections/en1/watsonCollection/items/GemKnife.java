@@ -11,27 +11,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.AbstractMap;
 import java.util.Map;
 
 public class GemKnife extends BatteryPack {
     public static final String name = "gemKnife";
 
     private static final Map<Material, Material> COMPATIBLE_MATERIALS = Map.ofEntries(
-        new AbstractMap.SimpleEntry<Material, Material>(Material.COAL_ORE, Material.COAL),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_COAL_ORE, Material.COAL),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.IRON_ORE, Material.IRON_NUGGET),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_IRON_ORE, Material.IRON_NUGGET),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.GOLD_ORE, Material.GOLD_NUGGET),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_GOLD_ORE, Material.GOLD_NUGGET),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.NETHER_GOLD_ORE, Material.GOLD_NUGGET),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.GILDED_BLACKSTONE, Material.GOLD_NUGGET),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.REDSTONE_ORE, Material.REDSTONE),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_REDSTONE_ORE, Material.REDSTONE),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.LAPIS_ORE, Material.LAPIS_LAZULI),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.DEEPSLATE_LAPIS_ORE, Material.LAPIS_LAZULI),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.NETHER_QUARTZ_ORE, Material.QUARTZ),
-        new AbstractMap.SimpleEntry<Material, Material>(Material.GLOWSTONE, Material.GLOWSTONE_DUST)
+        Map.entry(Material.COAL_ORE, Material.COAL),
+        Map.entry(Material.DEEPSLATE_COAL_ORE, Material.COAL),
+        Map.entry(Material.IRON_ORE, Material.IRON_NUGGET),
+        Map.entry(Material.DEEPSLATE_IRON_ORE, Material.IRON_NUGGET),
+        Map.entry(Material.GOLD_ORE, Material.GOLD_NUGGET),
+        Map.entry(Material.DEEPSLATE_GOLD_ORE, Material.GOLD_NUGGET),
+        Map.entry(Material.NETHER_GOLD_ORE, Material.GOLD_NUGGET),
+        Map.entry(Material.GILDED_BLACKSTONE, Material.GOLD_NUGGET),
+        Map.entry(Material.REDSTONE_ORE, Material.REDSTONE),
+        Map.entry(Material.DEEPSLATE_REDSTONE_ORE, Material.REDSTONE),
+        Map.entry(Material.LAPIS_ORE, Material.LAPIS_LAZULI),
+        Map.entry(Material.DEEPSLATE_LAPIS_ORE, Material.LAPIS_LAZULI),
+        Map.entry(Material.NETHER_QUARTZ_ORE, Material.QUARTZ),
+        Map.entry(Material.GLOWSTONE, Material.GLOWSTONE_DUST)
     );
 
     private static final Material material = Material.EMERALD;

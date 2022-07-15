@@ -28,7 +28,7 @@ import java.util.*;
 public class Sentry extends Item implements Interactable, Manipulatable, Retaliable, Hitable {
     public static final String name = "sentry";
     public static final Set<Enchantment> accepted = null;
-    private static final Map<Player, AbstractMap.SimpleEntry<Location, ArmorStand>> stands = new HashMap<>();
+    private static final Map<Player, Map.Entry<Location, ArmorStand>> stands = new HashMap<>();
 
     private static final Material material = Material.CROSSBOW;
     private static final int quantity = 1;
@@ -145,7 +145,7 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
         stand.getEquipment().setItemInMainHand(item);
         stand.setRightArmPose(new EulerAngle(Math.PI/2, 3.405, 0));
 
-        stands.put(player, new AbstractMap.SimpleEntry<>(reference.clone().add(0, -0.6, 0), stand));
+        stands.put(player, Map.entry(reference.clone().add(0, -0.6, 0), stand));
         item.setType(Material.LEVER);
 
 //        double y = block.getLocation().getY()-0.3;
@@ -196,7 +196,7 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
 
     private boolean cause(ItemStack item, Player player){
         if(item.getType()==Material.LEVER){
-            AbstractMap.SimpleEntry<Location, ArmorStand> entry = stands.get(player);
+            Map.Entry<Location, ArmorStand> entry = stands.get(player);
             if(entry==null){
                 item.setType(Material.CROSSBOW);
                 stands.remove(player);

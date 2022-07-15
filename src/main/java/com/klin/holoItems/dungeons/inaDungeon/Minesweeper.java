@@ -32,7 +32,7 @@ public class Minesweeper implements Listener, Resetable {
     //minesweeper -27 -9 -294 -262 59
     private final Set<Material> sand;
     public final Map<Integer, Material> flags;
-    private final Map<AbstractMap.SimpleEntry<Integer, Integer>, Boolean> squares;
+    private final Map<Map.Entry<Integer, Integer>, Boolean> squares;
     private final int y;
     private final Map<Block, BlockData> reset;
 
@@ -52,7 +52,7 @@ public class Minesweeper implements Listener, Resetable {
                 Block block = world.getBlockAt(x, y1, z);
                 do{
                     if(sand.contains(block.getType())) {
-                        squares.put(new AbstractMap.SimpleEntry<>(x, z), Math.random() < 0.25);
+                        squares.put(Map.entry(x, z), Math.random() < 0.25);
                         break;
                     }
                     block = block.getRelative(BlockFace.UP);
@@ -67,7 +67,7 @@ public class Minesweeper implements Listener, Resetable {
     public void mine(BlockBreakEvent event){
 //        event.setCancelled(true);
         Block block = event.getBlock();
-        AbstractMap.SimpleEntry<Integer, Integer> key = new AbstractMap.SimpleEntry<>(block.getX(), block.getZ());
+        Map.Entry<Integer, Integer> key = Map.entry(block.getX(), block.getZ());
         Boolean mine = squares.get(key);
         Material material = block.getType();
         if(mine==null || !sand.contains(material))
@@ -92,14 +92,14 @@ public class Minesweeper implements Listener, Resetable {
         int adjacent = 0;
         for(int i=-1; i<=1; i++){
             for(int j=-1; j<=1; j++){
-                AbstractMap.SimpleEntry<Integer, Integer> clone = new AbstractMap.SimpleEntry<>(key.getKey()+i, key.getValue()+j);
+                Map.Entry<Integer, Integer> clone = Map.entry(key.getKey()+i, key.getValue()+j);
                 Boolean present = squares.get(clone);
                 if(present!=null && present) {
                     if(adjacent>=4){
                         Random random = new Random();
-                        AbstractMap.SimpleEntry<Integer, Integer> shift = key;
+                        Map.Entry<Integer, Integer> shift = key;
                         while(squares.get(shift)==null || !squares.get(shift))
-                            shift = new AbstractMap.SimpleEntry<>(key.getKey()+random.nextInt(3) - 1, key.getValue()+random.nextInt(3) - 1);
+                            shift = Map.entry(key.getKey()+random.nextInt(3) - 1, key.getValue()+random.nextInt(3) - 1);
                         squares.replace(shift, false);
                         Block center = block.getWorld().getBlockAt(key.getKey(), y, key.getValue());
                         for(BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH_EAST, BlockFace.SOUTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_WEST}){

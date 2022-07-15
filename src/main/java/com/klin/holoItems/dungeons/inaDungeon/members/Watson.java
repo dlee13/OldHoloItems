@@ -20,8 +20,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
-import java.util.AbstractMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Watson extends Member {
@@ -51,7 +51,7 @@ public class Watson extends Member {
         if(abs<Math.PI*0.5 || abs>Math.PI*1.2)
             return;
         Maintenance maintenance = (Maintenance) InaDungeon.presets.get("maintenance");
-        maintenance.inputs.replace(player, new AbstractMap.SimpleEntry<>(maintenance.inputs.get(player).getKey(), 0.0));
+        maintenance.inputs.replace(player, Map.entry(maintenance.inputs.get(player).getKey(), 0.0));
         World world = player.getWorld();
         Set<LivingEntity> targets = new HashSet<>();
         LivingEntity living;
