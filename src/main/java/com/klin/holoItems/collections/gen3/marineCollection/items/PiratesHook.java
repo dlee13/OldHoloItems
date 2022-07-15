@@ -2,9 +2,9 @@ package com.klin.holoItems.collections.gen3.marineCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
-import com.klin.holoItems.collections.gen3.marineCollection.MarineCollection;
 import com.klin.holoItems.interfaces.Fishable;
 import com.klin.holoItems.utility.Utility;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -94,6 +94,15 @@ public class PiratesHook extends Item implements Fishable {
                 return;
             ItemStack strip = optional.get();
             if(strip.getType()!=Material.AIR){
+
+                // Frostfall Blacklist
+                if (strip.getItemMeta().hasLore()){
+                    List<Component> itemlore = strip.getItemMeta().lore();
+                    if (itemlore.toString().toLowerCase().contains("frostfall")){
+                        break;
+                    };
+                }
+
                 boolean remove = true;
                 Map<Enchantment, Integer> enchantments = strip.getEnchantments();
                 for(Enchantment enchantment : enchantments.keySet()){
