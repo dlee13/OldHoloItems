@@ -1,8 +1,10 @@
 package com.klin.holoItems.collections.gen3.pekoraCollection.items;
 
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Wiring;
-import com.klin.holoItems.collections.gen3.pekoraCollection.PekoraCollection;
+import com.klin.holoItems.utility.Utility;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -63,6 +65,12 @@ public class Compactor extends Wiring {
                     return;
                 }
 
+                ItemStack result = recipe.getResult().clone();
+                var holoItem = Utility.findItem(result, Item.class);
+                if (holoItem != null && holoItem.cost != 0) {
+                    return;
+                }
+
                 for (ItemStack itemStack : input) {
                     if (itemStack == null) {
                         continue;
@@ -70,7 +78,6 @@ public class Compactor extends Wiring {
                     itemStack.setAmount(itemStack.getAmount() - 1);
                 }
 
-                ItemStack result = recipe.getResult().clone();
                 ItemStack remaining = getCraftingRemainingItem(result.getType());
 
                 BlockState container = relative.getState();
