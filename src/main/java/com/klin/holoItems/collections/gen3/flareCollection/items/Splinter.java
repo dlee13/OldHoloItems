@@ -1,5 +1,7 @@
 package com.klin.holoItems.collections.gen3.flareCollection.items;
 
+import com.destroystokyo.paper.MaterialSetTag;
+import com.destroystokyo.paper.MaterialTags;
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen0.suiseiCollection.items.Comet;
@@ -18,13 +20,15 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Splinter extends Enchant implements Extractable {
     public static final String name = "splinter";
+
+    private static final NamespacedKey KEY = new NamespacedKey(HoloItems.getInstance(), name);
+    private static final MaterialSetTag COMPATIBLE_MATERIALS = new MaterialSetTag(KEY, Splinter::isCompatibleMaterial).lock();
+
     public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH);
-    public static final Set<String> acceptedIds = Stream.of(Comet.name).collect(Collectors.toCollection(HashSet::new));
+    public static final Set<String> acceptedIds = Set.of(Comet.name);
     public static final Set<Material> acceptedTypes = Utility.axes;
     public static final int expCost = 39;
 
@@ -60,10 +64,11 @@ public class Splinter extends Enchant implements Extractable {
         Bukkit.getServer().addRecipe(recipe1);
     }
 
+    // I hate this :(
     public void ability(BlockBreakEvent event){
         Block block = event.getBlock();
         Material wood = block.getType();
-        if(!Utility.logs.contains(wood))
+        if(!COMPATIBLE_MATERIALS.isTagged(wood))
             return;
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -106,5 +111,11 @@ public class Splinter extends Enchant implements Extractable {
                 }
             }
         };
+    }
+
+    private static boolean isCompatibleMaterial(Material material) {
+        return Tag.LOGS.isTagged(material) || Tag.LEAVES.isTagged(material)
+            || Tag.CRIMSON_STEMS.isTagged(material) || Tag.WARPED_STEMS.isTagged(material)
+            || Tag.WART_BLOCKS.isTagged(material) || MaterialTags.MUSHROOM_BLOCKS.isTagged(material);
     }
 }
