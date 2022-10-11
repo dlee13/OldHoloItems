@@ -1479,4 +1479,33 @@ public class Events implements Listener {
             }
         }
     }
+
+    /**
+     * This event handler is triggered when clicking on the output slot of the Cartography Inventory
+     * @param event Bukkit InventoryClickEvent
+     * @implNote
+     * It's not feasible to stop an item to be added to the Cartography Table's input slots:
+     * 1) When dropping what's on the cursor, the event must not be cancelled or else Minecraft client freezes.
+     * 2) When right-clicking on a recipe item (stack splitting), the event must not be cancelled or else Minecraft client freezes.
+     * 3) If an event with InventoryAction.MOVE_TO_OTHER_INVENTORY is cancelled, it's possible to create ghost items in
+     * the inventory in survival or dupe in creative mode.
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onCartographyResultEvent(InventoryClickEvent event){
+        //Filter from InventoryClickEvent
+        if (event.getSlotType() != InventoryType.SlotType.RESULT) return;
+        final Inventory clickedInventory = event.getClickedInventory();
+        if (clickedInventory == null) return;
+        if (clickedInventory.getType() != InventoryType.CARTOGRAPHY) return;
+
+        //https://wiki.vg/Inventory#Cartography_Table
+        ItemStack mapSlot = clickedInventory.getItem(0);
+        ItemStack paperSlot = clickedInventory.getItem(1);
+
+        //If an item added to the Cartography inventory has a Utility.key, it mustn't be crafted away
+        //This is the case of Verification Seal
+        if (Utility.hasPersistentUtilityKey(mapSlot) || Utility.hasPersistentUtilityKey(paperSlot)) {
+            event.setCancelled(true);
+        }
+    }
 }
