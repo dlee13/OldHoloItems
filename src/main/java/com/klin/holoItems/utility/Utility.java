@@ -816,6 +816,22 @@ public class Utility {
         profile.setProperty(new ProfileProperty("textures", base64));
         return profile;
     }
+
+    /**
+     * Checks if an ItemStack has a Utility.key with a PersistentDataType.STRING
+     * This helps check for instance if an ItemStack mustn't be used as a recipe
+     *
+     * @param itemStack ItemStack to be tested
+     * @return true if item has a PersistentDataType.STRING Utility.key, false otherwise
+     */
+    public static boolean hasPersistentUtilityKey(ItemStack itemStack) {
+        if (itemStack == null) return false;
+
+        if (!itemStack.hasItemMeta())
+            return false; //this is needed because getItemMeta() on Air throws exception
+
+        return (itemStack.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING) != null);
+    }
 }
 
 //    public static boolean cooldown(ItemStack item, double seconds){
