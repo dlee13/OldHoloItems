@@ -327,8 +327,6 @@ public class Utility {
             damage += 0.5+0.5*item.getEnchantmentLevel(Enchantment.DAMAGE_ALL);
         double thornsChance = 0;
         if(target.getEquipment()!=null && humanoids.contains(target.getType())) {
-            if (item!=null && target.getCategory().equals(EntityCategory.UNDEAD))
-                damage += 2.5*item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD);
             ItemStack[] armor = target.getEquipment().getArmorContents();
             double projProtection = 0;
             for (ItemStack piece : armor) {
@@ -340,8 +338,11 @@ public class Utility {
             if(projectile)
                 damage *= 1-Math.min(0.8, projProtection);
         }
-        else if (item!=null && target.getCategory().equals(EntityCategory.ARTHROPOD))
+        
+        if (item!=null && target.getCategory().equals(EntityCategory.ARTHROPOD))
             damage += 2.5*item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS);
+        if (item!=null && target.getCategory().equals(EntityCategory.UNDEAD))
+            damage += 2.5*item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD);
 
         int fire = item!=null ? item.getEnchantmentLevel(Enchantment.FIRE_ASPECT) : 0;
         if(fire>0) {
