@@ -280,6 +280,9 @@ public class Events implements Listener {
                     cost++;
                 }
                 ((AnvilInventory) inv).setRepairCost(cost);
+
+                // I'm confused if this is necessary, since we did Utility.addEnchant() above
+                // which has code to delete these enchantments anyway.
                 if (enchant.exclusive != null) {
                     for (Enchantment enchantment : result.getEnchantments().keySet()) {
                         if (enchant.exclusive.contains(enchantment))
@@ -311,6 +314,10 @@ public class Events implements Listener {
             }
             return;
         } else if(enchantItem==null){
+            // enchantItem = null therefore whatever we're putting onto the main item is not a holoitem
+            // or an item affected by holo-enchs (you can't put holo-enchs on a book, for some reason?)
+            // Since we're not putting new holo-enchs onto the item we don't need to write code for when holo-enchs
+            // are exclusive to other holo-enchs.
             if(reagent.getType()==Material.ENCHANTED_BOOK && reagent.getItemMeta() instanceof EnchantmentStorageMeta){
                 Map<Enchantment, Integer> enchantments = ((EnchantmentStorageMeta) reagent.getItemMeta()).getStoredEnchants();
                 ItemStack result = reactant.clone();
@@ -346,7 +353,8 @@ public class Events implements Listener {
                             levelCost += enchantmentLevel * ((findMultiplier(enchantment) + 1) / 2);
                         }
                     }
-                } if(levelCost>0) {
+                }
+                if(levelCost>0) {
                     ItemMeta meta = result.getItemMeta();
                     if(anvil) {
                         String renameText = ((AnvilInventory) inv).getRenameText();

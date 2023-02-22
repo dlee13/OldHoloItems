@@ -13,6 +13,7 @@ public abstract class Enchant extends Item {
     public final Set<String> acceptedIds;
     public final Set<Material> acceptedTypes;
     public final Set<Enchantment> exclusive;
+    public final Set<Enchant> exclusiveHoloEnchs;
     public final int expCost;
 
     public Enchant(String name, Set<Enchantment> accepted, Material material, String lore, int durability, boolean shiny, int cost, Set<String> acceptedIds, Set<Material> acceptedTypes, int expCost){
@@ -20,6 +21,7 @@ public abstract class Enchant extends Item {
         this.acceptedIds = acceptedIds;
         this.acceptedTypes = acceptedTypes;
         this.exclusive = null;
+        this.exclusiveHoloEnchs = null;
         this.expCost = expCost;
     }
 
@@ -28,6 +30,7 @@ public abstract class Enchant extends Item {
         this.acceptedIds = acceptedIds;
         this.acceptedTypes = acceptedTypes;
         this.exclusive = exclusive;
+        this.exclusiveHoloEnchs = null;
         this.expCost = expCost;
     }
 
@@ -36,6 +39,16 @@ public abstract class Enchant extends Item {
         this.acceptedIds = acceptedIds;
         this.acceptedTypes = acceptedTypes;
         this.exclusive = null;
+        this.exclusiveHoloEnchs = null;
+        this.expCost = expCost;
+    }
+
+    public Enchant(String name, Set<Enchantment> accepted, Material material, String lore, int durability, boolean shiny, int cost, Set<String> acceptedIds, Set<Material> acceptedTypes, Set<Enchantment> exclusive, Set<Enchant> exclusiveHolo, int expCost){
+        super(name, accepted, material, quantity, lore, durability, stackable, shiny, cost);
+        this.acceptedIds = acceptedIds;
+        this.acceptedTypes = acceptedTypes;
+        this.exclusive = exclusive;
+        this.exclusiveHoloEnchs = exclusiveHolo;
         this.expCost = expCost;
     }
 }

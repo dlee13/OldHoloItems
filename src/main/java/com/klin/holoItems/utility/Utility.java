@@ -8,6 +8,7 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.interfaces.customMobs.Spawnable;
+import jdk.jshell.execution.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -25,6 +26,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
@@ -286,13 +288,49 @@ public class Utility {
                     itemStack.removeEnchantment(enchantment);
             }
         }
+
         ItemMeta meta = itemStack.getItemMeta();
-        String enchantments = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-        if(enchantments==null)
-            enchantments = "";
-        else
-            enchantments += " ";
-        meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments+enchant.name);
+        PersistentDataContainer container = itemStack.getItemMeta().getPersistentDataContainer();
+        String enchantments = container.get(Utility.enchant, PersistentDataType.STRING);
+        if(enchantments == null){
+            enchantments = enchant.name;
+        }
+        else{
+            String[] holoEnchants = enchantments.split(" ");
+            List<Enchant> finalHoloEnchants = new ArrayList<>();
+            Set<Enchant> exclusiveHoloEnchants = enchant.exclusiveHoloEnchs;
+            // I'll admit, if there's no exclusive holo-enchants this is computationally WAY slower
+            // but there are a lot of things in this code which have made me think "Wow, this is computationally VERY SLOW"
+            // and maybe we'll find some other reason to not let an enchant go on an item.
+            // Haha, like an enchantment that can only be applied to items which already have certain enchant(s)
+            // (and then subsequently eats all of those enchants)
+            for(String ench : holoEnchants){
+                Enchant otherEnch = Utility.findItem(ench, Enchant.class);
+                if(exclusiveHoloEnchants.contains(otherEnch)){
+                    // The enchant we're adding is exclusive to an enchant already on the item
+                    // Goodbye, enchant already on the item.
+                    continue;
+                }
+                if(otherEnch.exclusiveHoloEnchs.contains(enchant)){
+                    // The other enchantment is exclusive to this one
+                    // but for some reason this one isn't programmed to be exclusive to the other one
+                    // Well, the other one is exclusive to this one so get rid of the other one.
+                    continue;
+                }
+                finalHoloEnchants.add(otherEnch);
+            }
+            finalHoloEnchants.add(enchant);
+
+            // Finally, turn the list of enchantments back into a string.
+            // TIL StringJoiner exists!
+            StringJoiner joiner = new StringJoiner(" ");
+            for(Enchant ench : finalHoloEnchants){
+                joiner.add(ench.name);
+            }
+            enchantments = joiner.toString();
+        }
+        container.set(Utility.enchant, PersistentDataType.STRING, enchantments+enchant.name);
+
         List<String> lore = meta.getLore();
         if(lore==null) {
             if(meta.isUnbreakable())
