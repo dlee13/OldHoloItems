@@ -1,5 +1,7 @@
 package com.klin.holoItems.collections.gamers.okayuCollection;
 
+import com.klin.holoItems.Collections;
+import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
 import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
@@ -7,9 +9,14 @@ import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
 import com.klin.holoItems.interfaces.Hungerable;
 import com.klin.holoItems.utility.Utility;
 import it.unimi.dsi.fastutil.objects.ObjectObjectMutablePair;
+import jdk.jshell.execution.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +46,17 @@ public class GoodAutoEat extends Enchant implements Hungerable {
 
     @Override
     public void registerRecipes() {
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        recipe.shape("gsg", "aea", "gsg");
+        // Good and Super foods
+        recipe.setIngredient('g', new RecipeChoice.MaterialChoice(Utility.goodFoods));
+        recipe.setIngredient('s', new RecipeChoice.MaterialChoice(Utility.superFoods));
+        // "E"nchanted golden apple
+        recipe.setIngredient('e', Material.ENCHANTED_GOLDEN_APPLE);
+        // "A"uto eat
+        recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.items.get(AutoEat.name).item));
 
+        Bukkit.getServer().addRecipe(recipe);
     }
 
     @Override

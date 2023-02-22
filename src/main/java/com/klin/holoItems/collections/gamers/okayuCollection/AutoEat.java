@@ -1,5 +1,7 @@
 package com.klin.holoItems.collections.gamers.okayuCollection;
 
+import com.klin.holoItems.Collections;
+import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
 import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
@@ -7,11 +9,11 @@ import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
 import com.klin.holoItems.interfaces.Hungerable;
 import com.klin.holoItems.utility.Utility;
 import it.unimi.dsi.fastutil.objects.ObjectObjectMutablePair;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -43,7 +45,16 @@ public class AutoEat extends Enchant implements Hungerable {
 
     @Override
     public void registerRecipes() {
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        recipe.shape("ngn", "bsb", "ngn");
+        // Normal, Good, and Supernatural food types
+        recipe.setIngredient('n', new RecipeChoice.MaterialChoice(Utility.normalFoods));
+        recipe.setIngredient('g', new RecipeChoice.MaterialChoice(Utility.goodFoods));
+        recipe.setIngredient('s', new RecipeChoice.MaterialChoice(Utility.superFoods));
+        // "B"asic auto eat
+        recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.items.get(BasicAutoEat.name).item));
 
+        Bukkit.getServer().addRecipe(recipe);
     }
 
     @Override

@@ -7,8 +7,12 @@ import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
 import com.klin.holoItems.interfaces.Hungerable;
 import com.klin.holoItems.utility.Utility;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +41,15 @@ public class BadAutoEat extends Enchant implements Hungerable {
 
     @Override
     public void registerRecipes() {
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
+        recipe.shape("plp", "pbp", "plp");
+        // "Poor" and "Low" foods
+        recipe.setIngredient('p', new RecipeChoice.MaterialChoice(Utility.poorFoods));
+        recipe.setIngredient('l', new RecipeChoice.MaterialChoice(Utility.lowFoods));
+        // "B"ook
+        recipe.setIngredient('b', Material.BOOK);
 
+        Bukkit.getServer().addRecipe(recipe);
     }
 
     @Override
