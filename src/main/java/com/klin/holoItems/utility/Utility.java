@@ -12,10 +12,7 @@ import jdk.jshell.execution.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.TileState;
+import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
@@ -23,6 +20,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -35,8 +33,10 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -870,6 +870,61 @@ public class Utility {
             return false; //this is needed because getItemMeta() on Air throws exception
 
         return (itemStack.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING) != null);
+    }
+
+    /**
+     * Searches for an item in an inventory. Can recursively search for an item in an inventory.
+     * Since this takes a predicate, you can use a lambda expression as a parameter.
+     * @param inv The inventory to search through.
+     * @param predicate The specific requirements of the item you're searching for.
+     * @param recursion The amount of times to recurse.
+     * @return The first instance of the item matching the predicate.
+     * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
+     */
+    @Nullable
+    public static ItemStack recursiveSearchForItem(Inventory inv, Predicate<ItemStack> predicate, int recursion){
+        return recursiveSearchForItem(inv.getStorageContents(), predicate, recursion);
+    }
+
+    /**
+     * Searches for an item in an inventory. Can recursively search for an item in an inventory.
+     * Since this takes a predicate, you can use a lambda expression as a parameter.
+     * @param items The array of items to search through.
+     * @param predicate The specific requirements of the item you're searching for.
+     * @param recursion The amount of times to recurse.
+     * @return The first instance of the item matching the predicate.
+     * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
+     */
+    @Nullable
+    public static ItemStack recursiveSearchForItem(ItemStack[] items, Predicate<ItemStack> predicate, int recursion){
+        if(recursion < 0){
+            // Stop recursing.
+            // It's done this way in case we want to add very similar things that don't search, do search, or recursive search
+            // and can just feed this a (level-number) instead of checking if (level-number >= 0)
+            return null;
+        }
+        for(ItemStack item : items){
+            // Predicate check.
+            if(predicate.test(item)){
+                return item;
+            }
+
+            // Recursion check.
+            ItemMeta itemMeta = item.getItemMeta();
+            if(itemMeta instanceof BlockStateMeta bsm){
+                if(bsm.getBlockState() instanceof ShulkerBox shulker){
+                    // And the recursive part.
+                    // Since we decrement the recursion after doing this, in theory feeding this a recursion of 1
+                    // would stop at the shulker-box-inside-a-shulker-box.
+                    ItemStack ret = recursiveSearchForItem(shulker.getInventory(), predicate, recursion-1);
+                    if(ret != null){
+                        return ret;
+                    }
+                }
+            }
+        }
+        // Item not found.
+        return null;
     }
 }
 
