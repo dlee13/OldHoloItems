@@ -41,7 +41,7 @@ public class GoodAutoEat extends Enchant implements Hungerable {
     public static final int expCost = 30;
 
     public GoodAutoEat(){
-        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
+        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, null, OkayuCollection.autoEatEnchs, expCost);
     }
 
     @Override

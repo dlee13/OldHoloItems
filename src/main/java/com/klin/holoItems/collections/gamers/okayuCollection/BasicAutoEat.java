@@ -44,7 +44,7 @@ public class BasicAutoEat extends Enchant implements Hungerable {
     public static final int expCost = 25;
 
     public BasicAutoEat(){
-        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
+        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, null, OkayuCollection.autoEatEnchs, expCost);
 
         // Incase I make an error like use BEETROOTS (block) insteaad of BEETROOT (item)
         for(Material key : Utility.nutritionValues.keySet()){

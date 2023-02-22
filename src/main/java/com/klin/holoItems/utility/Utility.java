@@ -432,6 +432,8 @@ public class Utility {
     }
 
     public static ItemStack addEnchant(ItemStack itemStack, Enchant enchant){
+        HoloItems.getInstance().getServer().getConsoleSender().sendMessage("addEnchant " + enchant.name);
+
         Set<Enchantment> exclusive = enchant.exclusive;
         if(exclusive!=null) {
             for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
@@ -443,31 +445,38 @@ public class Utility {
         ItemMeta meta = itemStack.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String enchantments = container.get(Utility.enchant, PersistentDataType.STRING);
+
+        List<String> holoEnchsToDelete = new ArrayList<>();
         if(enchantments == null){
             enchantments = enchant.name;
         }
         else{
             String[] holoEnchants = enchantments.split(" ");
             List<Enchant> finalHoloEnchants = new ArrayList<>();
-            Set<Enchant> exclusiveHoloEnchants = enchant.exclusiveHoloEnchs;
+            List<String> exclusiveHoloEnchants = enchant.exclusiveHoloEnchs;
             // I'll admit, if there's no exclusive holo-enchants this is computationally WAY slower
             // but there are a lot of things in this code which have made me think "Wow, this is computationally VERY SLOW"
             // and maybe we'll find some other reason to not let an enchant go on an item.
             // Haha, like an enchantment that can only be applied to items which already have certain enchant(s)
             // (and then subsequently eats all of those enchants)
-            for(String ench : holoEnchants){
-                Enchant otherEnch = Utility.findItem(ench, Enchant.class);
-                if(exclusiveHoloEnchants.contains(otherEnch)){
+            for(String otherEnchName : holoEnchants){
+                Enchant otherEnch = Utility.findItem(otherEnchName, Enchant.class);
+                HoloItems.getInstance().getServer().getConsoleSender().sendMessage("otherEnch name:" + otherEnch.name);
+                HoloItems.getInstance().getServer().getConsoleSender().sendMessage("exclusiveHoloEnchs:" + exclusiveHoloEnchants);
+                if(exclusiveHoloEnchants.contains(otherEnchName)){
                     // The enchant we're adding is exclusive to an enchant already on the item
                     // Goodbye, enchant already on the item.
+                    holoEnchsToDelete.add(otherEnchName);
                     continue;
                 }
-                if(otherEnch.exclusiveHoloEnchs.contains(enchant)){
+                if(otherEnch.exclusiveHoloEnchs.contains(enchant.name)){
                     // The other enchantment is exclusive to this one
                     // but for some reason this one isn't programmed to be exclusive to the other one
                     // Well, the other one is exclusive to this one so get rid of the other one.
+                    holoEnchsToDelete.add(otherEnchName);
                     continue;
                 }
+                HoloItems.getInstance().getServer().getConsoleSender().sendMessage("Adding HoloEnch");
                 finalHoloEnchants.add(otherEnch);
             }
             finalHoloEnchants.add(enchant);
@@ -490,6 +499,9 @@ public class Utility {
                 lore = new ArrayList<>();
         } else if(lore.get(0).startsWith("§b"))
             lore.add(0, "");
+        for(String toDelete : holoEnchsToDelete){
+            lore.remove("§7"+formatName(toDelete));
+        }
         lore.add(0, "§7"+formatName(enchant.name));
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
