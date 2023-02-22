@@ -10,7 +10,6 @@ import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.interfaces.customMobs.Spawnable;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectObjectMutablePair;
-import jdk.jshell.execution.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -146,6 +145,75 @@ public class Utility {
         put(DyeColor.GREEN, Stream.of(EMERALD_BLOCK/*, GREEN_BED, GREEN_CARPET*/, GREEN_CONCRETE/*, GREEN_CONCRETE_POWDER*/, GREEN_GLAZED_TERRACOTTA/*, GREEN_SHULKER_BOX*/, GREEN_STAINED_GLASS, GREEN_STAINED_GLASS_PANE, GREEN_TERRACOTTA, GREEN_WOOL, MOSS_BLOCK/*, MOSS_CARPET*/).collect(Collectors.toSet()));
         put(DyeColor.LIME, Stream.of(/*LIME_BED, LIME_CARPET,*/ LIME_CONCRETE/*, LIME_CONCRETE_POWDER*/, LIME_GLAZED_TERRACOTTA/*, LIME_SHULKER_BOX*/, LIME_STAINED_GLASS, LIME_STAINED_GLASS_PANE, LIME_TERRACOTTA, LIME_WOOL, SLIME_BLOCK).collect(Collectors.toSet()));
         put(DyeColor.BROWN, Stream.of(ANCIENT_DEBRIS/*, BROWN_BED, BROWN_CARPET*/, BROWN_CONCRETE/*, BROWN_CONCRETE_POWDER*/, BROWN_GLAZED_TERRACOTTA, BROWN_MUSHROOM_BLOCK/*, BROWN_SHULKER_BOX*/, BROWN_STAINED_GLASS, BROWN_STAINED_GLASS_PANE, BROWN_TERRACOTTA, BROWN_WOOL, COARSE_DIRT, DIRT, PODZOL, ROOTED_DIRT).collect(Collectors.toSet())); }};
+    /**
+     * Nutrition values from eating certain foods.
+     * Note: Chorus fruit and cake aren't listed here.
+     */
+    public static final Map<Material, float[]> nutritionValues = new HashMap<>(){{
+            // 38 food items, because no chorus fruit and no cake.
+            // **GUESS WHO FOUND OUT THERE ISN'T A TABLE OF FOOD ITEMS?**
+            // That, or I couldn't find it, so I get to make this instead.
+            put(APPLE, new float[]{4, 2.4F});
+            put(BAKED_POTATO, new float[]{5, 6F});
+            put(BEETROOT, new float[]{1, 1.2F});
+            put(BEETROOT_SOUP, new float[]{6, 7.2F});
+            put(BREAD, new float[]{5, 6F});
+            put(CARROT, new float[]{3, 3.6F});
+            put(COOKED_CHICKEN, new float[]{6, 7.2F});
+            put(COOKED_COD, new float[]{5, 6F});
+            put(COOKED_MUTTON, new float[]{6, 9.6F});
+            put(COOKED_PORKCHOP, new float[]{8, 12.8F});
+            put(COOKED_RABBIT, new float[]{5, 6F});
+            put(COOKED_SALMON, new float[]{6, 9.6F});
+            put(COOKIE, new float[]{2, 0.4F});
+            put(DRIED_KELP, new float[]{1, 0.6F});
+            put(ENCHANTED_GOLDEN_APPLE, new float[]{4, 9.6F});
+            put(GOLDEN_APPLE, new float[]{4, 9.6F});
+            put(GLOW_BERRIES, new float[]{2, 0.4F});
+            put(GOLDEN_CARROT, new float[]{6, 14.4F});
+            put(HONEY_BOTTLE, new float[]{6, 1.2F});
+            put(MELON_SLICE, new float[]{2, 1.2F});
+            put(MUSHROOM_STEW, new float[]{6, 7.2F});
+            put(POISONOUS_POTATO, new float[]{2, 1.2F});
+            put(POTATO, new float[]{1, 0.6F});
+            put(PUFFERFISH, new float[]{1, 0.2F});
+            put(PUMPKIN_PIE, new float[]{8, 4.8F});
+            put(RABBIT_STEW, new float[]{10, 12F});
+            put(BEEF, new float[]{3, 1.8F});
+            put(CHICKEN, new float[]{2, 1.2F});
+            put(COD, new float[]{2, 0.4F});
+            put(MUTTON, new float[]{2, 1.2F});
+            put(PORKCHOP, new float[]{3, 1.8F});
+            put(RABBIT, new float[]{3, 1.8F});
+            put(SALMON, new float[]{2, 0.4F});
+            put(ROTTEN_FLESH, new float[]{4, 0.8F});
+            put(SPIDER_EYE, new float[]{2, 3.2F});
+            put(COOKED_BEEF, new float[]{8, 12.8F});
+            put(SWEET_BERRIES, new float[]{2, 0.4F});
+            put(TROPICAL_FISH, new float[]{1, 0.2F});
+        }};
+    /**
+     * List of effects from eating certain foods.
+     * Note: Chorus fruit, rotten flesh, chicken, and honey bottles aren't listed here.
+     */
+    public static final Map<Material, PotionEffect[]> foodEatEffects = new HashMap<>(){{
+        put(PUFFERFISH, new PotionEffect[]{
+                new PotionEffect(PotionEffectType.HUNGER, 300, 2),
+                new PotionEffect(PotionEffectType.CONFUSION, 300, 0),
+                new PotionEffect(PotionEffectType.POISON, 1200, 1)
+        });
+        put(GOLDEN_APPLE, new PotionEffect[]{
+                new PotionEffect(PotionEffectType.REGENERATION, 100, 1),
+                new PotionEffect(PotionEffectType.ABSORPTION, 2400, 0)
+        });
+        put(ENCHANTED_GOLDEN_APPLE, new PotionEffect[]{
+                new PotionEffect(PotionEffectType.REGENERATION, 400, 1),
+                new PotionEffect(PotionEffectType.ABSORPTION, 2400, 3),
+                new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 2000, 0),
+                new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 2000, 0)
+        });
+    }};
+
     public static boolean test = false;
 
     public static <T> T findItem(ItemStack item, Class<T> cls){
