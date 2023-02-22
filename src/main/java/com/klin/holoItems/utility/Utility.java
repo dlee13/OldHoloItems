@@ -915,11 +915,11 @@ public class Utility {
                 // Maybe they want to force an item into their inv even if it means putting it into a shulker? I don't know.
                 ItemMeta itemMeta = item.getItemMeta();
                 if (itemMeta instanceof BlockStateMeta bsm) {
-                    if (bsm.getBlockState() instanceof ShulkerBox shulker) {
+                    if (bsm.getBlockState() instanceof BlockInventoryHolder blockInv) {
                         // And the recursive part.
                         // Since we decrement the recursion after doing this, in theory feeding this a recursion of 1
-                        // would stop at the shulker-box-inside-a-shulker-box.
-                        ItemStack ret = recursiveSearchForItem(shulker.getInventory(), recursion - 1, predicate);
+                        // would stop at the shulker-box-inside-a-shulker-box-inside-the-player's-inventory
+                        ItemStack ret = recursiveSearchForItem(blockInv.getInventory(), recursion - 1, predicate);
                         if (ret != null) {
                             return ret;
                         }
