@@ -432,7 +432,6 @@ public class Utility {
     }
 
     public static ItemStack addEnchant(ItemStack itemStack, Enchant enchant){
-        HoloItems.getInstance().getServer().getConsoleSender().sendMessage("addEnchant " + enchant.name);
 
         Set<Enchantment> exclusive = enchant.exclusive;
         if(exclusive!=null) {
@@ -461,8 +460,6 @@ public class Utility {
             // (and then subsequently eats all of those enchants)
             for(String otherEnchName : holoEnchants){
                 Enchant otherEnch = Utility.findItem(otherEnchName, Enchant.class);
-                HoloItems.getInstance().getServer().getConsoleSender().sendMessage("otherEnch name:" + otherEnch.name);
-                HoloItems.getInstance().getServer().getConsoleSender().sendMessage("exclusiveHoloEnchs:" + exclusiveHoloEnchants);
                 if(exclusiveHoloEnchants.contains(otherEnchName)){
                     // The enchant we're adding is exclusive to an enchant already on the item
                     // Goodbye, enchant already on the item.
@@ -476,7 +473,6 @@ public class Utility {
                     holoEnchsToDelete.add(otherEnchName);
                     continue;
                 }
-                HoloItems.getInstance().getServer().getConsoleSender().sendMessage("Adding HoloEnch");
                 finalHoloEnchants.add(otherEnch);
             }
             finalHoloEnchants.add(enchant);
