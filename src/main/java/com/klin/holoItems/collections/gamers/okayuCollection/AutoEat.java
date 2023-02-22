@@ -8,6 +8,7 @@ import com.klin.holoItems.interfaces.Hungerable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Material;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,11 +16,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class AutoEat extends Enchant implements Hungerable {
-    public static final String name = "badAutoEat";
+    public static final String name = "autoEat";
     private static final Material material = Material.BREAD;
     private static final String lore = """
             Auto-eat food.
-            You need the food on your hotbar
+            You need the food on your hotbar.
             It'll auto-refill from your inventory.""";
     private static final int durability = 0;
     private static final boolean shiny = true;
@@ -43,6 +44,27 @@ public class AutoEat extends Enchant implements Hungerable {
 
     @Override
     public void ability(FoodLevelChangeEvent event) {
-        BasicAutoEat.autoEat(event);
+        ItemStack consumedStack = BasicAutoEat.autoEat(event);
+        if(consumedStack == null){
+            // Didn't eat anything, move on.
+            return;
+        }
+
+        ItemStack replacementStack = Utility.recursiveSearchForItem(event.getEntity().getInventory(), 0, i ->
+                i != null && consumedStack.isSimilar(i) && consumedStack.hashCode() != i.hashCode());
+        if(replacementStack != null){
+            Material mat = consumedStack.getType();
+
+            int totalAmount = consumedStack.getAmount() + replacementStack.getAmount();
+            if(totalAmount <= mat.getMaxStackSize()){
+                consumedStack.setAmount(totalAmount);
+                replacementStack.setAmount(0);
+                replacementStack.setType(Material.AIR);
+            }
+            else{
+                consumedStack.setAmount(mat.getMaxStackSize());
+                replacementStack.setAmount(totalAmount - mat.getMaxStackSize());
+            }
+        }
     }
 }

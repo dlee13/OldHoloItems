@@ -290,7 +290,7 @@ public class Utility {
         }
 
         ItemMeta meta = itemStack.getItemMeta();
-        PersistentDataContainer container = itemStack.getItemMeta().getPersistentDataContainer();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
         String enchantments = container.get(Utility.enchant, PersistentDataType.STRING);
         if(enchantments == null){
             enchantments = enchant.name;
@@ -329,7 +329,7 @@ public class Utility {
             }
             enchantments = joiner.toString();
         }
-        container.set(Utility.enchant, PersistentDataType.STRING, enchantments+enchant.name);
+        container.set(Utility.enchant, PersistentDataType.STRING, enchantments);
 
         List<String> lore = meta.getLore();
         if(lore==null) {
@@ -876,27 +876,27 @@ public class Utility {
      * Searches for an item in an inventory. Can recursively search for an item in an inventory.
      * Since this takes a predicate, you can use a lambda expression as a parameter.
      * @param inv The inventory to search through.
-     * @param predicate The specific requirements of the item you're searching for.
      * @param recursion The amount of times to recurse.
+     * @param predicate The specific requirements of the item you're searching for.
      * @return The first instance of the item matching the predicate.
      * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
      */
     @Nullable
-    public static ItemStack recursiveSearchForItem(Inventory inv, Predicate<ItemStack> predicate, int recursion){
-        return recursiveSearchForItem(inv.getStorageContents(), predicate, recursion);
+    public static ItemStack recursiveSearchForItem(Inventory inv, int recursion, Predicate<ItemStack> predicate){
+        return recursiveSearchForItem(inv.getStorageContents(), recursion, predicate);
     }
 
     /**
      * Searches for an item in an inventory. Can recursively search for an item in an inventory.
      * Since this takes a predicate, you can use a lambda expression as a parameter.
      * @param items The array of items to search through.
-     * @param predicate The specific requirements of the item you're searching for.
      * @param recursion The amount of times to recurse.
+     * @param predicate The specific requirements of the item you're searching for.
      * @return The first instance of the item matching the predicate.
      * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
      */
     @Nullable
-    public static ItemStack recursiveSearchForItem(ItemStack[] items, Predicate<ItemStack> predicate, int recursion){
+    public static ItemStack recursiveSearchForItem(ItemStack[] items, int recursion, Predicate<ItemStack> predicate){
         if(recursion < 0){
             // Stop recursing.
             // It's done this way in case we want to add very similar things that don't search, do search, or recursive search
@@ -910,15 +910,19 @@ public class Utility {
             }
 
             // Recursion check.
-            ItemMeta itemMeta = item.getItemMeta();
-            if(itemMeta instanceof BlockStateMeta bsm){
-                if(bsm.getBlockState() instanceof ShulkerBox shulker){
-                    // And the recursive part.
-                    // Since we decrement the recursion after doing this, in theory feeding this a recursion of 1
-                    // would stop at the shulker-box-inside-a-shulker-box.
-                    ItemStack ret = recursiveSearchForItem(shulker.getInventory(), predicate, recursion-1);
-                    if(ret != null){
-                        return ret;
+            if(item != null) {
+                // The null-check isn't earlier incase for some reason someone is looking for Null in a player's inventory.
+                // Maybe they want to force an item into their inv even if it means putting it into a shulker? I don't know.
+                ItemMeta itemMeta = item.getItemMeta();
+                if (itemMeta instanceof BlockStateMeta bsm) {
+                    if (bsm.getBlockState() instanceof ShulkerBox shulker) {
+                        // And the recursive part.
+                        // Since we decrement the recursion after doing this, in theory feeding this a recursion of 1
+                        // would stop at the shulker-box-inside-a-shulker-box.
+                        ItemStack ret = recursiveSearchForItem(shulker.getInventory(), recursion - 1, predicate);
+                        if (ret != null) {
+                            return ret;
+                        }
                     }
                 }
             }
