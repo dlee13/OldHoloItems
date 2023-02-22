@@ -61,7 +61,7 @@ public class AutoEat extends Enchant implements Hungerable {
         // Search the non-hotbar slots for an item we can refill from.
         ObjectObjectMutablePair<ItemStack, Runnable> searchPair =
                 Utility.recursiveSearchForItem(inv.getStorageContents(), recursion, 9, Integer.MAX_VALUE,
-                        i -> i != null && toRefill.isSimilar(i) && toRefill.hashCode() != i.hashCode());
+                        i -> i != null && toRefill.isSimilar(i));
 
         // If we found something to refill from...
         if(searchPair != null){
