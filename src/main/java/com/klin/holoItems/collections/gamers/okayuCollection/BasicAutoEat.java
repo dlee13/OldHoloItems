@@ -36,7 +36,7 @@ public class BasicAutoEat extends Enchant implements Hungerable {
     // Yes, both of these variables represent the same thing; it was written this way in DemonAura.
     public static final Set<String> acceptedIds = Stream.of(ReadingGlasses.name, DragonHorns.name, Backdash.name).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Material> acceptedTypes = Utility.helmets;
-    public static final int expCost = 10;
+    public static final int expCost = 25;
 
     private static final Map<Material, float[]> nutritionValues = new HashMap<>(){{
         // 38 food items, because no chorus fruit and no cake.

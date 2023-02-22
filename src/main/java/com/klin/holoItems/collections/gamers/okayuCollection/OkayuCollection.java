@@ -24,8 +24,8 @@ public class OkayuCollection extends Collection {
 
         collection.add(new BadAutoEat());
         collection.add(new BasicAutoEat());
-        // AutoEat
-        // GoodAutoEat
+        collection.add(new AutoEat());
+        collection.add(new GoodAutoEat());
         // If I ever get approval/feel like doing the Lv5 which can also search your e-chest and its shulkers:
         // SuperAutoEat
     }
