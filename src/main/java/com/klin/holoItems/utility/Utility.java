@@ -8,6 +8,8 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.interfaces.customMobs.Spawnable;
+import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ObjectObjectMutablePair;
 import jdk.jshell.execution.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -878,11 +880,13 @@ public class Utility {
      * @param inv The inventory to search through.
      * @param recursion The amount of times to recurse.
      * @param predicate The specific requirements of the item you're searching for.
-     * @return The first instance of the item matching the predicate.
+     * @return A pair containing the first ItemStack matching the predicate, and a runnable to execute
+     * to make sure the ItemStack's changes are saved.
      * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
+     * @implNote I am HEAVILY of the opinion that if we find ANY reason to make a "SmartItemStack" class, we do that and make this return a SmartItemStack.
      */
     @Nullable
-    public static ItemStack recursiveSearchForItem(Inventory inv, int recursion, Predicate<ItemStack> predicate){
+    public static ObjectObjectMutablePair<ItemStack, Runnable> recursiveSearchForItem(Inventory inv, int recursion, Predicate<ItemStack> predicate){
         return recursiveSearchForItem(inv.getStorageContents(), recursion, predicate);
     }
 
@@ -892,21 +896,54 @@ public class Utility {
      * @param items The array of items to search through.
      * @param recursion The amount of times to recurse.
      * @param predicate The specific requirements of the item you're searching for.
-     * @return The first instance of the item matching the predicate.
+     * @return A pair containing the first ItemStack matching the predicate, and a runnable to execute
+     * to make sure the ItemStack's changes are saved. If the return is not-null, then both the ItemStack
+     * and the Runnable will be not-null (however the Runnable may do nothing when run.)
      * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
+     * @implNote I am HEAVILY of the opinion that if we find ANY reason to make a "SmartItemStack" class, we do that and make this return a SmartItemStack.
+     */
+    public static ObjectObjectMutablePair<ItemStack, Runnable> recursiveSearchForItem(ItemStack[] items, int recursion, Predicate<ItemStack> predicate){
+        return recursiveSearchForItem(items, recursion, 0, Integer.MAX_VALUE, predicate);
+    }
+
+    /**
+     * Searches for an item in an inventory. Can recursively search for an item in an inventory.
+     * Since this takes a predicate, you can use a lambda expression as a parameter.
+     * This version also has a startIndex and an endIndex, so you can feed it a PlayerInventory and a startIndex of 9
+     * to search through ONLY the non-hotbar slots of the player's inventory.
+     * @param items The array of items to search through.
+     * @param recursion The amount of times to recurse.
+     * @param startIndex The starting index for recursion, inclusive. If < 0, is set to 0.
+     * @param endIndex The stopping index for recursion, exclusive. If > array length, set to array length.
+     * @param predicate The specific requirements of the item you're searching for.
+     * @return A pair containing the first ItemStack matching the predicate, and a runnable to execute
+     * to make sure the ItemStack's changes are saved. If the return is not-null, then both the ItemStack
+     * and the Runnable will be not-null (however the Runnable may do nothing when run.)
+     * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
+     * @implNote I am HEAVILY of the opinion that if we find ANY reason to make a "SmartItemStack" class, we do that and make this return a SmartItemStack.
      */
     @Nullable
-    public static ItemStack recursiveSearchForItem(ItemStack[] items, int recursion, Predicate<ItemStack> predicate){
+    public static ObjectObjectMutablePair<ItemStack, Runnable> recursiveSearchForItem(ItemStack[] items, int recursion, int startIndex, int endIndex, Predicate<ItemStack> predicate){
+
         if(recursion < 0){
             // Stop recursing.
             // It's done this way in case we want to add very similar things that don't search, do search, or recursive search
             // and can just feed this a (level-number) instead of checking if (level-number >= 0)
             return null;
         }
-        for(ItemStack item : items){
+
+        if(startIndex < 0){
+            startIndex = 0;
+        }
+        if(endIndex > items.length){
+            endIndex = items.length;
+        }
+
+        for(int i = startIndex; i < endIndex; i++){
+            ItemStack item = items[i];
             // Predicate check.
             if(predicate.test(item)){
-                return item;
+                return new ObjectObjectMutablePair<>(item, () -> {});
             }
 
             // Recursion check.
@@ -915,13 +952,21 @@ public class Utility {
                 // Maybe they want to force an item into their inv even if it means putting it into a shulker? I don't know.
                 ItemMeta itemMeta = item.getItemMeta();
                 if (itemMeta instanceof BlockStateMeta bsm) {
-                    if (bsm.getBlockState() instanceof BlockInventoryHolder blockInv) {
+                    if (bsm.getBlockState() instanceof ShulkerBox box) {
                         // And the recursive part.
                         // Since we decrement the recursion after doing this, in theory feeding this a recursion of 1
                         // would stop at the shulker-box-inside-a-shulker-box-inside-the-player's-inventory
-                        ItemStack ret = recursiveSearchForItem(blockInv.getInventory(), recursion - 1, predicate);
+                        Pair<ItemStack, Runnable> ret = recursiveSearchForItem(box.getInventory(), recursion - 1, predicate);
                         if (ret != null) {
-                            return ret;
+                            // Found the item.
+                            // But when we update the item, we need to then update the shulker.
+                            return new ObjectObjectMutablePair<>(ret.left(), () -> {
+                                // update the shulker-in-the-shulker
+                                ret.right().run();
+                                // now update this shulker
+                                bsm.setBlockState(box);
+                                item.setItemMeta(bsm);
+                            });
                         }
                     }
                 }

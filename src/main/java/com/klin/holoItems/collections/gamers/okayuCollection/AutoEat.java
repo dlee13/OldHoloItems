@@ -6,10 +6,14 @@ import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
 import com.klin.holoItems.interfaces.Hungerable;
 import com.klin.holoItems.utility.Utility;
+import it.unimi.dsi.fastutil.objects.ObjectObjectMutablePair;
 import org.bukkit.Material;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,21 +54,36 @@ public class AutoEat extends Enchant implements Hungerable {
             return;
         }
 
-        ItemStack replacementStack = Utility.recursiveSearchForItem(event.getEntity().getInventory(), 0, i ->
-                i != null && consumedStack.isSimilar(i) && consumedStack.hashCode() != i.hashCode());
-        if(replacementStack != null){
-            Material mat = consumedStack.getType();
+        recursiveRefillSlot(consumedStack, event.getEntity().getInventory(), 0);
+    }
 
-            int totalAmount = consumedStack.getAmount() + replacementStack.getAmount();
+    public static void recursiveRefillSlot(ItemStack toRefill, PlayerInventory inv, int recursion){
+        // Search the non-hotbar slots for an item we can refill from.
+        ObjectObjectMutablePair<ItemStack, Runnable> searchPair =
+                Utility.recursiveSearchForItem(inv.getStorageContents(), recursion, 9, Integer.MAX_VALUE,
+                        i -> i != null && toRefill.isSimilar(i) && toRefill.hashCode() != i.hashCode());
+
+        // If we found something to refill from...
+        if(searchPair != null){
+            // Get that item.
+            ItemStack replacementStack = searchPair.left();
+            Material mat = toRefill.getType();
+
+            // Between BOTH slots, how many copies do we get?
+            // EX If we have 63 and 35 gapples, we have 98 gapples total.
+            int totalAmount = toRefill.getAmount() + replacementStack.getAmount();
             if(totalAmount <= mat.getMaxStackSize()){
-                consumedStack.setAmount(totalAmount);
+                // If the main stack can be overfilled then fill it and put the rest back
+                toRefill.setAmount(totalAmount);
                 replacementStack.setAmount(0);
                 replacementStack.setType(Material.AIR);
             }
             else{
-                consumedStack.setAmount(mat.getMaxStackSize());
+                // If the main stack can't be overfilled then fill it as much as you can and delete the old slot.
+                toRefill.setAmount(mat.getMaxStackSize());
                 replacementStack.setAmount(totalAmount - mat.getMaxStackSize());
             }
+            searchPair.right().run();
         }
     }
 }

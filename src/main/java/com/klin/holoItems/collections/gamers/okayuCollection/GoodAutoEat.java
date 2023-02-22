@@ -6,6 +6,7 @@ import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
 import com.klin.holoItems.interfaces.Hungerable;
 import com.klin.holoItems.utility.Utility;
+import it.unimi.dsi.fastutil.objects.ObjectObjectMutablePair;
 import org.bukkit.Material;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -49,21 +50,6 @@ public class GoodAutoEat extends Enchant implements Hungerable {
             return;
         }
 
-        ItemStack replacementStack = Utility.recursiveSearchForItem(event.getEntity().getInventory(), 1, i ->
-                i != null && consumedStack.isSimilar(i) && consumedStack.hashCode() != i.hashCode());
-        if(replacementStack != null){
-            Material mat = consumedStack.getType();
-
-            int totalAmount = consumedStack.getAmount() + replacementStack.getAmount();
-            if(totalAmount <= mat.getMaxStackSize()){
-                consumedStack.setAmount(totalAmount);
-                replacementStack.setAmount(0);
-                replacementStack.setType(Material.AIR);
-            }
-            else{
-                consumedStack.setAmount(mat.getMaxStackSize());
-                replacementStack.setAmount(totalAmount - mat.getMaxStackSize());
-            }
-        }
+        AutoEat.recursiveRefillSlot(consumedStack, event.getEntity().getInventory(), 1);
     }
 }
