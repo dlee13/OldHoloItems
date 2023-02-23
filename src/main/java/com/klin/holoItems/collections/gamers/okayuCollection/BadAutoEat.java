@@ -26,7 +26,7 @@ public class BadAutoEat extends Enchant implements Hungerable {
             "Only activates at 3 drumsticks or less.";
     private static final int durability = 0;
     private static final boolean shiny = true;
-    public static final boolean stackable = false;
+    public static final boolean stackable = true;
     public static final int cost = 0;
 
     // Accepted armor types this can be on.
@@ -36,16 +36,16 @@ public class BadAutoEat extends Enchant implements Hungerable {
     public static final int expCost = 20;
 
     public BadAutoEat(){
-        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, null, OkayuCollection.autoEatEnchs, expCost);
+        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, null, OkayuCollection.autoEatEnchs, expCost, stackable);
     }
 
     @Override
     public void registerRecipes() {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("plp", "pbp", "plp");
+        recipe.shape("lnl", "lbl", "lnl");
         // "Poor" and "Low" foods
-        recipe.setIngredient('p', new RecipeChoice.MaterialChoice(Utility.poorFoods));
         recipe.setIngredient('l', new RecipeChoice.MaterialChoice(Utility.lowFoods));
+        recipe.setIngredient('n', new RecipeChoice.MaterialChoice(Utility.normalFoods));
         // "B"ook
         recipe.setIngredient('b', Material.BOOK);
 

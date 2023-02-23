@@ -6,6 +6,7 @@ import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
 import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
+import com.klin.holoItems.collections.misc.ingredientsCollection.items.CoalPetal;
 import com.klin.holoItems.interfaces.Hungerable;
 import com.klin.holoItems.utility.Utility;
 import it.unimi.dsi.fastutil.objects.ObjectObjectMutablePair;
@@ -31,8 +32,8 @@ public class GoodAutoEat extends Enchant implements Hungerable {
             It'll auto-refill from your inventory and its shulker boxes.""";
     private static final int durability = 0;
     private static final boolean shiny = true;
-    public static final boolean stackable = false;
-    public static final int cost = 0;
+    public static final boolean stackable = true;
+    public static final int cost = 640;
 
     // Accepted armor types this can be on.
     // Yes, both of these variables represent the same thing; it was written this way in DemonAura.
@@ -41,18 +42,17 @@ public class GoodAutoEat extends Enchant implements Hungerable {
     public static final int expCost = 30;
 
     public GoodAutoEat(){
-        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, null, OkayuCollection.autoEatEnchs, expCost);
+        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, null, OkayuCollection.autoEatEnchs, expCost, stackable);
     }
 
     @Override
     public void registerRecipes() {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("gsg", "aea", "gsg");
-        // Good and Super foods
-        recipe.setIngredient('g', new RecipeChoice.MaterialChoice(Utility.goodFoods));
-        recipe.setIngredient('s', new RecipeChoice.MaterialChoice(Utility.superFoods));
+        recipe.shape("iei", "aea", "iei");
         // "E"nchanted golden apple
         recipe.setIngredient('e', Material.ENCHANTED_GOLDEN_APPLE);
+        // "I"ngot of netherite.
+        recipe.setIngredient('i', Material.NETHERITE_INGOT);
         // "A"uto eat
         recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.items.get(AutoEat.name).item));
 
