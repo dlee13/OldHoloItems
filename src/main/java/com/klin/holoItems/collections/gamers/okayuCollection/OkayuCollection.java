@@ -1,6 +1,10 @@
 package com.klin.holoItems.collections.gamers.okayuCollection;
 
 import com.klin.holoItems.Collection;
+import com.klin.holoItems.collections.gamers.okayuCollection.items.AutoEat;
+import com.klin.holoItems.collections.gamers.okayuCollection.items.BadAutoEat;
+import com.klin.holoItems.collections.gamers.okayuCollection.items.BasicAutoEat;
+import com.klin.holoItems.collections.gamers.okayuCollection.items.GoodAutoEat;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;

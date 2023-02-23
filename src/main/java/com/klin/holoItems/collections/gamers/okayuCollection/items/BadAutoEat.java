@@ -1,7 +1,8 @@
-package com.klin.holoItems.collections.gamers.okayuCollection;
+package com.klin.holoItems.collections.gamers.okayuCollection.items;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.abstractClasses.Enchant;
+import com.klin.holoItems.collections.gamers.okayuCollection.OkayuCollection;
 import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
 import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
