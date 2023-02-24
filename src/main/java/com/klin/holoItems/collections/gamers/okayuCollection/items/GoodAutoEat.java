@@ -46,11 +46,13 @@ public class GoodAutoEat extends Enchant implements Hungerable {
     @Override
     public void registerRecipes() {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("iei", "aea", "iei");
+        recipe.shape("iei", "aBa", "iei");
         // "E"nchanted golden apple
         recipe.setIngredient('e', Material.ENCHANTED_GOLDEN_APPLE);
         // "I"ngot of netherite.
         recipe.setIngredient('i', Material.NETHERITE_INGOT);
+        // "B"lock of netherite.
+        recipe.setIngredient('B', Material.NETHERITE_BLOCK);
         // "A"uto eat
         recipe.setIngredient('a', new RecipeChoice.ExactChoice(Collections.items.get(AutoEat.name).item));
 

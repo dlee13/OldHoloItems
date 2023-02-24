@@ -46,7 +46,7 @@ public class AutoEat extends Enchant implements Hungerable {
     @Override
     public void registerRecipes() {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("gig", "bsb", "gig");
+        recipe.shape("igi", "bsb", "igi");
         // Good and Supernatural food types
         recipe.setIngredient('g', new RecipeChoice.MaterialChoice(Utility.goodFoods));
         recipe.setIngredient('s', new RecipeChoice.MaterialChoice(Utility.superFoods));
