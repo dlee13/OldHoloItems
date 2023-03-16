@@ -652,8 +652,18 @@ public class Events implements Listener {
             return;
         String id = item.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING);
         if(id!=null) {
-            if(event.getDamage()>0)
-                Utility.addDurability(item, -1, living);
+            if(event.getDamage()>0) {
+                if(event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK){
+                    // Testing with ground pounder, comet, hoshiyumi, gnaw, carrot cannon, scoped rifle, and ukw
+                    // All of them use EntityDamageEvent.DamageCause.ENTITY_ATTACK
+                    // More accurately, all of them use Utility.damage(), which uses the ENTITY_ATTACK damage type
+                    // To stop them from losing durability for unrelated damage (such as thorns damage)
+                    // I added this if-statement block, but it's possible I missed an item and suddenly
+                    // another item is unbreakable. Not like it matters since the unbreakable magnet bug exists...
+                    // ... for now.
+                    Utility.addDurability(item, -1, living);
+                }
+            }
             if (Collections.disabled.contains(id))
                 return;
             Item generic = Collections.items.get(id);
