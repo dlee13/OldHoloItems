@@ -1,9 +1,7 @@
 package com.klin.holoItems.collections.gamers.okayuCollection;
 
 import com.klin.holoItems.Collection;
-import com.klin.holoItems.collections.gamers.okayuCollection.items.BadAutoEat;
 import com.klin.holoItems.collections.gamers.okayuCollection.items.MoguMogu;
-import com.klin.holoItems.collections.gamers.okayuCollection.items.GoodAutoEat;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
@@ -20,7 +18,6 @@ public class OkayuCollection extends Collection {
 
     // All autoEat enchantments
     // Used because all auto-eat enchantments are exclusive to all other auto-eat enchantments
-    public static final ArrayList<String> autoEatEnchs = new ArrayList<>(List.of(BadAutoEat.name, MoguMogu.name, AutoEat.name, GoodAutoEat.name));
 
     public OkayuCollection(){
         super(name, desc, theme, base64);
@@ -28,10 +25,7 @@ public class OkayuCollection extends Collection {
         // Not his fault, though: For some reason papermc doesn't let you add custom enchantments.
         // His workaround is good, especially for this, but yeah.
 
-        collection.add(new BadAutoEat());
         collection.add(new MoguMogu());
-        collection.add(new AutoEat());
-        collection.add(new GoodAutoEat());
         // If I ever get approval/feel like doing the Lv5 which can also search your e-chest and its shulkers:
         // SuperAutoEat
     }

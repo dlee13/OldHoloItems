@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MoguMogu extends Enchant implements Hungerable {
-    public static final String name = "basicAutoEat";
+    public static final String name = "moguMogu";
     private static final Material material = Material.BEEF;
     private static final String lore = "Auto-eat food.\n" +
             "You still need food on your hotbar, though.";
@@ -45,7 +45,7 @@ public class MoguMogu extends Enchant implements Hungerable {
     public static final int expCost = 25;
 
     public MoguMogu(){
-        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, null, OkayuCollection.autoEatEnchs, expCost, stackable);
+        super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
 
         // Incase I make an error like use BEETROOTS (block) insteaad of BEETROOT (item)
         for(Material key : Utility.nutritionValues.keySet()){
