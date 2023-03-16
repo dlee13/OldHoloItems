@@ -98,7 +98,7 @@ public class Utility {
     public static final Set<Material> hoes = Set.of(DIAMOND_HOE, GOLDEN_HOE, IRON_HOE, STONE_HOE, NETHERITE_HOE, WOODEN_HOE);
     public static final Set<Material> pickaxes = Set.of(DIAMOND_PICKAXE, GOLDEN_PICKAXE, IRON_PICKAXE, STONE_PICKAXE, NETHERITE_PICKAXE, WOODEN_PICKAXE);
     public static final Set<Material> shovels = Set.of(DIAMOND_SHOVEL, GOLDEN_SHOVEL, IRON_SHOVEL, STONE_SHOVEL, NETHERITE_SHOVEL, WOODEN_SHOVEL);
-    //    public static final Set<Material> swords = Set.of(DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, STONE_SWORD, NETHERITE_SWORD, WOODEN_SWORD);
+//    public static final Set<Material> swords = Set.of(DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, STONE_SWORD, NETHERITE_SWORD, WOODEN_SWORD);
     public static final Set<Material> fertile = Set.of(GRASS_BLOCK, DIRT, COARSE_DIRT, PODZOL, FARMLAND, MYCELIUM, ROOTED_DIRT);
     public static final Map<String, Set<Material>> dirt = new HashMap<>() {{
         put("SAPLING", fertile);
@@ -458,8 +458,8 @@ public class Utility {
     }
 
     public static boolean damage(ItemStack item, double damage, boolean crit,
-                                 LivingEntity attacker, LivingEntity target,
-                                 boolean strength, boolean projectile, boolean bypass){
+                              LivingEntity attacker, LivingEntity target,
+                              boolean strength, boolean projectile, boolean bypass){
         if(!fireBlank(attacker, target))
             return false;
 
@@ -467,7 +467,7 @@ public class Utility {
             int multiplier = checkPotionEffect(attacker, PotionEffectType.INCREASE_DAMAGE);
             damage = damage+3*multiplier*
                     (checkPotionEffect(attacker, PotionEffectType.INCREASE_DAMAGE)-
-                            checkPotionEffect(attacker, PotionEffectType.WEAKNESS));
+                    checkPotionEffect(attacker, PotionEffectType.WEAKNESS));
         }
         if(crit)
             damage *= 1.5;
@@ -504,7 +504,7 @@ public class Utility {
         target.damage(damage, attacker);
         if(bypass && target instanceof Player && ((Player) target).isBlocking())
             target.damage(damage);
-            //not bypass && attack blocked
+        //not bypass && attack blocked
         else if (target.getHealth() >= initial)
             return false;
 
@@ -557,9 +557,9 @@ public class Utility {
         if (flame)
             target.setFireTicks(100*multishot);
         if (damage >= 0) {
-            target.damage((abstractArrow.isCritical() ?
-                            damage + Math.random() * (damage / 2 + 1) : damage)*multishot,
-                    (Player) abstractArrow.getShooter());
+                target.damage((abstractArrow.isCritical() ?
+                                damage + Math.random() * (damage / 2 + 1) : damage)*multishot,
+                        (Player) abstractArrow.getShooter());
         } else {
             target.damage(2*multishot, (Player) abstractArrow.getShooter());
             if (target.isValid())
