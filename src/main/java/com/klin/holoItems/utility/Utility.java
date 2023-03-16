@@ -8,12 +8,13 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.interfaces.customMobs.Spawnable;
-import it.unimi.dsi.fastutil.Pair;
-import it.unimi.dsi.fastutil.objects.ObjectObjectMutablePair;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.TileState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
@@ -21,11 +22,9 @@ import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
@@ -33,12 +32,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,7 +98,7 @@ public class Utility {
     public static final Set<Material> hoes = Set.of(DIAMOND_HOE, GOLDEN_HOE, IRON_HOE, STONE_HOE, NETHERITE_HOE, WOODEN_HOE);
     public static final Set<Material> pickaxes = Set.of(DIAMOND_PICKAXE, GOLDEN_PICKAXE, IRON_PICKAXE, STONE_PICKAXE, NETHERITE_PICKAXE, WOODEN_PICKAXE);
     public static final Set<Material> shovels = Set.of(DIAMOND_SHOVEL, GOLDEN_SHOVEL, IRON_SHOVEL, STONE_SHOVEL, NETHERITE_SHOVEL, WOODEN_SHOVEL);
-//    public static final Set<Material> swords = Set.of(DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, STONE_SWORD, NETHERITE_SWORD, WOODEN_SWORD);
+    //    public static final Set<Material> swords = Set.of(DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, STONE_SWORD, NETHERITE_SWORD, WOODEN_SWORD);
     public static final Set<Material> fertile = Set.of(GRASS_BLOCK, DIRT, COARSE_DIRT, PODZOL, FARMLAND, MYCELIUM, ROOTED_DIRT);
     public static final Map<String, Set<Material>> dirt = new HashMap<>() {{
         put("SAPLING", fertile);
@@ -433,7 +429,6 @@ public class Utility {
     }
 
     public static ItemStack addEnchant(ItemStack itemStack, Enchant enchant){
-
         Set<Enchantment> exclusive = enchant.exclusive;
         if(exclusive!=null) {
             for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
@@ -441,53 +436,13 @@ public class Utility {
                     itemStack.removeEnchantment(enchantment);
             }
         }
-
         ItemMeta meta = itemStack.getItemMeta();
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        String enchantments = container.get(Utility.enchant, PersistentDataType.STRING);
-
-        List<String> holoEnchsToDelete = new ArrayList<>();
-        if(enchantments == null){
-            enchantments = enchant.name;
-        }
-        else{
-            String[] holoEnchants = enchantments.split(" ");
-            List<Enchant> finalHoloEnchants = new ArrayList<>();
-            List<String> exclusiveHoloEnchants = enchant.exclusiveHoloEnchs;
-            // I'll admit, if there's no exclusive holo-enchants this is computationally WAY slower
-            // but there are a lot of things in this code which have made me think "Wow, this is computationally VERY SLOW"
-            // and maybe we'll find some other reason to not let an enchant go on an item.
-            // Haha, like an enchantment that can only be applied to items which already have certain enchant(s)
-            // (and then subsequently eats all of those enchants)
-            for(String otherEnchName : holoEnchants){
-                Enchant otherEnch = Utility.findItem(otherEnchName, Enchant.class);
-                if(exclusiveHoloEnchants.contains(otherEnchName)){
-                    // The enchant we're adding is exclusive to an enchant already on the item
-                    // Goodbye, enchant already on the item.
-                    holoEnchsToDelete.add(otherEnchName);
-                    continue;
-                }
-                if(otherEnch.exclusiveHoloEnchs.contains(enchant.name)){
-                    // The other enchantment is exclusive to this one
-                    // but for some reason this one isn't programmed to be exclusive to the other one
-                    // Well, the other one is exclusive to this one so get rid of the other one.
-                    holoEnchsToDelete.add(otherEnchName);
-                    continue;
-                }
-                finalHoloEnchants.add(otherEnch);
-            }
-            finalHoloEnchants.add(enchant);
-
-            // Finally, turn the list of enchantments back into a string.
-            // TIL StringJoiner exists!
-            StringJoiner joiner = new StringJoiner(" ");
-            for(Enchant ench : finalHoloEnchants){
-                joiner.add(ench.name);
-            }
-            enchantments = joiner.toString();
-        }
-        container.set(Utility.enchant, PersistentDataType.STRING, enchantments);
-
+        String enchantments = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        if(enchantments==null)
+            enchantments = "";
+        else
+            enchantments += " ";
+        meta.getPersistentDataContainer().set(Utility.enchant, PersistentDataType.STRING, enchantments+enchant.name);
         List<String> lore = meta.getLore();
         if(lore==null) {
             if(meta.isUnbreakable())
@@ -496,9 +451,6 @@ public class Utility {
                 lore = new ArrayList<>();
         } else if(lore.get(0).startsWith("§b"))
             lore.add(0, "");
-        for(String toDelete : holoEnchsToDelete){
-            lore.remove("§7"+formatName(toDelete));
-        }
         lore.add(0, "§7"+formatName(enchant.name));
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
@@ -506,8 +458,8 @@ public class Utility {
     }
 
     public static boolean damage(ItemStack item, double damage, boolean crit,
-                              LivingEntity attacker, LivingEntity target,
-                              boolean strength, boolean projectile, boolean bypass){
+                                 LivingEntity attacker, LivingEntity target,
+                                 boolean strength, boolean projectile, boolean bypass){
         if(!fireBlank(attacker, target))
             return false;
 
@@ -515,7 +467,7 @@ public class Utility {
             int multiplier = checkPotionEffect(attacker, PotionEffectType.INCREASE_DAMAGE);
             damage = damage+3*multiplier*
                     (checkPotionEffect(attacker, PotionEffectType.INCREASE_DAMAGE)-
-                    checkPotionEffect(attacker, PotionEffectType.WEAKNESS));
+                            checkPotionEffect(attacker, PotionEffectType.WEAKNESS));
         }
         if(crit)
             damage *= 1.5;
@@ -536,7 +488,7 @@ public class Utility {
             if(projectile)
                 damage *= 1-Math.min(0.8, projProtection);
         }
-        
+
         if (item!=null && target.getCategory().equals(EntityCategory.ARTHROPOD))
             damage += 2.5*item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS);
         if (item!=null && target.getCategory().equals(EntityCategory.UNDEAD))
@@ -552,7 +504,7 @@ public class Utility {
         target.damage(damage, attacker);
         if(bypass && target instanceof Player && ((Player) target).isBlocking())
             target.damage(damage);
-        //not bypass && attack blocked
+            //not bypass && attack blocked
         else if (target.getHealth() >= initial)
             return false;
 
@@ -605,9 +557,9 @@ public class Utility {
         if (flame)
             target.setFireTicks(100*multishot);
         if (damage >= 0) {
-                target.damage((abstractArrow.isCritical() ?
-                                damage + Math.random() * (damage / 2 + 1) : damage)*multishot,
-                        (Player) abstractArrow.getShooter());
+            target.damage((abstractArrow.isCritical() ?
+                            damage + Math.random() * (damage / 2 + 1) : damage)*multishot,
+                    (Player) abstractArrow.getShooter());
         } else {
             target.damage(2*multishot, (Player) abstractArrow.getShooter());
             if (target.isValid())
@@ -1030,108 +982,6 @@ public class Utility {
             return false; //this is needed because getItemMeta() on Air throws exception
 
         return (itemStack.getItemMeta().getPersistentDataContainer().get(Utility.key, PersistentDataType.STRING) != null);
-    }
-
-    /**
-     * Searches for an item in an inventory. Can recursively search for an item in an inventory.
-     * Since this takes a predicate, you can use a lambda expression as a parameter.
-     * @param inv The inventory to search through.
-     * @param recursion The amount of times to recurse.
-     * @param predicate The specific requirements of the item you're searching for.
-     * @return A pair containing the first ItemStack matching the predicate, and a runnable to execute
-     * to make sure the ItemStack's changes are saved.
-     * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
-     * @implNote I am HEAVILY of the opinion that if we find ANY reason to make a "SmartItemStack" class, we do that and make this return a SmartItemStack.
-     */
-    @Nullable
-    public static ObjectObjectMutablePair<ItemStack, Runnable> recursiveSearchForItem(Inventory inv, int recursion, Predicate<ItemStack> predicate){
-        return recursiveSearchForItem(inv.getStorageContents(), recursion, predicate);
-    }
-
-    /**
-     * Searches for an item in an inventory. Can recursively search for an item in an inventory.
-     * Since this takes a predicate, you can use a lambda expression as a parameter.
-     * @param items The array of items to search through.
-     * @param recursion The amount of times to recurse.
-     * @param predicate The specific requirements of the item you're searching for.
-     * @return A pair containing the first ItemStack matching the predicate, and a runnable to execute
-     * to make sure the ItemStack's changes are saved. If the return is not-null, then both the ItemStack
-     * and the Runnable will be not-null (however the Runnable may do nothing when run.)
-     * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
-     * @implNote I am HEAVILY of the opinion that if we find ANY reason to make a "SmartItemStack" class, we do that and make this return a SmartItemStack.
-     */
-    public static ObjectObjectMutablePair<ItemStack, Runnable> recursiveSearchForItem(ItemStack[] items, int recursion, Predicate<ItemStack> predicate){
-        return recursiveSearchForItem(items, recursion, 0, Integer.MAX_VALUE, predicate);
-    }
-
-    /**
-     * Searches for an item in an inventory. Can recursively search for an item in an inventory.
-     * Since this takes a predicate, you can use a lambda expression as a parameter.
-     * This version also has a startIndex and an endIndex, so you can feed it a PlayerInventory and a startIndex of 9
-     * to search through ONLY the non-hotbar slots of the player's inventory.
-     * @param items The array of items to search through.
-     * @param recursion The amount of times to recurse.
-     * @param startIndex The starting index for recursion, inclusive. If < 0, is set to 0.
-     * @param endIndex The stopping index for recursion, exclusive. If > array length, set to array length.
-     * @param predicate The specific requirements of the item you're searching for.
-     * @return A pair containing the first ItemStack matching the predicate, and a runnable to execute
-     * to make sure the ItemStack's changes are saved. If the return is not-null, then both the ItemStack
-     * and the Runnable will be not-null (however the Runnable may do nothing when run.)
-     * @apiNote If you feed this a negative number of times to recurse, this will always return null and will not search the inventory.
-     * @implNote I am HEAVILY of the opinion that if we find ANY reason to make a "SmartItemStack" class, we do that and make this return a SmartItemStack.
-     */
-    @Nullable
-    public static ObjectObjectMutablePair<ItemStack, Runnable> recursiveSearchForItem(ItemStack[] items, int recursion, int startIndex, int endIndex, Predicate<ItemStack> predicate){
-
-        if(recursion < 0){
-            // Stop recursing.
-            // It's done this way in case we want to add very similar things that don't search, do search, or recursive search
-            // and can just feed this a (level-number) instead of checking if (level-number >= 0)
-            return null;
-        }
-
-        if(startIndex < 0){
-            startIndex = 0;
-        }
-        if(endIndex > items.length){
-            endIndex = items.length;
-        }
-
-        for(int i = startIndex; i < endIndex; i++){
-            ItemStack item = items[i];
-            // Predicate check.
-            if(predicate.test(item)){
-                return new ObjectObjectMutablePair<>(item, () -> {});
-            }
-
-            // Recursion check.
-            if(item != null) {
-                // The null-check isn't earlier incase for some reason someone is looking for Null in a player's inventory.
-                // Maybe they want to force an item into their inv even if it means putting it into a shulker? I don't know.
-                ItemMeta itemMeta = item.getItemMeta();
-                if (itemMeta instanceof BlockStateMeta bsm) {
-                    if (bsm.getBlockState() instanceof ShulkerBox box) {
-                        // And the recursive part.
-                        // Since we decrement the recursion after doing this, in theory feeding this a recursion of 1
-                        // would stop at the shulker-box-inside-a-shulker-box-inside-the-player's-inventory
-                        Pair<ItemStack, Runnable> ret = recursiveSearchForItem(box.getInventory(), recursion - 1, predicate);
-                        if (ret != null) {
-                            // Found the item.
-                            // But when we update the item, we need to then update the shulker.
-                            return new ObjectObjectMutablePair<>(ret.left(), () -> {
-                                // update the shulker-in-the-shulker
-                                ret.right().run();
-                                // now update this shulker
-                                bsm.setBlockState(box);
-                                item.setItemMeta(bsm);
-                            });
-                        }
-                    }
-                }
-            }
-        }
-        // Item not found.
-        return null;
     }
 }
 
