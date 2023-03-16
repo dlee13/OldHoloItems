@@ -28,7 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class BasicAutoEat extends Enchant implements Hungerable {
+public class MoguMogu extends Enchant implements Hungerable {
     public static final String name = "basicAutoEat";
     private static final Material material = Material.BEEF;
     private static final String lore = "Auto-eat food.\n" +
@@ -44,7 +44,7 @@ public class BasicAutoEat extends Enchant implements Hungerable {
     public static final Set<Material> acceptedTypes = Utility.helmets;
     public static final int expCost = 25;
 
-    public BasicAutoEat(){
+    public MoguMogu(){
         super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, null, OkayuCollection.autoEatEnchs, expCost, stackable);
 
         // Incase I make an error like use BEETROOTS (block) insteaad of BEETROOT (item)
@@ -59,14 +59,13 @@ public class BasicAutoEat extends Enchant implements Hungerable {
     @Override
     public void registerRecipes() {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
-        recipe.shape("ngn", "bab", "ngn");
-        // Normal and Good food types
-        recipe.setIngredient('n', new RecipeChoice.MaterialChoice(Utility.normalFoods));
-        recipe.setIngredient('g', new RecipeChoice.MaterialChoice(Utility.goodFoods));
-        // "A"ncient debris. Or scrap, whatever.
-        recipe.setIngredient('a', new RecipeChoice.MaterialChoice(Material.ANCIENT_DEBRIS, Material.NETHERITE_SCRAP));
-        // "B"ad auto eat
-        recipe.setIngredient('b', new RecipeChoice.ExactChoice(Collections.items.get(BadAutoEat.name).item));
+        recipe.shape("g g", "bhb", "ggg");
+        // "G"od apple
+        recipe.setIngredient('g', new RecipeChoice.MaterialChoice(Material.ENCHANTED_GOLDEN_APPLE));
+        // "B"lock of netherite
+        recipe.setIngredient('b', new RecipeChoice.MaterialChoice(Material.NETHERITE_BLOCK));
+        // "H"elmet (netherite)
+        recipe.setIngredient('h', new RecipeChoice.MaterialChoice(Material.NETHERITE_HELMET));
 
         Bukkit.getServer().addRecipe(recipe);
     }

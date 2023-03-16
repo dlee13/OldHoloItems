@@ -3,9 +3,8 @@ package com.klin.holoItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
-import com.klin.holoItems.collections.gamers.okayuCollection.items.AutoEat;
 import com.klin.holoItems.collections.gamers.okayuCollection.items.BadAutoEat;
-import com.klin.holoItems.collections.gamers.okayuCollection.items.BasicAutoEat;
+import com.klin.holoItems.collections.gamers.okayuCollection.items.MoguMogu;
 import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
 import com.klin.holoItems.collections.gen2.shionCollection.items.Fireball;
 import com.klin.holoItems.collections.gen2.shionCollection.items.SecretBrew;
@@ -74,7 +73,7 @@ public class Events implements Listener {
         add(ScopedRifle.name);
         add(Starch.name);
         add(BadAutoEat.name);
-        add(BasicAutoEat.name);
+        add(MoguMogu.name);
         add(AutoEat.name);
     }};
     //add permissible interfaces for each prohibitedInv
