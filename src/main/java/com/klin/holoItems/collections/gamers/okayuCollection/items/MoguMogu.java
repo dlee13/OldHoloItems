@@ -1,12 +1,12 @@
 package com.klin.holoItems.collections.gamers.okayuCollection.items;
 
-import com.klin.holoItems.Collections;
 import com.klin.holoItems.HoloItems;
+import com.klin.holoItems.Item;
 import com.klin.holoItems.abstractClasses.Enchant;
-import com.klin.holoItems.collections.gamers.okayuCollection.OkayuCollection;
 import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
 import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
+import com.klin.holoItems.interfaces.Consumable;
 import com.klin.holoItems.interfaces.Hungerable;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
@@ -16,6 +16,7 @@ import org.bukkit.Statistic;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.RecipeChoice;
@@ -88,16 +89,40 @@ public class MoguMogu extends Enchant implements Hungerable {
 
         HumanEntity humanEntity = event.getEntity();
         PlayerInventory inv = humanEntity.getInventory();
-        for(int i = 0; i <= 8; i++){
-            ItemStack item = inv.getItem(i);
-            if(item == null)
+        List<Integer> slots = new ArrayList<>(Arrays.asList(0,1,2,3,4,5,6,7,8,40));
+        Collections.shuffle(slots);
+        for(int slot : slots){
+            ItemStack itemStack = inv.getItem(slot);
+            if(itemStack == null)
                 continue;
-            Material foodType = item.getType();
-            if(!foodType.isEdible()){
+
+            // Next, check if we can eat it and if we want to eat it.
+            Item holoItem = Utility.findItem(itemStack, Item.class);
+
+            if(holoItem == null) {
+                // HoloItem!
+                // The HoloItem can handle its own shit.
+                if (holoItem instanceof Consumable) {
+                    // Well now I don't know what to do.
+                    // The holoItem requires a playerItemConsumeEvent
+                    // and playerItemConsumeEvent requires a player, an ItemStack, and an EquipmentSlot.
+                    // The problem is that if it's in a Shulker box it's not in an EquipmentSlot.
+                }
+                // HoloItem handling done.
+                continue;
+            }
+
+            // Not a HoloItem. Run the normal items check.
+            // First check if it's edible:
+            Material foodType = itemStack.getType();
+            if (!foodType.isEdible()) {
                 // Item isn't edible, so don't consider eating it.
                 continue;
             }
-            if(item.getItemMeta().hasDisplayName()){
+
+            // Then check if it has a name.
+            // This way we dodge things like Tsuchigumo eye.
+            if (itemStack.getItemMeta().hasDisplayName()) {
                 // Unnamed items have no display name (their display name is their default)
                 // I don't want to eat an item with a special display name.
                 // (Maybe it's a frostfall Tsuchigumo eye, who knows. Those are technically edible since they're spider eyes.)
@@ -114,7 +139,7 @@ public class MoguMogu extends Enchant implements Hungerable {
             }
 
             // We're 100% eating this so
-            item.setAmount(item.getAmount() - 1);
+            itemStack.setAmount(itemStack.getAmount() - 1);
             int hunger = Math.round(nutritionValue[0]);
             float saturation = nutritionValue[1];
 
@@ -155,7 +180,7 @@ public class MoguMogu extends Enchant implements Hungerable {
             }
 
             // And we've eaten something, so move on past this event.
-            return item;
+            return itemStack;
         }
         return null;
     }
