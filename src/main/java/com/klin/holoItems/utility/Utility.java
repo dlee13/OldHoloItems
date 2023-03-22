@@ -193,7 +193,7 @@ public class Utility {
      * List of effects from eating certain foods.
      * Note: Chorus fruit, rotten flesh, chicken, and honey bottles aren't listed here.
      */
-    public static final Map<Material, PotionEffect[]> foodEatEffects = new HashMap<>(){{
+    public static final EnumMap<Material, PotionEffect[]> foodEatEffects = new EnumMap<>(Material.class){{
         put(PUFFERFISH, new PotionEffect[]{
                 new PotionEffect(PotionEffectType.HUNGER, 300, 2),
                 new PotionEffect(PotionEffectType.CONFUSION, 300, 0),

@@ -89,7 +89,7 @@ public class MoguMogu extends Enchant implements Hungerable {
 
         HumanEntity humanEntity = event.getEntity();
         PlayerInventory inv = humanEntity.getInventory();
-        List<Integer> slots = new ArrayList<>(Arrays.asList(0,1,2,3,4,5,6,7,8,40));
+        List<Integer> slots = Arrays.asList(0,1,2,3,4,5,6,7,8,40);
         Collections.shuffle(slots);
         for(int slot : slots){
             ItemStack itemStack = inv.getItem(slot);
@@ -99,7 +99,7 @@ public class MoguMogu extends Enchant implements Hungerable {
             // Next, check if we can eat it and if we want to eat it.
             Item holoItem = Utility.findItem(itemStack, Item.class);
 
-            if(holoItem == null) {
+            if(holoItem != null) {
                 // HoloItem!
                 // The HoloItem can handle its own shit.
                 if (holoItem instanceof Consumable) {
@@ -139,7 +139,7 @@ public class MoguMogu extends Enchant implements Hungerable {
             }
 
             // We're 100% eating this so
-            itemStack.setAmount(itemStack.getAmount() - 1);
+            itemStack.subtract();
             int hunger = Math.round(nutritionValue[0]);
             float saturation = nutritionValue[1];
 
