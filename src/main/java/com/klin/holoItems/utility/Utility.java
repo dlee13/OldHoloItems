@@ -165,13 +165,13 @@ public class Utility {
             HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Found methods");
 
             Material testMaterial = COOKED_BEEF;
-            Object item = getItemMethod.invoke(null, testMaterial);
-            Boolean isEdible = (Boolean) isEdibleMethod.invoke(item);
+            final Object item = getItemMethod.invoke(null, testMaterial);
+            final Boolean isEdible = (Boolean) isEdibleMethod.invoke(item);
             HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Is edible:" + isEdible);
             if(isEdible) {
-                Object foodProperties = getFoodPropertiesMethod.invoke(item);
-                float nutrition = ((Integer) getNutritionMethod.invoke(foodProperties)).floatValue();
-                float saturation = (float) getSaturationMethod.invoke(foodProperties);
+                final Object foodProperties = getFoodPropertiesMethod.invoke(item);
+                final float nutrition = ((Integer) getNutritionMethod.invoke(foodProperties)).floatValue();
+                final float saturation = (float) getSaturationMethod.invoke(foodProperties);
                 HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Nutrition: " + nutrition);
                 HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Saturation: " + saturation);
             }
