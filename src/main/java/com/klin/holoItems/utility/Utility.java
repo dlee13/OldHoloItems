@@ -33,11 +33,14 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.klin.holoItems.utility.ReflectionUtils.craft;
 import static org.bukkit.Material.*;
 
 public class Utility {
@@ -147,48 +150,39 @@ public class Utility {
      * Note: Chorus fruit and cake aren't listed here.
      */
     public static final Map<Material, float[]> nutritionValues = new HashMap<>(){{
-            // 38 food items, because no chorus fruit and no cake.
-            // **GUESS WHO FOUND OUT THERE ISN'T A TABLE OF FOOD ITEMS?**
-            // That, or I couldn't find it, so I get to make this instead.
-            put(APPLE, new float[]{4, 2.4F});
-            put(BAKED_POTATO, new float[]{5, 6F});
-            put(BEETROOT, new float[]{1, 1.2F});
-            put(BEETROOT_SOUP, new float[]{6, 7.2F});
-            put(BREAD, new float[]{5, 6F});
-            put(CARROT, new float[]{3, 3.6F});
-            put(COOKED_CHICKEN, new float[]{6, 7.2F});
-            put(COOKED_COD, new float[]{5, 6F});
-            put(COOKED_MUTTON, new float[]{6, 9.6F});
-            put(COOKED_PORKCHOP, new float[]{8, 12.8F});
-            put(COOKED_RABBIT, new float[]{5, 6F});
-            put(COOKED_SALMON, new float[]{6, 9.6F});
-            put(COOKIE, new float[]{2, 0.4F});
-            put(DRIED_KELP, new float[]{1, 0.6F});
-            put(ENCHANTED_GOLDEN_APPLE, new float[]{4, 9.6F});
-            put(GOLDEN_APPLE, new float[]{4, 9.6F});
-            put(GLOW_BERRIES, new float[]{2, 0.4F});
-            put(GOLDEN_CARROT, new float[]{6, 14.4F});
-            put(HONEY_BOTTLE, new float[]{6, 1.2F});
-            put(MELON_SLICE, new float[]{2, 1.2F});
-            put(MUSHROOM_STEW, new float[]{6, 7.2F});
-            put(POISONOUS_POTATO, new float[]{2, 1.2F});
-            put(POTATO, new float[]{1, 0.6F});
-            put(PUFFERFISH, new float[]{1, 0.2F});
-            put(PUMPKIN_PIE, new float[]{8, 4.8F});
-            put(RABBIT_STEW, new float[]{10, 12F});
-            put(BEEF, new float[]{3, 1.8F});
-            put(CHICKEN, new float[]{2, 1.2F});
-            put(COD, new float[]{2, 0.4F});
-            put(MUTTON, new float[]{2, 1.2F});
-            put(PORKCHOP, new float[]{3, 1.8F});
-            put(RABBIT, new float[]{3, 1.8F});
-            put(SALMON, new float[]{2, 0.4F});
-            put(ROTTEN_FLESH, new float[]{4, 0.8F});
-            put(SPIDER_EYE, new float[]{2, 3.2F});
-            put(COOKED_BEEF, new float[]{8, 12.8F});
-            put(SWEET_BERRIES, new float[]{2, 0.4F});
-            put(TROPICAL_FISH, new float[]{1, 0.2F});
-        }};
+        HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Testing console sender");
+        try {
+            final Class<?> craftMagicNumbersClass = Class.forName(craft + ".util.CraftMagicNumbers", false, this.getClass().getClassLoader());
+            // final Class<?> craftMagicNumbersClass = Class.forName("org.bukkit.craftbukkit.util.CraftMagicNumbers", false, this.getClass().getClassLoader());
+            final Method getItemMethod = craftMagicNumbersClass.getMethod("getItem", Material.class);
+            final Class<?> itemClass = Class.forName("net.minecraft.world.item.Item", false, this.getClass().getClassLoader());
+            final Method getFoodPropertiesMethod = itemClass.getMethod("w");
+            final Method isEdibleMethod = itemClass.getMethod("v");
+            // It's so weird how we use the spigot classname but the obfuscated method name
+            final Class<?> foodPropertiesClass = Class.forName("net.minecraft.world.food.FoodInfo", false, this.getClass().getClassLoader());
+            final Method getNutritionMethod = foodPropertiesClass.getMethod("a");
+            final Method getSaturationMethod = foodPropertiesClass.getMethod("b");
+            HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Found methods");
+
+            Material testMaterial = COOKED_BEEF;
+            Object item = getItemMethod.invoke(null, testMaterial);
+            Boolean isEdible = (Boolean) isEdibleMethod.invoke(item);
+            HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Is edible:" + isEdible);
+            if(isEdible) {
+                Object foodProperties = getFoodPropertiesMethod.invoke(item);
+                float nutrition = ((Integer) getNutritionMethod.invoke(foodProperties)).floatValue();
+                float saturation = (float) getSaturationMethod.invoke(foodProperties);
+                HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Nutrition: " + nutrition);
+                HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Saturation: " + saturation);
+            }
+            HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Completed nutritionValues");
+
+            // Requesting permission to make this just "Exception e"
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
+                NoSuchMethodException | ExceptionInInitializerError e) {
+            e.printStackTrace();
+        }
+    }};
     /**
      * List of effects from eating certain foods.
      * Note: Chorus fruit, rotten flesh, chicken, and honey bottles aren't listed here.
