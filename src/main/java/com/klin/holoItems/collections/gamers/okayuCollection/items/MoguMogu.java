@@ -88,6 +88,7 @@ public class MoguMogu extends Enchant implements Hungerable {
         }
 
         HumanEntity humanEntity = event.getEntity();
+        Player player = Bukkit.getPlayer(humanEntity.getUniqueId());
         PlayerInventory inv = humanEntity.getInventory();
         List<Integer> slots = Arrays.asList(0,1,2,3,4,5,6,7,8,40);
         Collections.shuffle(slots);
@@ -107,10 +108,19 @@ public class MoguMogu extends Enchant implements Hungerable {
                     // The holoItem requires a playerItemConsumeEvent
                     // and playerItemConsumeEvent requires a player, an ItemStack, and an EquipmentSlot.
                     // The problem is that if it's in a Shulker box it's not in an EquipmentSlot.
+                    if(player != null) {
+                        PlayerItemConsumeEvent pice = new PlayerItemConsumeEvent(player, itemStack);
+                        Bukkit.getPluginManager().callEvent(pice);
+                        if(pice.isCancelled()){
+                            continue;
+                        }
+                    }
                 }
                 // HoloItem handling done.
                 continue;
             }
+
+
 
             // Not a HoloItem. Run the normal items check.
             // First check if it's edible:
@@ -125,7 +135,6 @@ public class MoguMogu extends Enchant implements Hungerable {
             if (itemStack.getItemMeta().hasDisplayName()) {
                 // Unnamed items have no display name (their display name is their default)
                 // I don't want to eat an item with a special display name.
-                // (Maybe it's a frostfall Tsuchigumo eye, who knows. Those are technically edible since they're spider eyes.)
                 continue;
             }
 
@@ -173,7 +182,6 @@ public class MoguMogu extends Enchant implements Hungerable {
             }
 
             // Finally, increment the statistic.
-            Player player = Bukkit.getPlayer(humanEntity.getUniqueId());
             if(player != null){
                 // weird but it's not "NotNull" so it's good to check
                 player.setStatistic(Statistic.USE_ITEM, foodType, player.getStatistic(Statistic.USE_ITEM, foodType) + 1);
