@@ -150,32 +150,34 @@ public class Utility {
      * Note: Chorus fruit and cake aren't listed here.
      */
     public static final Map<Material, float[]> nutritionValues = new HashMap<>(){{
-        HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Testing console sender");
         try {
-            final Class<?> craftMagicNumbersClass = Class.forName(craft + ".util.CraftMagicNumbers", false, this.getClass().getClassLoader());
+            final Class<?> craftMagicNumbersClass = Class.forName(craft + ".util.CraftMagicNumbers", false, Bukkit.getServer().getClass().getClassLoader());
             // final Class<?> craftMagicNumbersClass = Class.forName("org.bukkit.craftbukkit.util.CraftMagicNumbers", false, this.getClass().getClassLoader());
             final Method getItemMethod = craftMagicNumbersClass.getMethod("getItem", Material.class);
-            final Class<?> itemClass = Class.forName("net.minecraft.world.item.Item", false, this.getClass().getClassLoader());
-            final Method getFoodPropertiesMethod = itemClass.getMethod("w");
-            final Method isEdibleMethod = itemClass.getMethod("v");
+            final Class<?> itemClass = Class.forName("net.minecraft.world.item.Item", false, Bukkit.getServer().getClass().getClassLoader());
+            final Method getFoodPropertiesMethod = itemClass.getMethod("w"); // getFoodProperties
+            final Method isEdibleMethod = itemClass.getMethod("v"); // isEdible
             // It's so weird how we use the spigot classname but the obfuscated method name
-            final Class<?> foodPropertiesClass = Class.forName("net.minecraft.world.food.FoodInfo", false, this.getClass().getClassLoader());
-            final Method getNutritionMethod = foodPropertiesClass.getMethod("a");
-            final Method getSaturationMethod = foodPropertiesClass.getMethod("b");
-            HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Found methods");
+            final Class<?> foodPropertiesClass = Class.forName("net.minecraft.world.food.FoodInfo", false, Bukkit.getServer().getClass().getClassLoader());
+            final Method getNutritionMethod = foodPropertiesClass.getMethod("a"); // getNutrition
+            final Method getSaturationMethod = foodPropertiesClass.getMethod("b"); // getSaturationModifier
 
-            Material testMaterial = COOKED_BEEF;
-            final Object item = getItemMethod.invoke(null, testMaterial);
-            final Boolean isEdible = (Boolean) isEdibleMethod.invoke(item);
-            HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Is edible:" + isEdible);
-            if(isEdible) {
-                final Object foodProperties = getFoodPropertiesMethod.invoke(item);
-                final float nutrition = ((Integer) getNutritionMethod.invoke(foodProperties)).floatValue();
-                final float saturation = (float) getSaturationMethod.invoke(foodProperties);
-                HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Nutrition: " + nutrition);
-                HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Saturation: " + saturation);
+            for(Material testMaterial: Material.values()) {
+                if(testMaterial.isLegacy()){
+                    continue;
+                }
+                if(!testMaterial.isItem()){
+                    continue;
+                }
+                final Object item = getItemMethod.invoke(null, testMaterial);
+                final Boolean isEdible = (Boolean) isEdibleMethod.invoke(item);
+                if (isEdible) {
+                    final Object foodProperties = getFoodPropertiesMethod.invoke(item);
+                    final float nutrition = ((Integer) getNutritionMethod.invoke(foodProperties)).floatValue();
+                    final float saturationModifier = (float) getSaturationMethod.invoke(foodProperties);
+                    put(testMaterial, new float[]{nutrition, saturationModifier});
+                }
             }
-            HoloItems.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Completed nutritionValues");
 
             // Requesting permission to make this just "Exception e"
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
