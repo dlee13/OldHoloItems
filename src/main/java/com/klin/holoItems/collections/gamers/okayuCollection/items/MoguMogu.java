@@ -154,7 +154,7 @@ public class MoguMogu extends Enchant implements Hungerable {
 
             // Add that nutrition information to the entity.
             event.setFoodLevel(Math.min(event.getFoodLevel() + hunger, 20));
-            humanEntity.setSaturation(Math.min(humanEntity.getSaturation() + 2.0F * saturationModifier * hunger, 20));
+            humanEntity.setSaturation(Math.min(humanEntity.getSaturation() + 2.0F * saturationModifier * hunger, event.getFoodLevel()));
 
             // Check for this item's potion effects.
             PotionEffect[] effects = Utility.foodEatEffects.get(foodType);
