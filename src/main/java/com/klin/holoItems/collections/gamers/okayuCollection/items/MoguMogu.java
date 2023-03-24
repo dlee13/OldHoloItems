@@ -8,6 +8,7 @@ import com.klin.holoItems.collections.gen4.cocoCollection.items.DragonHorns;
 import com.klin.holoItems.collections.gen5.botanCollection.items.Backdash;
 import com.klin.holoItems.interfaces.Consumable;
 import com.klin.holoItems.interfaces.Hungerable;
+import com.klin.holoItems.utility.ReflectionUtils;
 import com.klin.holoItems.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -178,6 +179,8 @@ public class MoguMogu extends Enchant implements Hungerable {
                     humanEntity.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 600, 0));
                 }
             }
+
+            ReflectionUtils.finishUsingItem(itemStack, event.getEntity().getWorld(), event.getEntity());
 
             // Finally, increment the statistic.
             if(player != null){
