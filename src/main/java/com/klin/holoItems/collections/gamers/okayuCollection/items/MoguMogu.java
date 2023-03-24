@@ -109,32 +109,30 @@ public class MoguMogu extends Enchant implements Hungerable {
                     // and playerItemConsumeEvent requires a player, an ItemStack, and an EquipmentSlot.
                     // The problem is that if it's in a Shulker box it's not in an EquipmentSlot.
                     if(player != null) {
-                        PlayerItemConsumeEvent pice = new PlayerItemConsumeEvent(player, itemStack);
-                        Bukkit.getPluginManager().callEvent(pice);
-                        if(pice.isCancelled()){
+                        if(!tryConsumeItem(player, itemStack)){
+                            // do not consume the item
                             continue;
                         }
                     }
                 }
-                // HoloItem handling done.
+                // else: holoItem not instance of consumable
+                // holoitem can be "consumable" like spacebread
+                // I don't know how
                 continue;
             }
 
-
-
             // Not a HoloItem. Run the normal items check.
-            // First check if it's edible:
+            // First check if it's even possible:
+            if(!tryConsumeItem(player, itemStack)) {
+                // do not consume the item
+                // could be an FF item
+                continue;
+            }
+
+            // Then check if it's edible:
             Material foodType = itemStack.getType();
             if (!foodType.isEdible()) {
                 // Item isn't edible, so don't consider eating it.
-                continue;
-            }
-
-            // Then check if it has a name.
-            // This way we dodge things like Tsuchigumo eye.
-            if (itemStack.getItemMeta().hasDisplayName()) {
-                // Unnamed items have no display name (their display name is their default)
-                // I don't want to eat an item with a special display name.
                 continue;
             }
 
@@ -191,5 +189,20 @@ public class MoguMogu extends Enchant implements Hungerable {
             return itemStack;
         }
         return null;
+    }
+
+    /**
+     * Attempts to "consume" the item. Perhaps this could have a better desc.
+     * @param player The player consuming the item
+     * @param itemStack The ItemStack to be consumed
+     * @return Whether to consume the itemStack or not.
+     */
+    private static boolean tryConsumeItem(Player player, ItemStack itemStack){
+        PlayerItemConsumeEvent pice = new PlayerItemConsumeEvent(player, itemStack);
+        Bukkit.getPluginManager().callEvent(pice);
+        // if it's cancelled, don't consume
+        // so if it's not cancelled, consume
+        // I'm aware every usage of tryConsumeItem !'s it anyway but this makes more sense, I think.
+        return !pice.isCancelled();
     }
 }
