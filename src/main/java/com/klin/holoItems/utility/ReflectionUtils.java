@@ -30,44 +30,46 @@ public class ReflectionUtils {
     private static void setup() {
         System.out.println("Invoking setup()");
         try {
-            /*
-            String[] classes = "CraftArt,CraftChunk,CraftChunkSnapshot,CraftCrashReport,CraftEffect,CraftEquipmentSlot,CraftIpBanEntry,CraftIpBanList,CraftOfflinePlayer,CraftParticle,CraftProfileBanEntry,CraftProfileBanList,CraftServer,CraftSound,CraftStatistic,CraftWorld,CraftWorldBorder,LoggerOutputStream,Main,Overridden,SpigotTimings,TrigMath".split(",");
-            for(String name : classes){
-                final Class<?> testClass = Class.forName(craft + "." + name);
-                for(Method m:testClass.getMethods()){
-                    if(m.toString().contains("net.minecraft.world.Level")){
-                        System.out.println(name + " contains " + m);
-                    }
-                }
-            }
-
-             */
-            System.out.println("For-loop done");
             Class<?> craftStackClass = Class.forName(craft + ".inventory.CraftMetaItem");
             repairCost = craftStackClass.getDeclaredField("repairCost");
             repairCost.setAccessible(true);
 
             final Class<?> craftItemStackClass = Class.forName(craft + ".inventory.CraftItemStack", false, Bukkit.getServer().getClass().getClassLoader());
+            // asNMSCopy: Converts from Bukkit ItemStack to net.minecraft.world.item.ItemStack
             NMSifyItemStack = craftItemStackClass.getMethod("asNMSCopy", ItemStack.class);
 
+            // According to this bukkit.org forum link:
+            // https://bukkit.org/threads/cast-org-bukkit-world-to-net-minecraft-server-v1_8_r3-world.431984/
+            // Apparently you can cast org.bukkit.World to CraftWorld then use getHandle to get the NMS.World?
             craftWorldClass = Class.forName(craft + ".CraftWorld", false, Bukkit.getServer().getClass().getClassLoader());
+            // The following is reassurance, but not a guarantee, that World might be able to cast to CraftWorld.
+            // System.out.println("Is Bukkit world a superclass of craftWorld? " + World.class.isAssignableFrom(craftWorldClass));
+            // This gives a NMS.level.WorldServer class
             getWorldHandleMethod = craftWorldClass.getMethod("getHandle");
-            Class<?> test = getWorldHandleMethod.getReturnType();
-            while(test != Object.class){
-                System.out.println("Class: " + test);
-                System.out.println("Superclass: " + test.getSuperclass());
-                System.out.println("Interfaces: " + Arrays.toString(test.getInterfaces()));
-                test = test.getSuperclass();
-            }
-            // System.out.println(Arrays.toString(getWorldHandleMethod.getReturnType().getMethods()));
 
+            // worldClass is a superclass of NMS.level.WorldServer
+            // so you can cast from NMS.level.worldServer to worldClass
+            Class<?> worldClass = Class.forName("net.minecraft.world.level.World", false, Bukkit.getServer().getClass().getClassLoader());
+            // proof that worldClass is a superclass if NMS.level.worldServer
+            // System.out.println("Can you cast from getWorldHandleMethod returnType to worldClass?" + worldClass.isAssignableFrom(getWorldHandleMethod.getReturnType()));
+
+            // I can't find my notes on how to convert from Bukkit entity to CraftEntity?
+            // And google isn't being particularly helpful, except giving me something which I have no idea if it'll work.
+            // Apparantly I should just cast from Bukkit LivingEntity to CraftEntity and ... well, it'll work
+            // So craftBukkitLivingEntityClass does the conversion
             craftBukkitLivingEntityClass = Class.forName(craft + ".entity.CraftEntity");
+            // getHandle can get a net.minecraft.world.entity.Entity
             getLivingEntityHandleMethod = craftBukkitLivingEntityClass.getMethod("getHandle");
 
+            // And then I just have to pray that we can cast THAT to EntityLiving
             minecraftEntityLivingClass = Class.forName("net.minecraft.world.entity.EntityLiving");
 
             final Class<?> itemClass = Class.forName("net.minecraft.world.item.Item", false, Bukkit.getServer().getClass().getClassLoader());
-            finishUsingItemMethod = itemClass.getMethod("finishUsingItem", NMSifyItemStack.getReturnType(), getWorldHandleMethod.getReturnType(), minecraftEntityLivingClass);
+            System.out.println(NMSifyItemStack.getReturnType());
+            //System.out.println(getWorldHandleMethod.getReturnType());
+            System.out.println(worldClass);
+            System.out.println(minecraftEntityLivingClass);
+            finishUsingItemMethod = itemClass.getMethod("a", NMSifyItemStack.getReturnType(), worldClass, minecraftEntityLivingClass);
             System.out.println("finishUsingItemMethod: " + finishUsingItemMethod);
 
             setup = true;
