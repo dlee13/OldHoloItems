@@ -3,6 +3,7 @@ package com.klin.holoItems;
 import com.klin.holoItems.abstractClasses.Enchant;
 import com.klin.holoItems.abstractClasses.Pack;
 import com.klin.holoItems.abstractClasses.Wiring;
+import com.klin.holoItems.collections.gamers.okayuCollection.items.MoguMogu;
 import com.klin.holoItems.collections.gen1.melCollection.items.ReadingGlasses;
 import com.klin.holoItems.collections.gen2.shionCollection.items.Fireball;
 import com.klin.holoItems.collections.gen2.shionCollection.items.SecretBrew;
@@ -70,6 +71,7 @@ public class Events implements Listener {
         add(Sentry.name);
         add(ScopedRifle.name);
         add(Starch.name);
+        add(MoguMogu.name);
     }};
     //add permissible interfaces for each prohibitedInv
     private final Set<InventoryType> prohibitedInv = Set.of(
@@ -280,6 +282,9 @@ public class Events implements Listener {
                     cost++;
                 }
                 ((AnvilInventory) inv).setRepairCost(cost);
+
+                // I'm confused if this is necessary, since we did Utility.addEnchant() above
+                // which has code to delete these enchantments anyway.
                 if (enchant.exclusive != null) {
                     for (Enchantment enchantment : result.getEnchantments().keySet()) {
                         if (enchant.exclusive.contains(enchantment))
@@ -311,6 +316,10 @@ public class Events implements Listener {
             }
             return;
         } else if(enchantItem==null){
+            // enchantItem = null therefore whatever we're putting onto the main item is not a holoitem
+            // or an item affected by holo-enchs (you can't put holo-enchs on a book, for some reason?)
+            // Since we're not putting new holo-enchs onto the item we don't need to write code for when holo-enchs
+            // are exclusive to other holo-enchs.
             if(reagent.getType()==Material.ENCHANTED_BOOK && reagent.getItemMeta() instanceof EnchantmentStorageMeta){
                 Map<Enchantment, Integer> enchantments = ((EnchantmentStorageMeta) reagent.getItemMeta()).getStoredEnchants();
                 ItemStack result = reactant.clone();
@@ -346,7 +355,8 @@ public class Events implements Listener {
                             levelCost += enchantmentLevel * ((findMultiplier(enchantment) + 1) / 2);
                         }
                     }
-                } if(levelCost>0) {
+                }
+                if(levelCost>0) {
                     ItemMeta meta = result.getItemMeta();
                     if(anvil) {
                         String renameText = ((AnvilInventory) inv).getRenameText();
@@ -1506,6 +1516,38 @@ public class Events implements Listener {
         //This is the case of Verification Seal
         if (Utility.hasPersistentUtilityKey(mapSlot) || Utility.hasPersistentUtilityKey(paperSlot)) {
             event.setCancelled(true);
+        }
+    }
+
+    /**
+     * This event handler is triggered when a human entity's food level gets chhanged.
+     * @param event Bukkit FoodLevelChangeEvent
+     */
+    @EventHandler
+    public void onFoodLevelChangeEvent(FoodLevelChangeEvent event){
+        // This is the **EXACT** same way mendItem() does it, after some small class-name-changes.
+        // Deactivated the "activate even if event is cancelled", though.
+
+        // mendItem does this with a Player, but for some reason FoodLevelChangeEvent can apply to any "HumanEntity"
+        // and for some reason not all HumanEntities are players.
+        HumanEntity player = event.getEntity();
+        PlayerInventory inv = player.getInventory();
+        for(ItemStack item : new ItemStack[]{inv.getItemInMainHand(), inv.getItemInOffHand(), inv.getHelmet(), inv.getChestplate(), inv.getLeggings(), inv.getBoots()}) {
+            if (item == null || item.getType() == Material.AIR || item.getItemMeta() == null)
+                continue;
+            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+            Item generic = Utility.findItem(container.get(Utility.key, PersistentDataType.STRING), Item.class);
+            if(generic instanceof Hungerable)
+                ((Hungerable) generic).ability(event);
+            String enchants = container.get(Utility.enchant, PersistentDataType.STRING);
+            if(enchants!=null){
+                for(String enchant : enchants.split(" ")){
+                    Hungerable hungerable = Utility.findItem(enchant, Hungerable.class);
+                    if(hungerable!=null)
+                        hungerable.ability(event);
+                }
+            }
+            // This isn't mending so I removed all of the stuff related ot the mending enchantment
         }
     }
 }

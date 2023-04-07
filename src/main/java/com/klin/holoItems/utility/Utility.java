@@ -33,11 +33,14 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.klin.holoItems.utility.ReflectionUtils.craft;
 import static org.bukkit.Material.*;
 
 public class Utility {
@@ -142,6 +145,68 @@ public class Utility {
         put(DyeColor.GREEN, Stream.of(EMERALD_BLOCK/*, GREEN_BED, GREEN_CARPET*/, GREEN_CONCRETE/*, GREEN_CONCRETE_POWDER*/, GREEN_GLAZED_TERRACOTTA/*, GREEN_SHULKER_BOX*/, GREEN_STAINED_GLASS, GREEN_STAINED_GLASS_PANE, GREEN_TERRACOTTA, GREEN_WOOL, MOSS_BLOCK/*, MOSS_CARPET*/).collect(Collectors.toSet()));
         put(DyeColor.LIME, Stream.of(/*LIME_BED, LIME_CARPET,*/ LIME_CONCRETE/*, LIME_CONCRETE_POWDER*/, LIME_GLAZED_TERRACOTTA/*, LIME_SHULKER_BOX*/, LIME_STAINED_GLASS, LIME_STAINED_GLASS_PANE, LIME_TERRACOTTA, LIME_WOOL, SLIME_BLOCK).collect(Collectors.toSet()));
         put(DyeColor.BROWN, Stream.of(ANCIENT_DEBRIS/*, BROWN_BED, BROWN_CARPET*/, BROWN_CONCRETE/*, BROWN_CONCRETE_POWDER*/, BROWN_GLAZED_TERRACOTTA, BROWN_MUSHROOM_BLOCK/*, BROWN_SHULKER_BOX*/, BROWN_STAINED_GLASS, BROWN_STAINED_GLASS_PANE, BROWN_TERRACOTTA, BROWN_WOOL, COARSE_DIRT, DIRT, PODZOL, ROOTED_DIRT).collect(Collectors.toSet())); }};
+    /**
+     * Nutrition values from eating certain foods.
+     * Note: Chorus fruit and cake aren't listed here.
+     */
+    public static final Map<Material, float[]> nutritionValues = new HashMap<>(){{
+        try {
+            final Class<?> craftMagicNumbersClass = Class.forName(craft + ".util.CraftMagicNumbers", false, Bukkit.getServer().getClass().getClassLoader());
+            // final Class<?> craftMagicNumbersClass = Class.forName("org.bukkit.craftbukkit.util.CraftMagicNumbers", false, this.getClass().getClassLoader());
+            final Method getItemMethod = craftMagicNumbersClass.getMethod("getItem", Material.class);
+            final Class<?> itemClass = Class.forName("net.minecraft.world.item.Item", false, Bukkit.getServer().getClass().getClassLoader());
+            final Method getFoodPropertiesMethod = itemClass.getMethod("w"); // getFoodProperties
+            final Method isEdibleMethod = itemClass.getMethod("v"); // isEdible
+            // It's so weird how we use the spigot classname but the obfuscated method name
+            final Class<?> foodPropertiesClass = Class.forName("net.minecraft.world.food.FoodInfo", false, Bukkit.getServer().getClass().getClassLoader());
+            final Method getNutritionMethod = foodPropertiesClass.getMethod("a"); // getNutrition
+            final Method getSaturationMethod = foodPropertiesClass.getMethod("b"); // getSaturationModifier
+
+            for(Material testMaterial: Material.values()) {
+                if(testMaterial.isLegacy()){
+                    continue;
+                }
+                if(!testMaterial.isItem()){
+                    continue;
+                }
+                final Object item = getItemMethod.invoke(null, testMaterial);
+                final Boolean isEdible = (Boolean) isEdibleMethod.invoke(item);
+                if (isEdible) {
+                    final Object foodProperties = getFoodPropertiesMethod.invoke(item);
+                    final float nutrition = ((Integer) getNutritionMethod.invoke(foodProperties)).floatValue();
+                    final float saturationModifier = (float) getSaturationMethod.invoke(foodProperties);
+                    put(testMaterial, new float[]{nutrition, saturationModifier});
+                }
+            }
+
+            // Requesting permission to make this just "Exception e"
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
+                NoSuchMethodException | ExceptionInInitializerError e) {
+            e.printStackTrace();
+        }
+    }};
+    /**
+     * List of effects from eating certain foods.
+     * Note: Chorus fruit, rotten flesh, chicken, and honey bottles aren't listed here.
+     */
+    public static final EnumMap<Material, PotionEffect[]> foodEatEffects = new EnumMap<>(Material.class){{
+        put(PUFFERFISH, new PotionEffect[]{
+                new PotionEffect(PotionEffectType.HUNGER, 300, 2),
+                new PotionEffect(PotionEffectType.CONFUSION, 300, 0),
+                new PotionEffect(PotionEffectType.POISON, 1200, 1)
+        });
+        put(GOLDEN_APPLE, new PotionEffect[]{
+                new PotionEffect(PotionEffectType.REGENERATION, 100, 1),
+                new PotionEffect(PotionEffectType.ABSORPTION, 2400, 0)
+        });
+        put(ENCHANTED_GOLDEN_APPLE, new PotionEffect[]{
+                new PotionEffect(PotionEffectType.REGENERATION, 400, 1),
+                new PotionEffect(PotionEffectType.ABSORPTION, 2400, 3),
+                new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 2000, 0),
+                new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 2000, 0)
+        });
+    }};
+
     public static boolean test = false;
 
     public static <T> T findItem(ItemStack item, Class<T> cls){
@@ -338,7 +403,7 @@ public class Utility {
             if(projectile)
                 damage *= 1-Math.min(0.8, projProtection);
         }
-        
+
         if (item!=null && target.getCategory().equals(EntityCategory.ARTHROPOD))
             damage += 2.5*item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS);
         if (item!=null && target.getCategory().equals(EntityCategory.UNDEAD))
