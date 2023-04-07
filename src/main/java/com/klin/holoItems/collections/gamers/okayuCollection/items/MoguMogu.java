@@ -25,6 +25,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.sql.Ref;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -138,55 +139,7 @@ public class MoguMogu extends Enchant implements Hungerable {
             }
 
             // We're eating this item.
-            // First, find its nutrition information.
-            float[] nutritionValue = Utility.nutritionValues.get(foodType);
-            if(nutritionValue == null){
-                // Cake, chorus fruits, etc.
-                // Don't eat these!
-                continue;
-            }
-
-            // We're 100% eating this so
-            itemStack.subtract();
-            int hunger = Math.round(nutritionValue[0]);
-            float saturationModifier = nutritionValue[1];
-
-            // Add that nutrition information to the entity.
-            event.setFoodLevel(Math.min(event.getFoodLevel() + hunger, 20));
-            humanEntity.setSaturation(Math.min(humanEntity.getSaturation() + 2.0F * saturationModifier * hunger, event.getFoodLevel()));
-
-            // Check for this item's potion effects.
-            PotionEffect[] effects = Utility.foodEatEffects.get(foodType);
-            if(effects != null){
-                for(PotionEffect effect : effects){
-                    humanEntity.addPotionEffect(effect);
-                }
-            }
-
-            // Special effects for certain items.
-            if(foodType == Material.HONEY_BOTTLE){
-                humanEntity.removePotionEffect(PotionEffectType.POISON);
-            }
-            else if(foodType == Material.ROTTEN_FLESH){
-                Random r = ThreadLocalRandom.current();
-                if(r.nextDouble() < 0.8){
-                    humanEntity.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 600, 0));
-                }
-            }
-            else if(foodType == Material.CHICKEN){
-                Random r = ThreadLocalRandom.current();
-                if(r.nextDouble() < 0.3){
-                    humanEntity.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 600, 0));
-                }
-            }
-
-            ReflectionUtils.finishUsingItem(itemStack, event.getEntity().getWorld(), event.getEntity());
-
-            // Finally, increment the statistic.
-            if(player != null){
-                // weird but it's not "NotNull" so it's good to check
-                player.setStatistic(Statistic.USE_ITEM, foodType, player.getStatistic(Statistic.USE_ITEM, foodType) + 1);
-            }
+            ReflectionUtils.finishUsingItem(itemStack, humanEntity.getWorld(), humanEntity);
 
             // And we've eaten something, so move on past this event.
             return itemStack;

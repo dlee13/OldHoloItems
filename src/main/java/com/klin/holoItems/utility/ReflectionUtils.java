@@ -132,6 +132,11 @@ public class ReflectionUtils {
             Object NMSEntityLiving = minecraftEntityLivingClass.cast(NMSEntity);
 
             // Now that everything is the right type, call finishUsingItem.
+            System.out.println(NMSItemObject.getClass());
+            System.out.println(NMSItemStack.getClass());
+            System.out.println(NMSWorld.getClass());
+            System.out.println(NMSEntityLiving.getClass());
+            System.out.println("Flag to help detect infinite loop");
             finishUsingItemMethod.invoke(NMSItemObject, NMSItemStack, NMSWorld, NMSEntityLiving);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
