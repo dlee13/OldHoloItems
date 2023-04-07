@@ -43,9 +43,11 @@ public class MoguMogu extends Enchant implements Hungerable {
 
     // Accepted armor types this can be on.
     // Yes, both of these variables represent the same thing; it was written this way in DemonAura.
-    public static final Set<String> acceptedIds = Stream.of(ReadingGlasses.name, DragonHorns.name, Backdash.name).collect(Collectors.toCollection(HashSet::new));
+    public static final Set<String> acceptedIds = Set.of(ReadingGlasses.name, DragonHorns.name, Backdash.name);
     public static final Set<Material> acceptedTypes = Utility.helmets;
     public static final int expCost = 25;
+
+    private static final List<Integer> SLOTS = Arrays.asList(0,1,2,3,4,5,6,7,8,9,40);
 
     public MoguMogu(){
         super(name, material, lore, durability, shiny, cost, acceptedIds, acceptedTypes, expCost);
@@ -97,9 +99,8 @@ public class MoguMogu extends Enchant implements Hungerable {
         HumanEntity humanEntity = event.getEntity();
         Player player = Bukkit.getPlayer(humanEntity.getUniqueId());
         PlayerInventory inv = humanEntity.getInventory();
-        List<Integer> slots = Arrays.asList(0,1,2,3,4,5,6,7,8,40);
-        Collections.shuffle(slots);
-        for(int slot : slots){
+        Collections.shuffle(SLOTS);
+        for(int slot : SLOTS){
             ItemStack itemStack = inv.getItem(slot);
             if(itemStack == null)
                 continue;
