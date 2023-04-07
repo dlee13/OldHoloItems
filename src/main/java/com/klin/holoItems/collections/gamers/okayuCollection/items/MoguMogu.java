@@ -84,6 +84,11 @@ public class MoguMogu extends Enchant implements Hungerable {
      * @return The ItemStack used to refill the food level.
      */
     public static ItemStack autoEat(FoodLevelChangeEvent event) {
+        if(event.getItem() != null){
+            // dodge the infinite loop?
+            System.out.println("Attempting to dodge an infinite loop");
+            return null;
+        }
         if(event.getFoodLevel() > 19){
             // Each drumstick is 2, and each half-drumstick is 1
             return null;
