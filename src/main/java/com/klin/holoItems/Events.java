@@ -1276,7 +1276,9 @@ public class Events implements Listener {
             Retainable retainable = Utility.findItem(item, Retainable.class, player);
             if(retainable!=null && retainable.ability(event, item)) {
                 item.setAmount(item.getAmount() - 1);
-                return;
+                if(event.getKeepInventory()) {
+                    return;
+                }
             }
         }
     }
