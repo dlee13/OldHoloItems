@@ -9,6 +9,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.RecipeChoice;
 
 public class Momento extends Item implements Retainable {
     public static final String name = "momento";
@@ -19,7 +20,7 @@ public class Momento extends Item implements Retainable {
             "Item is automatically consumed to\n" +
             "keep inventory upon death";
     private static final int durability = 0;
-    public static final boolean stackable = false;
+    public static final boolean stackable = true;
     private static final boolean shiny = false;
     public static final int cost = 2700;
 
@@ -30,7 +31,7 @@ public class Momento extends Item implements Retainable {
     public void registerRecipes(){
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aaa","aba","aaa");
-        recipe.setIngredient('a', Material.OBSIDIAN);
+        recipe.setIngredient('a', new RecipeChoice.MaterialChoice(Material.OBSIDIAN, Material.CRYING_OBSIDIAN));
         recipe.setIngredient('b', Material.END_CRYSTAL);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
