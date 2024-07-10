@@ -40,7 +40,7 @@ public class SecretBrew extends Item implements Brewable, Mixable {
         ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.addIngredient(Material.DEAD_BUSH);
         recipe.addIngredient(Material.FERN);
-        recipe.addIngredient(Material.GRASS);
+        recipe.addIngredient(Material.SHORT_GRASS);
         recipe.addIngredient(Material.GLOW_LICHEN);
         recipe.addIngredient(Material.LILY_PAD);
         recipe.addIngredient(Material.SEAGRASS);
