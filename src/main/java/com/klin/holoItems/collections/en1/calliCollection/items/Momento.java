@@ -31,7 +31,7 @@ public class Momento extends Item implements Retainable {
     public void registerRecipes(){
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name), item);
         recipe.shape("aaa","aba","aaa");
-        recipe.setIngredient('a', RecipeChoice.MaterialChoice(Material.OBSIDIAN, Material.CRYING_OBSIDIAN));
+        recipe.setIngredient('a', new RecipeChoice.MaterialChoice(Material.OBSIDIAN, Material.CRYING_OBSIDIAN));
         recipe.setIngredient('b', Material.END_CRYSTAL);
         recipe.setGroup(name);
         Bukkit.getServer().addRecipe(recipe);
