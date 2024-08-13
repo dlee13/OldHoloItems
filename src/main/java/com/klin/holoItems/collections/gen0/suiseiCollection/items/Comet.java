@@ -73,112 +73,113 @@ public class Comet extends Item implements Interactable {
     }
 
     public void ability(PlayerInteractEvent event, Action action){
-        if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) ||
-                event.useInteractedBlock()==Event.Result.ALLOW)
-            return;
+        event.setCancelled(true);
+        // if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) ||
+        //         event.useInteractedBlock()==Event.Result.ALLOW)
+        //     return;
 
-        Player player = event.getPlayer();
-        if(player.hasPotionEffect(PotionEffectType.WEAKNESS)){
-            player.sendMessage("§7The axe weighs heavily on your arms");
-            return;
-        }
-        ItemStack item = event.getItem();
-        if(Utility.onCooldown(item))
-            return;
-        Utility.cooldown(item, 20);
-        double damage = 4 + 3 * (Utility.checkPotionEffect(player, PotionEffectType.INCREASE_DAMAGE) -
-                Utility.checkPotionEffect(player, PotionEffectType.WEAKNESS));
+        // Player player = event.getPlayer();
+        // if(player.hasPotionEffect(PotionEffectType.WEAKNESS)){
+        //     player.sendMessage("§7The axe weighs heavily on your arms");
+        //     return;
+        // }
+        // ItemStack item = event.getItem();
+        // if(Utility.onCooldown(item))
+        //     return;
+        // Utility.cooldown(item, 20);
+        // double damage = 4 + 3 * (Utility.checkPotionEffect(player, PotionEffectType.INCREASE_DAMAGE) -
+        //         Utility.checkPotionEffect(player, PotionEffectType.WEAKNESS));
 
-        Location location = player.getEyeLocation();
-        World world = player.getWorld();
-        boolean hand = event.getHand()==EquipmentSlot.HAND;
+        // Location location = player.getEyeLocation();
+        // World world = player.getWorld();
+        // boolean hand = event.getHand()==EquipmentSlot.HAND;
 
-        double distance = 50;
-        Vector dir = location.getDirection().multiply(3);
-        Set<LivingEntity> targets = new HashSet<>();
-        for(int i=0; i<1+item.getEnchantmentLevel(Enchantment.PIERCING); i++) {
-            RayTraceResult result = world.rayTrace(location, dir, 50,
-                    FluidCollisionMode.NEVER, true, 0.5,
-                    entity -> (entity != player &&
-                            entity instanceof LivingEntity && !(entity instanceof ArmorStand) &&
-                            !targets.contains(entity)));
-            if (result != null) {
-                LivingEntity entity = (LivingEntity) result.getHitEntity();
-                if (entity != null) {
-                    distance = location.distance(result.getHitEntity().getLocation());
-                    targets.add(entity);
-                }
-                else if (result.getHitBlock() != null) {
-                    distance = location.distance(result.getHitBlock().getLocation());
-                    break;
-                }
-            }
-        }
-        double iterations = distance/3;
+        // double distance = 50;
+        // Vector dir = location.getDirection().multiply(3);
+        // Set<LivingEntity> targets = new HashSet<>();
+        // for(int i=0; i<1+item.getEnchantmentLevel(Enchantment.PIERCING); i++) {
+        //     RayTraceResult result = world.rayTrace(location, dir, 50,
+        //             FluidCollisionMode.NEVER, true, 0.5,
+        //             entity -> (entity != player &&
+        //                     entity instanceof LivingEntity && !(entity instanceof ArmorStand) &&
+        //                     !targets.contains(entity)));
+        //     if (result != null) {
+        //         LivingEntity entity = (LivingEntity) result.getHitEntity();
+        //         if (entity != null) {
+        //             distance = location.distance(result.getHitEntity().getLocation());
+        //             targets.add(entity);
+        //         }
+        //         else if (result.getHitBlock() != null) {
+        //             distance = location.distance(result.getHitBlock().getLocation());
+        //             break;
+        //         }
+        //     }
+        // }
+        // double iterations = distance/3;
 
-        ArmorStand stand = world.spawn(location.clone().add(0, -1, 0), ArmorStand.class);
-        stand.setInvisible(true);
-        stand.setInvulnerable(true);
-        stand.setGravity(false);
-        stand.setBasePlate(false);
-        stand.setCanPickupItems(false);
-        stand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING);
-        stand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING);
-        stand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.ADDING);
-        stand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING);
-        stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
-        if(hand) {
-            stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
-            stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
-            stand.getEquipment().setItemInMainHand(item);
-        }
-        else {
-            stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
-            stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING);
-            stand.getEquipment().setItemInOffHand(item);
-        }
+        // ArmorStand stand = world.spawn(location.clone().add(0, -1, 0), ArmorStand.class);
+        // stand.setInvisible(true);
+        // stand.setInvulnerable(true);
+        // stand.setGravity(false);
+        // stand.setBasePlate(false);
+        // stand.setCanPickupItems(false);
+        // stand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING);
+        // stand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING);
+        // stand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.ADDING);
+        // stand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING);
+        // stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
+        // if(hand) {
+        //     stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
+        //     stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
+        //     stand.getEquipment().setItemInMainHand(item);
+        // }
+        // else {
+        //     stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
+        //     stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING);
+        //     stand.getEquipment().setItemInOffHand(item);
+        // }
 
-        String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-        boolean bread = enchant!=null && enchant.contains(SpaceBreadSplash.name);
-        double height = player.getLocation().getY();
+        // String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        // boolean bread = enchant!=null && enchant.contains(SpaceBreadSplash.name);
+        // double height = player.getLocation().getY();
 
-        if (player.getGameMode()!=GameMode.CREATIVE)
-            Utility.addDurability(item, -1, player);
-        new Task(HoloItems.getInstance(), 1, 1){
-            double increment = 0;
-            final boolean crit = player.getLocation().getY()<height;
+        // if (player.getGameMode()!=GameMode.CREATIVE)
+        //     Utility.addDurability(item, -1, player);
+        // new Task(HoloItems.getInstance(), 1, 1){
+        //     double increment = 0;
+        //     final boolean crit = player.getLocation().getY()<height;
 
-            public void run(){
-                if(increment>=0.3*iterations) {
-                    stand.remove();
-                    if(!targets.isEmpty()) {
-                        if (player.getGameMode()!=GameMode.CREATIVE)
-                            Utility.addDurability(item, 0.5, player);
-                        ItemStack clone = item.clone();
-                        if(bread) {
-                            clone.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 5);
-                            clone.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, 5);
-                            clone.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-                        }
-                        for (LivingEntity target : targets) {
-                            if (target.isValid() && (!(target instanceof Player) || !((Player) target).isBlocking()))
-                                Utility.damage(clone, damage, crit, player, target, false, true, false);
-                        }
-                    }
-                    cancel();
-                    return;
-                }
+        //     public void run(){
+        //         if(increment>=0.3*iterations) {
+        //             stand.remove();
+        //             if(!targets.isEmpty()) {
+        //                 if (player.getGameMode()!=GameMode.CREATIVE)
+        //                     Utility.addDurability(item, 0.5, player);
+        //                 ItemStack clone = item.clone();
+        //                 if(bread) {
+        //                     clone.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 5);
+        //                     clone.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, 5);
+        //                     clone.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
+        //                 }
+        //                 for (LivingEntity target : targets) {
+        //                     if (target.isValid() && (!(target instanceof Player) || !((Player) target).isBlocking()))
+        //                         Utility.damage(clone, damage, crit, player, target, false, true, false);
+        //                 }
+        //             }
+        //             cancel();
+        //             return;
+        //         }
 
-                double angle = increment*Math.PI;
-                if(hand)
-                    stand.setRightArmPose(stand.getRightArmPose().setX(angle));
-                else
-                    stand.setLeftArmPose(stand.getLeftArmPose().setX(angle));
-                increment += 0.3;
+        //         double angle = increment*Math.PI;
+        //         if(hand)
+        //             stand.setRightArmPose(stand.getRightArmPose().setX(angle));
+        //         else
+        //             stand.setLeftArmPose(stand.getLeftArmPose().setX(angle));
+        //         increment += 0.3;
 
-                stand.teleport(stand.getLocation().clone().
-                        add(dir.getX(), -0.3*Math.sin(angle)+dir.getY(), dir.getZ()));
-            }
-        };
+        //         stand.teleport(stand.getLocation().clone().
+        //                 add(dir.getX(), -0.3*Math.sin(angle)+dir.getY(), dir.getZ()));
+        //     }
+        // };
     }
 }
