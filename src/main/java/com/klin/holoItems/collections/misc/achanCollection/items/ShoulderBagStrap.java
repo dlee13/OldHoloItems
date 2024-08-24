@@ -5,6 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -16,11 +18,12 @@ import org.jetbrains.annotations.NotNull;
 
 import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
+import com.klin.holoItems.interfaces.Clickable;
 import com.klin.holoItems.interfaces.Closeable;
 import com.klin.holoItems.interfaces.Holdable;
 import com.klin.holoItems.interfaces.Placeable;
 
-public class ShoulderBagStrap extends Item implements Placeable, Holdable, Closeable {
+public class ShoulderBagStrap extends Item implements Placeable, Holdable, Closeable, Clickable {
     public static final String name = "shoulderBagStrap";
 
     private static final Material material = Material.CHAIN;
@@ -47,7 +50,7 @@ public class ShoulderBagStrap extends Item implements Placeable, Holdable, Close
     @Override
     public void ability(BlockPlaceEvent event) {
         final var itemStack = event.getItemInHand();
-        if (itemStack.getItemMeta() instanceof BlockStateMeta blockStateMeta && blockStateMeta.hasBlockState()
+        if (itemStack.getItemMeta() instanceof BlockStateMeta blockStateMeta
                 && blockStateMeta.getBlockState() instanceof ShulkerBox shulkerBox) {
             event.setCancelled(true);
             final var shoulderBag = new ShoulderBag(itemStack.getType(), shulkerBox);
@@ -66,6 +69,13 @@ public class ShoulderBagStrap extends Item implements Placeable, Holdable, Close
             if (!excess.isEmpty()) {
                 player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
             }
+        }
+    }
+
+    @Override
+    public void ability(InventoryClickEvent event, boolean current) {
+        if (event.getInventory().getHolder() instanceof ShoulderBag && event.getClick() == ClickType.SWAP_OFFHAND) {
+            event.setCancelled(true);
         }
     }
 

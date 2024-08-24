@@ -138,7 +138,10 @@ public class Events implements Listener {
 
         int slot = event.getRawSlot();
         boolean current = true;
-        for (ItemStack item : new ItemStack[]{event.getCurrentItem(), event.getCursor()}) {
+        final var itemsToCheck = new ItemStack[] {
+            event.getCurrentItem(), event.getCursor(), player.getInventory().getItemInOffHand()
+        };
+        for (final var item : itemsToCheck) {
             if (item == null || item.getItemMeta() == null) {
                 current = false;
                 continue;
@@ -1258,7 +1261,7 @@ public class Events implements Listener {
 //        }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void placeAbility(BlockPlaceEvent event){
         Player player = event.getPlayer();
         ItemStack item = event.getItemInHand();
