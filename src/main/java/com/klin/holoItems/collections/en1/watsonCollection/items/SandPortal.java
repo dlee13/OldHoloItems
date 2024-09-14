@@ -45,22 +45,25 @@ public class SandPortal extends Item implements Dispensable, Placeable {
     private static final boolean shiny = false;
     public static final int cost = 19200;
 
-    private final MethodHandle getInventoryHandle;
-    private final MethodHandle setChangedHandle;
+    private static final MethodHandle getInventoryHandle;
+    private static final MethodHandle setChangedHandle;
 
-    public SandPortal() {
-        super(name, material, quantity, lore, durability, stackable, shiny, cost);
+    static {
         final var lookup = MethodHandles.lookup();
         try {
             final var craftInventoryClass = lookup.findClass("org.bukkit.craftbukkit.inventory.CraftInventory");
             final var containerClass = lookup.findClass("net.minecraft.world.Container");
             final var getInventoryType = MethodType.methodType(containerClass);
-            this.getInventoryHandle = lookup.findVirtual(craftInventoryClass, "getInventory", getInventoryType);
+            getInventoryHandle = lookup.findVirtual(craftInventoryClass, "getInventory", getInventoryType);
             final var setChangedType = MethodType.methodType(void.class);
-            this.setChangedHandle = lookup.findVirtual(containerClass, "setChanged", setChangedType);
+            setChangedHandle = lookup.findVirtual(containerClass, "setChanged", setChangedType);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public SandPortal() {
+        super(name, material, quantity, lore, durability, stackable, shiny, cost);
     }
 
     @Override
@@ -105,8 +108,7 @@ public class SandPortal extends Item implements Dispensable, Placeable {
             final var inventory = container.getInventory();
             inventory.addItem(new ItemStack(type));
             try {
-                final var nmsContainer = getInventoryHandle.invoke(inventory);
-                setChangedHandle.invoke(nmsContainer);
+                setChangedHandle.invoke(getInventoryHandle.invoke(inventory));
             } catch (Throwable t) {
             }
         }
