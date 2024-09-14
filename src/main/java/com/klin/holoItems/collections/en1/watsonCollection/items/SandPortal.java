@@ -1,5 +1,9 @@
 package com.klin.holoItems.collections.en1.watsonCollection.items;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -41,8 +45,22 @@ public class SandPortal extends Item implements Dispensable, Placeable {
     private static final boolean shiny = false;
     public static final int cost = 19200;
 
+    private final MethodHandle getInventoryHandle;
+    private final MethodHandle setChangedHandle;
+
     public SandPortal() {
         super(name, material, quantity, lore, durability, stackable, shiny, cost);
+        final var lookup = MethodHandles.lookup();
+        try {
+            final var craftInventoryClass = lookup.findClass("org.bukkit.craftbukkit.inventory.CraftInventory");
+            final var containerClass = lookup.findClass("net.minecraft.world.Container");
+            final var getInventoryType = MethodType.methodType(containerClass);
+            this.getInventoryHandle = lookup.findVirtual(craftInventoryClass, "getInventory", getInventoryType);
+            final var setChangedType = MethodType.methodType(void.class);
+            this.setChangedHandle = lookup.findVirtual(containerClass, "setChanged", setChangedType);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -84,7 +102,13 @@ public class SandPortal extends Item implements Dispensable, Placeable {
         if (facedBlock.getType().isAir()) {
             facedBlock.setType(type);
         } else if (facedBlock.getState() instanceof Container container) {
-            container.getInventory().addItem(new ItemStack(type));
+            final var inventory = container.getInventory();
+            inventory.addItem(new ItemStack(type));
+            try {
+                final var nmsContainer = getInventoryHandle.invoke(inventory);
+                setChangedHandle.invoke(nmsContainer);
+            } catch (Throwable t) {
+            }
         }
     }
 
