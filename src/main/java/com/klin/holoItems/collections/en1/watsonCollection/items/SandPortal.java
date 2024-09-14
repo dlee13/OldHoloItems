@@ -15,9 +15,12 @@ import com.klin.holoItems.HoloItems;
 import com.klin.holoItems.Item;
 import com.klin.holoItems.interfaces.Dispensable;
 import com.klin.holoItems.interfaces.Placeable;
+import com.klin.holoItems.utility.Utility;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 
 public class SandPortal extends Item implements Dispensable, Placeable {
     public static final String name = "sandPortal";
@@ -44,6 +47,7 @@ public class SandPortal extends Item implements Dispensable, Placeable {
 
     @Override
     public void registerRecipes() {
+        final var style = Style.style().decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GOLD).build();
         for (final var material : types) {
             final var materialName = material.key().value().split("_");
             final var builder = new StringBuilder();
@@ -59,9 +63,9 @@ public class SandPortal extends Item implements Dispensable, Placeable {
                 builder.deleteCharAt(i);
             }
             final var key = builder.toString();
-            final var itemStack = new ItemStack(material);
+            final var itemStack = Utility.process(name, material, quantity, lore, durability, shiny);
             final var itemMeta = itemStack.getItemMeta();
-            itemMeta.displayName(Component.text(displayName, NamedTextColor.GOLD));
+            itemMeta.displayName(Component.text(displayName, style));
             itemStack.setItemMeta(itemMeta);
             final var recipe = new ShapelessRecipe(new NamespacedKey(HoloItems.getInstance(), key), itemStack);
             recipe.addIngredient(Material.NETHERITE_BLOCK);
