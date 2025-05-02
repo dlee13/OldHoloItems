@@ -84,11 +84,11 @@ public class WateringCan extends BatteryPack {
                     crop.setAge(crop.getAge()+1);
                     block.setBlockData(crop);
 
-                    world.spawnParticle(Particle.VILLAGER_HAPPY, loc, 1, 0.5, 0.5, 0.5);
+                    world.spawnParticle(Particle.HAPPY_VILLAGER, loc, 1, 0.5, 0.5, 0.5);
                 }
             }
         }
-        world.spawnParticle(Particle.WATER_SPLASH, player.getLocation(), 100, 2.5, 0.25, 2.5);
+        world.spawnParticle(Particle.SPLASH, player.getLocation(), 100, 2.5, 0.25, 2.5);
         if(charge==0)
             event.getItem().setType(Material.BUCKET);
     }

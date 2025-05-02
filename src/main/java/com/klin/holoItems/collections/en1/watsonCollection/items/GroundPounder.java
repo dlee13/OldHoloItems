@@ -51,7 +51,7 @@ public class GroundPounder extends Pack {
 
     public void registerRecipes(){
         ItemMeta meta = item.getItemMeta();
-        meta.addEnchant(Enchantment.DURABILITY, 1, false);
+        meta.addEnchant(Enchantment.UNBREAKING, 1, false);
         List<String> lore = meta.getLore();
         lore.add(0, "");
         meta.setLore(lore);
@@ -175,7 +175,7 @@ public class GroundPounder extends Pack {
                     return;
                 }
                 player.setVelocity(player.getVelocity().add(new Vector(0, -0.2, 0)));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 2, 3));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 2, 3));
                 increment++;
                 if(increment%5==0)
                     offset++;

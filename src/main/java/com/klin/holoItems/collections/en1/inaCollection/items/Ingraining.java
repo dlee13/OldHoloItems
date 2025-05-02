@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class Ingraining extends Enchant implements Extractable {
     public static final String name = "ingraining";
-    public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.LOOT_BONUS_BLOCKS);
+    public static final Set<Enchantment> accepted = Set.of(Enchantment.UNBREAKING, Enchantment.MENDING, Enchantment.FORTUNE);
 
     private static final Material material = Material.FLINT;
     private static final String lore =

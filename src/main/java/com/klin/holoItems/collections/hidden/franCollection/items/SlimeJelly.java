@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class SlimeJelly extends LaserPointer implements Retaliable {
     public static final String name = "slimeJelly";
 
-    private static final Material material = Material.SCUTE;
+    private static final Material material = Material.TURTLE_SCUTE;
     private static final String lore =
             "Find opportunities to rejuvenate";
 

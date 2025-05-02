@@ -216,7 +216,7 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
                     if(upgrade==0) {
                         Utility.cooldown(item, 20);
                         cost = Material.TNT;
-                        type = EntityType.PRIMED_TNT;
+                        type = EntityType.TNT;
                         velocity.multiply(0.5).add(new Vector(0, 0.2, 0));
                     }
                     else if(upgrade==1) {
@@ -237,7 +237,7 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
                 entity.setVelocity(velocity);
                 if(type==EntityType.SPECTRAL_ARROW)
                     entity.setGlowing(true);
-                else if(type==EntityType.PRIMED_TNT){
+                else if(type==EntityType.TNT){
                     TNTPrimed tnt = (TNTPrimed) entity;
                     tnt.setFuseTicks(60);
                     new Task(HoloItems.getInstance(), 3, 1){
@@ -254,7 +254,7 @@ public class Sentry extends Item implements Interactable, Manipulatable, Retalia
                                     stand++;
                             }
                             if(increment>=48 || stand<trigger.size() || entity.isOnGround()){
-                                tnt.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, tnt.getLocation(), 1);
+                                tnt.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, tnt.getLocation(), 1);
                                 tnt.remove();
                                 for(Entity nearby : entity.getNearbyEntities(4, 4, 4)){
                                     if(nearby instanceof LivingEntity && !(nearby instanceof ArmorStand)){

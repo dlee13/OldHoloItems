@@ -9,6 +9,7 @@ import com.klin.holoItems.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -20,7 +21,9 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
+import org.joml.Quaternionf;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,13 +32,13 @@ public class Comet extends Item implements Interactable {
     public static final String name = "comet";
     public static final Set<Enchantment> accepted = Set.of(
         Enchantment.FIRE_ASPECT,
-        Enchantment.DAMAGE_ALL,
-        Enchantment.DAMAGE_ARTHROPODS,
-        Enchantment.DAMAGE_UNDEAD,
-        Enchantment.DIG_SPEED,
-        Enchantment.DURABILITY,
-        Enchantment.LOOT_BONUS_BLOCKS,
-        Enchantment.LOOT_BONUS_MOBS,
+        Enchantment.SHARPNESS,
+        Enchantment.BANE_OF_ARTHROPODS,
+        Enchantment.SMITE,
+        Enchantment.EFFICIENCY,
+        Enchantment.UNBREAKING,
+        Enchantment.FORTUNE,
+        Enchantment.LOOTING,
         Enchantment.MENDING,
         Enchantment.PIERCING,
         Enchantment.SILK_TOUCH
@@ -73,113 +76,142 @@ public class Comet extends Item implements Interactable {
     }
 
     public void ability(PlayerInteractEvent event, Action action){
-        event.setCancelled(true);
-        // if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) ||
-        //         event.useInteractedBlock()==Event.Result.ALLOW)
-        //     return;
+        // Cancel if not right click
+        if(!(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) ||
+                event.useInteractedBlock()==Event.Result.ALLOW)
+            return;
 
-        // Player player = event.getPlayer();
-        // if(player.hasPotionEffect(PotionEffectType.WEAKNESS)){
-        //     player.sendMessage("§7The axe weighs heavily on your arms");
-        //     return;
-        // }
-        // ItemStack item = event.getItem();
-        // if(Utility.onCooldown(item))
-        //     return;
-        // Utility.cooldown(item, 20);
-        // double damage = 4 + 3 * (Utility.checkPotionEffect(player, PotionEffectType.INCREASE_DAMAGE) -
-        //         Utility.checkPotionEffect(player, PotionEffectType.WEAKNESS));
+        // Cancel if owner is affected by Weakness
+        Player player = event.getPlayer();
+        if(player.hasPotionEffect(PotionEffectType.WEAKNESS)){
+            player.sendMessage("§7The axe weighs heavily on your arms");
+            return;
+        }
 
-        // Location location = player.getEyeLocation();
-        // World world = player.getWorld();
-        // boolean hand = event.getHand()==EquipmentSlot.HAND;
+        // Cancel if on cooldown
+        ItemStack item = event.getItem();
+        if(Utility.onCooldown(item))
+            return;
+        Utility.cooldown(item, 20);
 
-        // double distance = 50;
-        // Vector dir = location.getDirection().multiply(3);
-        // Set<LivingEntity> targets = new HashSet<>();
-        // for(int i=0; i<1+item.getEnchantmentLevel(Enchantment.PIERCING); i++) {
-        //     RayTraceResult result = world.rayTrace(location, dir, 50,
-        //             FluidCollisionMode.NEVER, true, 0.5,
-        //             entity -> (entity != player &&
-        //                     entity instanceof LivingEntity && !(entity instanceof ArmorStand) &&
-        //                     !targets.contains(entity)));
-        //     if (result != null) {
-        //         LivingEntity entity = (LivingEntity) result.getHitEntity();
-        //         if (entity != null) {
-        //             distance = location.distance(result.getHitEntity().getLocation());
-        //             targets.add(entity);
-        //         }
-        //         else if (result.getHitBlock() != null) {
-        //             distance = location.distance(result.getHitBlock().getLocation());
-        //             break;
-        //         }
-        //     }
-        // }
-        // double iterations = distance/3;
+        double damage = 4 + 3 * (Utility.checkPotionEffect(player, PotionEffectType.STRENGTH));
 
-        // ArmorStand stand = world.spawn(location.clone().add(0, -1, 0), ArmorStand.class);
-        // stand.setInvisible(true);
-        // stand.setInvulnerable(true);
-        // stand.setGravity(false);
-        // stand.setBasePlate(false);
-        // stand.setCanPickupItems(false);
-        // stand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING);
-        // stand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING);
-        // stand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.ADDING);
-        // stand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING);
-        // stand.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, "hI");
-        // if(hand) {
-        //     stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
-        //     stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING);
-        //     stand.getEquipment().setItemInMainHand(item);
-        // }
-        // else {
-        //     stand.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
-        //     stand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING);
-        //     stand.getEquipment().setItemInOffHand(item);
-        // }
+        Location location = player.getEyeLocation();
+        World world = player.getWorld();
 
-        // String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
-        // boolean bread = enchant!=null && enchant.contains(SpaceBreadSplash.name);
-        // double height = player.getLocation().getY();
+        final double maxDistance = 50;
+        double distance = maxDistance;
 
-        // if (player.getGameMode()!=GameMode.CREATIVE)
-        //     Utility.addDurability(item, -1, player);
-        // new Task(HoloItems.getInstance(), 1, 1){
-        //     double increment = 0;
-        //     final boolean crit = player.getLocation().getY()<height;
+        // Normalized vector
+        Vector direction = location.getDirection();
 
-        //     public void run(){
-        //         if(increment>=0.3*iterations) {
-        //             stand.remove();
-        //             if(!targets.isEmpty()) {
-        //                 if (player.getGameMode()!=GameMode.CREATIVE)
-        //                     Utility.addDurability(item, 0.5, player);
-        //                 ItemStack clone = item.clone();
-        //                 if(bread) {
-        //                     clone.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 5);
-        //                     clone.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, 5);
-        //                     clone.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-        //                 }
-        //                 for (LivingEntity target : targets) {
-        //                     if (target.isValid() && (!(target instanceof Player) || !((Player) target).isBlocking()))
-        //                         Utility.damage(clone, damage, crit, player, target, false, true, false);
-        //                 }
-        //             }
-        //             cancel();
-        //             return;
-        //         }
+        Set<LivingEntity> targets = new HashSet<>();
 
-        //         double angle = increment*Math.PI;
-        //         if(hand)
-        //             stand.setRightArmPose(stand.getRightArmPose().setX(angle));
-        //         else
-        //             stand.setLeftArmPose(stand.getLeftArmPose().setX(angle));
-        //         increment += 0.3;
+        // Raytrace to find entities in the way. If piercing is applied, do it multiple times
+        for(int i=0; i<1+item.getEnchantmentLevel(Enchantment.PIERCING); i++) {
+            RayTraceResult result = world.rayTrace(location, direction, maxDistance,
+                    FluidCollisionMode.NEVER, true, 0.5,
+                    entity -> (entity != player &&
+                            entity instanceof LivingEntity && !(entity instanceof ArmorStand) &&
+                            !targets.contains(entity))); // Skip previously raytraced entities
+            if (result != null) {
+                LivingEntity entity = (LivingEntity) result.getHitEntity();
+                if (entity != null) {
+                    distance = location.distance(result.getHitEntity().getLocation());
+                    targets.add(entity);
+                }
+                else if (result.getHitBlock() != null) {
+                    distance = location.distance(result.getHitBlock().getLocation());
+                    break;
+                }
+            }
+        }
 
-        //         stand.teleport(stand.getLocation().clone().
-        //                 add(dir.getX(), -0.3*Math.sin(angle)+dir.getY(), dir.getZ()));
-        //     }
-        // };
+        // Offset axe according to player's hand
+        int rotation;
+        if (event.getHand() == EquipmentSlot.HAND) {
+            rotation = -1;
+        } else {
+            rotation = 1;
+        }
+
+        ItemDisplay axeDisplay = world.spawn(location, ItemDisplay.class, entity -> {
+            // This block runs before entity is ticked, meaning it won't show a mark in minimap right as the axe is spawned
+            entity.setInvisible(true); // Remove mark in minimaps
+            entity.setPersistent(false); // Remove if chunk unloads
+            entity.setItemStack(item);
+            entity.setViewRange((float)maxDistance);
+
+            Transformation currentTransformation = entity.getTransformation();
+            currentTransformation.getLeftRotation()
+                .rotateLocalY((float) Math.toRadians(-90)) // Rotate vertically (to face forward pointing frontwards)
+                .rotateLocalZ((float) Math.toRadians(15 * rotation)); // Slant inwards
+            currentTransformation.getTranslation().add(0.4f * rotation, -0.25f, 0.5f); // Move closer to hand
+            entity.setTransformation(currentTransformation);
+        });
+
+        // Check if SpaceBreadSplash is applied
+        String enchant = item.getItemMeta().getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING);
+        boolean bread = enchant!=null && enchant.contains(SpaceBreadSplash.name);
+        double height = player.getLocation().getY();
+
+        // Consume durability
+        if (player.getGameMode()!=GameMode.CREATIVE)
+            Utility.addDurability(item, -1, player);
+
+        // Set vector speed as 3 blocks/tick
+        final double speed = 3;
+        final double maxIteration = distance / (double) speed;
+
+        new Task(HoloItems.getInstance(), 1, 1){
+            double increment = 0;
+            boolean crit = player.getLocation().getY()<height;
+            Quaternionf rotationPerTick = new Quaternionf().rotateZ((float) Math.toRadians(-60));
+
+            public void run(){
+                try {
+                    if(increment >= maxIteration) {
+                        if(!targets.isEmpty()) {
+                            // Restore half durability
+                            if (player.getGameMode()!=GameMode.CREATIVE)
+                                Utility.addDurability(item, 0.5, player);
+
+                            // Prepare for Utility.damage()
+                            ItemStack itemForDamage = item;
+                            if(bread) {
+                                itemForDamage = item.clone();
+                                itemForDamage.addUnsafeEnchantment(Enchantment.SMITE, 5);
+                                itemForDamage.addUnsafeEnchantment(Enchantment.BANE_OF_ARTHROPODS, 5);
+                                itemForDamage.addUnsafeEnchantment(Enchantment.SHARPNESS, 5);
+                            }
+                            for (LivingEntity target : targets) {
+                                if (target.isValid() && (!(target instanceof Player) || !((Player) target).isBlocking()))
+                                    Utility.damage(itemForDamage, damage, crit, player, target, false, true, false);
+                            }
+                        }
+                        axeDisplay.remove();
+                        cancel();
+                        return;
+                    }
+
+
+                    if (increment != 0) {
+                        Transformation currentTransformation = axeDisplay.getTransformation();
+                        currentTransformation.getLeftRotation().mul(rotationPerTick); // Spin
+                        currentTransformation.getTranslation().add(0, 0, (float)speed); // Move forward
+                        axeDisplay.setTransformation(currentTransformation);
+                        axeDisplay.setInterpolationDelay(0);
+                        axeDisplay.setInterpolationDuration(1);
+                    }
+        
+                    ++increment;
+                } catch (Exception e) {
+                    // Avoid being in loop logging errors in case of exception
+                    HoloItems.getInstance().getLogger().warning("Error in Comet ability: " + e.getMessage());
+                    axeDisplay.remove();
+                    cancel();
+                }
+            }
+        };
     }
 }

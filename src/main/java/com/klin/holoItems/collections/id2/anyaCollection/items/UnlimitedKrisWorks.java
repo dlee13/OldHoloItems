@@ -29,7 +29,7 @@ import java.util.Set;
 
 public class UnlimitedKrisWorks extends Item implements Interactable {
     public static final String name = "unlimitedKrisWorks";
-    public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.LOYALTY, Enchantment.MENDING);
+    public static final Set<Enchantment> accepted = Set.of(Enchantment.UNBREAKING, Enchantment.LOYALTY, Enchantment.MENDING);
     private final Map<Material, Integer> swords;
 
     private static final Material material = Material.GOLDEN_SWORD;
@@ -103,7 +103,7 @@ public class UnlimitedKrisWorks extends Item implements Interactable {
                 inv.removeItem(sword);
         }
 
-        double damage = swords.get(sword.getType()) + 3 * (Utility.checkPotionEffect(player, PotionEffectType.INCREASE_DAMAGE) -
+        double damage = swords.get(sword.getType()) + 3 * (Utility.checkPotionEffect(player, PotionEffectType.STRENGTH) -
                 Utility.checkPotionEffect(player, PotionEffectType.WEAKNESS));
         Location location = player.getEyeLocation();
         World world = player.getWorld();

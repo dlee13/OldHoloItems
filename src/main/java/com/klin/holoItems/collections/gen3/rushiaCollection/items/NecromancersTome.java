@@ -54,7 +54,7 @@ public class NecromancersTome extends Pack implements Perishable, Defensible {
         prohibited = Set.of(
             EntityType.GHAST,
             EntityType.GIANT,
-            EntityType.SNOWMAN,
+            EntityType.SNOW_GOLEM,
             EntityType.IRON_GOLEM,
             EntityType.ELDER_GUARDIAN,
             EntityType.WITHER,

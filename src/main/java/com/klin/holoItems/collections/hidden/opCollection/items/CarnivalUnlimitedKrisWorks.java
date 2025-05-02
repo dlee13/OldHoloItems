@@ -128,7 +128,7 @@ public class CarnivalUnlimitedKrisWorks extends Item implements Interactable {
         }
 
         double damage = swords.get(sword.getType())
-                + 3 * (Utility.checkPotionEffect(player, PotionEffectType.INCREASE_DAMAGE) -
+                + 3 * (Utility.checkPotionEffect(player, PotionEffectType.STRENGTH) -
                         Utility.checkPotionEffect(player, PotionEffectType.WEAKNESS));
         Location location = player.getEyeLocation();
         World world = player.getWorld();

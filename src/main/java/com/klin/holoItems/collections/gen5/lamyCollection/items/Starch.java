@@ -5,6 +5,8 @@ import com.klin.holoItems.Item;
 import com.klin.holoItems.collections.gen5.lamyCollection.LamyCollection;
 import com.klin.holoItems.interfaces.Brewable;
 import com.klin.holoItems.interfaces.Consumable;
+import com.klin.holoItems.utility.Utility;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -16,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -58,19 +60,20 @@ public class Starch extends Item implements Brewable, Consumable {
                     if(!(itemMeta instanceof PotionMeta))
                         continue;
                     PotionMeta meta = (PotionMeta) item.getItemMeta();
-                    PotionType type = meta.getBasePotionData().getType();
+                    PotionType type = meta.getBasePotionType();
                     int multiplier = 1;
                     if(item.getType()==Material.LINGERING_POTION)
                         multiplier = 4;
                     if(type==PotionType.MUNDANE)
-                        meta.addCustomEffect(new PotionEffect(PotionEffectType.CONFUSION, 400/multiplier, 1), true);
-                    else if(type==PotionType.SPEED)
+                        meta.addCustomEffect(new PotionEffect(PotionEffectType.NAUSEA, 400/multiplier, 1), true);
+                    else if(type==PotionType.SWIFTNESS)
                         meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 800/multiplier, 1), true);
                     else
                         continue;
-                    meta.setBasePotionData(new PotionData(PotionType.UNCRAFTABLE));
+                    meta.setBasePotionType(PotionType.MUNDANE);
                     meta.setDisplayName("§6Sake");
                     meta.setColor(Color.SILVER);
+                    Sake.setSakeId(meta);
                     item.setItemMeta(meta);
                 }
             }
@@ -78,4 +81,26 @@ public class Starch extends Item implements Brewable, Consumable {
     }
 
     public void ability(PlayerItemConsumeEvent event, ItemStack item) {}
+
+    public class Sake {
+        //TODO: move potion transformation above to here
+
+        private static final String id = "sake_potion";
+
+        public static void setSakeId(ItemMeta itemMeta) {
+            itemMeta.getPersistentDataContainer().set(Utility.id, PersistentDataType.STRING, id);
+        }
+
+        public static boolean isSakePotion(ItemStack item) {
+            if (item == null || item.getType() != Material.POTION) {
+                return false;
+            }
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null || !(meta instanceof PotionMeta)) {
+                return false;
+            }
+            String id = meta.getPersistentDataContainer().get(Utility.id, PersistentDataType.STRING);
+            return Sake.id.equals(id);
+        }
+    }
 }

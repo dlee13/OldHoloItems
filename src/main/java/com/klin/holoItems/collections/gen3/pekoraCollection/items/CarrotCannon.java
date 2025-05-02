@@ -20,7 +20,7 @@ import java.util.Set;
 public class CarrotCannon extends BatteryPack {
     public static final String name = "carrotCannon";
     public static final Set<Enchantment> accepted = new HashSet<>(){{
-        add(Enchantment.DURABILITY);
+        add(Enchantment.UNBREAKING);
         add(Enchantment.MENDING);
     }};
     private static final ItemStack carrot = new ItemStack(Material.CARROT);
@@ -108,7 +108,7 @@ public class CarrotCannon extends BatteryPack {
 
             public void run(){
                 if(!proj.isValid() || increment>=600){
-                    world.spawnParticle(Particle.EXPLOSION_LARGE, explosion, 1);
+                    world.spawnParticle(Particle.EXPLOSION, explosion, 1);
                     Collection<Entity> entities = world.getNearbyEntities(explosion, 1.5, 1.5, 1.5,
                             entity -> entity instanceof LivingEntity);
                     for(Entity entity : entities) {

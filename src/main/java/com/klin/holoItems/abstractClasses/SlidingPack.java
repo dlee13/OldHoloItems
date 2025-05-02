@@ -48,7 +48,7 @@ public abstract class SlidingPack extends Pack implements Clickable {
             return;
         ItemStack selected = event.getCurrentItem();
         ItemMeta selectedMeta = selected.getItemMeta();
-        selectedMeta.addEnchant(Enchantment.LUCK, 1, false);
+        selectedMeta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, false);
         selectedMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         selected.setItemMeta(selectedMeta);
 

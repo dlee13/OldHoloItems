@@ -27,7 +27,7 @@ public class Splinter extends Enchant implements Extractable {
     private static final NamespacedKey KEY = new NamespacedKey(HoloItems.getInstance(), name);
     private static final MaterialSetTag COMPATIBLE_MATERIALS = new MaterialSetTag(KEY, Splinter::isCompatibleMaterial).lock();
 
-    public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH);
+    public static final Set<Enchantment> accepted = Set.of(Enchantment.UNBREAKING, Enchantment.MENDING, Enchantment.SILK_TOUCH);
     public static final Set<String> acceptedIds = Set.of(Comet.name);
     public static final Set<Material> acceptedTypes = Utility.axes;
     public static final int expCost = 39;
@@ -48,7 +48,7 @@ public class Splinter extends Enchant implements Extractable {
         ShapedRecipe recipe0 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"0"), item);
         recipe0.shape("**","*&"," %");
-        recipe0.setIngredient('*', Material.SCUTE);
+        recipe0.setIngredient('*', Material.TURTLE_SCUTE);
         recipe0.setIngredient('&', Material.CONDUIT);
         recipe0.setIngredient('%', Material.STICK);
         recipe0.setGroup(name);
@@ -57,7 +57,7 @@ public class Splinter extends Enchant implements Extractable {
         ShapedRecipe recipe1 =
                 new ShapedRecipe(new NamespacedKey(HoloItems.getInstance(), name+"1"), item);
         recipe1.shape("**","&*","% ");
-        recipe1.setIngredient('*', Material.SCUTE);
+        recipe1.setIngredient('*', Material.TURTLE_SCUTE);
         recipe1.setIngredient('&', Material.CONDUIT);
         recipe1.setIngredient('%', Material.STICK);
         recipe1.setGroup(name);

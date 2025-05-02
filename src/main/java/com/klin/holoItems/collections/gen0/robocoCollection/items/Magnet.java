@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 public class Magnet extends Enchant implements Extractable {
     public static final String name = "magnet";
 
-    public static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH);
+    public static final Set<Enchantment> accepted = Set.of(Enchantment.UNBREAKING, Enchantment.MENDING, Enchantment.SILK_TOUCH);
     public static final Set<String> acceptedIds = Stream.of(Comet.name).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Material> acceptedTypes = new HashSet<>();
     public static final int expCost = 39;

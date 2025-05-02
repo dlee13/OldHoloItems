@@ -199,7 +199,7 @@ public class Attacks {
                                     if(squid==null && livingEntity instanceof Squid) {
                                         squid = (Squid) livingEntity;
                                         squid.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 60, 1));
-                                        squid.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 3));
+                                        squid.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 60, 3));
                                     }
                                 }
                             }

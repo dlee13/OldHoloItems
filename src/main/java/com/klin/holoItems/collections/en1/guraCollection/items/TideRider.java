@@ -28,7 +28,7 @@ import java.util.Set;
 
 public class TideRider extends Item implements Interactable {
     public static final String name = "tideRider";
-    private static final Set<Enchantment> accepted = Set.of(Enchantment.DURABILITY, Enchantment.MENDING);
+    private static final Set<Enchantment> accepted = Set.of(Enchantment.UNBREAKING, Enchantment.MENDING);
 
     private static final Material material = Material.TRIDENT;
     private static final int quantity = 1;

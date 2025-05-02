@@ -60,7 +60,7 @@ public class SecretBrew extends Item implements Brewable, Mixable {
                     if(!(itemMeta instanceof PotionMeta))
                         continue;
                     PotionMeta meta = (PotionMeta) itemMeta;
-                    meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+                    meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
                     meta.setColor(Utility.getRandom(Utility.colors.keySet()).get().getColor());
                     meta.setDisplayName("§f"+Utility.processType(item.getType().toString()));
                     meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);
@@ -76,7 +76,7 @@ public class SecretBrew extends Item implements Brewable, Mixable {
             public void run(){
                 ItemStack item = inv.getItem(slot);
                 PotionMeta meta = (PotionMeta) item.getItemMeta();
-                meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+                meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
                 meta.setColor(color);
                 meta.setDisplayName("§f"+Utility.processType(item.getType().toString()));
                 meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, name);

@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 public class Gnaw extends Item implements Consumable {
     public static final String name = "gnaw";
     public static final Set<Enchantment> accepted = Stream.of(
-            Enchantment.DURABILITY,
+            Enchantment.UNBREAKING,
             Enchantment.FIRE_ASPECT,
             Enchantment.IMPALING,
             Enchantment.LURE,
@@ -97,7 +97,7 @@ public class Gnaw extends Item implements Consumable {
         int size = entities.size();
         PlayerInventory inv = player.getInventory();
         if(item.equals(inv.getItemInOffHand())){
-            if(Math.random()<(1f/(meta.getEnchantLevel(Enchantment.DURABILITY)+1))) {
+            if(Math.random()<(1f/(meta.getEnchantLevel(Enchantment.UNBREAKING)+1))) {
                 List<String> lore = meta.getLore();
                 int[] durability = Utility.getDurability(lore);
                 durability[0] = durability[0] - size;

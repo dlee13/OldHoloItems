@@ -18,7 +18,7 @@ public class CircleRenderer extends MapRenderer {
         mapView.setCenterZ(z);
         if(center==null) {
             center = mapCanvas.getCursors().addCursor(0, 0, (byte) 8);
-            center.setType(MapCursor.Type.SMALL_WHITE_CIRCLE);
+            center.setType(MapCursor.Type.PLAYER_OFF_LIMITS); // old "SMALL_WHITE_CIRCLE"
         }
         else{
             center.setX((byte) 0);

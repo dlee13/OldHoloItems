@@ -206,7 +206,7 @@ public class QuartzGranule extends Item implements Placeable, Breakable, Harmabl
             }
             hit();
             World world = center.getWorld();
-            world.spawnParticle(Particle.EXPLOSION_LARGE, center.getLocation().add(0.5, 0.5, 0.5), 1);
+            world.spawnParticle(Particle.EXPLOSION, center.getLocation().add(0.5, 0.5, 0.5), 1);
             world.playSound(center.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.1f, 1f);
             return;
         } else if(!(entity instanceof PolarBear))

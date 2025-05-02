@@ -80,7 +80,7 @@ public class Bloop extends BatteryPack implements Extractable, Holdable {
         event.setCancelled(true);
         block.setType(Material.AIR);
         ItemStack pickaxe = player.getInventory().getItemInMainHand();
-        int drops = pickaxe.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS)+1;
+        int drops = pickaxe.getEnchantmentLevel(Enchantment.FORTUNE)+1;
         player.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.QUARTZ_BLOCK, 1+(int)(Math.random()*drops)));
     }
 }

@@ -83,37 +83,37 @@ public class Events implements Listener {
     );
     private final Map<Integer, Enchantment[]> multiplier = new HashMap<>() {{
         put(1, new Enchantment[]{
-                Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.DAMAGE_ALL,
-                Enchantment.DIG_SPEED, Enchantment.ARROW_DAMAGE,
+                Enchantment.PROTECTION, Enchantment.SHARPNESS,
+                Enchantment.EFFICIENCY, Enchantment.POWER,
                 Enchantment.LOYALTY, Enchantment.PIERCING
         });
         put(2, new Enchantment[]{
-                Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_FALL,
-                Enchantment.PROTECTION_PROJECTILE, Enchantment.DAMAGE_UNDEAD,
-                Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK,
-                Enchantment.DURABILITY, Enchantment.QUICK_CHARGE
+                Enchantment.FIRE_PROTECTION, Enchantment.FEATHER_FALLING,
+                Enchantment.PROJECTILE_PROTECTION, Enchantment.SMITE,
+                Enchantment.BANE_OF_ARTHROPODS, Enchantment.KNOCKBACK,
+                Enchantment.UNBREAKING, Enchantment.QUICK_CHARGE
         });
         put(4, new Enchantment[]{
-                Enchantment.PROTECTION_EXPLOSIONS, Enchantment.OXYGEN,
-                Enchantment.DEPTH_STRIDER, Enchantment.WATER_WORKER,
-                Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS,
-                Enchantment.LOOT_BONUS_BLOCKS, Enchantment.ARROW_KNOCKBACK,
-                Enchantment.ARROW_FIRE, Enchantment.LUCK, Enchantment.LURE,
+                Enchantment.BLAST_PROTECTION, Enchantment.RESPIRATION,
+                Enchantment.DEPTH_STRIDER, Enchantment.AQUA_AFFINITY,
+                Enchantment.FIRE_ASPECT, Enchantment.LOOTING,
+                Enchantment.FORTUNE, Enchantment.PUNCH,
+                Enchantment.FLAME, Enchantment.LUCK_OF_THE_SEA, Enchantment.LURE,
                 Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.IMPALING,
                 Enchantment.RIPTIDE, Enchantment.MULTISHOT, Enchantment.SWEEPING_EDGE
         });
         put(8, new Enchantment[]{
-                Enchantment.THORNS, Enchantment.SILK_TOUCH, Enchantment.ARROW_INFINITE,
+                Enchantment.THORNS, Enchantment.SILK_TOUCH, Enchantment.INFINITY,
                 Enchantment.BINDING_CURSE, Enchantment.VANISHING_CURSE,
                 Enchantment.CHANNELING, Enchantment.SOUL_SPEED
         });
     }};
     private final Set<Set<Enchantment>> with = Set.of(
-            Set.of(Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.DAMAGE_ARTHROPODS),
-            Set.of(Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_EXPLOSIONS),
+            Set.of(Enchantment.SHARPNESS, Enchantment.SMITE, Enchantment.BANE_OF_ARTHROPODS),
+            Set.of(Enchantment.FIRE_PROTECTION, Enchantment.PROJECTILE_PROTECTION, Enchantment.PROTECTION, Enchantment.FEATHER_FALLING, Enchantment.BLAST_PROTECTION),
             Set.of(Enchantment.DEPTH_STRIDER, Enchantment.FROST_WALKER),
-            Set.of(Enchantment.LOOT_BONUS_BLOCKS, Enchantment.SILK_TOUCH),
-            Set.of(Enchantment.ARROW_INFINITE, Enchantment.MENDING),
+            Set.of(Enchantment.FORTUNE, Enchantment.SILK_TOUCH),
+            Set.of(Enchantment.INFINITY, Enchantment.MENDING),
             Set.of(Enchantment.MULTISHOT, Enchantment.PIERCING)
     );
     private final Map<Enchantment, Set<Enchantment>> exclusive = new HashMap<>(){{

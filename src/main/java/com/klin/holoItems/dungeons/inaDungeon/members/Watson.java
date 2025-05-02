@@ -70,7 +70,7 @@ public class Watson extends Member {
                         cancel();
                         return;
                     }
-                    world.spawnParticle(Particle.REDSTONE, loc.add(dir), 1, new Particle.DustOptions(Color.WHITE, 1));
+                    world.spawnParticle(Particle.DUST, loc.add(dir), 1, new Particle.DustOptions(Color.WHITE, 1));
                     increment += 0.2;
                 }
             }
@@ -80,7 +80,7 @@ public class Watson extends Member {
             return;
         for(LivingEntity target : targets){
             if(!airborne.contains(target)){
-                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 6, 6));
+                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 6, 6));
                 new Task(HoloItems.getInstance(), 6, 1){
                     int increment = 0;
                     boolean flip = true;

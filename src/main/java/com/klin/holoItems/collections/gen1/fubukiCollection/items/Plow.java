@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 public class Plow extends Enchant implements Extractable {
     public static final String name = "plow";
-    public static final Set<Enchantment> accepted = Stream.of(Enchantment.DIG_SPEED, Enchantment.SILK_TOUCH, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
+    public static final Set<Enchantment> accepted = Stream.of(Enchantment.EFFICIENCY, Enchantment.SILK_TOUCH, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
     public static final Set<String> acceptedIds = null;
     public static final Set<Material> acceptedTypes = Utility.shovels;
     public static final int expCost = 32;

@@ -28,11 +28,11 @@ public class Backstab extends Item implements Interactable{
     public static final String name = "backstab";
     public static final Set<Enchantment> accepted = Set.of(
             Enchantment.FIRE_ASPECT,
-            Enchantment.DAMAGE_ALL,
-            Enchantment.DAMAGE_ARTHROPODS,
-            Enchantment.DAMAGE_UNDEAD,
-            Enchantment.DURABILITY,
-            Enchantment.LOOT_BONUS_MOBS,
+            Enchantment.SHARPNESS,
+            Enchantment.BANE_OF_ARTHROPODS,
+            Enchantment.SMITE,
+            Enchantment.UNBREAKING,
+            Enchantment.LOOTING,
             Enchantment.KNOCKBACK,
             Enchantment.MENDING,
             Enchantment.SWEEPING_EDGE

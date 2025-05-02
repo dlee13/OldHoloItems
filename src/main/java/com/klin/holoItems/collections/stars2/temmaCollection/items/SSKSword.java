@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 public class SSKSword extends Item implements Afflictable {
     public static final String name = "sskSword";
-    public static final Set<Enchantment> accepted = Stream.of(Enchantment.FIRE_ASPECT, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_ARTHROPODS, Enchantment.DAMAGE_UNDEAD, Enchantment.DURABILITY, Enchantment.LOOT_BONUS_MOBS, Enchantment.MENDING, Enchantment.KNOCKBACK, Enchantment.SWEEPING_EDGE).collect(Collectors.toCollection(HashSet::new));
+    public static final Set<Enchantment> accepted = Stream.of(Enchantment.FIRE_ASPECT, Enchantment.SHARPNESS, Enchantment.BANE_OF_ARTHROPODS, Enchantment.SMITE, Enchantment.UNBREAKING, Enchantment.LOOTING, Enchantment.MENDING, Enchantment.KNOCKBACK, Enchantment.SWEEPING_EDGE).collect(Collectors.toCollection(HashSet::new));
 
     private static final Material material = Material.DIAMOND_SWORD;
     private static final int quantity = 1;

@@ -71,7 +71,7 @@ public class DyeConcentrate extends Item implements Combinable, Spawnable{
                 LivingEntity livingEntity = (LivingEntity) nearby;
                 livingEntity.setNoDamageTicks(0);
                 livingEntity.damage(8);
-                livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2));
+                livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 40, 2));
                 equip(world, livingEntity, ink);
             }
         }
@@ -93,7 +93,7 @@ public class DyeConcentrate extends Item implements Combinable, Spawnable{
                                 LivingEntity livingEntity = (LivingEntity) nearby;
                                 livingEntity.setNoDamageTicks(0);
                                 livingEntity.damage(16);
-                                livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 4));
+                                livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 80, 4));
                                 equip(world, livingEntity, ink);
                             }
                         }

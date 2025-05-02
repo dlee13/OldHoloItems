@@ -41,7 +41,7 @@ public class MoltenCore extends Wiring {
                 "Dispensers wired with this item can\n"+
                 "melt obsidian using fire charges\n"+
                 "Break the dispenser to retrieve"));
-        activatedMeta.addEnchant(Enchantment.LUCK, 1, false);
+        activatedMeta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, false);
         activatedMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         activated.setItemMeta(activatedMeta);
 

@@ -82,7 +82,7 @@ public class Minesweeper implements Listener, Resetable {
                 world.playSound(loc, Sound.BLOCK_GLASS_BREAK, 4, 1);
                 return;
             }
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, 8));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 10, 8));
             Entity entity = world.spawnEntity(loc, EntityType.EVOKER_FANGS);
             entity.getPersistentDataContainer().set(Utility.pack, PersistentDataType.STRING, SharpenedFangs.name+":20");
             world.playSound(loc, Sound.AMBIENT_CAVE, 4, 1);

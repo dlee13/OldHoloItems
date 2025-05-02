@@ -201,7 +201,7 @@ public class Payload extends SlidingPack {
                         public void run(){
                             Location loc = tnt.getLocation();
                             if(tnt.getVelocity().getY()<0 && Math.abs(loc.getY()-finish[1])<3 || increment>=60){
-                                world.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
+                                world.spawnParticle(Particle.EXPLOSION_EMITTER, loc, 1);
                                 world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.4f, 1f);
                                 minecart.remove();
                                 tnt.remove();
@@ -224,7 +224,7 @@ public class Payload extends SlidingPack {
                                             checked.add(center);
 
                                             center.setType(Material.AIR);
-                                            world.spawnParticle(Particle.EXPLOSION_LARGE, center.getLocation().add(0.5, 0, 0.5), 1);
+                                            world.spawnParticle(Particle.EXPLOSION, center.getLocation().add(0.5, 0, 0.5), 1);
                                             world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.1f, 1f);
                                             for (Block block : new Block[]{
                                                     center.getRelative(BlockFace.UP),
@@ -250,14 +250,14 @@ public class Payload extends SlidingPack {
 
                 if(ticks<=0){
                     Location loc = payload.getLocation();
-                    world.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
+                    world.spawnParticle(Particle.EXPLOSION_EMITTER, loc, 1);
                     world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1f, 1f);
                     payload.remove();
 
                     for(Entity entity : payload.getNearbyEntities(10, 10, 10)){
                         if(entity instanceof LivingEntity) {
                             ((LivingEntity) entity).damage(100);
-                            world.spawnParticle(Particle.EXPLOSION_LARGE, entity.getLocation(), 1);
+                            world.spawnParticle(Particle.EXPLOSION, entity.getLocation(), 1);
                         }
                     }
                     cancel();

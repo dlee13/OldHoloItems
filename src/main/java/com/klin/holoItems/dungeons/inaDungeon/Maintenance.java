@@ -219,7 +219,7 @@ public class Maintenance implements Listener, Resetable {
         new BukkitRunnable(){
             public void run(){
                 block.setType(Material.AIR);
-                block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5,0.5,0.5), 40, 0, 0, 0, 4, block.getType().createBlockData());
+                block.getWorld().spawnParticle(Particle.BLOCK, block.getLocation().add(0.5,0.5,0.5), 40, 0, 0, 0, 4, block.getType().createBlockData());
                 decay.remove(block);
             }
         }.runTaskLater(HoloItems.getInstance(), duration).getTaskId());

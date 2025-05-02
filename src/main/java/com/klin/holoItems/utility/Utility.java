@@ -42,6 +42,13 @@ import static org.bukkit.Material.*;
 
 public class Utility {
     public static final NamespacedKey key = new NamespacedKey(HoloItems.getInstance(), "holoItems");
+    
+    //New namespace for recognizing specific items
+    //There is scuff using the already existing 'key' namespace
+    //As an example, usable items (like potions) that have a 'key' and don't inherit from Consumable are cancelled
+    //Gradually, the usage of 'key' namespace will be reviewed, possibly being limited to very specific usages
+    public static final NamespacedKey id = new NamespacedKey(HoloItems.getInstance(), "id");
+
     public static final NamespacedKey stack = new NamespacedKey(HoloItems.getInstance(), "stack");
     public static final NamespacedKey cooldown = new NamespacedKey(HoloItems.getInstance(), "cooldown");
     public static final NamespacedKey enchant = new NamespacedKey(HoloItems.getInstance(), "enchant");
@@ -74,7 +81,7 @@ public class Utility {
         addAll(Utility.leggings);
         addAll(Utility.boots);
     }};
-    public static final Set<Enchantment> enchantedBoots = Set.of(Enchantment.PROTECTION_EXPLOSIONS, Enchantment.DEPTH_STRIDER, Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_FIRE, Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.SOUL_SPEED, Enchantment.THORNS, Enchantment.DURABILITY);
+    public static final Set<Enchantment> enchantedBoots = Set.of(Enchantment.BLAST_PROTECTION, Enchantment.DEPTH_STRIDER, Enchantment.FEATHER_FALLING, Enchantment.FIRE_PROTECTION, Enchantment.FROST_WALKER, Enchantment.MENDING, Enchantment.PROJECTILE_PROTECTION, Enchantment.PROTECTION, Enchantment.SOUL_SPEED, Enchantment.THORNS, Enchantment.UNBREAKING);
     public static final Set<Material> fences = Set.of(Material.ACACIA_FENCE, Material.BIRCH_FENCE, Material.OAK_FENCE, Material.DARK_OAK_FENCE, Material.CRIMSON_FENCE, Material.JUNGLE_FENCE, Material.NETHER_BRICK_FENCE, Material.SPRUCE_FENCE, Material.WARPED_FENCE, Material.CHAIN, Material.IRON_BARS, Material.GLASS_PANE, Material.BLACK_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE, Material.GREEN_STAINED_GLASS_PANE, Material.BLUE_STAINED_GLASS_PANE, Material.PURPLE_STAINED_GLASS_PANE, Material.CYAN_STAINED_GLASS_PANE, Material.LIGHT_GRAY_STAINED_GLASS_PANE, Material.GRAY_STAINED_GLASS_PANE, Material.PINK_STAINED_GLASS_PANE, Material.LIME_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.MAGENTA_STAINED_GLASS_PANE, Material.ORANGE_STAINED_GLASS_PANE, Material.WHITE_STAINED_GLASS_PANE, Material.BROWN_STAINED_GLASS_PANE, Material.COBBLESTONE_WALL, Material.MOSSY_COBBLESTONE_WALL,  Material.STONE_BRICK_WALL, Material.MOSSY_STONE_BRICK_WALL, Material.ANDESITE_WALL, Material.DIORITE_WALL, Material.GRANITE_WALL, Material.SANDSTONE_WALL, Material.RED_SANDSTONE_WALL, Material.BRICK_WALL, Material.PRISMARINE_WALL, Material.NETHER_BRICK_WALL, Material.RED_NETHER_BRICK_WALL, Material.END_STONE_BRICK_WALL, Material.BLACKSTONE_WALL, Material.POLISHED_BLACKSTONE_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL);
     public static final Set<Material> flowers = Set.of(RED_MUSHROOM, BROWN_MUSHROOM, DANDELION, POPPY, BLUE_ORCHID, ALLIUM, AZURE_BLUET, RED_TULIP, ORANGE_TULIP, WHITE_TULIP, PINK_TULIP, OXEYE_DAISY, CORNFLOWER, LILY_OF_THE_VALLEY, WITHER_ROSE);
     public static final Set<EntityType> humanoids = Set.of(EntityType.PLAYER, EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER, EntityType.HUSK, EntityType.SKELETON, EntityType.STRAY, EntityType.PIGLIN_BRUTE, EntityType.PIGLIN, EntityType.ZOMBIFIED_PIGLIN, EntityType.DROWNED, EntityType.WITHER_SKELETON, EntityType.VILLAGER, EntityType.PILLAGER, EntityType.VINDICATOR, EntityType.EVOKER, EntityType.WITCH, EntityType.GIANT);
@@ -110,17 +117,17 @@ public class Utility {
         }}); }};
     public static final Map<PotionType, Integer> durations = new HashMap<>() {{
         put(PotionType.FIRE_RESISTANCE, 3600);
-        put(PotionType.INSTANT_DAMAGE, 0);
-        put(PotionType.INSTANT_HEAL, 0);
+        put(PotionType.HARMING, 0);
+        put(PotionType.HEALING, 0);
         put(PotionType.INVISIBILITY, 3600);
-        put(PotionType.JUMP, 3600);
+        put(PotionType.LEAPING, 3600);
         put(PotionType.LUCK, 6000);
         put(PotionType.NIGHT_VISION, 3600);
         put(PotionType.POISON, 900);
-        put(PotionType.REGEN, 900);
+        put(PotionType.REGENERATION, 900);
         put(PotionType.SLOW_FALLING, 1800);
         put(PotionType.SLOWNESS, 1800);
-        put(PotionType.SPEED, 3600);
+        put(PotionType.SWIFTNESS, 3600);
         put(PotionType.STRENGTH, 3600);
         put(PotionType.TURTLE_MASTER, 400);
         put(PotionType.WATER_BREATHING, 3600);
@@ -207,7 +214,7 @@ public class Utility {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§6"+formatName(name));
         List<String> list = processStr(lore);
-        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         if(meta instanceof Damageable) {
             meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -223,7 +230,7 @@ public class Utility {
             list.add("§fDurability: " + durability + "/" + durability);
         }
         if(shiny){
-            meta.addEnchant(Enchantment.LUCK, 1, false);
+            meta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, false);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         //boolean enchant = meta.getPersistentDataContainer().get(Utility.enchant, PersistentDataType.STRING)!=null;
@@ -314,17 +321,17 @@ public class Utility {
             return false;
 
         if(strength) {
-            int multiplier = checkPotionEffect(attacker, PotionEffectType.INCREASE_DAMAGE);
+            int multiplier = checkPotionEffect(attacker, PotionEffectType.STRENGTH);
             damage = damage+3*multiplier*
-                    (checkPotionEffect(attacker, PotionEffectType.INCREASE_DAMAGE)-
+                    (checkPotionEffect(attacker, PotionEffectType.STRENGTH)-
                     checkPotionEffect(attacker, PotionEffectType.WEAKNESS));
         }
         if(crit)
             damage *= 1.5;
-        if(target.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))
-            damage *= Math.pow(0.8, target.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE).getAmplifier());
+        if(target.hasPotionEffect(PotionEffectType.RESISTANCE))
+            damage *= Math.pow(0.8, target.getPotionEffect(PotionEffectType.RESISTANCE).getAmplifier());
         if(item!=null)
-            damage += 0.5+0.5*item.getEnchantmentLevel(Enchantment.DAMAGE_ALL);
+            damage += 0.5+0.5*item.getEnchantmentLevel(Enchantment.SHARPNESS);
         double thornsChance = 0;
         if(target.getEquipment()!=null && humanoids.contains(target.getType())) {
             ItemStack[] armor = target.getEquipment().getArmorContents();
@@ -333,16 +340,16 @@ public class Utility {
                 if(piece==null || !piece.hasItemMeta())
                     continue;
                 thornsChance += 0.15*piece.getEnchantmentLevel(Enchantment.THORNS);
-                projProtection += 0.08*piece.getEnchantmentLevel(Enchantment.PROTECTION_PROJECTILE);
+                projProtection += 0.08*piece.getEnchantmentLevel(Enchantment.PROJECTILE_PROTECTION);
             }
             if(projectile)
                 damage *= 1-Math.min(0.8, projProtection);
         }
         
-        if (item!=null && target.getCategory().equals(EntityCategory.ARTHROPOD))
-            damage += 2.5*item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS);
-        if (item!=null && target.getCategory().equals(EntityCategory.UNDEAD))
-            damage += 2.5*item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD);
+        if (item!=null && Tag.ENTITY_TYPES_SENSITIVE_TO_BANE_OF_ARTHROPODS.isTagged(target.getType()))
+            damage += 2.5*item.getEnchantmentLevel(Enchantment.BANE_OF_ARTHROPODS);
+        if (item!=null && Tag.ENTITY_TYPES_SENSITIVE_TO_SMITE.isTagged(target.getType()))
+            damage += 2.5*item.getEnchantmentLevel(Enchantment.SMITE);
 
         int fire = item!=null ? item.getEnchantmentLevel(Enchantment.FIRE_ASPECT) : 0;
         if(fire>0) {
@@ -372,9 +379,9 @@ public class Utility {
         boolean flame = false;
         int multishot = 1;
         if (item != null) {
-            damage *= (1 + (.25 * item.getEnchantmentLevel(Enchantment.ARROW_DAMAGE)));
-            punch = item.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK) > 0;
-            flame = item.getEnchantmentLevel(Enchantment.ARROW_FIRE) > 0;
+            damage *= (1 + (.25 * item.getEnchantmentLevel(Enchantment.POWER)));
+            punch = item.getEnchantmentLevel(Enchantment.PUNCH) > 0;
+            flame = item.getEnchantmentLevel(Enchantment.FLAME) > 0;
             multishot = item.getEnchantmentLevel(Enchantment.MULTISHOT) > 0 ? 3 : 1;
         }
 
@@ -386,8 +393,8 @@ public class Utility {
             if (type != null) {
                 if (type.isInstant()) {
                     if (target.getCategory().equals(EntityCategory.UNDEAD) &&
-                            data.getType().equals(PotionType.INSTANT_DAMAGE) ||
-                            data.getType().equals(PotionType.INSTANT_HEAL)) {
+                            data.getType().equals(PotionType.HARMING) ||
+                            data.getType().equals(PotionType.HEALING)) {
                         if (damage < 12)
                             damage -= data.isUpgraded() ? 6 : 4;
                     } else
@@ -403,7 +410,7 @@ public class Utility {
         }
         if (punch)
             target.setVelocity(abstractArrow.getVelocity().setY(0.1).multiply(
-                    item.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK)).multiply(multishot));
+                    item.getEnchantmentLevel(Enchantment.PUNCH)).multiply(multishot));
         if (flame)
             target.setFireTicks(100*multishot);
         if (damage >= 0) {
@@ -484,7 +491,7 @@ public class Utility {
             return 0;
         if(durability[0]==-1 || addend>0 && durability[0]==durability[1])
             return (int) addend;
-        int unbreaking = meta.getEnchantLevel(Enchantment.DURABILITY);
+        int unbreaking = meta.getEnchantLevel(Enchantment.UNBREAKING);
         int total = durability[0]+(int) (addend*2);
         if(addend<0 && Math.random()<(1f/(unbreaking+1))) {
             durability[0] = durability[0]+(int) addend;
@@ -684,9 +691,9 @@ public class Utility {
             }
         }
         if(radius<3)
-            world.spawnParticle(Particle.EXPLOSION_LARGE, loc, 1);
+            world.spawnParticle(Particle.EXPLOSION, loc, 1);
         else
-            world.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
+            world.spawnParticle(Particle.EXPLOSION_EMITTER, loc, 1);
         world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, ((float) radius)/10, 1f);
         return blast;
     }

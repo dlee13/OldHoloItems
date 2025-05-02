@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 public class RolledNewspaper extends Item implements Responsible {
     public static final String name = "rolledNewspaper";
-    public static final Set<Enchantment> accepted = Stream.of(Enchantment.DURABILITY, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
+    public static final Set<Enchantment> accepted = Stream.of(Enchantment.UNBREAKING, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
 
     private static final Material material = Material.PAPER;
     private static final int quantity = 1;

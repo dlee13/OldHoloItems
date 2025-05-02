@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 public class PiratesHook extends Item implements Fishable {
     public static final String name = "piratesHook";
-    public static final Set<Enchantment> accepted = Stream.of(Enchantment.DURABILITY, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
+    public static final Set<Enchantment> accepted = Stream.of(Enchantment.UNBREAKING, Enchantment.MENDING).collect(Collectors.toCollection(HashSet::new));
 
     private static final Material material = Material.FISHING_ROD;
     private static final int quantity = 1;

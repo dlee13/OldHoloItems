@@ -131,13 +131,13 @@ public class Payload implements Resetable {
                     public void run(){
                         Location loc = tnt.getLocation();
                         if(increment>60 || tnt.isOnGround() || tnt.getVelocity().getZ()<0.1){
-                            world.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
+                            world.spawnParticle(Particle.EXPLOSION_EMITTER, loc, 1);
                             world.playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 4, 1);
                             tnt.remove();
                             cancel();
                             return;
                         }
-                        world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(Color.RED, 1));
+                        world.spawnParticle(Particle.DUST, loc, 1, new Particle.DustOptions(Color.RED, 1));
                         increment++;
                     }
                 };

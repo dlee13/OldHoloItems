@@ -44,12 +44,12 @@ public class Falchion extends Armor implements Afflictable {
         super(name, accepted, material, lore, durability, stackable, cost, armorPiece);
 
         ItemMeta meta = item.getItemMeta();
-        meta.addEnchant(Enchantment.DAMAGE_ALL, 10, true);
+        meta.addEnchant(Enchantment.SHARPNESS, 10, true);
         meta.addEnchant(Enchantment.KNOCKBACK, 1, false);
         item.setItemMeta(meta);
 
         PotionMeta potMeta = (PotionMeta) pot.getItemMeta();
-        potMeta.setBasePotionData(new PotionData(PotionType.INSTANT_DAMAGE, false, true));
+        potMeta.setBasePotionData(new PotionData(PotionType.HARMING, false, true));
         pot.setItemMeta(potMeta);
     }
 

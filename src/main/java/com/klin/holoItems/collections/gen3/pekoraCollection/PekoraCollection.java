@@ -32,7 +32,7 @@ public class PekoraCollection extends Collection {
         stat.put("Villagers killed", player.getStatistic(Statistic.KILL_ENTITY, EntityType.VILLAGER));
         stat.put("Wandering Traders killed", player.getStatistic(Statistic.KILL_ENTITY, EntityType.WANDERING_TRADER));
         stat.put("Iron Golems killed", player.getStatistic(Statistic.KILL_ENTITY, EntityType.IRON_GOLEM));
-        stat.put("Snow Golems killed", player.getStatistic(Statistic.KILL_ENTITY, EntityType.SNOWMAN));
+        stat.put("Snow Golems killed", player.getStatistic(Statistic.KILL_ENTITY, EntityType.SNOW_GOLEM));
         return stat;
     }
 }

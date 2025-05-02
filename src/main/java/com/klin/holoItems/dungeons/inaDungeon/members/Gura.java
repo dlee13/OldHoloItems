@@ -51,8 +51,8 @@ public class Gura extends Member {
         cooldown = true;
         meta.getPersistentDataContainer().set(Utility.key, PersistentDataType.STRING, Torrent.name);
         item.setItemMeta(meta);
-        player.setVelocity(new Vector(0, 0.45+0.15*Utility.checkPotionEffect(player, PotionEffectType.JUMP), 0));
-        PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);
+        player.setVelocity(new Vector(0, 0.45+0.15*Utility.checkPotionEffect(player, PotionEffectType.JUMP_BOOST), 0));
+        PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOWNESS);
         int duration;
         int amplifier;
         if(effect==null) {
@@ -63,7 +63,7 @@ public class Gura extends Member {
             duration = effect.getDuration();
             amplifier = effect.getAmplifier();
         }
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 6));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 120, 6));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 120, 1));
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Command: Torrent"));
         new Task(HoloItems.getInstance(), 1, 1){
@@ -73,10 +73,10 @@ public class Gura extends Member {
                     cooldown = false;
                     meta.getPersistentDataContainer().remove(Utility.key);
                     item.setItemMeta(meta);
-                    player.removePotionEffect(PotionEffectType.SLOW);
+                    player.removePotionEffect(PotionEffectType.SLOWNESS);
                     player.removePotionEffect(PotionEffectType.LEVITATION);
                     if(duration-increment>0)
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration-increment, amplifier));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, duration-increment, amplifier));
                     cancel();
                     return;
                 }

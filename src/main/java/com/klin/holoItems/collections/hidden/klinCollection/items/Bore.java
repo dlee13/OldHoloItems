@@ -17,7 +17,7 @@ import java.util.Set;
 public class Bore extends Item implements Extractable {
     public static final String name = "bore";
     public static final Set<Enchantment> accepted = new HashSet<>(){{
-        add(Enchantment.DIG_SPEED);
+        add(Enchantment.EFFICIENCY);
         add(Enchantment.SILK_TOUCH);
     }};
 

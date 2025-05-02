@@ -22,7 +22,7 @@ public class SpaceBreadSplash extends Enchant{
 
     public static final Set<String> acceptedIds = Stream.of(Comet.name).collect(Collectors.toCollection(HashSet::new));
     public static final Set<Material> acceptedTypes = null;
-    public static final Set<Enchantment> exclusive = Stream.of(Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.DAMAGE_ARTHROPODS).collect(Collectors.toCollection(HashSet::new));
+    public static final Set<Enchantment> exclusive = Stream.of(Enchantment.SHARPNESS, Enchantment.SMITE, Enchantment.BANE_OF_ARTHROPODS).collect(Collectors.toCollection(HashSet::new));
     public static final int expCost = 40;
     public static final int cost = -1;
 
